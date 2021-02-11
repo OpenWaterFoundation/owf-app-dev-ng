@@ -102,16 +102,32 @@ C:\Users\user\                                 User's home folder for Windows.
                                                This library is used by other `owf-*` libraries
                                                Specific examples are provided below for illustration.
                 src/                           Standard Angular folder for source code.
-                  lib/                         Standard Angular folder indicating library.
-                    ts/                        Time series package (ported from Java).
-                      TS.ts                    Time series class.
-                    ui/                        User interface components (based on Material).
-                      dialog/                  Code related to dialogs.
-                      window-manager/          Code related to Window Manger for managing dialogs.
-                        WindowManager.ts       Class to manager windows.
-                    util/                      Utility code package (ported from Java).
-                      time/                    Utility code for date/time.
-                        DateTime.ts            Class for date/time.
+                  lib/                         Main entry point into the library.
+                                               Not required to be named lib. Might be
+                                               changed in the future. All subsequent
+                                               folders under owf-common are considered
+                                               secondary entry points.
+                    *                          Any classes or module for the owf-common
+                                               library main entry point. (Empty for now)
+                  public-api.ts                Exported members of the library main
+                                               entry point.
+                ts/                            Time series package (ported from Java).
+                  TS.ts                        Time series class.
+                  package.json                 Tells ng-packagr to compile this as a
+                                               secondary entry point into the library.
+                  public-api.ts                Exported members of this ts/ module as
+                                               a secondary entry point.
+                ui/                            User interface components (based on Material).
+                  dialog/                      Code related to dialogs.
+                  window-manager/              Code related to Window Manger for managing dialogs.
+                    WindowManager.ts           Class to manager windows.
+                    package.json
+                    public-api.ts
+                util/                          Utility code package (ported from Java).
+                  time/                        Utility code for date/time.
+                    DateTime.ts                Class for date/time.
+                    package.json
+                    public-api.ts
               owf-d3/                          Library project containing D3.js visualizations.
                 *                              Follow standard Angular folder structure,
                                                with folders to organize package's classes.
@@ -128,8 +144,6 @@ C:\Users\user\                                 User's home folder for Windows.
 This section explains how to initialize the development environment for AngularDev.
 
 ### Prerequisites: ###
-
-**Josh review this.**
 
 Development and deployment of this Angular based web application requires the following tools:
 
@@ -155,16 +169,50 @@ Optionally add the flag `--open` to automatically open the application in a new 
 
 ## Sharing Libraries with AngularDev ##
 
-**Josh fill this out.**
+### Library Setup ###
 
-* Explain how the AngularDev application itself uses library modules.
-* See Sofia's [owf-app1-ng](https://github.com/OpenWaterFoundation/owf-app1-ng) documentation.
-* Must do `ng build`?
-* Uses `dist`?
-* `tsconfig.json`
-* `import` syntax
+The AngularDev application uses many different library modules under the `owf-common/`
+folder (e.g. `ts/`, `ui/`, and `util/`) that can be shared with the `angulardev` main
+application. To use these modules from the `owf-common` library, the library must be
+built using the following:
+
+1. `cd` into `projects/`. 
+2. Use the command `ng build owf-common` to build the library and put it into the
+`dist/` folder under the `ng-workspace`. Now the library and its modules are ready
+to be consumed by the application.
+3. In a developing environment, if the library is also being updated, an option for
+the build command is useful. `ng build --watch` will not only build the library, but
+will keep listening to the file and watch for any other updates to it. This way, both
+the app and library can be updated simultaneously. **NOTE:** `ng build --watch` must
+be run before `ng serve`. If built after the app's server is running, warnings and
+errors will occur.
+
+### Application Setup ###
+
+In the application, add the following as a property to the **compilerOptions** in the
+`projects/tsconfig.ts` file so the `angulardev` app knows where to look when importing
+classes/modules.
+
+```json
+"paths": {
+  "@owf-common": [
+    "dist/owf-common"
+  ],
+  "@owf-common/*": [
+    "dist/owf-common/*"
+  ]
+}
+```
+
+The first path tells the app that importing something from `@owf-common` is the main
+entry point for the library (currently empty). This may be updated to something else
+in the future.
+
+The second will be for all other modules in the library, where a more descriptive path
+to the module will be needed, such as `@owf-common/ui/window-manager/WindowManager`.
+This way, there will be no ambiguity as to where the module originated from.
+
 * Use GitHub packages or local files to hand off `npm` packages?
-* anything else?
 
 The following is an example of `import` to use a library class.
 Goals of the implementation are:
@@ -174,11 +222,31 @@ Goals of the implementation are:
 * Use folders to emphasize hierarchy of code, similar to other languages.
 * Code should be the same whether the library is used in AngularDev application, InfoMapper, or other application.
 
-```ng
+```javascript
 import { WindowManager } from "@owf-common/ui/window-manager/WindowManager"
 ```
 
-**Josh include `tsconfig.json` example here to achieve the above.  Describe other configuration.**
+The `projects/tsconfig.ts` file will look something like the following after the paths
+property has been entered:
+
+```json
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    ...,
+    "paths": {
+      "@owf-common": [
+        "dist/owf-common"
+      ],
+      "@owf-common/*": [
+        "dist/owf-common/*"
+      ]
+    }
+  }
+  ...
+}
+```
 
 ## Sharing Libraries with InfoMapper ##
 
