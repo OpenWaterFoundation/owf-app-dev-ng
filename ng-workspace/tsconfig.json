@@ -1,0 +1,45 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "traceResolution": false,
+    "listFiles": true,
+    "baseUrl": "./",
+    "paths": {
+      "@owf/common/*": [
+        "projects/owf-common/*",
+        "dist/owf-common/*"
+      ],
+      "@owf/common": [
+        "projects/owf-common",
+        "dist/owf-common"
+      ],
+      "@owf/owf-showdown/*": [
+        "projects/owf-showdown/*",
+        "dist/owf-showdown/src/lib/*"
+      ]
+    },
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "es2020",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  },
+  "types": [
+    "jquery"
+  ]
+}
