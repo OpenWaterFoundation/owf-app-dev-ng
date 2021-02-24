@@ -1,0 +1,251 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1, 
+  "newProjectRoot": "projects",
+  "projects": {
+    "angulardev": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/angulardev",
+      "sourceRoot": "projects/angulardev/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "allowedCommonJsDependencies": [
+              "jquery",
+              "select2",
+              "papaparse",
+              "chart.js",
+              "showdown"
+            ],
+            "outputPath": "dist/angulardev",
+            "index": "projects/angulardev/src/index.html",
+            "main": "projects/angulardev/src/main.ts",
+            "polyfills": "projects/angulardev/src/polyfills.ts",
+            "tsConfig": "projects/angulardev/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/angulardev/src/favicon.ico",
+              "projects/angulardev/src/assets"
+            ],
+            "styles": [
+              "projects/angulardev/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/angulardev/src/environments/environment.ts",
+                  "with": "projects/angulardev/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "angulardev:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "angulardev:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "angulardev:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/angulardev/src/test.ts",
+            "polyfills": "projects/angulardev/src/polyfills.ts",
+            "tsConfig": "projects/angulardev/tsconfig.spec.json",
+            "karmaConfig": "projects/angulardev/karma.conf.js",
+            "assets": [
+              "projects/angulardev/src/favicon.ico",
+              "projects/angulardev/src/assets"
+            ],
+            "styles": [
+              "projects/angulardev/src/styles.css"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/angulardev/tsconfig.app.json",
+              "projects/angulardev/tsconfig.spec.json",
+              "projects/angulardev/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/angulardev/e2e/protractor.conf.js",
+            "devServerTarget": "angulardev:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "angulardev:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "owf-common": {
+      "projectType": "library",
+      "root": "projects/owf-common",
+      "sourceRoot": "projects/owf-common/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/owf-common/tsconfig.lib.json",
+            "project": "projects/owf-common/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/owf-common/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/owf-common/src/test.ts",
+            "tsConfig": "projects/owf-common/tsconfig.spec.json",
+            "karmaConfig": "projects/owf-common/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/owf-common/tsconfig.lib.json",
+              "projects/owf-common/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "owf-showdown": {
+      "projectType": "library",
+      "root": "projects/owf-showdown",
+      "sourceRoot": "projects/owf-showdown/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/owf-showdown/tsconfig.lib.json",
+            "project": "projects/owf-showdown/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/owf-showdown/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/owf-showdown/src/test.ts",
+            "tsConfig": "projects/owf-showdown/tsconfig.spec.json",
+            "karmaConfig": "projects/owf-showdown/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/owf-showdown/tsconfig.lib.json",
+              "projects/owf-showdown/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "my-library": {
+      "projectType": "library",
+      "root": "projects/my-scope/my-library",
+      "sourceRoot": "projects/my-scope/my-library/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/my-scope/my-library/tsconfig.lib.json",
+            "project": "projects/my-scope/my-library/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/my-scope/my-library/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/my-scope/my-library/src/test.ts",
+            "tsConfig": "projects/my-scope/my-library/tsconfig.spec.json",
+            "karmaConfig": "projects/my-scope/my-library/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/my-scope/my-library/tsconfig.lib.json",
+              "projects/my-scope/my-library/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }},
+  "defaultProject": "angulardev"
+}
