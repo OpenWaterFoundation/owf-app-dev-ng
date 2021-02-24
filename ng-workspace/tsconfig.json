@@ -9,10 +9,6 @@
         "projects/owf-common/*",
         "dist/owf-common/*"
       ],
-      "@owf/common": [
-        "projects/owf-common",
-        "dist/owf-common"
-      ],
       "@owf/owf-showdown/*": [
         "projects/owf-showdown/*",
         "dist/owf-showdown/src/lib/*"
