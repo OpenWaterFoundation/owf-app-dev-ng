@@ -181,6 +181,22 @@ Optionally add the flag `--open` to automatically open the application in a new 
 
 ## Angular Library Concepts ##
 
+The following table summarizes naming conventions used in a library, using `owf-common` as an
+example.
+
+| **Library Resource**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Name**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Description** |
+| -- | -- | -- |
+| Library folder | `owf-common` | Folder in `workspace/projects` for library code. |
+| Import scope and path | `import { TimeUtil } from @owf/common/util/time` | Import library classes using scope `@owf` and path to class folder (entry point). |
+| [tsconfig.json paths](./ng-workspace/tsconfig.json) | <pre>"paths":<br>  "@owf/common/*":<br>    "projects/owf-common/\*",<br>    "dist/owf-common/\*"</pre> | Creates an alias for imports. Any import starting with the path `@owf/common/*` will substitute `dist/owf-common/*` for application compilation or `projects/owf-common/*` for library compilation, and search for an entry point there. |
+| Main entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/src/public-api.ts) | `export * from '@owf/common/util/time';` | File exporting every secondary entry point in the library to be consumed by an application, class, module, etc. |
+| Secondary entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/dwr/statemod/public-api.ts) | `export * from ./DateTimeUtil` | File exporting every class, component, module, etc. in the entry point folder to be found by the main entry point `public-api.ts`. |
+| Library [package.json](./ng-workspace/projects/owf-common/package.json) | <pre>"name": "@owf/common",<br>"version": "0.0.1",<br>"peerDependencies": {},<br>"dependencies": {}</pre> | The `common` library's `package.json` contains the library scope and name, the version of the library, and any peer dependencies and dependencies the library relies on. |
+| Secondary entry point<br>[package.json](./ng-workspace/projects/owf-common/ts/package.json) | <pre>"ngPackage": {<br>  "lib": {<br>    "entryFile": "public-api.ts",<br>    "cssUrl": "inline"<br>  }<br>}</pre> | Contains basic information that declares this folder as a secondary entry point. This file is identical for every secondary entry point folder. |
+| `npm` zip file | `owf-common-<version>.tgz` | The tarball file created after `npm pack` is run in the library's `dist/` folder. The scope and version are taken from the library's [package.json version](./ng-workspace/projects/owf-common/package.json) `name` property. |
+| `node_modules` folder | `node_modules/@owf/common` | The `npm` installed `common` package in a consuming application's `node_modules/` folder. Run `npm install path/to/zip/file` to install in `node_modules`. |
+| Git Packages | **Needs to be researched** |  |
+
 ### Entry Points ###
 
 A class is made known to code by using `import` statements. It is desirable that `import`
@@ -455,24 +471,6 @@ The `src/` folder only contains an empty `index.ts` file and the main
 entry point's `public-api.ts` file that exports all secondary entry points. The library's
 main entry point still needs to exist (as indicated by the existence of `public-api.ts` file)
 but contains no code.
-
-### Angular Library Concepts ###
-
-The following table summarizes naming conventions used in a library, using `owf-common` as an
-example.
-
-| **Library Resource**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Name**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Description** |
-| -- | -- | -- |
-| Library folder | `owf-common` | Folder in `workspace/projects` for library code. |
-| Import scope and path | `import { TimeUtil } from @owf/common/util/time` | Import library classes using scope `@owf` and path to class folder (entry point). |
-| [tsconfig.json paths](./ng-workspace/tsconfig.json) | <pre>"paths":<br>  "@owf/common/*":<br>    "projects/owf-common/\*",<br>    "dist/owf-common/\*"</pre> | Creates an alias for imports. Any import starting with the path `@owf/common/*` will substitute `dist/owf-common/*` for application compilation or `projects/owf-common/*` for library compilation, and search for an entry point there. |
-| Main entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/src/public-api.ts) | `export * from '@owf/common/util/time';` | File exporting every secondary entry point in the library to be consumed by an application, class, module, etc. |
-| Secondary entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/dwr/statemod/public-api.ts) | `export * from ./DateTimeUil` | File exporting every class, component, module, etc. in the entry point folder to be found by the main entry point `public-api.ts`. |
-| Library [package.json](./ng-workspace/projects/owf-common/package.json) | <pre>"name": "@owf/common",<br>"version": "0.0.1",<br>"peerDependencies": {},<br>"dependencies": {}</pre> | The `common` library's `package.json` contains the library scope and name, the version of the library, and any peer dependencies and dependencies the library relies on. |
-| Secondary entry point<br>[package.json](./ng-workspace/projects/owf-common/ts/package.json) | <pre>"ngPackage": {<br>  "lib": {<br>    "entryFile": "public-api.ts",<br>    "cssUrl": "inline"<br>  }<br>}</pre> | Contains basic information that declares this folder as a secondary entry point. This file is identical for every secondary entry point folder. |
-| `npm` zip file | `owf-common-<version>.tgz` | The tarball file created after `npm pack` is run in the library's `dist/` folder. The scope and version are taken from the library's [package.json version](./ng-workspace/projects/owf-common/package.json) `name` property. |
-| `node_modules` folder | `node_modules/@owf/common` | The `npm` installed `common` package in a consuming application's `node_modules/` folder. Run `npm install path/to/zip/file` to install in `node_modules`. |
-| Git Packages | **Needs to be researched** |  |
 
 ### Adding a Class (for non-UI classes) ###
 
