@@ -42,10 +42,10 @@ The following libraries are included in this repository, in addition to AngularD
 
 | **Library** | **`npm` package** | **Description** |
 | -- | -- | -- |
-| `owf-common` | `ng-owf-common` | Useful common code, including application utilities, classes ported from Java, and UI components based on Angular Material. |
-| `owf-d3` | `ng-owf-d3` | [D3.js](https://d3js.org/) dynamic visualizations. |
-| `owf-plotly` | `ng-owf-plotly` | [Plotly.js](https://plotly.com/) chart visualizations. |
-| `owf-showdown` | `ng-owf-showdown` | Markdown to HTML package using [showdown.js](http://showdownjs.com/). |
+| `owf-common` | `@owf/common` | Useful common code, including application utilities, classes ported from Java, and UI components based on Angular Material. |
+| `owf-d3` | `@owf/d3` | [D3.js](https://d3js.org/) dynamic visualizations. |
+| `owf-plotly` | `@owf/plotly` | [Plotly.js](https://plotly.com/) chart visualizations. |
+| `owf-showdown` | `@owf/showdown` | Markdown to HTML package using [showdown.js](http://showdownjs.com/). |
 
 The library code is packaged with `npm` to share locally with other applications,
 including the following OWF applications.
@@ -60,7 +60,8 @@ See the following resources for background information.
 This repository generally follows the conventions for an Angular 
 "multi-project workspace".
 
-* [Angular](https://angular.io/) web framework
+* [Angular web framework](https://angular.io/)
+* [Angular - Architecture & Concepts](https://angular.io/guide/architecture)
 * [Angular - Workspace and project file structure](https://angular.io/guide/file-structure)
 * [Angular - Creating Libraries](https://angular.io/guide/creating-libraries)
 * [Angular - Robust Library Architecture](https://medium.com/@tomastrajan/the-best-way-to-architect-your-angular-libraries-87959301d3d3)
@@ -77,7 +78,7 @@ repositories for product (`git-repos`), and specific repositories for the produc
 Currently the application only includes one repository;
 however, additional repositories may be added in the future.
 Folders within the Angular workspace adhere to Angular standards for a "multi-project
-workspace", with the exception of library folder structuring. Library's are using a folder
+workspace", with the exception of library folder structuring. Libraries use a folder
 architecture that is recommended by the developers of the compiler that builds Angular
 libraries, `ng-packagr`. If more granular import paths are desired, they recommend using
 secondary entry points, similar to Angular Material, and Angular core. This removes the
@@ -141,7 +142,7 @@ C:\Users\user\                                 User's home folder for Windows.
                     package.json
                     public-api.ts
               owf-d3/                          Library project containing D3.js visualizations.
-                *                              Follow Angular secondary entry point folder    structure,
+                *                              Follow Angular secondary entry point folder structure,
                                                with folders to organize package's classes.
               owf-plotly/                      Library project containing plotly.js visualizations.
                 *                              Follow Angular secondary entry point folder structure,
@@ -182,17 +183,31 @@ Optionally add the flag `--open` to automatically open the application in a new 
 
 ### Entry Points ###
 
-When Angular libraries become more complex than a simple Component or class, and when more
-verbose import paths are needed to differentiate between sections of a large library, secondary
-entry points are Angular's solution. All Angular libraries have a main entry point into them,
-located in the `src/` folder right under the library's top-level folder. The `src/` folder
-contains a `public-api.ts` file that is needed to export all modules, classes, etc. so that
-they can been seen by a consuming application.
+A class is made known to code by using `import` statements. It is desirable that `import`
+statements use a full path to classes, to provide transparency and avoid ambiguity. 
+Angular libraries may contain many components and classes organized in folders. All Angular
+libraries have a main entry point folder, located in the `src/` folder under the library's
+top-level folder. The `src/` folder contains a `public-api.ts` file that is needed to export all
+modules, classes, etc. so that they can been seen by a consuming application. For example:
 
-By default, since the `public-api.ts` file knows all exports, then a single import will do the
-trick when importing from the library; hence the term 'main entry point'. It is the single
+```typescript
+export * from '@owf/common/dwr/statemod';
+export * from '@owf/common/services';
+export * from '@owf/common/ts';
+export * from '@owf/common/ts-command-processor/commands/delimited';
+export * from '@owf/common/ts-command-processor/core';
+export * from '@owf/common/ui/dialog';
+export * from '@owf/common/ui/layer-manager';
+export * from '@owf/common/ui/window-manager';
+export * from '@owf/common/util/io';
+export * from '@owf/common/util/string';
+export * from '@owf/common/util/time';
+```
+
+The `public-api.ts` file exports all modules under the folder and therefore can be used when
+importing from the library; hence the term 'main entry point'. It is the single
 entry point into the library for an application. For example, if the `common` library only had a
-main entry point, then a consuming application would import the following for the `StateMod_TS`
+main entry point, then a consuming application could import the following for the `StateMod_TS`
 class:
 
 ```typescript
@@ -203,27 +218,29 @@ or the `StringUtil` class:
 import { StringUtil } from '@owf/common';
 ```
 
-This would work, but the exact folder the classes reside in is a mystery. Secondary entry points
-are useful in a few ways, but 2 of the most noticeable are
+This would allow the module location to be resolved, but the exact folder for the class is not
+obvious. This is because the compiler uses the main entry point. Secondary entry points
+can be used to:
 
-1. They allow for more precise imports, e.g.
+1. Implement precise imports, e.g.
     ```typescript
     import { StateMod_TS } from '@owf/common/dwr/statemod';
     import { StringUtil }  from '@owf/common/util/string';
     ```
-2. It enables the ability for a library to split up its dependencies. The default import
-statement shown up above envelops everything in the library, so even though a relatively small
-class is needed, the entire library with all dependencies would be required. Using a secondary
-entry point in a folder would only need the dependencies of the entry point, and wouldn't care
-about the rest of the library.
+2. Enable the ability for a library to split up its dependencies. The default import
+statement (`import {} from '@owf/common`) resolves everything in the library, so even though a
+relatively small class is needed, the entire library with all dependencies would be required.
+Using a secondary entry point in a folder would only need the dependencies of the entry point,
+and wouldn't care about the rest of the library. This results in a smaller Webpack, and less
+dependencies for a developer or user when using the library.
 
-OWF has done research and believes it is recreating the setup done by Angular Material, the main
-Angular core, along with other Google-made libraries supplied by Angular. The developer's of the
+OWF has implemented a configuration similar to Angular Material, the main
+Angular core, and other Google-made libraries supplied by Angular. The developers of the
 compiler that builds libraries also recommend this approach for the above reasons, as well as
 more that can be found at their
 [Secondary Entry Points](https://github.com/ng-packagr/ng-packagr/blob/master/docs/secondary-entrypoints.md) GitHub page. There is also an informative
 [Medium](https://medium.com/tunaiku-tech/creating-secondary-entry-points-for-your-angular-library-1d5c0e95600a)
-article describing what has been done in this library.
+article describing what has been implemented in this library.
 
 ## Sharing Libraries with AngularDev ##
 
@@ -236,8 +253,8 @@ built using the following:
 
 1. `cd` into `projects/`. 
 2. Use the command `ng build owf-common` to build the library into the `ng-workspace/dist/`
-folder. The library and its modules are ready to be consumed by the application.
-3. If a library is also being updated, an option for the build command is useful. In the
+folder. The library and its modules are then ready to be consumed by the application.
+3. If library code is also being updated, an option for the build command is useful. In the
 `projects/` folder , `ng build <lib-name> --watch` will not only build the library, but
 will keep listening to the file and watch for any other updates to it. This way, both
 the app and library can be updated simultaneously. **NOTE:** `ng build <lib-name> --watch` must
@@ -277,8 +294,8 @@ with similarly named classes in other libraries.
 InfoMapper, or
 other application.
 
-```javascript
-import { WindowManager } from "@owf/common/ui/window-manager"
+```typescript
+import { WindowManager } from "@owf/common/ui/window-manager";
 ```
 
 The `projects/tsconfig.ts` file will look something like to following after the `paths`
@@ -311,7 +328,11 @@ import { WindowManager } from "@owf/common";
 
 will _not_ work, as there is no ending slash with the path to the Window Manager's
 public api TypeScript file. The previously shown WindowManager import statement containing
-the path to the class would work however.
+the path to the class would work however:
+
+```typescript
+import { WindowManager } from "@owf/common/ui/window-manager";
+```
 
 ## Sharing Libraries with InfoMapper ##
 
@@ -347,9 +368,6 @@ C:\Users\user\                   User's home folder for Windows.
                 *                Other runtime configuration and data files.
 ```
 
-* Explain how the application sees library modules via `npm` packages and `node_modules`.
-* Should this use GitHub packages to get `npm` packages?
-
 ## Angular Tasks ##
 
 The following sections contain checklists and notes about developing and consuming libraries
@@ -359,7 +377,7 @@ from both a workspace and stand-alone application.
 
 #### Scope & Namespace ####
 Libraries can have a few different top-level folders, normally the library name. This is not
-always the case however. The common library for example contains `owf-common/` as
+always the case however. The common library, for example, uses `owf-common/` as
 its top level folder name. When using the Angular Command Line Interface (CLI), Angular will
 create the folder names. For example, using the command
 
@@ -399,18 +417,19 @@ and name have successfully been changed to `@owf` and `common` respectively.
 #### Main & Secondary Entry Points ####
 
 Angular libraries can be consumed by applications in two different ways: using the library's
-main and/or secondary 'entry points'. An entry point is a way in for an application that wants
-to use the library's information. The common library only uses its secondary entry points,
-meaning when a consuming application imports a class from it, using the import statement
+main and/or secondary 'entry points'. An entry point corresponds to a folder where a
+class/componet/module exists. The common library only uses secondary entry points, meaning when
+a consuming application imports a class from the library, the following import statement
 
 ```typescript
 import { TS } from '@owf/common';
 ```
 
-would not be enough, as that is attempting to use the library's main entry point. This is by
-default how TypeScript importing works, but thanks to Angular's ng-packagr compiler, options
+would not be enough, because it is attempting to use the library's main entry point, and a
+specific folder is required. Using only the main entry point is by default how TypeScript
+importing works, but thanks to Angular's ng-packagr compiler, options
 for more granular imports are given by creating and using secondary entry points. After
-researching, OWF has decided to use the same structuring that the ng-packagr developers and
+research, OWF has decided to use the same structuring that the `ng-packagr` developers and
 Angular itself suggest and use.
 
 Normally, a library's top-level structure would look something like the following:
@@ -422,37 +441,54 @@ my-library/                      The library top-level folder.
       *                          The source files of the library (classes, components, etc.)
 ```
 
-The above import statement would work for this set up, but not for the way the common library
-was implemented. According to one of the two main ng-packagr developers, when using secondary
-entry points, each should be placed in their own folders right underneath the library's top
-level folder. A more in-depth description can be viewed under the `owf-common/` folder in the
+The above import statement using the main entry point would work for this set up, does not
+allow for granular import statements. According to one of the two main `ng-packagr` developers,
+when using secondary entry points, each entry point folder should exists beneath the library's
+top level folder. A more in-depth description can be viewed under the `owf-common/` folder in the
 [Repository Contents](#repository-contents) section. Examples of articles that helped OWF
-decide what route to take for library folder structuring can be found at ng-packagr's GitHub
+decide approach for library folder structuring can be found at `ng-packagr`'s GitHub
 issues [#900](https://github.com/ng-packagr/ng-packagr/issues/900),
 [#959](https://github.com/ng-packagr/ng-packagr/issues/959), and
 [#987](https://github.com/ng-packagr/ng-packagr/issues/987). 
 
-The `src/` folder only contains an `index.ts` (currently not doing anything) and the main
+The `src/` folder only contains an empty `index.ts` file and the main
 entry point's `public-api.ts` file that exports all secondary entry points. The library's
-main entry point still needs to exist, contains contains no code itself so that the more granular
-imports can be used on the secondary entry point folders.
+main entry point still needs to exist (as indicated by the existence of `public-api.ts` file)
+but contains no code.
+
+### Angular Library Concepts ###
+
+The following table summarizes naming conventions used in a library, using `owf-common` as an
+example.
+
+| **Library Resource**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Name**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Description** |
+| -- | -- | -- |
+| Library folder | `owf-common` | Folder in `workspace/projects` for library code. |
+| Import scope and path | `import { TimeUtil } from @owf/common/util/time` | Import library classes using scope `@owf` and path to class folder (entry point). |
+| [tsconfig.json paths](./ng-workspace/tsconfig.json) | <pre>"paths":<br>  "@owf/common/*":<br>    "projects/owf-common/\*",<br>    "dist/owf-common/\*"</pre> | Creates an alias for imports. Any import starting with the path `@owf/common/*` will substitute `dist/owf-common/*` for application compilation or `projects/owf-common/*` for library compilation, and search for an entry point there. |
+| Main entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/src/public-api.ts) | `export * from '@owf/common/util/time';` | File exporting every secondary entry point in the library to be consumed by an application, class, module, etc. |
+| Secondary entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/dwr/statemod/public-api.ts) | `export * from ./DateTimeUil` | File exporting every class, component, module, etc. in the entry point folder to be found by the main entry point `public-api.ts`. |
+| Library [package.json](./ng-workspace/projects/owf-common/package.json) | <pre>"name": "@owf/common",<br>"version": "0.0.1",<br>"peerDependencies": {},<br>"dependencies": {}</pre> | The `common` library's `package.json` contains the library scope and name, the version of the library, and any peer dependencies and dependencies the library relies on. |
+| Secondary entry point<br>[package.json](./ng-workspace/projects/owf-common/ts/package.json) | <pre>"ngPackage": {<br>  "lib": {<br>    "entryFile": "public-api.ts",<br>    "cssUrl": "inline"<br>  }<br>}</pre> | Contains basic information that declares this folder as a secondary entry point. This file is identical for every secondary entry point folder. |
+| `npm` zip file | `owf-common-<version>.tgz` | The tarball file created after `npm pack` is run in the library's `dist/` folder. The scope and version are taken from the library's [package.json version](./ng-workspace/projects/owf-common/package.json) `name` property. |
+| `node_modules` folder | `node_modules/@owf/common` | The `npm` installed `common` package in a consuming application's `node_modules/` folder. Run `npm install path/to/zip/file` to install in `node_modules`. |
+| Git Packages | **Needs to be researched** |  |
 
 ### Adding a Class (for non-UI classes) ###
 
-Classes whose main purpose is to do computations behind the scenes and provide other utility
-functions can be added to libraries. There are two different instances when a regular, non-UI
-class can be added: Adding it as a
-[new entry point](#brand-new-class-and-secondary-entry-point) into the library, and
-the much easier process of adding it to an already
-[existing entry point](#adding-a-class-to-an-existing-entry-point).
+Classes that do not include UI-components can be added to libraries. There are two different
+instances when a regular, non-UI class can be added: Adding it as a
+[new entry point](#brand-new-class-and-secondary-entry-point) folder, and
+the simpler process of adding it to an already
+[existing entry point](#adding-a-class-to-an-existing-entry-point) folder.
 
 #### New Class and Secondary Entry Point ####
 
 To add a new class in a new folder:
 
-1. If a new absolute import path wants to be created in the library:
-    * Create a folder directly underneath the top-level library folder. This will be the first
-    folder given in the import path after the library scope and name, e.g.
+1. Top-level folder: Create folder(s) for code
+    * If necessary, create a folder directly underneath the top-level library folder. This will
+    be the first folder given in the import path after the library scope and name, e.g.
 
       ```typescript
       "@owf/common/util"
@@ -464,24 +500,24 @@ To add a new class in a new folder:
       being the entry point.
 
     If a branching import path wants to be added to the library:
-    * Create the sub folder in the folder where the branch is to occur. For example, if
-    `ts-command-processor/commands/` already exists and the sub-folder `core/` is to be added
+    * Create the sub folders if necessary, for additional levels of code hierarchy. For example
+    if `ts-command-processor/commands/` already exists and the sub-folder `core/` is to be added
     at the same level as `commands/`, then `cd` into `ts-command-processor` and create `core/`.
     Any subsequent nested folders can be created as needed.
 
 2. Convert the folder to an entry point by adding these 3 files with the following content:
-    * `index.ts` - Export the entry point's `public-api.ts`
+    * `index.ts` - Export the entry point's `public-api.ts`. This file is always one line,
+    exporting all content from the `public-api` file. 
       ```typescript
       export * from './public-api';
       ```
-    * `public-api.ts` - Export the class using the class name to be consumed. For example, the
-    `delimited/` case:
+    * `public-api.ts` - Export the new class using the class name:
       ```typescript
       export * from './WriteDelimitedFile_Command';
       ```
       NOTE: Another name for this file has been confirmed to be `projects.ts`. If using the
       Angular CLI, any library created after the first will contain a `projects.ts` file
-      in place of the `public-api.ts` file. OWF is researching into why the file name is changed,
+      in place of the `public-api.ts` file. OWF is researching why the file name is changed,
       and how it still seems to serve the same purpose.
     * `package.json` - Finish letting `ng-packagr` know this is a secondary entry point by
     adding the following:
@@ -495,7 +531,13 @@ To add a new class in a new folder:
         }
       }
       ```
-3. Export the newly created secondary entry point from the main entry point so it can be
+3. Create the class in the entry point folder:
+    ```typescript
+    export class MyClass {
+      constructor() {}
+    }
+    ```
+4. Export the newly created secondary entry point from the main entry point so it can be
 consumed by an application. This is done in the main entry point's `public-api.ts` file
 under the library's `src/`. Again, using the `delimited/` example:
 
@@ -504,19 +546,18 @@ under the library's `src/`. Again, using the `delimited/` example:
     ```
 
     Note that importing and exporting classes between entry points **must** use absolute
-    paths, and not relative. See issue
-    [#987](https://github.com/ng-packagr/ng-packagr/issues/987) for more info. Also confirm
-    the workspace `tsconfig.json` file has been updated so that the `@` scope path-finding can be
-    used. See [Application Setup](#application-setup) for help.
-4. In the consuming application, import the entry point in the desired location by importing the
+    paths (in this case scope and path), and not relative (`../../path/to/class`). See issue
+    [#987](https://github.com/ng-packagr/ng-packagr/issues/987) for more information. Also
+    confirm the workspace `tsconfig.json` file has been updated so that the `@` scope
+    path-finding can be used. See [Application Setup](#application-setup) for information.
+5. In the consuming application, import the entry point in the desired location by importing the
 same path given in the main entry point export, e.g.
 
     ```typescript
     import { WriteDelimitedFile_Command } from '@owf/common/ts-command-processor/commands/delimited';
     ```
 
-    The class name itself is not required in the path, as the compiler only cares about where
-    the entry point for the class is located.
+    The class name itself is not required at the end of the path, because the compiler only cares about the entry point for the class.
 
 #### Adding a Class to an Existing Entry Point ####
 
@@ -534,70 +575,81 @@ the entry point.
 
 ### Adding a Component (for UI classes) ###
 
-The addition of Components to a library implies that there is a need to manipulate the
+A component is more complex than non-UI classes in that it contains features to manipulate the
 DOM and change/update/show web page content to users. An example of the folder structure in the
-common library is the dialog entry point.
+common library is the `dialog` entry point.
 
 ![Dialog Project Structure](./doc/images/component-creation.png)
 
-To create a layout similar to this, the first 2 points from the
-[new entry point](#brand-new-class-and-secondary-entry-point) checklist
-can be followed, which helps determine what the entry point folder will be
-(`dialog/` in this case), and the creation of the 3 necessary files to
-convert the folder into an entry point (Notice all 3 are directly below
-the aforementioned `dialog/` folder). Here, each `dialog-*` folder represents its own
-component. To keep things more compartmentalized, each component has it's own module.ts that
-exports the component for use elsewhere.
+To create a component, first create entry point folders as per the
+[new entry point](#brand-new-class-and-secondary-entry-point) checklist for the
+`ui/dialog/` folder, including the creation of the 3 necessary files to
+convert the `dialog` folder into an entry point. Each `dialog-*` folder in the above image
+contains its own component. To keep things more compartmentalized, each component has its own
+`module.ts` that exports the component for use elsewhere. For more information on Angular
+modules, components and services, see the
+[Angular Concepts Documentation](https://angular.io/guide/architecture).
 
-1. Create the module by residing in the entry point folder (`dialog/` for example), and using:
-    * `ng generate module new-module` - The CLI will create a new folder `new-module/` with a
-    `new-module.module.ts` file.
-    * `cd new-module/`
-    * `ng generate component new-comp` - The CLI will create the .css, .html, spec.ts, and .ts files
+1. Change to `ui/dialog` folder. Create the component using:
+    * `ng generate module dialog-data-table` - The CLI will create a new folder `new-module/`
+    with a `dialog-data-table.module.ts` file.
+    * `cd dialog-date-table/`
+    * `ng generate component dialog-data-table` - The CLI will create the `.css`, `.html`,
+    `spec.ts`, and `.ts` files
 2. Add the component and module to the entry point's `public-api.ts` or `projects.ts` file:
-    * `export * from './new-module/new-comp.component';`
-    * `export * from './new-module/new-module.module';`
+    * `export * from './dialog-data-table/dialog-data-table.component';`
+    * `export * from './dialog-data-table/dialog-data-table.module';`
 3. Export this entry point's `public-api.ts` file from the library's main
 entry point:
     * `export * from '@owf/common/ui/dialog';` - This only needs to be done
     once.
 
-An application can now import the Component in a component or class of its
-own to use it's TypeScript source code, or import its Module into its own
-to use the Component's HTML.
+An application can now import the component in a component or class of its
+own to use it's TypeScript source code:
+
+```typescript
+import { DialogDataTableComponent } from '@owf/common/ui/dialog';
+```
+
+or import its Module into its own to use the Component's HTML:
+
+```typescript
+import { DialogDataTableModule } from '@owf/common/ui/dialog';
+```
 
 ### Adding a Library ###
 
-When creating an Angular library, using the CLI is a good way to leave granular file updates up
-to Angular. There are 3 main ways to create a library in a workspace:
+Creating an Angular library using the CLI will automatically update necessary files. There are
+3 main ways to create a library in a workspace:
 
 1. Use the CLI to create a new scope and library name by using the following commands:
     * `cd ng-workspace/projects/`
-    * `ng generate library @scope/lib-name`
+    * `ng generate library @scope/lib-name`. For example, `ng generate library @scope/lib-name`.
 
-    The CLI will take care of setting the correct scope and package name in the library's
+    The CLI will set the correct scope and package name in the library's
     `package.json`, and create `@scope/lib-name/` as two directories.
 2. Use the CLI to create a new library only:
     * `cd ng-workspace/projects/`
-    * `ng generate library lib-name`
+    * `ng generate library lib-name`. For example, `ng generate library common`
 
     If a scope is needed, it needs to be manually added to the library's `package.json` name
     property. Only a `lib-name/` folder will be used.
 3. Use the CLI to create a new library, then change the library name manually:
     * `cd ng-workspace/projects/`
-    * `ng generate library lib-name`
+    * `ng generate library lib-name`. For example, `ng generate library common`
 
     In the library `package.json`, add a scope to the library, and change the name in the name
-    property. This way, The folder structure would remain `ng-workspace/projects/lib-name`,
-    but the library scope and name would be `@scope/new-lib-name`.
+    property. This way, The folder structure remains as `ng-workspace/projects/lib-name`,
+    but the library scope and name are `@scope/new-lib-name`. This was done for the
+    `@owf/common` library.
 
 ### Adding a Test ###
 
-**To be implemented**
+**To be implemented.**
 
 ### Running Tests ###
 
-**To be implemented**
+**To be implemented.**
 
 
 ## Deploying the Site to AWS ##
@@ -649,20 +701,3 @@ The AngularDev application and libraries are maintained by the Open Water Founda
 The AngularDev and library code are licensed under the GPL v3+ license. See the
 [GPL v3 license](LICENSE.md).
 
-# Notes and Thoughts #
-
-`ng g library @my-scope/my-library` can be used to automatically create the scope and library
-name, so no changes will have to be made to the library's top level package.json file. 
-
-| **Library Resource**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Name**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Description** |
-| -- | -- | -- |
-| Library folder | `owf-common` | Folder in `workspace/projects` for library code. |
-| Import scope and path | `import {} from @owf/common` | Import library classes using scope `@owf` and path to class folder (entry point). |
-| [tsconfig.json paths](./ng-workspace/tsconfig.json) | <pre>"paths":<br>  "@owf/common/*":<br>    "projects/owf-common/\*",<br>    "dist/owf-common/\*"</pre> | Creates an alias for imports. Any import starting with the defined path `@owf/common/*` will substitute `dist/owf-common/*` and look for entry point there. |
-| Main entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/src/public-api.ts) | `import * from '@owf/common/path/module';` | File exporting every class, component, module, etc. in the library to be consumed by an application, class, module, etc. |
-| Secondary entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/dwr/statemod/public-api.ts) | `import * from ./MyClass` | File exporting every class, component, module, etc. in the entry point folder to be found by the main entry point `public-api.ts`. |
-| Library [package.json](./ng-workspace/projects/owf-common/package.json) | <pre>"name": "@owf/common",<br>"version": "0.0.1",<br>"peerDependencies": {},<br>"dependencies": {}</pre> | The `common` library's `package.json` contains the library scope and name, the version of the library, and any peer dependencies and dependencies the library relies on. |
-| Secondary entry point<br>[package.json](./ng-workspace/projects/owf-common/ts/package.json) | <pre>"ngPackage": {<br>  "lib": {<br>    "entryFile": "public-api.ts",<br>    "cssUrl": "inline"<br>  }<br>}</pre> | Contains basic information that declares this folder as a secondary entry point. This file is identical for every secondary entry point folder. |
-| `npm` zip file | `owf-common-<version>.tgz` | The tarball file created after `npm pack` is performed under the library's `dist/` folder. The appended version is taken from the library's [package.json version](./ng-workspace/projects/owf-common/package.json), not the workspace `package.json`. |
-| `node_modules` folder | `node_modules/@owf/common` | The `npm` installed `common` package in a consuming applications `node_modules/` folder. `npm install path/to/zip/file` installed |
-| Git Packages | **Needs to be researched** |  |

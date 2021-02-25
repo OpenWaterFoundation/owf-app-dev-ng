@@ -2,7 +2,8 @@ import { TimeInterval } from './TimeInterval';
 import { StringUtil }   from '@owf/common/util/string';
 import { YearType }     from './YearType';
 
-import * as moment      from 'moment';
+import * as moment_      from 'moment';
+const moment = moment_;
 
 
 export class DateTime {

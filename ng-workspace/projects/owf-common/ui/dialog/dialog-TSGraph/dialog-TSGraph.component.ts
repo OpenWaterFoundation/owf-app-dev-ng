@@ -22,7 +22,8 @@ import { WindowManager,
           WindowType }            from '@owf/common/ui/window-manager';
 
 import * as Papa                  from 'papaparse';
-import * as moment                from 'moment';
+import * as moment_                from 'moment';
+const moment = moment_;
 import { Chart }                  from 'chart.js';
 import                                 'chartjs-plugin-zoom';
 
