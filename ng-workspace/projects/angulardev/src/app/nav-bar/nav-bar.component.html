@@ -1,0 +1,45 @@
+<!-- Toolbar -->
+<nav class="toolbar">
+
+  <!-- Angular Dev App -->
+  <button mat-button
+          id="navbar-title"
+          routerLink="/home">Angular Dev App</button>
+  <!-- OWF Common Library -->
+  <!-- [matMenuTriggerFor]="menu"
+  #menuTrigger="matMenuTrigger"
+  (click)="menuTrigger.openMenu()" -->
+  <button mat-button
+          id="navbar-button"
+          matTooltip="Click to view @owf/common&#13; library information"
+          [matTooltipShowDelay]="500"
+          matTooltipPosition="left"
+          [routerLink]="['/owf-common']"
+          routerLinkActive="link-active">Common Library</button>
+  <!-- <mat-menu #menu>
+    <button mat-menu-item
+            (mouseleave)="menuTrigger.closeMenu()">
+      Hi
+    </button>
+  </mat-menu> -->
+  <!-- OWF Showdown Library -->
+  <button mat-button
+          id="navbar-button"
+          [disabled]="true">Showdown Library</button>
+  <!-- OWF D3 Library -->
+  <button mat-button
+          id="navbar-button"
+          [disabled]="true">D3 Library</button>
+  <!-- OWF Plotly Library -->
+  <button mat-button
+          id="navbar-button"
+          [disabled]="true">Plotly Library</button>
+
+</nav>
+
+<!-- Main Page Content -->
+<div class="content" role="main">
+
+
+
+</div>

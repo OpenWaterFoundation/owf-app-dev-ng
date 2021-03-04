@@ -1,0 +1,80 @@
+<div id="text-center">
+
+  <h1 id="common-title">OWF Common Library</h1>
+  <p class="description">The Common Library consists of a breadth of created code that would be reused in different projects for
+    OWF. The purpose of the library is to contain this code so that in can be imported and implemented along with other code
+    to produce desired results. It has both non-UI related classes and UI related components.
+    To test different components and some selected classes from the OWF Common Library, select from the list of examples below.
+  </p>
+
+  <p class="description">
+    To test different components and some selected classes from the OWF Common Library, select from the list of examples below.
+  </p>
+
+  <div id="example-button-center">
+    <button mat-raised-button
+            id="owf-common-examples"
+            matTooltip="Click to view @owf/common&#13;TSGraph example"
+            [matTooltipShowDelay]="500"
+            matTooltipPosition="left"
+            [matMenuTriggerFor]="menu"
+            #menuTrigger="matMenuTrigger"
+            (click)="menuTrigger.openMenu()"
+            routerLinkActive="link-active">OWF Common Library Examples</button>
+
+    <mat-menu #menu>
+      <button mat-menu-item
+              (click)="openDocMarkdownExampleDialog()">
+        <b>Documentation</b> Markdown Dialog
+      </button>
+
+      <button mat-menu-item
+              (click)="openDocTextExampleDialog()">
+        <b>Documentation</b> Text Dialog
+      </button>
+
+      <button mat-menu-item
+              (click)="openDocHTMLExampleDialog()">
+        <b>Documentation</b> HTML Dialog
+      </button>
+
+      <button mat-menu-item
+              (click)="openTextExampleDialog()">
+        <b>Text</b> Dialog
+      </button>
+
+      <hr id="divider"><!-- Separates the working examples above from the yet to be implemented below. -->
+
+      <button mat-menu-item
+              [disabled]="true"
+              (click)="openTSGraphExampleDialog()">
+        <b>Data Table</b> Dialog
+      </button>
+
+      <button mat-menu-item
+              [disabled]="true"
+              (click)="openTSGraphExampleDialog()">
+        <b>Gallery</b> Dialog
+      </button>
+
+      <button mat-menu-item
+              [disabled]="true"
+              (click)="openTSGraphExampleDialog()">
+        <b>Gapminder</b> Dialog
+      </button>
+
+      <button mat-menu-item
+              [disabled]="true"
+              (click)="openTSGraphExampleDialog()">
+        <b>TSGraph</b> Dialog
+      </button>
+
+      <button mat-menu-item
+              [disabled]="true"
+              (click)="openTSGraphExampleDialog()">
+        <b>Properties</b> Dialog
+      </button>
+    </mat-menu>
+  </div>
+
+</div>

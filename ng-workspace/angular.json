@@ -18,7 +18,9 @@
               "select2",
               "papaparse",
               "chart.js",
-              "showdown"
+              "showdown",
+              "chartjs-plugin-zoom",
+              "file-saver"
             ],
             "outputPath": "dist/angulardev",
             "index": "projects/angulardev/src/index.html",
@@ -31,6 +33,9 @@
               "projects/angulardev/src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/font-awesome/css/font-awesome.css",
               "projects/angulardev/src/styles.css"
             ],
             "scripts": []

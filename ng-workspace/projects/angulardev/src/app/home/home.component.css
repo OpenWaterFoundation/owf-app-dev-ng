@@ -1,0 +1,15 @@
+/* TAGS */
+
+div#text-center {
+  /* vh is the percentage of the viewport (or the browser window size), so the height of the Showdown HTML should take
+  up 90% of the height */
+  height: 85vh;
+  margin: 25px 15vw 0px 15vw;
+  /* If scrolling is not needed, (e.g. the size of the Showdown content is less than 85% of the content page) a scroll bar will
+  not be shown. The scroll bar will be shown if it is */
+  overflow: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  background-color: rgb(250, 250, 250);
+}

@@ -1,1 +1,48 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Imports CSS for showing markdown via Showdown throughout the application. */
+@import 'assets/css/showdown-default.css';
+
+/* Not sure if this is the best practice, but it works for now. Sets font for the entire application. Found at:
+https://stackoverflow.com/questions/43747518/angular-material-and-changing-fonts. Using the asterisk (*) did indeed cause
+an error (more accurately described as unintended behavior - no actual error occurred). It seemed to overwrite the
+font-family property everywhere in the application causing font-awesome icons to show up as squares instead of the 
+desired icon. The body tag is a little more restrictive,   */
+body, html {
+  font-family: Trebuchet MS,Helvetica,sans-serif!important;
+}
+
+/* CLASSES */
+
+/* Allows all MatTooltip's text lines throughout the application to be broken at newline characters, at <br>,
+as as necessary to fill line boxes. */
+.mat-tooltip {
+  white-space: pre-line;
+}
+
+/* This is for a Dialog Content Component. It is CSS that overrides the default behavior for the mat-dialog-container
+created and shown as the background for the Dialog popup. Whereas the class call below changes both this div and its
+child, this will change only the sizing on the outer div. VERY IMPORTANT for resizing all dialogs. */
+.custom-dialog-container {
+  overflow: auto;
+  resize: both; 
+}
+
+/* Sets the padding and height of both the .custom-dialog-container outer div and its child .mat-dialog-container. */
+.custom-dialog-container .mat-dialog-container {
+  padding-top: 0%;
+  padding-left: 0%;
+  padding-right: 0%;
+  padding-bottom: 0%;
+  height: 100%;
+}
+
+/* Similar to .custom-dialog-container, but does not have the option for resizing, so the resizing lines in the bottom-left
+hand corner of the Dialog do not appear to the user. */
+.custom-dialog-container-no-resize .mat-dialog-container {
+  padding-top: 0%;
+  padding-left: 0%;
+  padding-right: 0%;
+  padding-bottom: 0%;
+  height: 100%;
+}

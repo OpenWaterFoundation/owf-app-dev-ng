@@ -21,14 +21,14 @@
   </div>
   <!-- Show the markdown converted to HTML using showdown of a geoLayerViewGroup or geoLayerView -->
   <div *ngIf="docMarkdown" class="doc-contents">
-    <div id="docDiv">
+    <div id="docMarkdownDiv">
       <!-- [options]="options" -->
       <showdown [value]="showdownHTML" class="doc-contents-text"></showdown>
     </div>
   </div>
   <!-- Show the contents of a regular HTML file -->
   <div *ngIf="docHTML" class="doc-contents">
-    <div id="docDiv"></div>
+    <div id="docHTMLDiv"></div>
   </div>
 
 </div>

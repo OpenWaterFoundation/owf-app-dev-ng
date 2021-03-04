@@ -1,10 +1,12 @@
 import { Injectable }      from '@angular/core';
 import { HttpClient }      from '@angular/common/http';
 import { MapLayerManager } from '@owf/common/ui/layer-manager';
+// import { DataUnits }       from '@owf/common/util/io';
 
 import * as IM             from './types';
 
 import { Observable }      from 'rxjs';
+import { map }             from 'rxjs/operators';
 
 
 @Injectable({
@@ -982,6 +984,9 @@ export class OwfCommonService {
             // Take off the pre pending ]( and ending )
             var innerParensContent = word.substring(2, word.length - 1);
             // Return the formatted full markdown path with the corresponding bracket and parentheses
+            if (innerParensContent.startsWith('assets/img/')) {
+              return '](' + innerParensContent + ')';
+            }
             return '](' + _this.buildPath(pathType, [innerParensContent]) + ')';
           });
 
@@ -999,6 +1004,12 @@ export class OwfCommonService {
   public setAppConfig(appConfig: {}): void { this.appConfig = appConfig; }
 
   /**
+   * No configuration file was detected from the user, so the 'assets/app-default/' path is set
+   * @param path The default assets path to set the @var appPath to
+   */
+  public setAppPath(path: string): void { this.appPath = path; }
+
+  /**
    * Sets, or possibly creates the badPath object with the geo
    * @param geoLayerId The geoLayerId from the geoLayer where the bad path was set
    */
@@ -1012,6 +1023,16 @@ export class OwfCommonService {
     this.chartTemplateObject = graphTemplateObject;
   }
 
+  /**
+   * Sets the @var dataUnits array to the passed in dataUnits from the nav-bar
+   * @param dataUnits The array of DataUnits to set the service @var dataUnits to
+   */
+  public setDataUnitsArr(dataUnits: any[]): void { this.dataUnits = dataUnits; }
+
+  /**
+   * 
+   * @param path 
+   */
   private setFullMarkdownPath(path: string): void {
     
     var fullMarkdownPath = '';
