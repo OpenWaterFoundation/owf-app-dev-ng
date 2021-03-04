@@ -1,14 +1,13 @@
-import { Component } from '@angular/core';
+import { Component,
+          Inject }          from '@angular/core';
+import { DOCUMENT }         from '@angular/common';
 
-import { StateMod_TS } from '@owf/common/dwr/statemod';
+import { map }              from 'rxjs/operators';
 
+import { DataUnits }        from '@owf/common/util/io';
 import { OwfCommonService } from '@owf/common/services';
-
-import { StringUtil } from '@owf/common/util/string';
-
-import { WindowManager } from '@owf/common/ui/window-manager';
-
-import { DialogDataTableComponent } from '@owf/common/ui/dialog';
+import * as IM              from '@owf/common/services';
+import { WindowManager }    from '@owf/common/ui/window-manager';
 
 
 @Component({
@@ -21,21 +20,32 @@ export class AppComponent {
 
   public windowManager: WindowManager = WindowManager.getInstance();
 
-  constructor(private owfService: OwfCommonService) {
+  constructor(private owfService: OwfCommonService,
+              @Inject(DOCUMENT) private document: HTMLDocument) {
 
   }
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    var TSObject = new StateMod_TS(this.owfService);
-    TSObject.readTimeSeries('Larimer.DOLA.Population.Year', 'assets/Larimer.DOLA.Population.Year.filled.dv')
-    .subscribe((resultsArray) => {
-      console.log(resultsArray);
+    // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    // Set the app's favicon.
+    this.document.getElementById('appFavicon').setAttribute('href', 'assets/img/OWF-Logo-Favicon-32x32.ico');
+    
+
+  }
+
+  /**
+   * Asynchronously reads the data unit file to determine what the precision is for units when displaying them in a dialog table.
+   * @param dataUnitsPath The path to the dataUnits file.
+   */
+  private setDataUnits(dataUnitsPath: string): void {
+    this.owfService.getPlainText(this.owfService.buildPath(IM.Path.dUP, [dataUnitsPath]), IM.Path.dUP).pipe(map((dfile: any) => {
+      let dfileArray = dfile.split('\n');
+      // Convert the returned string above into an array of strings as an argument
+      DataUnits.readUnitsFileBool ( dfileArray, true );
+
+      return DataUnits.getUnitsData();
+    })).subscribe((results: DataUnits[]) => {
+      this.owfService.setDataUnitsArr(results);
     });
-
-    console.log(StringUtil.remove('doggy', 'g'));
-
-    console.log(this.windowManager.windowExists('id'));
   }
 }

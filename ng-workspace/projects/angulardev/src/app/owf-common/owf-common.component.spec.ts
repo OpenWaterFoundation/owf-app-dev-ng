@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DialogGalleryComponent } from './dialog-gallery.component';
+import { OwfCommonComponent } from './owf-common.component';
 
-describe('DialogGalleryComponent', () => {
-  let component: DialogGalleryComponent;
-  let fixture: ComponentFixture<DialogGalleryComponent>;
+describe('OwfCommonComponent', () => {
+  let component: OwfCommonComponent;
+  let fixture: ComponentFixture<OwfCommonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DialogGalleryComponent ]
+      declarations: [ OwfCommonComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DialogGalleryComponent);
+    fixture = TestBed.createComponent(OwfCommonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -44,7 +44,7 @@ and the <h1> are sharing the space */
 
 /* ID's */
 
-#docDiv {
+#docMarkdownDiv, #docHTMLDiv {
   height: 100%;
   padding-left: 15px;
   padding-right: 15px;

@@ -22,14 +22,6 @@ import * as Showdown        from 'showdown';
 })
 export class DialogPropertiesComponent implements OnInit {
   /**
-   * The MapLayerItem that represents the layer for the properties being displayed.
-   */
-  public layerItem: MapLayerItem;
-  /**
-   * An array of all properties for this layer.
-   */
-  public layerProperties: string[];
-  /**
    * The layer's geoLayerId.
    */
   public geoLayerId: string;
@@ -38,10 +30,22 @@ export class DialogPropertiesComponent implements OnInit {
    */
   public geoLayer: any;
   /**
+   * The MapLayerItem that represents the layer for the properties being displayed.
+   */
+  public layerItem: MapLayerItem;
+  /**
+   * An array of all properties for this layer.
+   */
+  public layerProperties: string[];
+  /**
    * The instance of the MapLayerManager, a helper class that manages MapLayerItem objects with Leaflet layers
    * and other layer data for displaying, ordering, and highlighting.
    */
   public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
+  /**
+   * String to use as an absolute path to the geoJson layer file.
+   */
+  public pathResolver: string;
   /**
    * The formatted string to be converted to HTML by Showdown.
    */
@@ -67,11 +71,12 @@ export class DialogPropertiesComponent implements OnInit {
               public dialogRef: MatDialogRef<DialogPropertiesComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
-    this.geoLayer = this.owfCommonService.getGeoLayerFromId(dataObject.data.geoLayerId);
+    this.geoLayer = dataObject.data.geoLayer;
     this.geoLayerId = dataObject.data.geoLayerId;
     this.layerProperties = dataObject.data.layerProperties;
     this.windowID = this.geoLayerId + '-dialog-properties';
     this.layerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
+    this.pathResolver = dataObject.data.pathResolver;
   }
 
 
@@ -184,7 +189,8 @@ export class DialogPropertiesComponent implements OnInit {
     }
     
 
-    var fullPath: string = this.owfCommonService.buildPath(IM.Path.gLGJP, [this.geoLayer.sourcePath]);
+    // var fullPath: string = this.owfCommonService.buildPath(IM.Path.gLGJP, [this.geoLayer.sourcePath]);
+    var fullPath = this.pathResolver + this.geoLayer.sourcePath;
     var formattedPath = this.owfCommonService.condensePath(fullPath, 'link');
 
     markdownString += '\n## Download Layer ##\n\n' +

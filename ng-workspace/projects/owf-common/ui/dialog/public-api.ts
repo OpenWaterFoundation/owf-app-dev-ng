@@ -5,10 +5,10 @@ export * from './dialog-data-table/dialog-data-table.module';
 export * from './dialog-doc/dialog-doc.component';
 export * from './dialog-doc/dialog-doc.module';
 // DIALOG GALLERY
-// export * from './dialog-gallery/dialog-gallery.component'; <------+ Implement later
-// export * from './dialog-gallery/dialog-gallery.module';           |
-// DIALOG GAPMINDER                                                  |
-// export * from './dialog-gapminder/dialog-gapminder.component';<---+
+export * from './dialog-gallery/dialog-gallery.component';
+export * from './dialog-gallery/dialog-gallery.module';
+// DIALOG GAPMINDER
+// export * from './dialog-gapminder/dialog-gapminder.component'; <--- Implement later
 // export * from './dialog-gapminder/dialog-gapminder.module';
 // DIALOG PROPERTIES
 export * from './dialog-properties/dialog-properties.component';

@@ -9,7 +9,6 @@ import * as IM              from '@owf/common/services';
 
 import { WindowManager }    from '@owf/common/ui/window-manager';
 
-import * as Showdown        from 'showdown';
 
 @Component({
   selector: 'app-dialog-doc',
@@ -82,14 +81,6 @@ export class DialogDocComponent implements OnInit {
   ngOnInit(): void {
 
     if (this.docMarkdown) {
-      let converter = new Showdown.Converter({
-        emoji: true,
-        openLinksInNewWindow: true,
-        parseImgDimensions: true,
-        simpleLineBreaks: false,
-        strikethrough: true,
-        tables: true
-      });
       // Check to see if the markdown file has any input that is an image link syntax. If it does, we want users to
       // be able to set the path to the image relative to the markdown folder being displayed, so they don't have to
       // be burdened with putting a possibly extra long path.
@@ -97,11 +88,11 @@ export class DialogDocComponent implements OnInit {
       var sanitizedDoc = this.owfCommonService.sanitizeDoc(this.doc, IM.Path.mP);
 
       setTimeout(() => {
-        this.showdownHTML = converter.makeHtml(sanitizedDoc);
+        this.showdownHTML = sanitizedDoc;
       });
     } else if (this.docHTML) {
       setTimeout(() => {          
-        document.getElementById('docDiv').innerHTML = this.doc;
+        document.getElementById('docHTMLDiv').innerHTML = this.doc;
       });
     }
   }
