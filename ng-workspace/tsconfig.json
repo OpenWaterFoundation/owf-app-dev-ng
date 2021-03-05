@@ -5,9 +5,9 @@
     "listFiles": true,
     "baseUrl": "./",
     "paths": {
-      "@open-water-foundation/test-lib": [
-        "dist/open-water-foundation/test-lib/open-water-foundation-test-lib",
-        "dist/open-water-foundation/test-lib"
+      "@OpenWaterFoundation/test-lib": [
+        "dist/OpenWaterFoundation/test-lib/OpenWaterFoundation-test-lib",
+        "dist/OpenWaterFoundation/test-lib"
       ],
       "@owf/common/*": [
         "projects/owf-common/*",

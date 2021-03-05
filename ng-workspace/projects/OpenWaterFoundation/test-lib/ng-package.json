@@ -1,6 +1,6 @@
 {
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/open-water-foundation/test-lib",
+  "dest": "../../../dist/OpenWaterFoundation/test-lib",
   "lib": {
     "entryFile": "src/projects.ts"
   }

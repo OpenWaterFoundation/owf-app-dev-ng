@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '../../../coverage/open-water-foundation/test-lib'),
+      dir: require('path').join(__dirname, '../../../coverage/OpenWaterFoundation/test-lib'),
       subdir: '.',
       reporters: [
         { type: 'html' },

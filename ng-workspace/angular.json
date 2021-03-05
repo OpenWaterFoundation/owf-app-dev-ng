@@ -254,36 +254,36 @@
     },
     "@OpenWaterFoundation/test-lib": {
       "projectType": "library",
-      "root": "projects/open-water-foundation/test-lib",
-      "sourceRoot": "projects/open-water-foundation/test-lib/src",
+      "root": "projects/OpenWaterFoundation/test-lib",
+      "sourceRoot": "projects/OpenWaterFoundation/test-lib/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/open-water-foundation/test-lib/tsconfig.lib.json",
-            "project": "projects/open-water-foundation/test-lib/ng-package.json"
+            "tsConfig": "projects/OpenWaterFoundation/test-lib/tsconfig.lib.json",
+            "project": "projects/OpenWaterFoundation/test-lib/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/open-water-foundation/test-lib/tsconfig.lib.prod.json"
+              "tsConfig": "projects/OpenWaterFoundation/test-lib/tsconfig.lib.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/open-water-foundation/test-lib/src/test.ts",
-            "tsConfig": "projects/open-water-foundation/test-lib/tsconfig.spec.json",
-            "karmaConfig": "projects/open-water-foundation/test-lib/karma.conf.js"
+            "main": "projects/OpenWaterFoundation/test-lib/src/test.ts",
+            "tsConfig": "projects/OpenWaterFoundation/test-lib/tsconfig.spec.json",
+            "karmaConfig": "projects/OpenWaterFoundation/test-lib/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/open-water-foundation/test-lib/tsconfig.lib.json",
-              "projects/open-water-foundation/test-lib/tsconfig.spec.json"
+              "projects/OpenWaterFoundation/test-lib/tsconfig.lib.json",
+              "projects/OpenWaterFoundation/test-lib/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
