@@ -4,10 +4,10 @@ import { DOCUMENT }         from '@angular/common';
 
 import { map }              from 'rxjs/operators';
 
-import { DataUnits }        from '@owf/common/util/io';
-import { OwfCommonService } from '@owf/common/services';
-import * as IM              from '@owf/common/services';
-import { WindowManager }    from '@owf/common/ui/window-manager';
+import { DataUnits }        from '@OpenWaterFoundation/common/util/io';
+import { OwfCommonService } from '@OpenWaterFoundation/common/services';
+import * as IM              from '@OpenWaterFoundation/common/services';
+import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
 
 
 @Component({

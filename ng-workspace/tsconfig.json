@@ -5,17 +5,9 @@
     "listFiles": true,
     "baseUrl": "./",
     "paths": {
-      "@OpenWaterFoundation/test-lib": [
-        "dist/OpenWaterFoundation/test-lib/OpenWaterFoundation-test-lib",
-        "dist/OpenWaterFoundation/test-lib"
-      ],
-      "@owf/common/*": [
-        "projects/owf-common/*",
-        "dist/owf-common/*"
-      ],
-      "@owf/owf-showdown/*": [
-        "projects/owf-showdown/*",
-        "dist/owf-showdown/src/lib/*"
+      "@OpenWaterFoundation/common/*": [
+        "projects/OpenWaterFoundation/common/*",
+        "dist/OpenWaterFoundation/common/*"
       ]
     },
     "outDir": "./dist/out-tsc",

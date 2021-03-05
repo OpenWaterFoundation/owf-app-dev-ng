@@ -6,11 +6,11 @@ import { MatDialog,
 
 import { DialogDocComponent,
           DialogTextComponent,
-          DialogTSGraphComponent } from '@owf/common/ui/dialog';
+          DialogTSGraphComponent } from '@OpenWaterFoundation/common/ui/dialog';
 import { WindowManager,
-          WindowType }             from '@owf/common/ui/window-manager';
-import { OwfCommonService }        from '@owf/common/services';
-import * as IM                     from '@owf/common/services';
+          WindowType }             from '@OpenWaterFoundation/common/ui/window-manager';
+import { OwfCommonService }        from '@OpenWaterFoundation/common/services';
+import * as IM                     from '@OpenWaterFoundation/common/services';
 
 import { take }                    from 'rxjs/operators';
 

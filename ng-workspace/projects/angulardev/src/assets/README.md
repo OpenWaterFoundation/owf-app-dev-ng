@@ -42,10 +42,10 @@ The following libraries are included in this repository, in addition to AngularD
 
 | **Library** | **`npm` package** | **Description** |
 | -- | -- | -- |
-| `owf-common` | `@owf/common` | Useful common code, including application utilities, classes ported from Java, and UI components based on Angular Material. |
-| `owf-d3` | `@owf/d3` | [D3.js](https://d3js.org/) dynamic visualizations. |
-| `owf-plotly` | `@owf/plotly` | [Plotly.js](https://plotly.com/) chart visualizations. |
-| `owf-showdown` | `@owf/showdown` | Markdown to HTML package using [showdown.js](http://showdownjs.com/). |
+| `owf-common` | `@OpenWaterFoundation/common` | Useful common code, including application utilities, classes ported from Java, and UI components based on Angular Material. |
+| `owf-d3` | `@OpenWaterFoundation/d3` | [D3.js](https://d3js.org/) dynamic visualizations. |
+| `owf-plotly` | `@OpenWaterFoundation/plotly` | [Plotly.js](https://plotly.com/) chart visualizations. |
+| `owf-showdown` | `@OpenWaterFoundation/showdown` | Markdown to HTML package using [showdown.js](http://showdownjs.com/). |
 
 The library code is packaged with `npm` to share locally with other applications,
 including the following OWF applications.
@@ -187,14 +187,14 @@ example.
 | **Library Resource**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Name**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Description** |
 | -- | -- | -- |
 | Library folder | `owf-common` | Folder in `workspace/projects` for library code. |
-| Import scope and path | `import { TimeUtil } from @owf/common/util/time` | Import library classes using scope `@owf` and path to class folder (entry point). |
-| [tsconfig.json paths](./ng-workspace/tsconfig.json) | <pre>"paths":<br>  "@owf/common/*":<br>    "projects/owf-common/\*",<br>    "dist/owf-common/\*"</pre> | Creates an alias for imports. Any import starting with the path `@owf/common/*` will substitute `dist/owf-common/*` for application compilation or `projects/owf-common/*` for library compilation, and search for an entry point there. |
-| Main entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/src/public-api.ts) | `export * from '@owf/common/util/time';` | File exporting every secondary entry point in the library to be consumed by an application, class, module, etc. |
+| Import scope and path | `import { TimeUtil } from @OpenWaterFoundation/common/util/time` | Import library classes using scope `@OpenWaterFoundation` and path to class folder (entry point). |
+| [tsconfig.json paths](./ng-workspace/tsconfig.json) | <pre>"paths":<br>  "@OpenWaterFoundation/common/*":<br>    "projects/owf-common/\*",<br>    "dist/owf-common/\*"</pre> | Creates an alias for imports. Any import starting with the path `@OpenWaterFoundation/common/*` will substitute `dist/owf-common/*` for application compilation or `projects/owf-common/*` for library compilation, and search for an entry point there. |
+| Main entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/src/public-api.ts) | `export * from '@OpenWaterFoundation/common/util/time';` | File exporting every secondary entry point in the library to be consumed by an application, class, module, etc. |
 | Secondary entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/dwr/statemod/public-api.ts) | `export * from ./DateTimeUtil` | File exporting every class, component, module, etc. in the entry point folder to be found by the main entry point `public-api.ts`. |
-| Library [package.json](./ng-workspace/projects/owf-common/package.json) | <pre>"name": "@owf/common",<br>"version": "0.0.1",<br>"peerDependencies": {},<br>"dependencies": {}</pre> | The `common` library's `package.json` contains the library scope and name, the version of the library, and any peer dependencies and dependencies the library relies on. |
+| Library [package.json](./ng-workspace/projects/owf-common/package.json) | <pre>"name": "@OpenWaterFoundation/common",<br>"version": "0.0.1",<br>"peerDependencies": {},<br>"dependencies": {}</pre> | The `common` library's `package.json` contains the library scope and name, the version of the library, and any peer dependencies and dependencies the library relies on. |
 | Secondary entry point<br>[package.json](./ng-workspace/projects/owf-common/ts/package.json) | <pre>"ngPackage": {<br>  "lib": {<br>    "entryFile": "public-api.ts",<br>    "cssUrl": "inline"<br>  }<br>}</pre> | Contains basic information that declares this folder as a secondary entry point. This file is identical for every secondary entry point folder. |
 | `npm` zip file | `owf-common-<version>.tgz` | The tarball file created after `npm pack` is run in the library's `dist/` folder. The scope and version are taken from the library's [package.json version](./ng-workspace/projects/owf-common/package.json) `name` property. |
-| `node_modules` folder | `node_modules/@owf/common` | The `npm` installed `common` package in a consuming application's `node_modules/` folder. Run `npm install path/to/zip/file` to install in `node_modules`. |
+| `node_modules` folder | `node_modules/@OpenWaterFoundation/common` | The `npm` installed `common` package in a consuming application's `node_modules/` folder. Run `npm install path/to/zip/file` to install in `node_modules`. |
 | Git Packages | **Needs to be researched** |  |
 
 ### Entry Points ###
@@ -207,17 +207,17 @@ top-level folder. The `src/` folder contains a `public-api.ts` file that is need
 modules, classes, etc. so that they can been seen by a consuming application. For example:
 
 ```typescript
-export * from '@owf/common/dwr/statemod';
-export * from '@owf/common/services';
-export * from '@owf/common/ts';
-export * from '@owf/common/ts-command-processor/commands/delimited';
-export * from '@owf/common/ts-command-processor/core';
-export * from '@owf/common/ui/dialog';
-export * from '@owf/common/ui/layer-manager';
-export * from '@owf/common/ui/window-manager';
-export * from '@owf/common/util/io';
-export * from '@owf/common/util/string';
-export * from '@owf/common/util/time';
+export * from '@OpenWaterFoundation/common/dwr/statemod';
+export * from '@OpenWaterFoundation/common/services';
+export * from '@OpenWaterFoundation/common/ts';
+export * from '@OpenWaterFoundation/common/ts-command-processor/commands/delimited';
+export * from '@OpenWaterFoundation/common/ts-command-processor/core';
+export * from '@OpenWaterFoundation/common/ui/dialog';
+export * from '@OpenWaterFoundation/common/ui/layer-manager';
+export * from '@OpenWaterFoundation/common/ui/window-manager';
+export * from '@OpenWaterFoundation/common/util/io';
+export * from '@OpenWaterFoundation/common/util/string';
+export * from '@OpenWaterFoundation/common/util/time';
 ```
 
 The `public-api.ts` file exports all modules under the folder and therefore can be used when
@@ -227,11 +227,11 @@ main entry point, then a consuming application could import the following for th
 class:
 
 ```typescript
-import { StateMod_TS  } from '@owf/common';
+import { StateMod_TS  } from '@OpenWaterFoundation/common';
 ```
 or the `StringUtil` class:
 ```typescript
-import { StringUtil } from '@owf/common';
+import { StringUtil } from '@OpenWaterFoundation/common';
 ```
 
 This would allow the module location to be resolved, but the exact folder for the class is not
@@ -240,11 +240,11 @@ can be used to:
 
 1. Implement precise imports, e.g.
     ```typescript
-    import { StateMod_TS } from '@owf/common/dwr/statemod';
-    import { StringUtil }  from '@owf/common/util/string';
+    import { StateMod_TS } from '@OpenWaterFoundation/common/dwr/statemod';
+    import { StringUtil }  from '@OpenWaterFoundation/common/util/string';
     ```
 2. Enable the ability for a library to split up its dependencies. The default import
-statement (`import {} from '@owf/common`) resolves everything in the library, so even though a
+statement (`import {} from '@OpenWaterFoundation/common`) resolves everything in the library, so even though a
 relatively small class is needed, the entire library with all dependencies would be required.
 Using a secondary entry point in a folder would only need the dependencies of the entry point,
 and wouldn't care about the rest of the library. This results in a smaller Webpack, and less
@@ -288,7 +288,7 @@ from the library in the app. Override the default by adding the following:
 
 ```json
 "paths": {
-  "@owf/common/*": [
+  "@OpenWaterFoundation/common/*": [
     "projects/owf-common/*",
     "projects/owf-common"
   ]
@@ -296,14 +296,14 @@ from the library in the app. Override the default by adding the following:
 ```
 
 Using the `*` wildcard in the path tells consuming modules/classes they need a more descriptive
-path to the module to be imported, such as `@owf/common/ui/window-manager` instead of
-`@owf/common`. Consequently, there will be no ambiguity as to the module origin.
+path to the module to be imported, such as `@OpenWaterFoundation/common/ui/window-manager` instead of
+`@OpenWaterFoundation/common`. Consequently, there will be no ambiguity as to the module origin.
 
 The following is an example of `import` to use a library class.
 Goals of the implementation are:
 
 * Follow standard Angular syntax and protocols.
-* Clearly indicate "scope" `@owf` to distinguish as OWF library and avoid conflict
+* Clearly indicate "scope" `@OpenWaterFoundation` to distinguish as OWF library and avoid conflict
 with similarly named classes in other libraries.
 * Use folders to emphasize hierarchy of code, similar to other languages.
 * Import statements should be the same whether the library is used in AngularDev application,
@@ -311,7 +311,7 @@ InfoMapper, or
 other application.
 
 ```typescript
-import { WindowManager } from "@owf/common/ui/window-manager";
+import { WindowManager } from "@OpenWaterFoundation/common/ui/window-manager";
 ```
 
 The `projects/tsconfig.ts` file will look something like to following after the `paths`
@@ -324,7 +324,7 @@ property has been defined:
     "baseUrl": "./",
     "...": "...",
     "paths": {
-      "@owf/common/*": [
+      "@OpenWaterFoundation/common/*": [
         "projects/owf-common/*",
         "dist/owf-common/*"
       ]
@@ -339,7 +339,7 @@ point must be supplied when importing a module. The above tells the `ng-packagr`
 import using
 
 ```javascript
-import { WindowManager } from "@owf/common";
+import { WindowManager } from "@OpenWaterFoundation/common";
 ```
 
 will _not_ work, as there is no ending slash with the path to the Window Manager's
@@ -347,7 +347,7 @@ public api TypeScript file. The previously shown WindowManager import statement 
 the path to the class would work however:
 
 ```typescript
-import { WindowManager } from "@owf/common/ui/window-manager";
+import { WindowManager } from "@OpenWaterFoundation/common/ui/window-manager";
 ```
 
 ## Sharing Libraries with InfoMapper ##
@@ -423,12 +423,12 @@ was used, creating the `owf-common/` folder. The library's `package.json` was ch
 
 ```json
 {
-  "name": "@owf/common"
+  "name": "@OpenWaterFoundation/common"
 }
 ```
 
 Even though the file structure still has the `owf-common/` top level file, the library's scope
-and name have successfully been changed to `@owf` and `common` respectively.
+and name have successfully been changed to `@OpenWaterFoundation` and `common` respectively.
 
 #### Main & Secondary Entry Points ####
 
@@ -438,7 +438,7 @@ class/componet/module exists. The common library only uses secondary entry point
 a consuming application imports a class from the library, the following import statement
 
 ```typescript
-import { TS } from '@owf/common';
+import { TS } from '@OpenWaterFoundation/common';
 ```
 
 would not be enough, because it is attempting to use the library's main entry point, and a
@@ -489,7 +489,7 @@ To add a new class in a new folder:
     be the first folder given in the import path after the library scope and name, e.g.
 
       ```typescript
-      "@owf/common/util"
+      "@OpenWaterFoundation/common/util"
       ```
 
       Determine if more folders need to be created for the desired structuring. The longest / 
@@ -540,7 +540,7 @@ consumed by an application. This is done in the main entry point's `public-api.t
 under the library's `src/`. Again, using the `delimited/` example:
 
     ```typescript
-    export * from '@owf/common/ts-command-processor/commands/delimited';
+    export * from '@OpenWaterFoundation/common/ts-command-processor/commands/delimited';
     ```
 
     Note that importing and exporting classes between entry points **must** use absolute
@@ -552,7 +552,7 @@ under the library's `src/`. Again, using the `delimited/` example:
 same path given in the main entry point export, e.g.
 
     ```typescript
-    import { WriteDelimitedFile_Command } from '@owf/common/ts-command-processor/commands/delimited';
+    import { WriteDelimitedFile_Command } from '@OpenWaterFoundation/common/ts-command-processor/commands/delimited';
     ```
 
     The class name itself is not required at the end of the path, because the compiler only cares about the entry point for the class.
@@ -599,20 +599,20 @@ modules, components and services, see the
     * `export * from './dialog-data-table/dialog-data-table.module';`
 3. Export this entry point's `public-api.ts` file from the library's main
 entry point:
-    * `export * from '@owf/common/ui/dialog';` - This only needs to be done
+    * `export * from '@OpenWaterFoundation/common/ui/dialog';` - This only needs to be done
     once.
 
 An application can now import the component in a component or class of its
 own to use it's TypeScript source code:
 
 ```typescript
-import { DialogDataTableComponent } from '@owf/common/ui/dialog';
+import { DialogDataTableComponent } from '@OpenWaterFoundation/common/ui/dialog';
 ```
 
 or import its Module into its own to use the Component's HTML:
 
 ```typescript
-import { DialogDataTableModule } from '@owf/common/ui/dialog';
+import { DialogDataTableModule } from '@OpenWaterFoundation/common/ui/dialog';
 ```
 
 ### Adding a Library ###
@@ -639,7 +639,7 @@ Creating an Angular library using the CLI will automatically update necessary fi
     In the library `package.json`, add a scope to the library, and change the name in the name
     property. This way, The folder structure remains as `ng-workspace/projects/lib-name`,
     but the library scope and name are `@scope/new-lib-name`. This was done for the
-    `@owf/common` library.
+    `@OpenWaterFoundation/common` library.
 
 ### Adding a Test ###
 

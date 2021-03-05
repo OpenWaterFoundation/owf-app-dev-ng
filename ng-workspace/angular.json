@@ -132,158 +132,38 @@
         }
       }
     },
-    "owf-common": {
+    "@OpenWaterFoundation/common": {
       "projectType": "library",
-      "root": "projects/owf-common",
-      "sourceRoot": "projects/owf-common/src",
+      "root": "projects/OpenWaterFoundation/common",
+      "sourceRoot": "projects/OpenWaterFoundation/common/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/owf-common/tsconfig.lib.json",
-            "project": "projects/owf-common/ng-package.json"
+            "tsConfig": "projects/OpenWaterFoundation/common/tsconfig.lib.json",
+            "project": "projects/OpenWaterFoundation/common/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/owf-common/tsconfig.lib.prod.json"
+              "tsConfig": "projects/OpenWaterFoundation/common/tsconfig.lib.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/owf-common/src/test.ts",
-            "tsConfig": "projects/owf-common/tsconfig.spec.json",
-            "karmaConfig": "projects/owf-common/karma.conf.js"
+            "main": "projects/OpenWaterFoundation/common/src/test.ts",
+            "tsConfig": "projects/OpenWaterFoundation/common/tsconfig.spec.json",
+            "karmaConfig": "projects/OpenWaterFoundation/common/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/owf-common/tsconfig.lib.json",
-              "projects/owf-common/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "owf-showdown": {
-      "projectType": "library",
-      "root": "projects/owf-showdown",
-      "sourceRoot": "projects/owf-showdown/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/owf-showdown/tsconfig.lib.json",
-            "project": "projects/owf-showdown/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/owf-showdown/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/owf-showdown/src/test.ts",
-            "tsConfig": "projects/owf-showdown/tsconfig.spec.json",
-            "karmaConfig": "projects/owf-showdown/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/owf-showdown/tsconfig.lib.json",
-              "projects/owf-showdown/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "my-library": {
-      "projectType": "library",
-      "root": "projects/my-scope/my-library",
-      "sourceRoot": "projects/my-scope/my-library/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/my-scope/my-library/tsconfig.lib.json",
-            "project": "projects/my-scope/my-library/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/my-scope/my-library/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/my-scope/my-library/src/test.ts",
-            "tsConfig": "projects/my-scope/my-library/tsconfig.spec.json",
-            "karmaConfig": "projects/my-scope/my-library/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/my-scope/my-library/tsconfig.lib.json",
-              "projects/my-scope/my-library/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "@OpenWaterFoundation/test-lib": {
-      "projectType": "library",
-      "root": "projects/OpenWaterFoundation/test-lib",
-      "sourceRoot": "projects/OpenWaterFoundation/test-lib/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/OpenWaterFoundation/test-lib/tsconfig.lib.json",
-            "project": "projects/OpenWaterFoundation/test-lib/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/OpenWaterFoundation/test-lib/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/OpenWaterFoundation/test-lib/src/test.ts",
-            "tsConfig": "projects/OpenWaterFoundation/test-lib/tsconfig.spec.json",
-            "karmaConfig": "projects/OpenWaterFoundation/test-lib/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/OpenWaterFoundation/test-lib/tsconfig.lib.json",
-              "projects/OpenWaterFoundation/test-lib/tsconfig.spec.json"
+              "projects/OpenWaterFoundation/common/tsconfig.lib.json",
+              "projects/OpenWaterFoundation/common/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
