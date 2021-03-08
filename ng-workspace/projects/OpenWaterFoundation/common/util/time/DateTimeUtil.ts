@@ -2699,8 +2699,8 @@ export class DateTime {
 
 }
 
-
-export abstract class TimeUtil {
+// @dynamic
+export class TimeUtil {
 
   /**
   The TimeUtil class provides time utility methods for date/time data, independent

@@ -4,8 +4,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 /**
  * A helper singleton class for creating, managing and maintaining multiple opened Material Dialogs (WindowManagerItem object)
  * while viewing a map in the Infomapper. The fact that it is singleton is important, as it allows the building of a unique
- * name using a number to signify how many windows have been opened.
+ * name using a number to signify how many windows have been opened. The (at)dynamic line below needs to be declared before
+ * classes that declares static methods.
  */
+// @dynamic
 export class WindowManager {
   /**
    * The number of the window that's been opened, starting at 0.

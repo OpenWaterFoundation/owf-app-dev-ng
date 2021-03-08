@@ -28,6 +28,7 @@ NoticeEnd */
 The DataUnits class provides capabilities for reading and storing 
 data units and conversion between units.  Units are maintained internally using a list of DataUnits.
 */
+// @dynamic
 export class DataUnits {
 
   /**

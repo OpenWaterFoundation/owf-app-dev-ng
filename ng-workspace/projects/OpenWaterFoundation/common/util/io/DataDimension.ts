@@ -38,6 +38,7 @@ TEMPERATURE
 TIME
 <pre>
 */
+// @dynamic
 export class DataDimension {
 
   // Private static data members for object house-keeping...

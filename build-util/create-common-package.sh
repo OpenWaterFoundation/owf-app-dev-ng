@@ -9,9 +9,9 @@ repoFolder=$(dirname "${scriptFolder}")
 # mainFolder is ng-workspace.
 mainFolder="${repoFolder}/ng-workspace"
 # The owf-common dist folder after ng build
-commonDistFolder="${mainFolder}/dist/owf-common"
+commonDistFolder="${mainFolder}/dist/OpenWaterFoundation/common"
 
 # Change directory to the main folder and build the common library.
-(cd "${mainFolder}" && ng build owf-common) 
+(cd "${mainFolder}" && ng build @OpenWaterFoundation/common --prod) 
 # Change directory to the owf-common dist folder
 (cd "${commonDistFolder}" && npm pack)

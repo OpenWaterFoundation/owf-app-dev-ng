@@ -10,8 +10,6 @@ import { NgxGalleryOptions,
 
 import { OwfCommonService }    from '@OpenWaterFoundation/common/services';
 import { WindowManager }       from '@OpenWaterFoundation/common/ui/window-manager';
-import { listenerCount } from 'events';
-
 
 
 @Component({

@@ -4,8 +4,9 @@ import * as $ from 'jquery';
 
 /**
  * A helper singleton class for creating, managing and maintaining Leaflet maps in the Infomapper. The fact that it is singleton
- * is important.
+ * is important. The (at)dynamic line below needs to be declared before classes that declares static methods.
  */
+// @dynamic
 export class MapLayerManager {
 
   /**
