@@ -5,7 +5,7 @@ adds significant styling but text isn't properly styled when imported here. only
 when imported here it only styles the provider dropdown a little bit but not all the way */
 /* <-----------------------------------------------------------------------------------------> */
 @import './css/gapminder_bootstrap.css';
-@import '../../../../../node_modules/clusterize.js/clusterize.css'; /* affects the data table within 'Data' tab */
+@import '../../../../../../node_modules/clusterize.js/clusterize.css'; /* affects the data table within 'Data' tab */
 
 
 #selectAll{

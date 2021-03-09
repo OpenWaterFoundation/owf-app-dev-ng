@@ -1,24 +1,129 @@
-# OwfCommon
+# Open Water Foundation Common Library
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.7.
+This package contains the Open Water Foundation (OWF) Angular `common` library, which is used to
+develop common library code in the AngularDev workspace. It can then be used by other Angular
+applications such as OWF InfoMapper.
 
-## Code scaffolding
+* [Building the Common Library](#building-the-common-library)
+* [Publishing the Common Library](#publishing-the-common-library)
+* [Setting up a Library to use GitHub Packages](#setting-up-a-library-to-use-github-packages)
+* [Running Unit Tests](#running-unit-tests)
+* [Code Scaffolding](#code-scaffolding)
+* [Further Help](#further-help)
 
-Run `ng generate component component-name --project owf-common` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project owf-common`.
-> Note: Don't forget to add `--project owf-common` or else it will be added to the default project in your `angular.json` file. 
+See the following resources for background information for the library.
 
-## Build
+* [Publishing private `npm` packages using GitHub Packages](https://javascript.plainenglish.io/publishing-private-npm-packages-using-github-packages-415993cd2da8).
+* [Configuring npm for use with GitHub Packages](https://docs.github.com/en/packages/guides/configuring-npm-for-use-with-github-packages).
+* [Semantic Versioning](https://github.com/semver/semver/blob/master/semver.md).
 
-Run `ng build owf-common` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Publishing
+## Building the Common Library
 
-After building your library with `ng build owf-common`, go to the dist folder `cd dist/owf-common` and run `npm publish`.
+From the `ng-workspace` folder, type `../build-util/create-common-package.sh` to build the
+project through Angular and create a tarball file through npm. This allows the library to be
+published using the created distributable version of the library in the `dist/` folder, or
+by installing the local tarball file in another local application's `package.json` dependencies.
 
-## Running unit tests
+## Publishing the Common Library ##
 
-Run `ng test owf-common` to execute the unit tests via [Karma](https://karma-runner.github.io).
+After building the library with the `create-common-package` script:
+
+1. `cd` into the `dist/` folder
+
+2. If publishing the library for the first time, type
+
+    * `npm publish`
+
+    If a version of the library has already been published, the version number must be
+    incremented. Do this by typing the following:
+
+    * `npm version <version_number>` where `<version_number>` is the new version to be published.
+    Using GitHub semantic versioning is highly advised. In depth information can be found at the
+    [semver GitHub account](https://github.com/semver/semver/blob/master/semver.md).
+    * `npm publish` to publish the package using GitHub packages. Information on how to set up a
+    library to use GitHub packages can be found at [Setting up a Library to use GitHub Packages]().
+
+## Setting up a Library to use GitHub Packages ##
+
+The following sections include authenticating and publishing to GitHub packages, and the
+installing of GitHub packages in an application. This section is mostly for developers, and can
+be largely skipped if only the installation and utilization of the common library is needed. To
+use the library, follow number `4` under
+[Installing a GitHub Package](#installing-a-github-package).
+
+### Authenticating to GitHub Packages ###
+
+If a legitimate GitHub access *TOKEN* is used (i.e. one is created in a GitHub user account and
+said account has the correct OWF repository access), and local library changes are to be
+published as a GitHub Package, add
+
+```
+//npm.pkg.github.com/:_authToken=TOKEN
+```
+
+to the top-level library `.npmrc` file, replacing `TOKEN` with the personal access token.
+
+### Publishing a GitHub Package ###
+
+The `.npmrc` file can be used to configure the scope mapping for the project, and prevents other
+developers from accidentally publishing the package to npmjs.org instead of GitHub Packages.
+Publish the package as follows:
+
+1. Authenticate to GitHub Packages. This is done in
+[Authenticating to GitHub Packages](#authenticating-to-github-packages) above. 
+2. Add `registry=https://npm.pkg.github.com/OWNER` in the `.npmrc` file, replacing `OWNER` with
+the name of the user or organization that own the repository containing the project.
+3. Add the `.npmrc` file to the repository via `git push`.
+4. GitHub Package set up is now complete. Publish the package by following the instructions in
+[Publishing the Common Library](#publishing-the-common-library).
+
+### Installing a GitHub Package ###
+
+The following instructions are for setting up an already existing application to be able to
+communicate with GitHub so that an `npm` created GitHub Package can be consumed:
+
+1. In the same directory as the app `package.json` file, create or edit an `.npmrc` file and add
+    ```
+    registry=https://npm.pkg.github.com/OWNER
+    ```
+    replacing `OWNER` with the name of the user or organization account that own the repository
+    containing the project.
+2. Add the `.npmrc` file to the repo the application belongs to so GitHub Packages can find the
+project.
+3. Configure the `package.json` to use the package being installed. This means adding it to the
+dependencies. This needs to be done manually by a developer, then once there, it will be in the
+repository and used when cloned/fetched/pulled. For example, the dependencies property would
+look something like:
+    ```json
+    {
+      "name": "@my-org/my-app",
+      "version": "1.0.0",
+      "description": "An app that uses the @openwaterfoundation/common package",
+      "main": "index.js",
+      "author": "",
+      "license": "MIT",
+      "dependencies": {
+        "@openwaterfoundation/common": "0.0.1-alpha.2"
+      }
+    }
+    ```
+4. Install the package by typing `npm install` like any other npm package.
+
+## Running Unit Tests
+
+Run `ng test common` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Code Scaffolding
+
+Run `ng generate component component-name --project common` to generate a new component. You can
+also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project common`.
+> Note: Don't forget to add `--project common` or else it will be added to the default project
+in your `angular.json` file. 
 
 ## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+To get more help on the Angular CLI use `ng help` or go check out the
+[Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+For more information on how this library is used, go to the [AngularDev README]()
