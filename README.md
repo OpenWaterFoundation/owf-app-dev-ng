@@ -42,7 +42,7 @@ The following libraries are included in this repository, in addition to AngularD
 
 | **Library** | **`npm` package** | **Description** |
 | -- | -- | -- |
-| `owf-common` | `@OpenWaterFoundation/common` | Useful common code, including application utilities, classes ported from Java, and UI components based on Angular Material. |
+| `common` | `@OpenWaterFoundation/common` | Useful common code, including application utilities, classes ported from Java, and UI components based on Angular Material. |
 | `owf-d3` | `@OpenWaterFoundation/d3` | [D3.js](https://d3js.org/) dynamic visualizations. |
 | `owf-plotly` | `@OpenWaterFoundation/plotly` | [Plotly.js](https://plotly.com/) chart visualizations. |
 | `owf-showdown` | `@OpenWaterFoundation/showdown` | Markdown to HTML package using [showdown.js](http://showdownjs.com/). |
@@ -115,7 +115,7 @@ C:\Users\user\                                 User's home folder for Windows.
                     *                          Application source code.
                   assets/                      Folder containing run-time configuration and data.
                     app-config.json            Application configuration file.
-              owf-common/                      Library project containing common (shared) OWF code.
+              common/                      Library project containing common (shared) OWF code.
                                                This library is used by other `owf-*` libraries
                                                Specific examples are provided below for illustration.
                 src/                           The library's main entry point folder.
@@ -181,19 +181,19 @@ Optionally add the flag `--open` to automatically open the application in a new 
 
 ## Angular Library Concepts ##
 
-The following table summarizes naming conventions used in a library, using `owf-common` as an
+The following table summarizes naming conventions used in a library, using `common` as an
 example.
 
 | **Library Resource** | **Name**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Description** |
 | -- | -- | -- |
-| Library folder | `owf-common` | Folder in `workspace/projects` for library code. |
+| Library folder | `common` | Folder in `workspace/projects` for library code. |
 | Import scope and path | `import { TimeUtil } from @OpenWaterFoundation/common/util/time` | Import library classes using scope `@OpenWaterFoundation` and path to class folder (entry point). |
-| [tsconfig.json paths](./ng-workspace/tsconfig.json) | <pre>"paths":<br>  "@OpenWaterFoundation/common/*":<br>    "projects/owf-common/\*",<br>    "dist/owf-common/\*"</pre> | Creates an alias for imports. Any import starting with the path `@OpenWaterFoundation/common/*` will substitute `dist/owf-common/*` for application compilation or `projects/owf-common/*` for library compilation, and search for an entry point there. |
-| Main entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/src/public-api.ts) | `export * from '@OpenWaterFoundation/common/util/time';` | File exporting every secondary entry point in the library to be consumed by an application, class, module, etc. |
-| Secondary entry point<br>[public-api.ts](./ng-workspace/projects/owf-common/dwr/statemod/public-api.ts) | `export * from ./DateTimeUtil` | File exporting every class, component, module, etc. in the entry point folder to be found by the main entry point `public-api.ts`. |
-| Library [package.json](./ng-workspace/projects/owf-common/package.json) | <pre>"name": "@OpenWaterFoundation/common",<br>"version": "0.0.1",<br>"peerDependencies": {},<br>"dependencies": {}</pre> | The `common` library's `package.json` contains the library scope and name, the version of the library, and any peer dependencies and dependencies the library relies on. |
-| Secondary entry point<br>[package.json](./ng-workspace/projects/owf-common/ts/package.json) | <pre>"ngPackage": {<br>  "lib": {<br>    "entryFile": "public-api.ts",<br>    "cssUrl": "inline"<br>  }<br>}</pre> | Contains basic information that declares this folder as a secondary entry point. This file is identical for every secondary entry point folder. |
-| `npm` zip file | `owf-common-<version>.tgz` | The tarball file created after `npm pack` is run in the library's `dist/` folder. The scope and version are taken from the library's [package.json version](./ng-workspace/projects/owf-common/package.json) `name` property. |
+| [tsconfig.json paths](./ng-workspace/tsconfig.json) | <pre>"paths":<br>  "@OpenWaterFoundation/common/*":<br>    "projects/common/\*",<br>    "dist/common/\*"</pre> | Creates an alias for imports. Any import starting with the path `@OpenWaterFoundation/common/*` will substitute `dist/common/*` for application compilation or `projects/common/*` for library compilation, and search for an entry point there. |
+| Main entry point<br>[public-api.ts](./ng-workspace/projects/common/src/public-api.ts) | `export * from '@OpenWaterFoundation/common/util/time';` | File exporting every secondary entry point in the library to be consumed by an application, class, module, etc. |
+| Secondary entry point<br>[public-api.ts](./ng-workspace/projects/common/dwr/statemod/public-api.ts) | `export * from ./DateTimeUtil` | File exporting every class, component, module, etc. in the entry point folder to be found by the main entry point `public-api.ts`. |
+| Library [package.json](./ng-workspace/projects/common/package.json) | <pre>"name": "@OpenWaterFoundation/common",<br>"version": "0.0.1",<br>"peerDependencies": {},<br>"dependencies": {}</pre> | The `common` library's `package.json` contains the library scope and name, the version of the library, and any peer dependencies and dependencies the library relies on. |
+| Secondary entry point<br>[package.json](./ng-workspace/projects/common/ts/package.json) | <pre>"ngPackage": {<br>  "lib": {<br>    "entryFile": "public-api.ts",<br>    "cssUrl": "inline"<br>  }<br>}</pre> | Contains basic information that declares this folder as a secondary entry point. This file is identical for every secondary entry point folder. |
+| `npm` zip file | `common-<version>.tgz` | The tarball file created after `npm pack` is run in the library's `dist/` folder. The scope and version are taken from the library's [package.json version](./ng-workspace/projects/common/package.json) `name` property. |
 | `node_modules` folder | `node_modules/@OpenWaterFoundation/common` | The `npm` installed `common` package in a consuming application's `node_modules/` folder. Run `npm install path/to/zip/file` to install in `node_modules`. |
 | Git Packages | **Needs to be researched** |  |
 
@@ -262,26 +262,28 @@ article describing what has been implemented in this library.
 
 ### Library Setup ###
 
-The AngularDev application uses many different library modules under the `owf-common/`
+The AngularDev application uses many different library modules under the `common/`
 folder (e.g. `ts/`, `ui/`, and `util/`) that can be shared with the `angulardev` main
-application. To use these modules from the `owf-common` library, the library must be
+application. To use these modules from the `common` library, the library must be
 built using the following:
 
 1. `cd` into `projects/`. 
-2. Use the command `ng build owf-common` to build the library into the `ng-workspace/dist/`
+2. Use the command `ng build common` to build the library into the `ng-workspace/dist/`
 folder. The library and its modules are then ready to be consumed by the application.
 3. If library code is also being updated, an option for the build command is useful. In the
 `projects/` folder , `ng build <lib-name> --watch` will not only build the library, but
 will keep listening to the file and watch for any other updates to it. This way, both
-the app and library can be updated simultaneously. **NOTE:** `ng build <lib-name> --watch` must
-be run before `ng serve`. If built after the app's server is running, warnings and
-errors will occur. `<lib-name>` should be replaced with the name of the library to be
-built and/or watched. 
+the app and library can be updated simultaneously.
+
+    > Note: `ng build <lib-name> --watch` must
+    be run before `ng serve`. If built after the app's server is running, warnings and
+    errors will occur. `<lib-name>` should be replaced with the name of the library to be
+    built and/or watched. 
 
 ### Application Setup ###
 
-The `owf-common` library was added using the command `ng generate library owf-common`.
-Angular adds all the necessary references for the new `owf-common` library in workspace files,
+The `common` library was added using the command `ng generate library common`.
+Angular adds all the necessary references for the new `common` library in workspace files,
 one of them being the addition of a `paths` property under **compilerOptions** in the
 `projects/tsconfig.ts` file. This property lists aliases that can be used when importing modules
 from the library in the app. Override the default by adding the following:
@@ -289,8 +291,8 @@ from the library in the app. Override the default by adding the following:
 ```json
 "paths": {
   "@OpenWaterFoundation/common/*": [
-    "projects/owf-common/*",
-    "projects/owf-common"
+    "projects/common/*",
+    "projects/common"
   ]
 }
 ```
@@ -325,8 +327,8 @@ property has been defined:
     "...": "...",
     "paths": {
       "@OpenWaterFoundation/common/*": [
-        "projects/owf-common/*",
-        "dist/owf-common/*"
+        "projects/common/*",
+        "dist/common/*"
       ]
     }
   },
@@ -356,8 +358,9 @@ Libraries developed in this repository can be shared with other applications.
 The section uses the InfoMapper application as an example to explain how this occurs.
 
 The following is a summary of InfoMapper folder structure.
-**Note - InfoMapper will likely be converted to a multi-project workspace in the future
-but the following currently uses a single application project folder structure.**
+
+> Note: InfoMapper will likely be converted to a multi-project workspace in the future
+but the following currently uses a single application project folder structure.
 
 ```
 C:\Users\user\                   User's home folder for Windows.
@@ -393,7 +396,7 @@ from both a workspace and stand-alone application.
 
 #### Scope & Namespace ####
 Libraries can have a few different top-level folders, normally the library name. This is not
-always the case however. The common library, for example, uses `owf-common/` as
+always the case however. The common library, for example, uses `common/` as
 its top level folder name. When using the Angular Command Line Interface (CLI), Angular will
 create the folder names. For example, using the command
 
@@ -416,10 +419,10 @@ the library's compiler looks for when the `ng build my-library` command is given
 be altered so that another name can be used instead. In the common library, the command
 
 ```
-ng generate library owf-common
+ng generate library common
 ```
 
-was used, creating the `owf-common/` folder. The library's `package.json` was changed as follows:
+was used, creating the `common/` folder. The library's `package.json` was changed as follows:
 
 ```json
 {
@@ -427,7 +430,7 @@ was used, creating the `owf-common/` folder. The library's `package.json` was ch
 }
 ```
 
-Even though the file structure still has the `owf-common/` top level file, the library's scope
+Even though the file structure still has the `common/` top level file, the library's scope
 and name have successfully been changed to `@OpenWaterFoundation` and `common` respectively.
 
 #### Main & Secondary Entry Points ####
@@ -460,7 +463,7 @@ my-library/                      The library top-level folder.
 The above import statement using the main entry point would work for this set up, does not
 allow for granular import statements. According to one of the two main `ng-packagr` developers,
 when using secondary entry points, each entry point folder should exists beneath the library's
-top level folder. A more in-depth description can be viewed under the `owf-common/` folder in the
+top level folder. A more in-depth description can be viewed under the `common/` folder in the
 [Repository Contents](#repository-contents) section. Examples of articles that helped OWF
 decide approach for library folder structuring can be found at `ng-packagr`'s GitHub
 issues [#900](https://github.com/ng-packagr/ng-packagr/issues/900),
@@ -513,7 +516,7 @@ To add a new class in a new folder:
       ```typescript
       export * from './WriteDelimitedFile_Command';
       ```
-      NOTE: Another name for this file has been confirmed to be `projects.ts`. If using the
+      > Note: Another name for this file has been confirmed to be `projects.ts`. If using the
       Angular CLI, any library created after the first will contain a `projects.ts` file
       in place of the `public-api.ts` file. OWF is researching why the file name is changed,
       and how it still seems to serve the same purpose.
@@ -543,7 +546,7 @@ under the library's `src/`. Again, using the `delimited/` example:
     export * from '@OpenWaterFoundation/common/ts-command-processor/commands/delimited';
     ```
 
-    Note that importing and exporting classes between entry points **must** use absolute
+    > Note: Importing and exporting classes between entry points **must** use absolute
     paths (in this case scope and path), and not relative (`../../path/to/class`). See issue
     [#987](https://github.com/ng-packagr/ng-packagr/issues/987) for more information. Also
     confirm the workspace `tsconfig.json` file has been updated so that the `@` scope
