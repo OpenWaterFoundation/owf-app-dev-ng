@@ -5,6 +5,7 @@ import { MatDialog,
           MatDialogRef }           from '@angular/material/dialog';
 
 import { DialogDocComponent,
+          DialogImageComponent,
           DialogTextComponent,
           DialogTSGraphComponent } from '@OpenWaterFoundation/common/ui/dialog';
 import { WindowManager,
@@ -170,6 +171,43 @@ export class OwfCommonComponent implements OnInit {
   /**
    * 
    */
+  public openImageExampleDialog(): void {
+
+    var windowID = 'uniqueImageID' + '-dialog-image';
+    if (this.windowManager.windowExists(windowID)) {
+      return;
+    }
+
+    var pathObj = {
+      absolutePath: "assets/app/",
+      relativePath: "img/"
+    }
+
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.data = {
+        dialogID: windowID,
+        imagePath: pathObj.absolutePath + pathObj.relativePath + 'poudre_river.jpg'
+      }
+      const dialogRef: MatDialogRef<DialogImageComponent, any> = this.dialog.open(DialogImageComponent, {
+        data: dialogConfig,
+        // This stops the dialog from containing a backdrop, which means the background opacity is set to 0, and the
+        // entire InfoMapper is still navigable while having the dialog open. This way, you can have multiple dialogs
+        // open at the same time.
+        hasBackdrop: false,
+        panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
+        height: "750px",
+        width: "900px",
+        minHeight: "290px",
+        minWidth: "450px",
+        maxHeight: "90vh",
+        maxWidth: "90vw"
+      });
+      this.windowManager.addWindow(windowID, WindowType.DOC);
+  }
+
+  /**
+   * 
+   */
   public openTextExampleDialog(): void {
     var windowID = 'uniqueTextID' + '-dialog-text';
     if (this.windowManager.windowExists(windowID)) {
@@ -184,7 +222,7 @@ export class OwfCommonComponent implements OnInit {
     this.owfCommonService.getPlainText("assets/app/Text/text-files/0300911.H2.xdd").subscribe((text: any) => {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.data = {
-        buttonID: 'uniqueTextButtonId',
+        buttonID: windowID,
         text: text,
         resourcePath: pathObj.absolutePath + pathObj.relativePath + 'text-files/0300911.H2.xdd'
       }

@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Imports CSS for showing markdown via Showdown throughout the application. */
-@import 'assets/css/showdown-default.css';
+@import 'assets/app/css/showdown-default.css';
 
 /* Not sure if this is the best practice, but it works for now. Sets font for the entire application. Found at:
 https://stackoverflow.com/questions/43747518/angular-material-and-changing-fonts. Using the asterisk (*) did indeed cause

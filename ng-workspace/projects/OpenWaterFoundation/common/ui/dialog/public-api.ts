@@ -4,7 +4,7 @@ export * from './dialog-data-table/dialog-data-table.module';
 // DIALOG DOC
 export * from './dialog-doc/dialog-doc.component';
 export * from './dialog-doc/dialog-doc.module';
-// DIALOG GALLERY
+// DIALOG IMAGE GALLERY
 export * from './dialog-gallery/dialog-gallery.component';
 export * from './dialog-gallery/dialog-gallery.module';
 // DIALOG GAPMINDER
@@ -22,3 +22,6 @@ export * from './dialog-tstable/dialog-tstable.module';
 // DIALOG TSGRAPH
 export * from './dialog-TSGraph/dialog-TSGraph.component';
 export * from './dialog-TSGraph/dialog-TSGraph.module';
+// DIALOG IMAGE
+export * from './dialog-image/dialog-image.component';
+export * from './dialog-image/dialog-image.module';

@@ -1,0 +1,47 @@
+/* CLASSES */
+
+/* Div class that takes up 5.5% of the height of the dialog and is gray to differentiate itself from the dialog content */
+.drag-header-main {
+  background-color: #e6e6e6;
+  height: 40px;
+  margin: 0px;
+}
+
+.header-div {
+  display: inline-block;
+  height: 100%;
+  width: 80%;
+}
+
+.header-title {
+  font-size: medium;
+  padding-left: 20%;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* Sets a max height for the text in the Dialog, as well as uses Courier font for formatting the text correctly and making the
+font smaller so that's it still readable, but the user won't have to scroll a lot to get around the data. */
+.image-contents {
+  height: calc(100% - 90px);
+}
+
+div#image-description {
+  padding-top: 10px;
+  text-align: center;
+}
+
+/* Puts a margin at the top of all buttons in this text dialog so they don't hug the bottom scroll bar of
+the displayed text */
+.image-components-group button {
+  margin-top: 6px;
+}
+
+.upper-close-button {
+  background-color: #c2c1c1;
+  height: 100%;
+  width: 80px;
+  float: right;
+  outline: none;
+}

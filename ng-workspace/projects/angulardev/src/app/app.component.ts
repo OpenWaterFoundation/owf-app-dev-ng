@@ -28,7 +28,7 @@ export class AppComponent {
   ngOnInit(): void {
     // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     // Set the app's favicon.
-    this.document.getElementById('appFavicon').setAttribute('href', 'assets/img/OWF-Logo-Favicon-32x32.ico');
+    this.document.getElementById('appFavicon').setAttribute('href', 'assets/app/img/OWF-Logo-Favicon-32x32.ico');
     
 
   }
