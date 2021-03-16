@@ -1,0 +1,35 @@
+<!-- The draggable <h1> element so a user can move a graph around anywhere on the screen -->
+<div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+    <!-- The draggable <h1> element so a user can move a graph around anywhere on the screen, but only using the h1 -->
+    <div mat-dialog-title cdkDragHandle class="drag-header-main">
+      <!-- Keep this empty for now. Might add a title later on for regular text files -->
+      <div class="header-div">
+        <p class="header-title">
+          Image {{imageName}}
+        </p>
+      </div>
+      <!-- The close button on the upper right part of the dialog -->
+      <button mat-button (click)="onClose()" class="upper-close-button">
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <!------------------------------------------------------------------------------------------------------------------------------>
+    <!-- Show a regular text file if the showText Dialog class variable is true -->
+    <img [src]="imagePath" alt="" width="900" height="500">
+
+    <div id="image-description">
+      <p>
+        This is an image of the Cache La Poudre River, taken from the
+        <a href="https://www.visitftcollins.com/things-to-do/parks-open-spaces/cache-la-poudre-river/" target="_blank">Visit Fort Collins website</a>
+      </p>
+    </div>
+    
+  
+    <div class="image-components-group">
+      <!-- CLOSE button -->
+      <button mat-raised-button (click)="onClose()" class="lower-dialog-close-button">
+        Close
+      </button>
+    </div>
+  
+  </div>

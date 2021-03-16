@@ -577,7 +577,7 @@ A component is more complex than non-UI classes in that it contains features to 
 DOM and change/update/show web page content to users. An example of the folder structure in the
 common library is the `dialog` entry point.
 
-![Dialog Project Structure](assets/img/component-creation.png)
+![Dialog Project Structure](assets/app/img/component-creation.png)
 
 To create a component, first create entry point folders as per the
 [new entry point](#brand-new-class-and-secondary-entry-point) checklist for the
