@@ -24,25 +24,41 @@ From the `ng-workspace` folder, type `../build-util/create-common-package.sh` to
 project through Angular and create a tarball file through npm. This allows the library to be
 published using the created distributable version of the library in the `dist/` folder, or
 by installing the local tarball file in another local application's `package.json` dependencies.
+This is used for testing the library.
 
 ## Publishing the Common Library ##
 
-After building the library with the `create-common-package` script:
+To publish as a GitHub Package using npm, perform the following steps:
 
-1. `cd` into the `dist/` folder
+>Note: If publishing the package for the first time, skip to step 3. 
 
-2. If publishing the library for the first time, type
-
-    * `npm publish`
-
+1. `cd` into `ng-workspace/projects/OpenWaterFoundation/common`
+2. `npm version <version_number>` where `<version_number>` is the new version to be published.
     If a version of the library has already been published, the version number must be
-    incremented. Do this by typing the following:
-
-    * `npm version <version_number>` where `<version_number>` is the new version to be published.
-    Using GitHub semantic versioning is highly advised. In depth information can be found at the
+    incremented.
+    Using GitHub semantic versioning is highly advised. In-depth information can be found at the
     [semver GitHub account](https://github.com/semver/semver/blob/master/semver.md).
-    * `npm publish` to publish the package using GitHub packages. Information on how to set up a
-    library to use GitHub packages can be found at [Setting up a Library to use GitHub Packages]().
+
+3. Follow the instructions under [Building the Common Library](#building-the-common-library)
+above.
+
+4. `cd` into the `dist/OpenWaterFoundation/common` folder
+
+5. Login to the GitHub Packages registry by using the command
+
+    ```
+    npm login --registry=https://npm.pkg.github.com --scope=OWNER
+    ```
+
+    replacing OWNER with the owner of the repository - OpenWaterFoundation in this case. Three
+    prompts will display:
+
+      1. **Username** - GitHub username. This must be all lower case or it will ask again.
+      2. **Password** - The GitHub Package access Token (GitHub password would also work).
+      3. **Email** - GitHub email address.
+
+6. `npm publish` to publish the package using GitHub packages. More information can be found at
+[Setting up a Library to use GitHub Packages]().
 
 ## Setting up a Library to use GitHub Packages ##
 

@@ -1,21 +1,41 @@
+/* TAGS */
+
+div#test {
+  height: calc(100% - 125px);
+}
+
+img#image {
+  max-width: 90%;
+  max-height: 80%;
+  min-height: 100px;
+  display: block;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* CLASSES */
 
+/* .cdk-drag {
+  background-color: rgb(59, 59, 59);
+} */
+
 /* Div class that takes up 5.5% of the height of the dialog and is gray to differentiate itself from the dialog content */
-.drag-header-main {
+div.drag-header-main {
   background-color: #e6e6e6;
   height: 40px;
   margin: 0px;
 }
 
-.header-div {
+div.header-div {
   display: inline-block;
   height: 100%;
   width: 80%;
 }
 
-.header-title {
+p.header-title {
   font-size: medium;
-  padding-left: 20%;
+  padding-left: calc(20% + 40px);
   text-align: center;
   height: 100%;
   width: 100%;
@@ -28,6 +48,7 @@ font smaller so that's it still readable, but the user won't have to scroll a lo
 }
 
 div#image-description {
+  /* color: #e6e6e6; */
   padding-top: 10px;
   text-align: center;
 }

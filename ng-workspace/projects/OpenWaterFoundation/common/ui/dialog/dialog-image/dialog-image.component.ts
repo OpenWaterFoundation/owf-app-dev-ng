@@ -15,20 +15,19 @@ import { WindowManager }     from '@OpenWaterFoundation/common/ui/window-manager
 })
 export class DialogImageComponent implements OnInit {
   /**
-   * Unique ID for 
+   * Unique ID for this dialog to be used by the Window Manager.
    */
   public dialogID: string;
   /**
-   * 
+   * The optional description to be shown underneath the image.
    */
   public imageDescription: string;
   /**
    * The name of the image being displayed in the dialog.
    */
-  // TODO: Change this from a had-coded example to the name of the image.
-  public imageName = 'test.txt';
+  public imageName: string;
   /**
-   * 
+   * The absolute path to the image file.
    */
   public imagePath: string;
   /**
@@ -40,12 +39,14 @@ export class DialogImageComponent implements OnInit {
   /**
    * 
    * @param dialogRef 
+   * @param dataObject
    */
   constructor(public dialogRef: MatDialogRef<DialogImageComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
     this.imagePath = dataObject.data.imagePath;
     this.dialogID = dataObject.data.dialogID;
+    this.imageDescription = dataObject.data.imageDescription ? dataObject.data.imageDescription : '';
   }
 
 
@@ -53,7 +54,7 @@ export class DialogImageComponent implements OnInit {
    * 
    */
   ngOnInit(): void {
-    this.imageDescription = '';
+    this.imageName = this.imagePath.split('/')[this.imagePath.split('/').length - 1]
   }
 
   /**
