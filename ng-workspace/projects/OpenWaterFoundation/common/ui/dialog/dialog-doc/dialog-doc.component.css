@@ -28,7 +28,7 @@ and the <h1> are sharing the space */
 
 .header-title {
   font-size: medium;
-  padding-left: 20%;
+  padding-left: calc(20% + 40px);
   text-align: center;
   height: 100%;
   width: 100%;
