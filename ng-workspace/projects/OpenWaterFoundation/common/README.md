@@ -30,7 +30,8 @@ This is used for testing the library.
 
 To publish as a GitHub Package using npm, perform the following steps:
 
->Note: If publishing the package for the first time, skip to step 3. 
+>Note: If publishing the package for the first time, skipping to step 3 will publish the package
+as the default version of `0.0.1`.
 
 1. `cd` into `ng-workspace/projects/OpenWaterFoundation/common`
 2. `npm version <version_number>` where `<version_number>` is the new version to be published.
@@ -42,7 +43,7 @@ To publish as a GitHub Package using npm, perform the following steps:
 3. Follow the instructions under [Building the Common Library](#building-the-common-library)
 above.
 
-4. `cd` into the `dist/OpenWaterFoundation/common` folder
+4. `cd` into the `dist/OpenWaterFoundation/common` folder.
 
 5. Login to the GitHub Packages registry by using the command
 

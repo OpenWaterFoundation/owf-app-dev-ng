@@ -1,13 +1,19 @@
 /* TAGS */
 
-div#test {
+/* Styling for the div surrounding the image and description, if the description is present. */
+div.description {
   height: calc(100% - 125px);
 }
 
-img#image {
-  max-width: 90%;
-  max-height: 80%;
-  min-height: 100px;
+/* Styling for the div surrounding the image and description, if the description is not present. */
+div.no-description {
+  height: calc(100% - 150px);
+}
+
+/* Styling for centering the image, and keeping the image aspect ratio on a resize of the dialog. */
+img#dialog-image {
+  max-height: 100%;
+  max-width: 100%;
   display: block;
   margin-top: 20px;
   margin-left: auto;

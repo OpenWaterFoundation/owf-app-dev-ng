@@ -15,8 +15,8 @@
   </div>
   <!------------------------------------------------------------------------------------------------------------------------------>
   <!-- Show a regular text file if the showText Dialog class variable is true -->
-  <div id="test">
-    <img [src]="imagePath" id="image" width="850" height="600">
+  <div [ngClass]="imageDescription === '' ? 'no-description' : 'description'">
+    <img [src]="imagePath" id="dialog-image" width="auto" height="auto">
 
     <div id="image-description">
       <p>

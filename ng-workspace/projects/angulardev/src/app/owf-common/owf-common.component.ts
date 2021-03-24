@@ -187,7 +187,7 @@ export class OwfCommonComponent implements OnInit {
       dialogConfig.data = {
         dialogID: windowID,
         imagePath: pathObj.absolutePath + pathObj.relativePath + '402-SNODAS-SnowCover.png',
-        imageDescription: 'This is a graph representing snow cover in the NF SOLOMON RIVER NR GOODLAND KS basin. This will be an extra long description for testing purposes, and should take up 3 lines at the minimum width'
+        imageDescription: ''
       }
       const dialogRef: MatDialogRef<DialogImageComponent, any> = this.dialog.open(DialogImageComponent, {
         data: dialogConfig,
@@ -200,7 +200,7 @@ export class OwfCommonComponent implements OnInit {
         width: "900px",
         minHeight: "500px",
         minWidth: "525px",
-        maxHeight: "70vh",
+        maxHeight: "65vh",
         maxWidth: "80vw"
       });
       this.windowManager.addWindow(windowID, WindowType.DOC);
