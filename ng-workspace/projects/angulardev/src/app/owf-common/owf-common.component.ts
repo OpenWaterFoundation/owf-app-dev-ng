@@ -4,7 +4,8 @@ import { MatDialog,
           MatDialogConfig,
           MatDialogRef }           from '@angular/material/dialog';
 
-import { DialogDocComponent,
+import { DialogDataTableComponent,
+          DialogDocComponent,
           DialogImageComponent,
           DialogTextComponent,
           DialogTSGraphComponent } from '@OpenWaterFoundation/common/ui/dialog';
@@ -34,6 +35,44 @@ export class OwfCommonComponent implements OnInit {
 
 
   ngOnInit(): void {
+  }
+
+  /**
+   * 
+   */
+  public openDataTableExampleDialog(): void {
+    var windowID = 'geoLayerId-dialog-data-table';
+    if (this.windowManager.windowExists(windowID)) {
+      return;
+    }
+
+    this.owfCommonService.getJSONData('assets/app/map-layers/municipal-boundaries.geojson')
+    .subscribe((allFeatures: any) => {
+
+      var geoLayerId = 'geoLayerId', geoLayerViewName = 'geoLayerViewName';
+      var selectedLayers = {};
+      var mainMap = {};
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.data = {
+        allFeatures: allFeatures,
+        geoLayerId: geoLayerId,
+        geoLayerViewName: geoLayerViewName,
+        selectedLayers: selectedLayers,
+        mainMap: mainMap
+      }
+      const dialogRef: MatDialogRef<DialogDataTableComponent, any> = this.dialog.open(DialogDataTableComponent, {
+        data: dialogConfig,
+        hasBackdrop: false,
+        panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
+        height: "750px",
+        width: "910px",
+        minHeight: "275px",
+        minWidth: "675px",
+        maxHeight: "90vh",
+        maxWidth: "90vw"
+      });
+      this.windowManager.addWindow(windowID, WindowType.TABLE);
+    });
   }
 
   /**

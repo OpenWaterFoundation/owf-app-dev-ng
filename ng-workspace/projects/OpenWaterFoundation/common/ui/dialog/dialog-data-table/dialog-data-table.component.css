@@ -15,6 +15,10 @@ mat-form-field {
   width: 100%;
 }
 
+mat-radio-button.option {
+  margin: 5px 10px 0px 0px;
+}
+
 /* Table width for the Mat Table */
 table {
   width: 100%;
@@ -208,8 +212,9 @@ will hide the rest of a long string in a fixed-layout table, and won't wrap, cre
   outline: none;
 }
 
+/*  */
 .wrapper {
-  height: calc(100% - 55px);
+  height: calc(100% - 87px);
 }
 
 .zoom-to-selected {

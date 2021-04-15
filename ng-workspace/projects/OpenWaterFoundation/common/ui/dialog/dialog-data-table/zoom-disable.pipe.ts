@@ -7,7 +7,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({ name: 'zoomDisable' })
 export class ZoomDisablePipe implements PipeTransform {
 
-  transform(value: unknown, ...args: any[]): boolean {
+  transform(value: any, ...args: any[]): boolean {
+
+    if (typeof value === 'string') {
+      if (value.toUpperCase().includes('POLYGON')) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
     var isSelectedLayer = value[args[0]];
 
     if (isSelectedLayer) {

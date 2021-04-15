@@ -17,11 +17,27 @@
   <!-- Show the attribute table for a layer -->
   <div class="data-table-content">
 
+    <mat-radio-group color="primary"
+                      [(ngModel)]="searchType">
+      <mat-radio-button value="columns"
+                        checked="true"
+                        (click)="toggleSearchInfo()"
+                        class="option">
+        Search layer data
+      </mat-radio-button>
+      <mat-radio-button value="address"
+                        (click)="toggleSearchInfo()"
+                        [hidden]="geometryType | zoomDisable"
+                        class="option">
+        Find from address
+      </mat-radio-button>
+    </mat-radio-group>
+
     <mat-form-field>
       <mat-label>Filter</mat-label>
       <input matInput
               (keyup)="applyFilter($event)"
-              placeholder="Filter all columns using the filter string. Press Enter to execute the filter."
+              placeholder="{{matInputFilterText}}"
               cdkFocusInitial
               #input>
     </mat-form-field>

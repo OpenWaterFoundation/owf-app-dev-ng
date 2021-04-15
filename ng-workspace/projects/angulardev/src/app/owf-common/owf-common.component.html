@@ -24,6 +24,11 @@
 
     <mat-menu #menu>
       <button mat-menu-item
+              (click)="openDataTableExampleDialog()">
+        <b>Data Table</b> Dialog
+      </button>
+
+      <button mat-menu-item
               (click)="openDocMarkdownExampleDialog()">
         <b>Documentation</b> Markdown Dialog
       </button>
@@ -49,12 +54,6 @@
       </button>
 
       <hr id="divider"><!-- Separates the working examples above from the yet to be implemented below. -->
-
-      <button mat-menu-item
-              [disabled]="true"
-              (click)="openTSGraphExampleDialog()">
-        <b>Data Table</b> Dialog
-      </button>
 
       <button mat-menu-item
               [disabled]="true"

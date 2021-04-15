@@ -22,6 +22,13 @@ import { MapLayerManager }              from '@OpenWaterFoundation/common/ui/lay
 })
 export class DialogDataTableComponent implements OnInit {
 
+  public addressLat: number;
+
+  public addressLng: number;
+  /**
+   * Holds all features in the layer for determining if an address resides in a polygon.
+   */
+  public allLayerFeatures: any;
   /**
    * The original object containing all features in the layer.
    */
@@ -44,14 +51,13 @@ export class DialogDataTableComponent implements OnInit {
    */
   public geoLayerViewName: string;
   /**
+   * 
+   */
+  public geometryType = 'WKT:Polygon';
+  /**
    * Object containing the URL as the key and value, so each link is unique. Used by the template file to use as the link's href.
    */
   public links: {} = {};
-  /**
-   * Object containing the geoLayerId as the key, and the selectedLayer object. If the geoLayerId exists in this object, it means
-   * the layer's features can be highlighted.
-   */
-  public selectedLayers: any;
   /**
    * The reference to the Map Component's this.mainMap; the Leaflet map.
    */
@@ -66,9 +72,24 @@ export class DialogDataTableComponent implements OnInit {
    */
   public matchedRows: number;
   /**
+   * 
+   */
+  public matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
+  /**
+   * The type of search the filter is currently performing. Can be:
+   * * `columns`
+   * * `address`
+   */
+  public searchType = 'columns';
+  /**
    * This layer's selectedLayer that extends L.geoJSON. Highlights and displays under selected features, and resets/hide them
    */
   public selectedLayer: any;
+  /**
+   * Object containing the geoLayerId as the key, and the selectedLayer object. If the geoLayerId exists in this object, it means
+   * the layer's features can be highlighted.
+   */
+  public selectedLayers: any;
   // TODO: jpkeahey 2020.10.27 - Commented out. Will be used for row selection
   /**
    * Class variable the template file uses to display how many rows (features in the layer) are selected on the data table.
@@ -101,12 +122,16 @@ export class DialogDataTableComponent implements OnInit {
 
     this.attributeTable = new TableVirtualScrollDataSource(dataObject.data.allFeatures.features);
     this.attributeTableOriginal = JSON.parse(JSON.stringify(dataObject.data.allFeatures.features));
+    this.allLayerFeatures = JSON.parse(JSON.stringify(dataObject.data.allFeatures.features));
     this.displayedColumns = Object.keys(dataObject.data.allFeatures.features[0].properties);
     // Manually add the select column to the displayed Columns. This way checkboxes can be added below
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
     // this.displayedColumns.unshift('select');
     this.geoLayerId = dataObject.data.geoLayerId;
     this.geoLayerViewName = dataObject.data.geoLayerViewName;
+    this.geometryType = dataObject.data.geometryType;
+    // This is needed for testing the library.
+    // this.geometryType = 'WKT:Polygon';
     this.selectedLayers = dataObject.data.selectedLayers;
     this.mainMap = dataObject.data.mainMap;
     this.matchedRows = this.attributeTable.data.length;
@@ -146,9 +171,18 @@ export class DialogDataTableComponent implements OnInit {
           this.highlightFeatures();
         } else {
           const filterValue = (event.target as HTMLInputElement).value;
-          this.attributeTable.filter = filterValue.trim().toUpperCase();
-          this.matchedRows = this.attributeTable.filteredData.length;
+          // Search for columns (default).
+          if (this.searchType === 'columns') {
+            this.attributeTable.filter = filterValue.trim().toUpperCase();
+            this.matchedRows = this.attributeTable.filteredData.length;
+          }
+          // Search for an address using the geocodio service.
+          else if (this.searchType === 'address') {
+            this.filterByAddress(filterValue);
+          }
         }
+
+        
       }
     }
   }
@@ -162,6 +196,33 @@ export class DialogDataTableComponent implements OnInit {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row`;
+  }
+
+  /**
+   * 
+   * @param filterValue 
+   */
+  private filterByAddress(filterAddress: string): void {
+    // Replace all spaces and commas with URI-encoded characters using regex.
+    var encodedAddress = filterAddress.replace(/ /g, '+').replace(/,/g, '%2c');
+    // TODO: jpkeahey 2021.04.14 - This is using an OWF employee API key necessary for the query. What to do?
+    var addressQuery = 'https://api.geocod.io/v1.6/geocode?q=' + encodedAddress + '&api_key=e794ffb42737727f9904673702993bd96707bf6';
+    this.owfCommonService.getJSONData(addressQuery).subscribe((resultJSON: any) => {
+      if (resultJSON.results[0] === undefined) {
+        this.addressLat = -1;
+        this.addressLng = -1;
+      } else {
+        // Set the returned lat and long values so they can be used in the filter function. From GeoCodIO's documentation,
+        // use the first result in the array, as it will be the most accurate.
+        this.addressLat = resultJSON.results[0].location.lat;
+        this.addressLng = resultJSON.results[0].location.lng;
+      }
+      console.log('GeoCodIO result ->', resultJSON);
+      // Call the filter function for addresses. The user given input itself won't be used, but this is how the function
+      // is called. Set the data rows to show by using the filtered data.
+      this.attributeTable.filter = filterAddress.trim().toUpperCase();
+      this.matchedRows = this.attributeTable.filteredData.length;
+    });
   }
 
   /**
@@ -229,6 +290,32 @@ export class DialogDataTableComponent implements OnInit {
       return numSelected === numRows;
     }
     
+  }
+
+  /**
+   * Uses the Ray Casting Algorithm to determine whether a set of coordinates exist inside a given polygon. It contains
+   * a second `for` loop so that it also works on donut shaped polygons. Ref: https://stackoverflow.com/a/42532563/11854796
+   * @param lat 
+   * @param lng 
+   * @param poly 
+   * @returns A boolean showing whether the given lat and long is inside the provided polygon or donut polygon.
+   */
+  private isInsidePolygon(lat: number, lng: number, poly: any): boolean {
+    var inside = false;
+    var x = lat, y = lng;
+    for (var ii=0; ii < poly.length; ii++){
+        var polyPoints = poly[ii];
+        for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+            var xi = polyPoints[i][1], yi = polyPoints[i][0];
+            var xj = polyPoints[j][1], yj = polyPoints[j][0];
+
+            var intersect = ((yi > y) != (yj > y))
+                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+    }
+
+    return inside;
   }
 
   /** Selects all rows, or all filtered rows, if they are not all selected; otherwise clear selection.
@@ -367,6 +454,22 @@ export class DialogDataTableComponent implements OnInit {
     }
   }
 
+  public test() {
+    console.log('it worked!');
+  }
+
+  /**
+   * 
+   */
+  public toggleSearchInfo() {
+    if (this.matInputFilterText.startsWith('Filter all columns')) {
+      this.matInputFilterText = 'Filter by an address. Press Enter to execute the filter.'
+    } else {
+      this.matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
+    }
+    
+  }
+
   /**
    * 
    * @param event 
@@ -387,26 +490,45 @@ export class DialogDataTableComponent implements OnInit {
    * that only specific columns are used.
    * Note: Right now, the default is all columns
    */
-  private updateFilterAlgorithm(): void {
+  private updateFilterAlgorithm(): void {    
 
-    // For returning all results that contain the filter in EVERY column
+    // This is for filtering 
     this.attributeTable.filterPredicate = (data: any, filter: string) => {
-      for (let property in data.properties) {
-        if (data.properties[property] === null) {
-          continue;
-        } else {
-          if (typeof data.properties[property] === 'string') {
-            if (data.properties[property].toUpperCase().includes(filter)) {
-              return true;
-            } else continue;
-          } else if (typeof data.properties[property] === 'number') {
-            if (data.properties[property].toString().includes(filter)) {
-              return true;
-            } else continue;
+      // Filter for searching all columns.
+      if (this.searchType === 'columns') {
+        for (let property in data.properties) {
+          if (data.properties[property] === null) {
+            continue;
+          } else {
+            if (typeof data.properties[property] === 'string') {
+              if (data.properties[property].toUpperCase().includes(filter)) {
+                return true;
+              } else continue;
+            } else if (typeof data.properties[property] === 'number') {
+              if (data.properties[property].toString().includes(filter)) {
+                return true;
+              } else continue;
+            }
           }
         }
+        return false;
       }
-      return false;
+      // Filter for searching for an address.
+      else if (this.searchType === 'address') {
+        // If a bad query/address was given, don't return anything.
+        if (this.addressLat === -1 || this.addressLng === -1) {
+          return false;
+        }
+        // This function (filterPredicate) is called for each feature, so iterate over each polygon or multi-polygon array(s)
+        // and, using the the lat and long obtained from the geocodio query, determine whether they're inside.
+        for (let coordArr = 0; coordArr < data['geometry']['coordinates'].length; ++coordArr) {
+          if (this.isInsidePolygon(this.addressLat, this.addressLng, data['geometry']['coordinates'][coordArr]) === true) {
+            return true;
+          }
+        }
+        return false;
+      }
+      
       // For returning all results that contain the filter in the IncidentName
       // return data.properties['IncidentName'] === null ? false : data.properties['IncidentName'].toUpperCase().includes(filter);
     }
