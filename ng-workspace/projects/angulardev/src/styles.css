@@ -46,3 +46,16 @@ hand corner of the Dialog do not appear to the user. */
   padding-bottom: 0%;
   height: 100%;
 }
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+  opacity: 0.5 !important;     /*click effect color change*/
+  background-color: #9DB66B !important;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #9DB66B !important;   /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+ border-color:#9DB66B !important; /*outer ring color change*/
+}

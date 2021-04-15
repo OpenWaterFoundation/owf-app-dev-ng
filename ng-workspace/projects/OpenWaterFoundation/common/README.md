@@ -7,6 +7,7 @@ applications such as OWF InfoMapper.
 * [Building the Common Library](#building-the-common-library)
 * [Publishing the Common Library](#publishing-the-common-library)
 * [Setting up a Library to use GitHub Packages](#setting-up-a-library-to-use-github-packages)
+* [Changelog](#changelog)
 * [Running Unit Tests](#running-unit-tests)
 * [Code Scaffolding](#code-scaffolding)
 * [Further Help](#further-help)
@@ -126,6 +127,52 @@ following steps (assuming InfoMapper is being used):
 3. `cd owf-app-infomapper-ng/infomapper`
 4. Follow step `5` under [Publishing the Common Library](#publishing-the-common-library)
 5. Run `npm install`
+
+## Changelog ##
+
+### 0.0.1-alpha.6 ###
+
+Bug Fixes
+
+Code Refactoring
+
+Features
+
+* 
+
+Performance Improvements
+
+Breaking Changes
+
+### 0.0.1-alpha.5 ###
+
+Bug Fixes
+
+Code Refactoring
+
+Features
+
+Performance Improvements
+
+Breaking Changes
+
+### 0.0.1-alpha.3 ###
+
+Bug Fixes
+
+Code Refactoring
+
+Features
+
+Performance Improvements
+
+Breaking Changes
+
+### 0.0.1-alpha.2 ###
+
+* Initial working common library
+* Contains dialogs, services, multi project environment, 
+
 
 ## Running Unit Tests
 

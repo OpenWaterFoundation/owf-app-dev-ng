@@ -453,11 +453,7 @@ export class DialogDataTableComponent implements OnInit {
       bounds.SWMinLong = long;
     }
   }
-
-  public test() {
-    console.log('it worked!');
-  }
-
+  
   /**
    * 
    */
@@ -532,6 +528,16 @@ export class DialogDataTableComponent implements OnInit {
       // For returning all results that contain the filter in the IncidentName
       // return data.properties['IncidentName'] === null ? false : data.properties['IncidentName'].toUpperCase().includes(filter);
     }
+  }
+
+  /**
+   * 
+   */
+  public zoomToAddress(): void {
+    this.mainMap.flyTo([this.addressLat, this.addressLng], 16,
+      {
+        duration: 3
+      });
   }
 
   /**

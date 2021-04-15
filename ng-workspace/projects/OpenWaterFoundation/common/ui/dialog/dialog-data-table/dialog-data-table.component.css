@@ -51,6 +51,18 @@ th.mat-header-cell {
  background-color: #9DB66B !important;;
 }
 
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: rgb(66, 134, 244);
+}
+
+.mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: rgb(66, 134, 244);
+}
+
+.mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+  background-color:rgba(66, 134, 244,.26);
+}
+
 /* The div surrounding the Mat Table so scrolling will occur if the table is large enough, and it doesn't
 take up too much space vertically in the Dialog. The draggable <h1> is 5% of the Dialog height, so this
 <div> can be technically 95%. Making it 95% is just slightly too big and creates some problems, maybe
@@ -215,6 +227,10 @@ will hide the rest of a long string in a fixed-layout table, and won't wrap, cre
 /*  */
 .wrapper {
   height: calc(100% - 87px);
+}
+
+.zoom-to-address {
+  font-size: 12px;
 }
 
 .zoom-to-selected {

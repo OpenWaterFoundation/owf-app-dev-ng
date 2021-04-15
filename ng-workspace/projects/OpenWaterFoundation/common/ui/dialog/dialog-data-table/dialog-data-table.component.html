@@ -27,7 +27,7 @@
       </mat-radio-button>
       <mat-radio-button value="address"
                         (click)="toggleSearchInfo()"
-                        [hidden]="geometryType | zoomDisable"
+                        [hidden]="geometryType | zoomDisable : 'null' : 'address-radio'"
                         class="option">
         Find from address
       </mat-radio-button>
@@ -129,9 +129,17 @@
       </button>
       <mat-menu #menuFriend="matMenu">
         <button mat-menu-item
+                class="zoom-to-address"
+                (click)="zoomToAddress()"
+                [disabled]="geometryType | zoomDisable : matchedRows : 'address-zoom'">
+          <i class="fa fa-search-plus fa-2x"></i>
+          Zoom to address
+        </button>
+
+        <button mat-menu-item
                 class="zoom-to-selected"
                 (click)="zoomToFeatures()"
-                [disabled]="selectedLayers | zoomDisable: geoLayerId">
+                [disabled]="selectedLayers | zoomDisable : geoLayerId : 'selected-layers'">
           <i class="fa fa-search-plus fa-2x"></i>
           Zoom to selected features
         </button>

@@ -9,22 +9,30 @@ export class ZoomDisablePipe implements PipeTransform {
 
   transform(value: any, ...args: any[]): boolean {
 
-    if (typeof value === 'string') {
-      if (value.toUpperCase().includes('POLYGON')) {
-        return false;
-      } else {
-        return true;
-      }
-    }
+    switch(args[1]) {
+      case 'address-radio':
+        console.log('value:', value);
+        if (value.toUpperCase().includes('POLYGON')) {
+          return false;
+        } else {
+          return true;
+        }
+      case 'address-zoom':
+        if (args[0] === 1) {
+          return false;
+        } else {
+          return true;
+        }
+      case 'selected-layers':
+        var isSelectedLayer = value[args[0]];
 
-    var isSelectedLayer = value[args[0]];
-
-    if (isSelectedLayer) {
-      // If the selected layer exists, then we don't want the button to be disabled, so return false
-      return false;
-    } else {
-      // If no selected layer exists, then we DO want the button disabled, so return true
-      return true;
+        if (isSelectedLayer) {
+          // If the selected layer exists, then we don't want the button to be disabled, so return false
+          return false;
+        } else {
+          // If no selected layer exists, then we DO want the button disabled, so return true
+          return true;
+        }
     }
   }
 }
