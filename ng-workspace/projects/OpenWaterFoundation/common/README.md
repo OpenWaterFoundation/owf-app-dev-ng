@@ -45,7 +45,8 @@ above.
 
 4. `cd` into the `dist/OpenWaterFoundation/common` folder.
 
-5. Login to the GitHub Packages registry by using the command
+5. Authenticate to GitHub Packages/npm by logging in to the GitHub Packages registry by using
+the command
 
     ```
     npm login --registry=https://npm.pkg.github.com --scope=OWNER
@@ -69,18 +70,6 @@ be largely skipped if only the installation and utilization of the common librar
 use the library, follow number `4` under
 [Installing a GitHub Package](#installing-a-github-package).
 
-### Authenticating to GitHub Packages ###
-
-If a legitimate GitHub access *TOKEN* is used (i.e. one is created in a GitHub user account and
-said account has the correct OWF repository access), and local library changes are to be
-published as a GitHub Package, add
-
-```
-//npm.pkg.github.com/:_authToken=TOKEN
-```
-
-to the top-level library `.npmrc` file, replacing `TOKEN` with the personal access token.
-
 ### Publishing a GitHub Package ###
 
 The `.npmrc` file can be used to configure the scope mapping for the project, and prevents other
@@ -95,14 +84,14 @@ the name of the user or organization that own the repository containing the proj
 4. GitHub Package set up is now complete. Publish the package by following the instructions in
 [Publishing the Common Library](#publishing-the-common-library).
 
-### Installing a GitHub Package ###
+### Setting up a GitHub Package to be Installed ###
 
 The following instructions are for setting up an already existing application to be able to
 communicate with GitHub so that an `npm` created GitHub Package can be consumed:
 
 1. In the same directory as the app `package.json` file, create or edit an `.npmrc` file and add
     ```
-    registry=https://npm.pkg.github.com/OWNER
+    @OWNER:registry=https://npm.pkg.github.com
     ```
     replacing `OWNER` with the name of the user or organization account that own the repository
     containing the project.
@@ -121,11 +110,22 @@ look something like:
       "author": "",
       "license": "MIT",
       "dependencies": {
-        "@openwaterfoundation/common": "0.0.1-alpha.2"
+        "@OpenWaterFoundation/common": "0.0.1-alpha.6"
       }
     }
     ```
-4. Install the package by typing `npm install` like any other npm package.
+4. The package can now be installed by typing `npm install` like any other npm package.
+
+### Installing a GitHub Package  ###
+
+To install the dependencies of a project using GitHub Packages from a git clone, perform the
+following steps (assuming InfoMapper is being used):
+
+1. `cd` into the directory that will hold the repository folder.
+2. `git clone git@github.com:OpenWaterFoundation/owf-app-infomapper-ng.git`
+3. `cd owf-app-infomapper-ng/infomapper`
+4. Follow step `5` under [Publishing the Common Library](#publishing-the-common-library)
+5. Run `npm install`
 
 ## Running Unit Tests
 
