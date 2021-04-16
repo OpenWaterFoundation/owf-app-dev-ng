@@ -11,8 +11,7 @@ export class ZoomDisablePipe implements PipeTransform {
 
     switch(args[1]) {
       case 'address-radio':
-        console.log('value:', value);
-        if (value.toUpperCase().includes('POLYGON')) {
+        if (typeof value != 'undefined' && value.toUpperCase().includes('POLYGON')) {
           return false;
         } else {
           return true;

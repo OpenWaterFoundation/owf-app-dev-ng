@@ -76,6 +76,10 @@ export class DialogDataTableComponent implements OnInit {
    */
   public matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
   /**
+   * 
+   */
+  public defaultRadioDisabled = true;
+  /**
    * The type of search the filter is currently performing. Can be:
    * * `columns`
    * * `address`
@@ -458,9 +462,21 @@ export class DialogDataTableComponent implements OnInit {
    * 
    */
   public toggleSearchInfo() {
-    if (this.matInputFilterText.startsWith('Filter all columns')) {
+    // console.log(this.defaultRadioDisabled);
+
+    // if (this.defaultRadioDisabled === true) {
+    //   this.defaultRadioDisabled = false;
+    //   this.matInputFilterText = 'Filter by an address. Press Enter to execute the filter.'
+    // } else if (this.defaultRadioDisabled === false) {
+    //   this.defaultRadioDisabled = true;
+    //   this.matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
+    // }
+    
+    if (this.searchType === 'columns') {
+      this.defaultRadioDisabled = true;
       this.matInputFilterText = 'Filter by an address. Press Enter to execute the filter.'
-    } else {
+    } else if (this.searchType === 'address') {
+      this.defaultRadioDisabled = false;
       this.matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
     }
     

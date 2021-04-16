@@ -130,49 +130,7 @@ following steps (assuming InfoMapper is being used):
 
 ## Changelog ##
 
-### 0.0.1-alpha.6 ###
-
-Bug Fixes
-
-Code Refactoring
-
-Features
-
-* 
-
-Performance Improvements
-
-Breaking Changes
-
-### 0.0.1-alpha.5 ###
-
-Bug Fixes
-
-Code Refactoring
-
-Features
-
-Performance Improvements
-
-Breaking Changes
-
-### 0.0.1-alpha.3 ###
-
-Bug Fixes
-
-Code Refactoring
-
-Features
-
-Performance Improvements
-
-Breaking Changes
-
-### 0.0.1-alpha.2 ###
-
-* Initial working common library
-* Contains dialogs, services, multi project environment, 
-
+See the Common library [Changelog](CHANGELOG.md).
 
 ## Running Unit Tests
 

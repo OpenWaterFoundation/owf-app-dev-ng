@@ -55,6 +55,7 @@ export class OwfCommonComponent implements OnInit {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.data = {
         allFeatures: allFeatures,
+        geometryType: 'WKT:Polygon',
         geoLayerId: geoLayerId,
         geoLayerViewName: geoLayerViewName,
         selectedLayers: selectedLayers,
