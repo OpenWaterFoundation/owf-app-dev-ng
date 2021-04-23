@@ -50,6 +50,18 @@ export class DialogPropertiesComponent implements OnInit {
    * The formatted string to be converted to HTML by Showdown.
    */
   public showdownHTML: string;
+  /** The Showdown config option object. Overrides the `app.module.ts` config option object. */
+  public showdownOptions = {
+    emoji: true,
+    flavor: 'github',
+    noHeaderId: true,
+    openLinksInNewWindow: true,
+    parseImgDimensions: true,
+    // This must exist in the config object and be set to false to work.
+    simpleLineBreaks: false,
+    strikethrough: true,
+    tables: true
+  }
   /**
    * A unique string representing the windowID of this Dialog Component in the WindowManager.
    */

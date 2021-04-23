@@ -962,7 +962,7 @@ export class OwfCommonService {
   /**
    * Sanitizes the markdown syntax by checking if image links are present, and replacing them with the full path to the
    * image relative to the markdown file being displayed. This eases usability so that just the name and extension of the
-   * file can be used e.g. ![Waldo](waldo.png) will be converted to ![Waldo](full/path/to/markdown/file/waldo.png)
+   * file can be used e.g. `![Waldo](waldo.png)` will be converted to `![Waldo](full/path/to/markdown/file/waldo.png)`
    * @param doc The documentation string retrieved from the markdown file
    */
   public sanitizeDoc(doc: string, pathType: IM.Path): string {

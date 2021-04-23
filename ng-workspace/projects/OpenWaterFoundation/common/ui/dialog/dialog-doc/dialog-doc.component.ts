@@ -41,6 +41,18 @@ export class DialogDocComponent implements OnInit {
    * The string to show as the DialogDoc title.
    */
   public informationName: string;
+  /** The Showdown config option object. Overrides an app `app.module.ts` config option object. */
+  public showdownOptions = {
+    emoji: true,
+    flavor: 'github',
+    noHeaderId: true,
+    openLinksInNewWindow: true,
+    parseImgDimensions: true,
+    // This must exist in the config object and be set to false to work.
+    simpleLineBreaks: false,
+    strikethrough: true,
+    tables: true
+  }
   /**
    * The formatted string to be converted into markdown by Showdown.
    */
@@ -84,7 +96,6 @@ export class DialogDocComponent implements OnInit {
       // Check to see if the markdown file has any input that is an image link syntax. If it does, we want users to
       // be able to set the path to the image relative to the markdown folder being displayed, so they don't have to
       // be burdened with putting a possibly extra long path.
-      // var sanitizedDoc = this.sanitizeDoc(this.doc);
       var sanitizedDoc = this.owfCommonService.sanitizeDoc(this.doc, IM.Path.mP);
 
       setTimeout(() => {

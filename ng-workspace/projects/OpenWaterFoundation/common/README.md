@@ -59,6 +59,11 @@ the command
       1. **Username** - GitHub username. This must be all lower case or it will ask again.
       2. **Password** - The GitHub Package access Token (GitHub password would also work).
       3. **Email** - GitHub email address.
+  
+    A successful login will show something similar to
+    ```shell
+      Logged in as <User> to scope @OpenWaterFoundation on https://npm.pkg.github.com/.
+    ```
 
 6. `npm publish` to publish the package using GitHub packages. More information can be found at
 [Setting up a Library to use GitHub Packages]().

@@ -10,6 +10,17 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.0.1-alpha.8 #
+
+### Bug Fixes ###
+
+* Added in showdownOptions into each component that uses Showdown. This configuration object
+is given to the converter on a component scope, and overrides any other top level Showdown
+option objects. On one hand, it prevents users from changing the options when using the common
+library. On the other, the options set would be used a majority of the time, and prevent users
+from adding a specific line into their own app.module.ts file when importing the ShowdownModule
+into the NgModule. This also prevents adding unwanted `<br>` tags in the converted HTML.
+
 # 0.0.1-alpha.7 #
 
 ### Bug Fixes ###

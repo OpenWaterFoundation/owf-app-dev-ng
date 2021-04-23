@@ -165,6 +165,7 @@ export class DialogDataTableComponent implements OnInit {
     // features if it does. This should hopefully help with large datasets, as it only checks when enter is pressed, and not for
     // every letter that the keyup is detected.
     else {
+      // TODO: jpkeahey 2021-04-20 - Update to also take Enter from the numpad Enter.
       if (event.code.toUpperCase() === 'ENTER') {
         this.selectedLayer = this.selectedLayers[this.geoLayerId];
         if (this.selectedLayer) {

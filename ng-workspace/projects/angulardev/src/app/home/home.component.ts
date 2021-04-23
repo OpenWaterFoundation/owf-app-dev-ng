@@ -13,14 +13,27 @@ import { ElementCache } from '../ElementCache';
 })
 export class HomeComponent implements OnInit {
   /**
-   * The string to be converted into HTML and shown as markdown using Showdown in this component's template.
-   */
-  public showdownHTML: string;
-  /**
    * The ElementCache Instance, that caches network retrieved elements so that a network request is unneeded if a user clicks
    * between multiple pages repeatedly.
    */
-  public cache: ElementCache = ElementCache.getInstance();
+   public cache: ElementCache = ElementCache.getInstance();
+  /**
+   * The string to be converted into HTML and shown as markdown using Showdown in this component's template.
+   */
+  public showdownHTML: string;
+  /** The Showdown config option object. Overrides the `app.module.ts` config option object. */
+  public showdownOptions = {
+    emoji: true,
+    flavor: 'github',
+    noHeaderId: true,
+    openLinksInNewWindow: true,
+    parseImgDimensions: true,
+    // This must exist in the config object and be set to false to work.
+    simpleLineBreaks: false,
+    strikethrough: true,
+    tables: true
+  }
+  
 
 
   /**

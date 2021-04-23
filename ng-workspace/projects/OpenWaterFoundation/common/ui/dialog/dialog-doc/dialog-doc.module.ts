@@ -18,7 +18,16 @@ import { DialogDocComponent } from './dialog-doc.component';
     DragDropModule,
     MatButtonModule,
     MatDialogModule,
-    ShowdownModule
+    ShowdownModule.forRoot({
+      emoji: true,
+      flavor: 'github',
+      noHeaderId: true,
+      openLinksInNewWindow: true,
+      parseImgDimensions: true,
+      simpleLineBreaks: false,
+      strikethrough: true,
+      tables: true
+    })
   ],
   exports: [
     DialogDocComponent

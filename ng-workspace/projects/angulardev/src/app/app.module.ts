@@ -75,7 +75,7 @@ const convert = new Showdown.Converter({
       simpleLineBreaks: false,
       strikethrough: true,
       tables: true
-       })
+    })
   ],
   providers: [
     AppService,

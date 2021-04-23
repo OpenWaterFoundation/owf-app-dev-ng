@@ -23,7 +23,7 @@
   <div *ngIf="docMarkdown" class="doc-contents">
     <div id="docMarkdownDiv">
       <!-- [options]="options" -->
-      <showdown [value]="showdownHTML" class="doc-contents-text"></showdown>
+      <showdown [value]="showdownHTML" [options]="showdownOptions" class="doc-contents-text"></showdown>
     </div>
   </div>
   <!-- Show the contents of a regular HTML file -->
