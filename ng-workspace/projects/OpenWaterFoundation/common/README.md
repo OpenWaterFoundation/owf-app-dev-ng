@@ -61,7 +61,7 @@ the command
       3. **Email** - GitHub email address.
   
     A successful login will show something similar to
-    ```shell
+    ```
       Logged in as <User> to scope @OpenWaterFoundation on https://npm.pkg.github.com/.
     ```
 

@@ -1,5 +1,6 @@
  import { Component,
           Inject,
+          OnDestroy,
           OnInit }                      from '@angular/core';
 import { MatDialogRef,
           MAT_DIALOG_DATA }             from '@angular/material/dialog';
@@ -20,7 +21,7 @@ import { MapLayerManager }              from '@OpenWaterFoundation/common/ui/lay
   templateUrl: './dialog-data-table.component.html',
   styleUrls: ['./dialog-data-table.component.css', '../main-dialog-style.css']
 })
-export class DialogDataTableComponent implements OnInit {
+export class DialogDataTableComponent implements OnInit, OnDestroy {
 
   public addressLat: number;
 
@@ -376,6 +377,15 @@ export class DialogDataTableComponent implements OnInit {
    * Closes the Mat Dialog popup when the Close button is clicked.
    */
   public onClose(): void {
+    this.dialogRef.close();
+    this.windowManager.removeWindow(this.windowID);
+  }
+
+  /**
+   * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
+   * a new map, make sure to close the dialog and remove it from the window manager.
+   */
+  public ngOnDestroy(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }

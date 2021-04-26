@@ -1,5 +1,6 @@
 import { Component,
           Inject,
+          OnDestroy,
           OnInit }                      from '@angular/core';
 import { MatDialogRef,
           MAT_DIALOG_DATA }             from '@angular/material/dialog';
@@ -21,7 +22,7 @@ import { WindowManager }                from '@OpenWaterFoundation/common/ui/win
   templateUrl: './dialog-tstable.component.html',
   styleUrls: ['./dialog-tstable.component.css', '../main-dialog-style.css']
 })
-export class DialogTSTableComponent implements OnInit {
+export class DialogTSTableComponent implements OnInit, OnDestroy {
 
   /**
    * The object housing the data to be displayed in the data table as a TableVirtualScrollDataSource instance. Used to virtually
@@ -104,6 +105,15 @@ export class DialogTSTableComponent implements OnInit {
    * Closes the Mat Dialog popup when the Close button is clicked.
    */
   public onClose(): void {
+    this.dialogRef.close();
+    this.windowManager.removeWindow(this.windowID);
+  }
+
+  /**
+   * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
+   * a new map, make sure to close the dialog and remove it from the window manager.
+   */
+  public ngOnDestroy(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }

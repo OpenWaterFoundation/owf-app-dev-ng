@@ -10,6 +10,18 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.0.1-alpha.9 #
+
+### Bug Fixes ###
+
+* Dialogs were only being closed and removed from the window manager when either of the top or
+bottom close buttons were clicked inside the Dialog. If a user navigates away from the current
+page, like a markdown link for example, the URL would change for the InfoMapper, and the close
+function would not be called. The same functions called from the onClose function have now been
+copied into each dialog Component's onDestroy function (Dialog Text, TSTable, Doc, etc.). This
+is a pre-defined function from Angular that is called when the Component is destroyed. This way,
+any dialog will successfully have its clean-up functions called.
+
 # 0.0.1-alpha.8 #
 
 ### Bug Fixes ###

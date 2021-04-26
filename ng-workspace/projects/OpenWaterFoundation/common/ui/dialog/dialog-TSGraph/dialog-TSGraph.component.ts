@@ -1,5 +1,7 @@
 import { Component,
-          Inject }                from '@angular/core';
+          Inject, 
+          OnDestroy, 
+          OnInit}                from '@angular/core';
 import { MatDialog,
           MatDialogConfig,
           MatDialogRef,
@@ -35,7 +37,7 @@ declare var Plotly: any;
   templateUrl: './dialog-TSGraph.component.html',
   styleUrls: ['./dialog-TSGraph.component.css', '../main-dialog-style.css']
 })
-export class DialogTSGraphComponent {
+export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
   /**
    * The array of objects to pass to the tstable component for data table creation.
@@ -860,6 +862,15 @@ export class DialogTSGraphComponent {
    * Closes the Mat Dialog popup when the Close button is clicked.
    */
   public onClose(): void {
+    this.dialogRef.close();
+    this.windowManager.removeWindow(this.buttonID);
+  }
+
+  /**
+   * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
+   * a new map, make sure to close the dialog and remove it from the window manager.
+   */
+  public ngOnDestroy(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.buttonID);
   }

@@ -1,5 +1,6 @@
 import { Component,
           Inject,
+          OnDestroy,
           OnInit }          from '@angular/core';
 
 import { MatDialogRef,
@@ -20,7 +21,7 @@ import * as Showdown        from 'showdown';
   templateUrl: './dialog-properties.component.html',
   styleUrls: ['./dialog-properties.component.css', '../main-dialog-style.css']
 })
-export class DialogPropertiesComponent implements OnInit {
+export class DialogPropertiesComponent implements OnInit, OnDestroy {
   /**
    * The layer's geoLayerId.
    */
@@ -254,6 +255,15 @@ export class DialogPropertiesComponent implements OnInit {
    * Closes the Mat Dialog popup when the Close button is clicked.
    */
   public onClose(): void {
+    this.dialogRef.close();
+    this.windowManager.removeWindow(this.windowID);
+  }
+
+  /**
+   * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
+   * a new map, make sure to close the dialog and remove it from the window manager.
+   */
+  public ngOnDestroy(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }

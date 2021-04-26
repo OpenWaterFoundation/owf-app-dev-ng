@@ -1,6 +1,7 @@
 import { Component,
           OnInit,
-          Inject }          from '@angular/core';
+          Inject, 
+          OnDestroy}          from '@angular/core';
 import { MatDialogRef,
           MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -17,7 +18,7 @@ import * as FileSaver       from 'file-saver';
   templateUrl: './dialog-text.component.html',
   styleUrls: ['./dialog-text.component.css', '../main-dialog-style.css']
 })
-export class DialogTextComponent implements OnInit {
+export class DialogTextComponent implements OnInit, OnDestroy {
 
   /**
    * A string representing the button ID of the button clicked to open this dialog.
@@ -75,6 +76,15 @@ export class DialogTextComponent implements OnInit {
    * Closes the Mat Dialog popup when the Close button is clicked.
    */
   public onClose(): void {
+    this.dialogRef.close();
+    this.windowManager.removeWindow(this.buttonID);
+  }
+
+  /**
+   * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
+   * a new map, make sure to close the dialog and remove it from the window manager.
+   */
+  public ngOnDestroy(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.buttonID);
   }

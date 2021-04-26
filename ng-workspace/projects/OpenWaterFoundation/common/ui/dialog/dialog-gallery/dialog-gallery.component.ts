@@ -1,5 +1,6 @@
 import { Component,
           Inject,
+          OnDestroy,
           OnInit }             from '@angular/core';
 
 import { MatDialogRef,
@@ -17,7 +18,7 @@ import { WindowManager }       from '@OpenWaterFoundation/common/ui/window-manag
   templateUrl: './dialog-gallery.component.html',
   styleUrls: ['./dialog-gallery.component.css', '../main-dialog-style.css']
 })
-export class DialogGalleryComponent implements OnInit {
+export class DialogGalleryComponent implements OnInit, OnDestroy {
   /**
    * All features of a geoLayerView.
    */
@@ -241,6 +242,15 @@ export class DialogGalleryComponent implements OnInit {
    * Closes the Mat Dialog popup when the Close button is clicked.
    */
   public onClose(): void {
+    this.dialogRef.close();
+    this.windowManager.removeWindow(this.windowID);
+  }
+
+  /**
+   * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
+   * a new map, make sure to close the dialog and remove it from the window manager.
+   */
+   public ngOnDestroy(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }

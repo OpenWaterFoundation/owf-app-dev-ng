@@ -1,5 +1,6 @@
 import { Component,
           Inject,
+          OnDestroy,
           OnInit, }         from '@angular/core';
 import { MatDialogRef,
           MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -15,31 +16,18 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
   templateUrl: './dialog-doc.component.html',
   styleUrls: ['./dialog-doc.component.css', '../main-dialog-style.css']
 })
-export class DialogDocComponent implements OnInit {
-
-  /**
-   * Boolean showing if the current documentation type is a regular text file.
-   */
+export class DialogDocComponent implements OnInit, OnDestroy {
+  /** Boolean showing if the current documentation type is a regular text file. */
   public docText: boolean;
-  /**
-   * Boolean showing if the current documentation type is a markdown file.
-   */
+  /** Boolean showing if the current documentation type is a markdown file. */
   public docMarkdown: boolean;
-  /**
-   * Boolean showing if the current documentation type is an HTML file.
-   */
+  /** Boolean showing if the current documentation type is an HTML file. */
   public docHTML: boolean;
-  /**
-   * The string containing the documentation that needs to be displayed in this DialogDocComponent.
-   */
+  /** The string containing the documentation that needs to be displayed in this DialogDocComponent. */
   public doc: string;
-  /**
-   * The string representing the path to the documentation file to be displayed.
-   */
+  /** The string representing the path to the documentation file to be displayed. */
   public docPath: string;
-  /**
-   * The string to show as the DialogDoc title.
-   */
+  /** The string to show as the DialogDoc title. */
   public informationName: string;
   /** The Showdown config option object. Overrides an app `app.module.ts` config option object. */
   public showdownOptions = {
@@ -112,6 +100,16 @@ export class DialogDocComponent implements OnInit {
    * Closes the Mat Dialog popup when the Close button is clicked.
    */
   public onClose(): void {
+    console.log('Dialog closed and removed from the Window Manager');
+    this.dialogRef.close();
+    this.windowManager.removeWindow(this.windowID);
+  }
+
+  /**
+   * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
+   * a new map, make sure to close the dialog and remove it from the window manager.
+   */
+  public ngOnDestroy(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }
