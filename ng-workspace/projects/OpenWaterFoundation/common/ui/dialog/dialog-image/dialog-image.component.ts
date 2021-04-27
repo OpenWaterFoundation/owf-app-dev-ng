@@ -14,25 +14,20 @@ import { WindowManager }     from '@OpenWaterFoundation/common/ui/window-manager
   styleUrls: ['./dialog-image.component.css', '../main-dialog-style.css']
 })
 export class DialogImageComponent implements OnInit {
-  /**
-   * Unique ID for this dialog to be used by the Window Manager.
-   */
+  /** Unique ID for this dialog to be used by the Window Manager. */
   public dialogID: string;
-  /**
-   * The optional description to be shown underneath the image.
-   */
+  /** The optional description to be shown underneath the image. */
   public imageDescription: string;
-  /**
-   * The name of the image being displayed in the dialog.
-   */
+  /** The name of the image being displayed in the dialog. */
   public imageName: string;
-  /**
-   * The absolute path to the image file.
-   */
+  /** The absolute path to the image file. */
   public imagePath: string;
   /**
-   * The windowManager instance for managing the opening and closing of windows throughout the InfoMapper.
+   * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
+   * To be set in the app service for relative paths.
    */
+   public mapConfigPath: string;
+  /** The windowManager instance for managing the opening and closing of windows throughout the InfoMapper. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
 
@@ -44,9 +39,10 @@ export class DialogImageComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<DialogImageComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
-    this.imagePath = dataObject.data.imagePath;
     this.dialogID = dataObject.data.dialogID;
+    this.imagePath = dataObject.data.imagePath;
     this.imageDescription = dataObject.data.imageDescription ? dataObject.data.imageDescription : '';
+    this.mapConfigPath = dataObject.data.mapConfigPath;
   }
 
 
@@ -54,6 +50,8 @@ export class DialogImageComponent implements OnInit {
    * 
    */
   ngOnInit(): void {
+    // this.owfCommonService.setMapConfigPath(this.mapConfigPath);
+
     this.imageName = this.imagePath.split('/')[this.imagePath.split('/').length - 1]
   }
 

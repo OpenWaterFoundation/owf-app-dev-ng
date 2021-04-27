@@ -22,63 +22,44 @@ import { MapLayerManager }              from '@OpenWaterFoundation/common/ui/lay
   styleUrls: ['./dialog-data-table.component.css', '../main-dialog-style.css']
 })
 export class DialogDataTableComponent implements OnInit, OnDestroy {
-
+  /** The filtered address latitude. */
   public addressLat: number;
-
+  /** The filtered address longitude. */
   public addressLng: number;
-  /**
-   * Holds all features in the layer for determining if an address resides in a polygon.
-   */
+  /** Holds all features in the layer for determining if an address resides in a polygon. */
   public allLayerFeatures: any;
-  /**
-   * The original object containing all features in the layer.
-   */
+  /** The original object containing all features in the layer. */
   public attributeTableOriginal: any;
   /**
    * The copied object for displaying data a Material Table's cells. Is an instance of TableVirtualScrollDataSource, needed for
    * using the third party virtual scrolling with an Angular Material Table. It extends the Angular Material DataSource class.
    */
   public attributeTable: TableVirtualScrollDataSource<any>;
-  /**
-   * Array containing the names of all header columns in the Material Table.
-   */
+  /** Array containing the names of all header columns in the Material Table. */
   public displayedColumns: string[];
-  /**
-   * The layer's geoLayerId.
-   */
+  /** The layer's geoLayerId. */
   public geoLayerId: string;
-  /**
-   * The layer's geoLayerView name
-   */
+  /** The layer's geoLayerView name. */
   public geoLayerViewName: string;
-  /**
-   * 
-   */
+  /** The type of layer being queried for the data table. Used for determining whether to enable the zoom to address button. */
   public geometryType = 'WKT:Polygon';
   /**
-   * Object containing the URL as the key and value, so each link is unique. Used by the template file to use as the link's href.
+   * Object containing the URL as the key and value, so each link is unique.
+   * Used by the template file to use as the link's href.
    */
   public links: {} = {};
-  /**
-   * The reference to the Map Component's this.mainMap; the Leaflet map.
-   */
+  /** The reference to the Map Component's this.mainMap; the Leaflet map. */
   public mainMap: any;
   /**
    * The instance of the MapLayerManager, a helper class that manages MapLayerItem objects with Leaflet layers
    * and other layer data for displaying, ordering, and highlighting.
    */
   public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
-  /**
-   * Class variable the template file uses to display how many features are highlighted on the map.
-   */
+  /** Used by the template file to display how many features are highlighted on the map. */
   public matchedRows: number;
-  /**
-   * 
-   */
+  /** Dynamic string to show in the filter input area to a user. Default is set on initialization. */
   public matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
-  /**
-   * 
-   */
+  /** Used to determine which matInputFilterText option to display. */
   public defaultRadioDisabled = true;
   /**
    * The type of search the filter is currently performing. Can be:
@@ -87,7 +68,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    */
   public searchType = 'columns';
   /**
-   * This layer's selectedLayer that extends L.geoJSON. Highlights and displays under selected features, and resets/hide them
+   * This layer's selectedLayer that extends the Leaflet L.geoJSON class. Highlights and displays under selected features,
+   * and resets/hides them.
    */
   public selectedLayer: any;
   /**
@@ -97,20 +79,14 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public selectedLayers: any;
   // TODO: jpkeahey 2020.10.27 - Commented out. Will be used for row selection
   /**
-   * Class variable the template file uses to display how many rows (features in the layer) are selected on the data table.
+   * Used by the template file to display how many rows (features in the layer) are selected on the data table.
    */
   // public selectedRows = 0;
-  /**
-   * Object needed to show and deal with the checkboxes on the data table when selecting each row in the Material Table.
-   */
+  /** Object needed to show and deal with the checkboxes on the data table when selecting each row in the Material Table. */
   public selection: SelectionModel<any>;
-  /**
-   * A unique string representing the windowID of this Dialog Component in the WindowManager.
-   */
+  /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
   public windowID: string;
-  /**
-   * The windowManager instance, whose job it will be to create, maintain, and remove multiple open dialogs from the InfoMapper.
-   */
+  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs from the InfoMapper. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
 

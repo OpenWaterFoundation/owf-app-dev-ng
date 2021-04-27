@@ -19,9 +19,7 @@ import { WindowManager }       from '@OpenWaterFoundation/common/ui/window-manag
   styleUrls: ['./dialog-gallery.component.css', '../main-dialog-style.css']
 })
 export class DialogGalleryComponent implements OnInit, OnDestroy {
-  /**
-   * All features of a geoLayerView.
-   */
+  /** All features of a geoLayerView. */
   public allFeatures: any;
   /**
    * The object containing an event action's id as the key, and the entire event object from the popup template file
@@ -33,30 +31,23 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    * popup template file.
    */
   public eventObject: any;
-  /**
-   * The initial index of the picture in the @var galleryImages array when this DialogGalleryComponent was opened.
-   */
+  /** The initial index of the picture in the @var galleryImages array when this DialogGalleryComponent was opened. */
   private featureIndex: number;
-  /**
-   * Array of NgxGalleryOption objects containing optional data for creating the Gallery.
-   */
+  /** Array of NgxGalleryOption objects containing optional data for creating the Gallery. */
   public galleryOptions: NgxGalleryOptions[] = [];
-  /**
-   * Array of NgxGalleryImage objects for creating and showing images in the Gallery.
-   */
+  /** Array of NgxGalleryImage objects for creating and showing images in the Gallery. */
   public galleryImages: NgxGalleryImage[] = [];
-  /**
-   * The geoLayerId that the feature belongs to from the map configuration file.
-   */
+  /** The geoLayerId that the feature belongs to from the map configuration file. */
   public geoLayerId: string;
-  /**
-   * The geoLayerView that the feature belongs to from the map configuration file.
-   */
+  /** The geoLayerView that the feature belongs to from the map configuration file. */
   public geoLayerView: any;
-  /**
-   * The reference to the Leaflet map object.
-   */
+  /** The reference to the Leaflet map object. */
   public mainMap: any;
+  /**
+   * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
+   * To be set in the app service for relative paths.
+   */
+   public mapConfigPath: string;
   /**
    * The array containing the result objects from Papaparse, with the headers of the CSV file as keys, and the appropriate CSV
    * column as the value. Each object in the array counts as one line from the CSV file.
@@ -67,22 +58,16 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    * config file.
    */
   public pathResolver: string;
-  /**
-   * The object of a specific Leaflet LayerGroup that supports feature highlighting.
-   */
+  /** The object of a specific Leaflet LayerGroup that supports feature highlighting. */
   public selectedLayerGroup: any;
   /**
    * The object of all Leaflet LayerGroups that support feature highlighting. Each element in the object contains the geoLayerId
    * as the key, and the LayerGroup object as the value.
    */
   public selectedLayers: any;
-  /**
-   * A unique string representing the windowID of this Dialog Component in the WindowManager.
-   */
+  /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
   public windowID: string;
-  /**
-   * The windowManager instance, whose job it will be to create, maintain, and remove multiple open dialogs from the InfoMapper.
-   */
+  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs from the InfoMapper. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
 
@@ -105,6 +90,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
     this.papaResult = dataObject.data.papaResult;
     this.pathResolver = dataObject.data.pathResolver;
     this.mainMap = dataObject.data.mainMap;
+    this.mapConfigPath = dataObject.data.mapConfigPath;
     this.selectedLayers = dataObject.data.selectedLayers;
     this.windowID = this.geoLayerId + '-dialog-gallery';
   }
@@ -235,6 +221,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    * Called once after the constructor.
    */
   ngOnInit(): void {
+    this.owfCommonService.setMapConfigPath(this.mapConfigPath);
     this.buildGallery();
   }
 

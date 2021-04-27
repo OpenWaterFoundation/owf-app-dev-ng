@@ -1,12 +1,10 @@
 import { Injectable }      from '@angular/core';
 import { HttpClient }      from '@angular/common/http';
 import { MapLayerManager } from '@OpenWaterFoundation/common/ui/layer-manager';
-// import { DataUnits }       from '@OpenWaterFoundation/common/util/io';
 
 import * as IM             from './types';
 
 import { Observable }      from 'rxjs';
-import { map }             from 'rxjs/operators';
 
 
 @Injectable({
@@ -221,7 +219,10 @@ export class OwfCommonService {
       case IM.Path.sMP:
       case IM.Path.raP:
       case IM.Path.rP:
-        // If any of the pathType's above are given, they will be 
+        // If any of the pathType's above are given, they will either be given as an absolute or relative path. A forward
+        // slash at the beginning of the string signifies its absolute, so since assets/app/ is already given, just append
+        // the rest. If not, relative is assumed, so use the map config path as the 'home' of the path, e.g.
+        // 'assets/app/data-maps/map-configuration-files/'.
         if (path.startsWith('/')) {
           return path.substring(1);
         } else {
@@ -1105,7 +1106,7 @@ export class OwfCommonService {
   }
 
   /**
-   * Sets the @var mapConfigPath to the path to the map configuration file in the application
+   * Sets the @var mapConfigPath to the path of the map configuration file in the application.
    * @param path The path to set to
    */
   public setMapConfigPath(path: string): void {

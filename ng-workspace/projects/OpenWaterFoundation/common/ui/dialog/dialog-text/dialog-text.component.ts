@@ -19,26 +19,20 @@ import * as FileSaver       from 'file-saver';
   styleUrls: ['./dialog-text.component.css', '../main-dialog-style.css']
 })
 export class DialogTextComponent implements OnInit, OnDestroy {
-
-  /**
-   * A string representing the button ID of the button clicked to open this dialog.
-   */
-  public buttonID: string;
-  /**
-   * The text to be displayed in the dialog.
-   */
-  public text: any;
-  /**
-   * A string representing the file extension that the text came from. Used for the Download button tooltip.
-   */
+  /** A string representing the file extension that the text came from. Used for the Download button tooltip. */
   public fileExtension: string;
-  /**
-   * A string representing the name that the text came from.
-   */
+  /** A string representing the name that the text came from. */
   public fileName: string;
   /**
-   * The windowManager instance for managing the opening and closing of windows throughout the InfoMapper.
+   * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
+   * To be set in the app service for relative paths.
    */
+   public mapConfigPath: string;
+  /** The text to be displayed in the dialog. */
+  public text: any;
+  /** A string representing the button ID of the button clicked to open this dialog. */
+  public windowID: string;
+  /** The windowManager instance for managing the opening and closing of windows throughout the InfoMapper. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
 
@@ -52,7 +46,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
               private owfCommonService: OwfCommonService,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
-    this.buttonID = dataObject.data.buttonID;
+    this.windowID = dataObject.data.windowID;
     this.text = dataObject.data.text;
     this.fileName = dataObject.data.resourcePath;
     if (this.fileName.includes('.')) {
@@ -60,6 +54,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
     } else {
       this.fileExtension = this.fileName;
     }
+    this.mapConfigPath = dataObject.data.mapConfigPath;
   }
 
 
@@ -67,6 +62,8 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    * Called once on Component initialization, right after the constructor.
    */
   ngOnInit(): void {
+    this.owfCommonService.setMapConfigPath(this.mapConfigPath);
+
     var splitPath = this.fileName.split('/');
     this.fileName = splitPath[splitPath.length - 1];
     
@@ -77,7 +74,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    */
   public onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.buttonID);
+    this.windowManager.removeWindow(this.windowID);
   }
 
   /**
@@ -86,7 +83,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    */
   public ngOnDestroy(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.buttonID);
+    this.windowManager.removeWindow(this.windowID);
   }
 
   /**
