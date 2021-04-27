@@ -7,11 +7,11 @@ import { MatDialogRef,
           MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
 
 import { MapLayerManager,
           MapLayerItem }    from '@OpenWaterFoundation/common/ui/layer-manager';
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
+import * as IM              from '@OpenWaterFoundation/common/services';
 
 import * as Showdown        from 'showdown';
 
@@ -22,34 +22,25 @@ import * as Showdown        from 'showdown';
   styleUrls: ['./dialog-properties.component.css', '../main-dialog-style.css']
 })
 export class DialogPropertiesComponent implements OnInit, OnDestroy {
-  /**
-   * The layer's geoLayerId.
-   */
+  /** The layer's geoLayerId. */
   public geoLayerId: string;
-  /**
-   * The reference to the layer's geoLayer object.
-   */
+  /** The reference to the layer's geoLayer object. */
   public geoLayer: any;
-  /**
-   * The MapLayerItem that represents the layer for the properties being displayed.
-   */
+  /** The MapLayerItem that represents the layer for the properties being displayed. */
   public layerItem: MapLayerItem;
-  /**
-   * An array of all properties for this layer.
-   */
+  /** An array of all properties for this layer. */
   public layerProperties: string[];
+  /**
+   * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
+   * To be set in the app service for relative paths.
+   */
+  public mapConfigPath: string;
   /**
    * The instance of the MapLayerManager, a helper class that manages MapLayerItem objects with Leaflet layers
    * and other layer data for displaying, ordering, and highlighting.
    */
   public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
-  /**
-   * String to use as an absolute path to the geoJson layer file.
-   */
-  public pathResolver: string;
-  /**
-   * The formatted string to be converted to HTML by Showdown.
-   */
+  /** The formatted string to be converted to HTML by Showdown. */
   public showdownHTML: string;
   /** The Showdown config option object. Overrides the `app.module.ts` config option object. */
   public showdownOptions = {
@@ -63,13 +54,9 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
     strikethrough: true,
     tables: true
   }
-  /**
-   * A unique string representing the windowID of this Dialog Component in the WindowManager.
-   */
+  /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
   public windowID: string;
-  /**
-   * The windowManager instance, whose job it will be to create, maintain, and remove multiple open dialogs from the InfoMapper.
-   */
+  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs from the InfoMapper. */
   public windowManager: WindowManager = WindowManager.getInstance();
   
 
@@ -87,9 +74,9 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
     this.geoLayer = dataObject.data.geoLayer;
     this.geoLayerId = dataObject.data.geoLayerId;
     this.layerProperties = dataObject.data.layerProperties;
-    this.windowID = this.geoLayerId + '-dialog-properties';
     this.layerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
-    this.pathResolver = dataObject.data.pathResolver;
+    this.mapConfigPath = dataObject.data.mapConfigPath;
+    this.windowID = this.geoLayerId + '-dialog-properties';
   }
 
 
@@ -202,8 +189,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
     }
     
 
-    // var fullPath: string = this.owfCommonService.buildPath(IM.Path.gLGJP, [this.geoLayer.sourcePath]);
-    var fullPath = this.pathResolver + this.geoLayer.sourcePath;
+    var fullPath: string = this.owfCommonService.buildPath(IM.Path.gLGJP, [this.geoLayer.sourcePath]);
     var formattedPath = this.owfCommonService.condensePath(fullPath, 'link');
 
     markdownString += '\n## Download Layer ##\n\n' +
@@ -238,6 +224,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
    * The initial function called in this component. Called once, after ngOnChanges().
    */
   ngOnInit(): void {
+    this.owfCommonService.setMapConfigPath(this.mapConfigPath);
     this.formatLayerProperties();
 
     var markdownString = this.buildMarkdownString();

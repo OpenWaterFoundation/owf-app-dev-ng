@@ -10,6 +10,16 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.0.1-alpha.10 #
+
+### Bug Fixes ###
+
+* Fixed the path resolver issue, where if a file from the InfoMapper wanted to use a path
+relative to its map configuration file, the dialog wouldn't know where to find it. Each
+dialog has the path resolver variable 'mapConfigPath' defined and set to the common library's
+service, so the relative path can be found with building paths. This is set even if the dialog
+is not currently using a relative path, but will be ready in the future.
+
 # 0.0.1-alpha.9 #
 
 ### Bug Fixes ###

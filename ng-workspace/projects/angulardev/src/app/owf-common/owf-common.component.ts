@@ -263,7 +263,7 @@ export class OwfCommonComponent implements OnInit {
     this.owfCommonService.getPlainText("assets/app/Text/text-files/0300911.H2.xdd").subscribe((text: any) => {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.data = {
-        buttonID: windowID,
+        windowID: windowID,
         text: text,
         resourcePath: pathObj.absolutePath + pathObj.relativePath + 'text-files/0300911.H2.xdd'
       }
@@ -298,7 +298,7 @@ export class OwfCommonComponent implements OnInit {
     // Create a MatDialogConfig object to pass to the DialogTSGraphComponent for the graph that will be shown
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      buttonID: 'uniqueTSGraphButtonId',
+      windowID: 'uniqueTSGraphWindowId',
       // featureProperties: featureProperties,
       chartPackage: 'plotly',
       // graphTemplate: graphTemplateObject,

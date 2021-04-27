@@ -23,31 +23,20 @@ import { WindowManager }                from '@OpenWaterFoundation/common/ui/win
   styleUrls: ['./dialog-tstable.component.css', '../main-dialog-style.css']
 })
 export class DialogTSTableComponent implements OnInit, OnDestroy {
-
   /**
    * The object housing the data to be displayed in the data table as a TableVirtualScrollDataSource instance. Used to virtually
    * scroll large data tables quickly and efficiently.
    */
   public attributeTable: TableVirtualScrollDataSource<any>;
-  /**
-   * The name of the first column, which could be DATE or DATE / TIME.
-   */
+  /** The name of the first column, which could be DATE or DATE / TIME. */
   public dateTimeColumnName: string;
-  /**
-   * An array of strings of each column name in the data table.
-   */
+  /** An array of strings of each column name in the data table. */
   public displayedColumns: string[] = [];
-  /**
-   * A string representing the downloadFile action property from the popup configuration file if one is given.
-   */
+  /** A string representing the downloadFile action property from the popup configuration file if one is given. */
   public downloadFileName: string;
-  /**
-   * The object containing the selected feature's properties as the key, and the description/value as the value.
-   */
+  /** The object containing the selected feature's properties as the key, and the description/value as the value. */
   public featureProperties: any;
-  /**
-   * Boolean showing whether the file trying to be downloaded was originally a TS file.
-   */
+  /** Shows whether the file trying to be downloaded was originally a TS file. */
   private isTSFile: boolean;
   /**
    * The array of TS objects that was originally read in using the StateMod or DateValue Java converted code. Needed when
@@ -55,16 +44,13 @@ export class DialogTSTableComponent implements OnInit, OnDestroy {
    */
   public TSArrayRef: TS[];
   /**
-   * An array for holding all column header titles for the data table past the first column. To be used for downloading as CSV.
+   * An array for holding all column header titles for the data table past the first column.
+   * To be used for downloading as a CSV file.
    */
   public valueColumns: string[];
-  /**
-   * A unique string representing the windowID of this Dialog Component in the WindowManager.
-   */
+  /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
   public windowID: string;
-  /**
-   * The windowManager instance, whose job it will be to create, maintain, and remove multiple open dialogs from the InfoMapper.
-   */
+  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs from the InfoMapper. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
 

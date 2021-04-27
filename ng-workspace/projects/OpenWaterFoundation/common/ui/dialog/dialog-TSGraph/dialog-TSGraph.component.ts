@@ -24,7 +24,7 @@ import { WindowManager,
           WindowType }            from '@OpenWaterFoundation/common/ui/window-manager';
 
 import * as Papa                  from 'papaparse';
-import * as moment_                from 'moment';
+import * as moment_               from 'moment';
 const moment = moment_;
 import { Chart }                  from 'chart.js';
 import                                 'chartjs-plugin-zoom';
@@ -38,63 +38,43 @@ declare var Plotly: any;
   styleUrls: ['./dialog-TSGraph.component.css', '../main-dialog-style.css']
 })
 export class DialogTSGraphComponent implements OnInit, OnDestroy {
-
-  /**
-   * The array of objects to pass to the tstable component for data table creation.
-   */
+  /** The array of objects to pass to the tstable component for data table creation. */
   public attributeTable: any[] = [];
-  /**
-   * This variable lets the template file know if neither a CSV, DateValue, or StateMod file is given.
-   */
+  /** This variable lets the template file know if neither a CSV, DateValue, or StateMod file is given. */
   public badFile = false;
-  /**
-   * A string representing the button ID of the button clicked to open this dialog.
-   */
-  public buttonID: string;
-  /**
-   * A string representing the chartPackage property given (or not) from a popup configuration file.
-   */
+  /** A string representing the button ID of the button clicked to open this dialog. */
+  public windowID: string;
+  /** A string representing the chartPackage property given (or not) from a popup configuration file. */
   public chartPackage: string;
-  /**
-   * A string containing the name to be passed to the TSTableComponent's first column name: DATE or DATE / TIME.
-   */
+  /** A string containing the name to be passed to the TSTableComponent's first column name: DATE or DATE / TIME. */
   public dateTimeColumnName: string;
-  /**
-   * The graph template object retrieved from the popup configuration file property resourcePath.
-   */
+  /** The graph template object retrieved from the popup configuration file property resourcePath. */
   public graphTemplateObject: any;
-  /**
-   * The name of the download file for the dialog-tstable component.
-   */
+  /** The name of the download file for the dialog-tstable component. */
   private downloadFileName: string;
-  /**
-   * The object containing all of the layer's feature properties.
-   */
+  /** The object containing all of the layer's feature properties. */
   public featureProperties: any;
-  /**
-   * The absolute or relative path to the data file used to populate the graph being created.
-   */
+  /** The absolute or relative path to the data file used to populate the graph being created. */
   public graphFilePath: string;
-  // TODO: jpkeahey 2020.09.22 - Set to false so the Material progress bar never shows up
-  /**
-   * 
-   */
+  /** Set to false so the Material progress bar never shows up.*/
   public isLoading = false;
-  /**
-   * Boolean for helping dialog-tstable component determine what kind of file needs downloading.
-   */
+  /** Boolean for helping dialog-tstable component determine what kind of file needs downloading. */
   public isTSFile: boolean;
+  /** A string representing the documentation retrieved from the txt, md, or html file to be displayed for a layer. */
+  public mainTitleString: string;
+  /**
+   * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
+   * To be set in the app service for relative paths.
+   */
+  public mapConfigPath: string;
   /**
    * The array of TS objects that was originally read in using the StateMod or DateValue Java converted code. Used as a
    * reference in the dialog-tstable component for downloading to the user's local machine.
    */
   public TSArrayOGResultRef: TS[];
   /**
-   * A string representing the documentation retrieved from the txt, md, or html file to be displayed for a layer.
-   */
-  public mainTitleString: string;
-  /**
-   * The string representing the TSID before the first '~' in the graph template object. Used to help create a unique graph ID.
+   * The string representing the TSID before the first tilde (~) in the graph template object. Used to help create
+   * a unique graph ID.
    */
   public TSID_Location: string;
   /**
@@ -102,9 +82,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * downloading files.
    */
   public valueColumns: string[] = [];
-  /**
-   * The windowManager instance, whose job it will be to create, maintain, and remove multiple open dialogs from the InfoMapper.
-   */
+  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs from the InfoMapper. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
 
@@ -120,12 +98,13 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
               public dialogRef: MatDialogRef<DialogTSGraphComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
-    this.buttonID = dataObject.data.buttonID;
+    this.windowID = dataObject.data.windowID;
     this.featureProperties = dataObject.data.featureProperties;
     this.chartPackage = dataObject.data.chartPackage;
     this.downloadFileName = dataObject.data.downloadFileName ? dataObject.data.downloadFileName : undefined;
     this.graphTemplateObject = dataObject.data.graphTemplate;
     this.graphFilePath = dataObject.data.graphFilePath;
+    this.mapConfigPath = dataObject.data.mapConfigPath;
     this.TSID_Location = dataObject.data.TSID_Location;
   }
 
@@ -702,7 +681,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     };
     // Plots the actual plotly graph with the given <div> id, data array, layout and configuration objects organize and maintain
     // multiple opened dialogs in the future.  (https://plotly.com/javascript/plotlyjs-function-reference/#plotlyplot)
-    Plotly.react(this.buttonID + this.TSID_Location, finalData, layout, plotlyConfig);
+    Plotly.react(this.windowID + this.TSID_Location, finalData, layout, plotlyConfig);
   }
 
 
@@ -833,8 +812,9 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   * for graph creation.
   */
   // TODO: jpkeahey 2020.07.02 - Might need to change how this is implemented, since Steve said both CSV and StateMod (or other)
-  // files could be in the same popup template file. They might not be mutually exclusive in the future
+  // files could be in the same popup template file. They might not be mutually exclusive in the future.
   ngOnInit(): void {
+    this.owfCommonService.setMapConfigPath(this.mapConfigPath);
     this.owfCommonService.setChartTemplateObject(this.graphTemplateObject);
     this.owfCommonService.setGraphFilePath(this.graphFilePath);
     this.owfCommonService.setTSIDLocation(this.TSID_Location);
@@ -863,7 +843,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    */
   public onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.buttonID);
+    this.windowManager.removeWindow(this.windowID);
   }
 
   /**
@@ -872,7 +852,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    */
   public ngOnDestroy(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.buttonID);
+    this.windowManager.removeWindow(this.windowID);
   }
 
   /**
@@ -885,7 +865,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     //   this.attributeTable = this.attributeTable.concat(this.attributeTable);
     // }
 
-    var windowID = this.buttonID + '-dialog-tsTable';
+    var windowID = this.windowID + '-dialog-tsTable';
     if (this.windowManager.windowExists(windowID)) {
       return;
     }

@@ -16,6 +16,11 @@ import * as display       from './js/gapminder-util/display-data';
 export class DialogGapminderComponent  {
   // Define gapminder configuration: Will be set by providing path to openDialog function
   public configurationFile;
+  /**
+   * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
+   * To be set in the app service for relative paths.
+   */
+   public mapConfigPath: string;
   // Define gapminder Ref for function calls in template
   // public gapminderRef = gapminderv6;
 
@@ -23,11 +28,12 @@ export class DialogGapminderComponent  {
           public dialogRef: MatDialogRef<DialogGapminderComponent>,
           @Inject(MAT_DIALOG_DATA) public dataObject: any) { 
           
-            this.configurationFile = dataObject.data.resourcePath;
-      
+    this.configurationFile = dataObject.data.resourcePath;
+    this.mapConfigPath = dataObject.data.mapConfigPath;
   }
 
   ngAfterViewInit(): void {
+    // this.owfCommonService.setMapConfigPath(this.mapConfigPath);
     console.log("Config path: ", this.configurationFile)
       // Get the element id="defaultOpen" and click for default option to be set
     document.getElementById("defaultOpen").click();

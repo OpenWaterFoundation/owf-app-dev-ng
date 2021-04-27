@@ -29,6 +29,11 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   public docPath: string;
   /** The string to show as the DialogDoc title. */
   public informationName: string;
+  /**
+   * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
+   * To be set in the app service for relative paths.
+   */
+   public mapConfigPath: string;
   /** The Showdown config option object. Overrides an app `app.module.ts` config option object. */
   public showdownOptions = {
     emoji: true,
@@ -41,17 +46,11 @@ export class DialogDocComponent implements OnInit, OnDestroy {
     strikethrough: true,
     tables: true
   }
-  /**
-   * The formatted string to be converted into markdown by Showdown.
-   */
+  /** The formatted string to be converted into markdown by Showdown. */
   public showdownHTML: string;
-  /**
-   * A unique string representing the windowID of this Dialog Component in the WindowManager.
-   */
+  /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
   public windowID: string;
-  /**
-   * The windowManager instance, whose job it will be to create, maintain, and remove multiple open dialogs from the InfoMapper.
-   */
+  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs from the InfoMapper. */
   public windowManager: WindowManager = WindowManager.getInstance();
   
 
@@ -72,6 +71,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
     else if (dataObject.data.docMarkdown) this.docMarkdown = true;
     else if (dataObject.data.docHtml) this.docHTML = true;
 
+    this.mapConfigPath = dataObject.data.mapConfigPath;
     this.windowID = dataObject.data.windowID;
   }
 
@@ -79,6 +79,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
    * This function is called on initialization of the map component, right after the constructor.
    */
   ngOnInit(): void {
+    this.owfCommonService.setMapConfigPath(this.mapConfigPath);
 
     if (this.docMarkdown) {
       // Check to see if the markdown file has any input that is an image link syntax. If it does, we want users to
