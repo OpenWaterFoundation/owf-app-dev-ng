@@ -27,6 +27,8 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   public doc: string;
   /** The string representing the path to the documentation file to be displayed. */
   public docPath: string;
+  /** The full path to the folder containing the markdown file. */
+  public fullMarkdownPath: string;
   /** The string to show as the DialogDoc title. */
   public informationName: string;
   /**
@@ -60,6 +62,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
 
     this.doc = dataObject.data.doc;
     this.docPath = dataObject.data.docPath;
+    this.fullMarkdownPath = dataObject.data.fullMarkdownPath;
 
     if (dataObject.data.geoLayerView.name) {
       this.informationName = dataObject.data.geoLayerView.name;
@@ -80,6 +83,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.owfCommonService.setMapConfigPath(this.mapConfigPath);
+    this.owfCommonService.setFullMarkdownPath(this.fullMarkdownPath);
 
     if (this.docMarkdown) {
       // Check to see if the markdown file has any input that is an image link syntax. If it does, we want users to

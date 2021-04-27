@@ -158,7 +158,7 @@ export class OwfCommonService {
       case IM.Path.raP:
       case IM.Path.rP:
         if (pathType === IM.Path.dP) {
-          this.setFullMarkdownPath(this.getAppPath() + this.formatPath(arg[0], pathType));
+          this.setMarkdownPath(this.getAppPath() + this.formatPath(arg[0], pathType));
         }
         return this.getAppPath() + this.formatPath(arg[0], pathType);
       case IM.Path.bSIP:
@@ -1030,18 +1030,8 @@ export class OwfCommonService {
    */
   public setDataUnitsArr(dataUnits: any[]): void { this.dataUnits = dataUnits; }
 
-  /**
-   * 
-   * @param path 
-   */
-  private setFullMarkdownPath(path: string): void {
-    
-    var fullMarkdownPath = '';
-    let splitPath: string[] = path.split('/');
-    for (let i = 0; i < splitPath.length - 1; i++) {
-      fullMarkdownPath += splitPath[i] + '/';
-    }
-    this.fullMarkdownPath = fullMarkdownPath;
+  public setFullMarkdownPath(path: string) {
+    this.fullMarkdownPath = path;
   }
 
   /**
@@ -1111,6 +1101,20 @@ export class OwfCommonService {
    */
   public setMapConfigPath(path: string): void {
     this.mapConfigPath = path;
+  }
+
+  /**
+   * 
+   * @param path 
+   */
+  private setMarkdownPath(path: string): void {
+    
+    var fullMarkdownPath = '';
+    let splitPath: string[] = path.split('/');
+    for (let i = 0; i < splitPath.length - 1; i++) {
+      fullMarkdownPath += splitPath[i] + '/';
+    }
+    this.fullMarkdownPath = fullMarkdownPath;
   }
 
   /**
