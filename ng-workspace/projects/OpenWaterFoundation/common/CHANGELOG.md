@@ -10,6 +10,48 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.1.0 #
+
+### Bug Fixes ###
+
+* Fixed an bug where the function that determines whether a point of coordinates reside inside
+of a polygon was not working correctly. Replace the single function with Turf.js, a geospatial
+analysis package, which seems to have fixed the issue.
+
+### Features ###
+
+* Added ability to highlight polygons when filtered in the Data Table.
+* Added ability to zoom to polygons using a Turf.js created boundary box.
+
+### Code Refactoring ###
+
+* Gutted how a selection layer was created in the InfoMapper app, and instead will create it in
+the common library. This way, only features that are found are added to the selected layer, and
+not all of them, which could negatively effect user experience if there are hundreds.
+* Changed the clear selection code so that each layer can still clear highlighted features, but
+added the ability to add in a global clear selection button in the future.
+* Added some error testing if an address is given when the search layer data radio button is
+selected, if an address isn't found, etc.
+
+
+# 0.0.1 #
+
+### Bug Fixes ###
+
+* Fixed a bug in the Data Table Dialog where the Zoom to Address button shows up even if the
+Find from Address radio button was not there.
+* Squished a bug that wouldn't know how to display an image in Dialog Doc markdown when given
+a relative path to the image from where the markdown file lives. The component needed another
+property from the InfoMapper so the library could set its own fullMarkdownPath in the top
+level service.
+
+### Feature ###
+
+* Not a feature per se, but `-alpha.X` was removed from the package version now that there is
+more confidence in building and publishing new versions of the package. In fact, publishing was
+deemed to be happening too quickly, and subsequent version updates will either have multiple
+updates/fixes/changes, or contain a high-priority/critical bug fix if not.
+
 # 0.0.1-alpha.10 #
 
 ### Bug Fixes ###

@@ -4,7 +4,8 @@ import { MapLayerManager } from '@OpenWaterFoundation/common/ui/layer-manager';
 
 import * as IM             from './types';
 
-import { Observable }      from 'rxjs';
+import { BehaviorSubject,
+          Observable }     from 'rxjs';
 
 
 @Injectable({
@@ -49,6 +50,14 @@ export class OwfCommonService {
    * The hard-coded string of the path to the default icon path that will be used for the website if none is given.
    */
   public readonly defaultFaviconPath = 'assets/app-default/img/OWF-Logo-Favicon-32x32.ico';
+  /**
+   * 
+   */
+  public highlighted = new BehaviorSubject(false);
+  /**
+   * 
+   */
+  public highlightedData = this.highlighted.asObservable();
   /**
    * The boolean representing if a favicon path has been provided by the user.
    */
@@ -200,6 +209,10 @@ export class OwfCommonService {
       }
       return finalPath.join('/');
     }
+  }
+
+  public featureHighlighted(highlighted: boolean): any {
+    return this.highlighted.next(highlighted);
   }
 
   /**

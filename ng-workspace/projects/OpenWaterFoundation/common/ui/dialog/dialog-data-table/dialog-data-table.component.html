@@ -131,7 +131,7 @@
         <button mat-menu-item
                 class="zoom-to-address"
                 (click)="zoomToAddress()"
-                [disabled]="geometryType | zoomDisable : matchedRows : 'address-zoom'"
+                [disabled]="searchType | zoomDisable : matchedRows : 'address-zoom'"
                 [hidden]="geometryType | zoomDisable : 'null' : 'address-radio'">
           <i class="fa fa-search-plus fa-2x"></i>
           Zoom to address
@@ -140,7 +140,7 @@
         <button mat-menu-item
                 class="zoom-to-selected"
                 (click)="zoomToFeatures()"
-                [disabled]="selectedLayers | zoomDisable : geoLayerId : 'selected-layers'">
+                [disabled]="selectedLayer | zoomDisable : geoLayerId : 'selected-layers'">
           <i class="fa fa-search-plus fa-2x"></i>
           Zoom to selected features
         </button>

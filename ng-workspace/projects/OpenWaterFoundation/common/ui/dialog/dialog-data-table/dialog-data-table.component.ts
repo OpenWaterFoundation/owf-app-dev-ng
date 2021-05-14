@@ -1,19 +1,26 @@
  import { Component,
+          EventEmitter,
           Inject,
           OnDestroy,
-          OnInit }                      from '@angular/core';
+          OnInit,
+          Output }                      from '@angular/core';
 import { MatDialogRef,
           MAT_DIALOG_DATA }             from '@angular/material/dialog';
 import { SelectionModel }               from '@angular/cdk/collections';
 
-import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
+import booleanPointInPolygon            from '@turf/boolean-point-in-polygon';
+import bbox                             from '@turf/bbox';
 
+import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
 import * as FileSaver                   from 'file-saver';
 
 import { OwfCommonService }             from '@OpenWaterFoundation/common/services';
 import * as IM                          from '@OpenWaterFoundation/common/services';
 import { WindowManager }                from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapLayerManager }              from '@OpenWaterFoundation/common/ui/layer-manager';
+
+// import * as L from 'leaflet';
+declare var L: any;
 
 
 @Component({
@@ -26,6 +33,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public addressLat: number;
   /** The filtered address longitude. */
   public addressLng: number;
+  /** The Leaflet Marker object for displaying when an address is filtered on the map. */
+  public addressMarker: any;
   /** Holds all features in the layer for determining if an address resides in a polygon. */
   public allLayerFeatures: any;
   /** The original object containing all features in the layer. */
@@ -35,14 +44,22 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * using the third party virtual scrolling with an Angular Material Table. It extends the Angular Material DataSource class.
    */
   public attributeTable: TableVirtualScrollDataSource<any>;
+
+  public currentLayer: any;
   /** Array containing the names of all header columns in the Material Table. */
   public displayedColumns: string[];
+  /** EventEmitter that alerts the Map component (parent) that an update has happened, and sends the basin name. */
+  @Output() featureHighlighted = new EventEmitter<boolean>();
   /** The layer's geoLayerId. */
   public geoLayerId: string;
   /** The layer's geoLayerView name. */
   public geoLayerViewName: string;
   /** The type of layer being queried for the data table. Used for determining whether to enable the zoom to address button. */
   public geometryType = 'WKT:Polygon';
+
+  public layerClassificationInfo: any;
+
+  public layerSymbol: any;
   /**
    * Object containing the URL as the key and value, so each link is unique.
    * Used by the template file to use as the link's href.
@@ -104,6 +121,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     this.attributeTable = new TableVirtualScrollDataSource(dataObject.data.allFeatures.features);
     this.attributeTableOriginal = JSON.parse(JSON.stringify(dataObject.data.allFeatures.features));
     this.allLayerFeatures = JSON.parse(JSON.stringify(dataObject.data.allFeatures.features));
+    this.currentLayer = L.geoJSON(dataObject.data.allFeatures);
     this.displayedColumns = Object.keys(dataObject.data.allFeatures.features[0].properties);
     // Manually add the select column to the displayed Columns. This way checkboxes can be added below
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
@@ -111,9 +129,10 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     this.geoLayerId = dataObject.data.geoLayerId;
     this.geoLayerViewName = dataObject.data.geoLayerViewName;
     this.geometryType = dataObject.data.geometryType;
+    this.layerClassificationInfo = dataObject.data.layerClassificationInfo;
+    this.layerSymbol = dataObject.data.layerSymbol;
     // This is needed for testing the library.
     // this.geometryType = 'WKT:Polygon';
-    this.selectedLayers = dataObject.data.selectedLayers;
     this.mainMap = dataObject.data.mainMap;
     this.matchedRows = this.attributeTable.data.length;
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
@@ -142,31 +161,23 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     // features if it does. This should hopefully help with large datasets, as it only checks when enter is pressed, and not for
     // every letter that the keyup is detected.
     else {
-      // TODO: jpkeahey 2021-04-20 - Update to also take Enter from the numpad Enter.
-      if (event.code.toUpperCase() === 'ENTER') {
-        this.selectedLayer = this.selectedLayers[this.geoLayerId];
-        if (this.selectedLayer) {
+      if (event.code && (event.code.toUpperCase() === 'ENTER' || event.code.toUpperCase() === 'NUMPADENTER')) {        
+        if (this.searchType === 'columns') {
           const filterValue = (event.target as HTMLInputElement).value;
           this.attributeTable.filter = filterValue.trim().toUpperCase();
           this.matchedRows = this.attributeTable.filteredData.length;
 
           this.highlightFeatures();
-        } else {
+        } else if (this.searchType === 'address') {
           const filterValue = (event.target as HTMLInputElement).value;
-          // Search for columns (default).
-          if (this.searchType === 'columns') {
-            this.attributeTable.filter = filterValue.trim().toUpperCase();
-            this.matchedRows = this.attributeTable.filteredData.length;
-          }
           // Search for an address using the geocodio service.
-          else if (this.searchType === 'address') {
-            this.filterByAddress(filterValue);
-          }
+          this.filterByAddress(filterValue);
         }
 
         
       }
     }
+    return;
   }
 
   /** The label for the checkbox on the passed row
@@ -198,61 +209,159 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         // use the first result in the array, as it will be the most accurate.
         this.addressLat = resultJSON.results[0].location.lat;
         this.addressLng = resultJSON.results[0].location.lng;
+
+        // var defaultMarker = L.icon({
+        //   iconUrl: 'assets/app/img/default-marker-25x41.png',
+        //   iconAnchor: [12, 41]
+        // });
+        // L.marker([this.addressLat, this.addressLng], { icon: defaultMarker }).addTo(this.mainMap);
       }
       console.log('GeoCodIO result ->', resultJSON);
       // Call the filter function for addresses. The user given input itself won't be used, but this is how the function
       // is called. Set the data rows to show by using the filtered data.
       this.attributeTable.filter = filterAddress.trim().toUpperCase();
       this.matchedRows = this.attributeTable.filteredData.length;
+      
+      // // This uses type casting so that a 'correct' GeoJsonObject is created for the L.geoJSON function.
+      // // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37370#issuecomment-577504151
+      // var geoJsonObj = {
+      //   type: "FeatureCollection" as const,
+      //   bbox: [],
+      //   features: []
+      // };
+
+      // // Iterate through each feature in the layer
+      // this.currentLayer.eachLayer((featureLayer: any) => {
+      //   console.log(featureLayer);
+      // });
+      // // Check to see if anything was actually found.
+      // if (geoJsonObj.features.length > 0) {
+      //   this.createSelectedLeafletClass(geoJsonObj);
+      // }
     });
   }
 
   /**
-   * Looks through each feature and each feature property to determine which feature should be highlighted on the Leaflet
+   * 
+   */
+   private createSelectedLeafletClass(geoJsonObj: any): void {
+
+    var _this = this;
+
+    var SelectedClass = L.GeoJSON.include({
+
+      highlightCount: 0,
+
+      addToHighlightCount: function() {
+        this.highlightCount += 1;
+      },
+
+      getHighlightCount: function() {
+        return this.highlightCount;
+      },
+
+      removeFromHighlightCount: function() {
+        this.highlightCount -= 1;
+      },
+
+      setSelectedStyleInit: function() {
+        this.setStyle({
+          opacity: '0',
+          fillOpacity: '0'
+        });
+      }
+
+    });
+
+    this.selectedLayer = new SelectedClass();
+
+    var symbolSizeType = (
+      this.layerSymbol.properties.symbolSize ? this.layerSymbol.properties.symbolSize :
+      this.layerClassificationInfo[this.geoLayerId] ? this.layerClassificationInfo[this.geoLayerId].symbolSize :
+      '4'
+    );
+    var symbolShapeType = (
+      this.layerSymbol.properties.symbolShape ? this.layerSymbol.properties.symbolShape.toLowerCase() :
+      this.layerClassificationInfo[this.geoLayerId] ? this.layerClassificationInfo[this.geoLayerId].symbolShape.toLowerCase() :
+      'circle'
+    )
+
+    if (geoJsonObj.features[0].geometry.type.toUpperCase().includes('POLYGON')) {
+      this.selectedLayer = L.geoJSON(geoJsonObj, {
+        style: function (feature: any) {
+          return {
+            className: _this.geoLayerId,
+            fillColor: '#ffff01',
+            fillOpacity: '0.7',
+            opacity: '0',
+            weight: 0
+          }
+        }
+      });
+    } else {
+      this.selectedLayer = L.geoJson(geoJsonObj, {
+        pointToLayer: (feature: any, latlng: any) => {
+          return L.shapeMarker(latlng, {
+            className: _this.geoLayerId,
+            color: 'red',
+            fillColor: '#ffff01',
+            fillOpacity: '1',
+            // Grab the radius from the feature, which was changed on initialization of the selected layer.
+            radius: parseInt(symbolSizeType) + 4,
+            shape: symbolShapeType,
+            opacity: '1',
+            weight: 2
+          });
+        }
+      });
+    }
+    
+
+    this.selectedLayer.addTo(this.mainMap);
+    this.selectedLayer.bringToBack();
+    
+  }
+
+  /**
+   * Looks through each feature and its properties to determine which should be highlighted on the Leaflet
    * map. Not the fastest at the moment.
    */
   private highlightFeatures(): void {
 
-    this.selectedLayer.bringToBack();
+    // This uses type casting so that a 'correct' GeoJsonObject is created for the L.geoJSON function.
+    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37370#issuecomment-577504151
+    var geoJsonObj = {
+      type: "FeatureCollection" as const,
+      bbox: [],
+      features: []
+    };
 
     // Iterate through each feature in the layer
-    this.selectedLayer.eachLayer((featureLayer: any) => {
-      
-      featureLayer.setStyle({
-        fillOpacity: '0',
-        opacity: '0'
-      });
+    this.currentLayer.eachLayer((featureLayer: any) => {
       // Iterate over each property in the feature
       for (let property in featureLayer.feature.properties) {
         if (featureLayer.feature.properties[property] !== null) {
           if (typeof featureLayer.feature.properties[property] === 'string') {
             if (featureLayer.feature.properties[property].toUpperCase().includes(this.attributeTable.filter)) {
-              featureLayer.setStyle({
-                color: 'red',
-                fillColor: 'yellow',
-                fillOpacity: '1',
-                radius: featureLayer.options.radius,
-                opacity: '1',
-                weight: 2
-              });
+              // this.owfCommonService.featureHighlighted(true);
+              geoJsonObj.features.push(featureLayer.feature);
               break;
             }
           } else if (typeof featureLayer.feature.properties[property] === 'number') {
             if ((featureLayer.feature.properties[property] + '').indexOf(this.attributeTable.filter) > -1) {
-              featureLayer.setStyle({
-                color: 'red',
-                fillColor: 'yellow',
-                fillOpacity: '1',
-                radius: featureLayer.options.radius,
-                opacity: '1',
-                weight: 2
-              });
+              geoJsonObj.features.push(featureLayer.feature);
+              // this.owfCommonService.featureHighlighted(true);
               break;
             }
           }
         }
       }
     });
+    // Check to see if anything was actually found.
+    if (geoJsonObj.features.length > 0) {
+      this.createSelectedLeafletClass(geoJsonObj);
+    }
+    
   }
 
   /** Whether the number of selected elements matches the total number of rows.
@@ -272,32 +381,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
       return numSelected === numRows;
     }
     
-  }
-
-  /**
-   * Uses the Ray Casting Algorithm to determine whether a set of coordinates exist inside a given polygon. It contains
-   * a second `for` loop so that it also works on donut shaped polygons. Ref: https://stackoverflow.com/a/42532563/11854796
-   * @param lat 
-   * @param lng 
-   * @param poly 
-   * @returns A boolean showing whether the given lat and long is inside the provided polygon or donut polygon.
-   */
-  private isInsidePolygon(lat: number, lng: number, poly: any): boolean {
-    var inside = false;
-    var x = lat, y = lng;
-    for (var ii=0; ii < poly.length; ii++){
-        var polyPoints = poly[ii];
-        for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
-            var xi = polyPoints[i][1], yi = polyPoints[i][0];
-            var xj = polyPoints[j][1], yj = polyPoints[j][0];
-
-            var intersect = ((yi > y) != (yj > y))
-                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-            if (intersect) inside = !inside;
-        }
-    }
-
-    return inside;
   }
 
   /** Selects all rows, or all filtered rows, if they are not all selected; otherwise clear selection.
@@ -429,6 +512,12 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     FileSaver.saveAs(data, this.owfCommonService.formatSaveFileName(this.geoLayerId, IM.SaveFileType.dataTable));
   }
 
+  /**
+   * 
+   * @param lat 
+   * @param long 
+   * @param bounds 
+   */
   private setZoomBounds(lat: number, long: number, bounds: IM.Bounds): void {
 
     if (lat > bounds.NEMaxLat) {
@@ -449,7 +538,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * 
    */
   public toggleSearchInfo() {
-    // console.log(this.defaultRadioDisabled);
 
     // if (this.defaultRadioDisabled === true) {
     //   this.defaultRadioDisabled = false;
@@ -518,14 +606,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         if (this.addressLat === -1 || this.addressLng === -1) {
           return false;
         }
-        // This function (filterPredicate) is called for each feature, so iterate over each polygon or multi-polygon array(s)
-        // and, using the the lat and long obtained from the geocodio query, determine whether they're inside.
-        for (let coordArr = 0; coordArr < data['geometry']['coordinates'].length; ++coordArr) {
-          if (this.isInsidePolygon(this.addressLat, this.addressLng, data['geometry']['coordinates'][coordArr]) === true) {
-            return true;
-          }
-        }
-        return false;
+        // Check if a point of coordinates reside in the currently searched polygon, given into the booleanPointWithinPolygon
+        // function from the @turf/boolean-point-within-polygon module.
+        return booleanPointInPolygon([this.addressLng, this.addressLat], data);
       }
       
       // For returning all results that contain the filter in the IncidentName
@@ -547,9 +630,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * When the kebab Zoom button is clicked on, get the correct coordinate bounds and zoom the map to them.
    */
   public zoomToFeatures(): void {
-    // Attempt to create the selectedLayer object.
-    this.selectedLayer = this.selectedLayers[this.geoLayerId];
-    //
+    // Create the Bounds object for 
     var bounds: IM.Bounds = {
       NEMaxLat : Number.NEGATIVE_INFINITY,
       NEMaxLong : Number.NEGATIVE_INFINITY,
@@ -558,9 +639,52 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     }
     // If the selected (or highlighted) layer exists, zoom to it on the map.
     if (this.selectedLayer) {
+      // Check if the layer is a polygon layer.
+      if (this.attributeTable.filteredData &&
+          this.attributeTable.filteredData[0].geometry.type.toUpperCase().includes('POLYGON')) {
+            // Fly to the box surrounding all features of the layer.
+            if (this.attributeTable.filteredData.length === this.attributeTableOriginal.length) {
+              // If the selectedLayer variable is created (if the Leaflet layer supports it e.g. Points, Markers, Images) then fly
+              // to the layer bounds on the map.
+              this.mainMap.flyToBounds(this.selectedLayer.getBounds(), {
+                animate: true,
+                duration: 1.5,
+                // easeLinearity: 1,
+                padding: [475, 0]
+              });
+              
+            } else if (this.attributeTable.filteredData.length > 1) {
+              // Iterate over each found feature and determine what the bounds should be.
+              this.attributeTable.filteredData.forEach((feature: any) => {
+                var feature_bbox = bbox(feature);
+                this.setZoomBounds(feature_bbox[3], feature_bbox[2], bounds);
+                this.setZoomBounds(feature_bbox[1], feature_bbox[0], bounds);
+              });
+
+              // The Lat and Long Bounds members have been set, and can be used as the bounds for the selected features.
+              var zoomBounds = [[bounds.NEMaxLat, bounds.NEMaxLong],
+                                [bounds.SWMinLat, bounds.SWMinLong]];
+              // Use the Leaflet map reference to fly to the bounds
+              this.mainMap.flyToBounds(zoomBounds, {
+              animate: true,
+              duration: 1.5,
+              padding: [475, 0]
+              });
+            } else if (this.attributeTable.filteredData.length === 1) {
+              var feature_bbox = bbox(this.attributeTable.filteredData[0]);
+              
+              var zoomBounds = [[feature_bbox[3], feature_bbox[2]],
+                                [feature_bbox[1], feature_bbox[0]]]
+              this.mainMap.flyToBounds(zoomBounds, {
+                animate: true,
+                duration: 1.5,
+                padding: [475, 0]
+              });
+            }
+            return;
+          }
       // Fly to the box surrounding all features of the layer.
       if (this.attributeTable.filteredData.length === this.attributeTableOriginal.length) {
-      
         // If the selectedLayer variable is created (if the Leaflet layer supports it e.g. Points, Markers, Images) then fly
         // to the layer bounds on the map
         this.mainMap.flyToBounds(this.selectedLayer.getBounds(), {

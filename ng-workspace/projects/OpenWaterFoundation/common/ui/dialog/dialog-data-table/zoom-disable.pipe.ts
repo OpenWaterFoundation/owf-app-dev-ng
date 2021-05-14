@@ -17,15 +17,15 @@ export class ZoomDisablePipe implements PipeTransform {
           return true;
         }
       case 'address-zoom':
-        if (args[0] === 1) {
+        if (value === 'address' && args[0] === 1) {
           return false;
         } else {
           return true;
         }
       case 'selected-layers':
-        var isSelectedLayer = value[args[0]];
+        // var isSelectedLayer = value[args[0]];
 
-        if (isSelectedLayer) {
+        if (value) {
           // If the selected layer exists, then we don't want the button to be disabled, so return false
           return false;
         } else {
