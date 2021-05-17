@@ -8,18 +8,11 @@ import * as $ from 'jquery';
  */
 // @dynamic
 export class MapLayerManager {
-
-  /**
-   * The instance of this MapLayerManager object.
-   */
+  /** The instance of this MapLayerManager object. */
   private static instance: MapLayerManager;
-  /**
-   * String array containing the geoLayerId of the reverse order each layer should be displayed in on the Leaflet map.
-   */
+  /** String array containing the geoLayerId of the reverse order each layer should be displayed in on the Leaflet map. */
   private mapConfigLayerOrder: string[];
-  /**
-   * The object to hold each MapLayerItem as the value, with the layer's geoLayerId as the key.
-   */
+  /** The object to hold each MapLayerItem as the value, with the layer's geoLayerId as the key. */
   private mapLayers: {} = {};
   /**
    * The object with each geoLayerViewGroup in the geoMap as the key, and an array of all geoLayerId's in the geoLayerViewGroup
@@ -27,10 +20,10 @@ export class MapLayerManager {
    */
   private layerViewGroups: {} = {};
 
-  /**
-   * A private constructor is declared so any instance of the class cannot be created elsewhere, getInstance must be called
-   */
+
+  /** A private constructor is declared so any instance of the class cannot be created elsewhere, getInstance must be called. */
   private constructor() { }
+
 
   /**
    * Only one instance of this MapLayerManager can be used at one time, making it a singleton Class.
@@ -82,6 +75,9 @@ export class MapLayerManager {
     return this.mapLayers[geoLayerId] ? this.mapLayers[geoLayerId] : null;
   }
 
+  /**
+   * @returns The object holding all MapLayerItems as its value, with the geoLayerId as the key.
+   */
   public getMapLayers(): any {
     return this.mapLayers;
   }

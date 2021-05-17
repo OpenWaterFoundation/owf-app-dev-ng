@@ -10,6 +10,31 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.1.3 #
+
+### Features ###
+
+* Added a marker to be displayed on an address when filtered in the Data Table. The address is
+attached to the layer so that toggling the layer on/off will affect the marker as well.
+
+* Updated some more of the MapLayerItem code so that if a user clears the input in the Data Table
+filter, all selected layers will be removed from the map instead of hidden, as this will keep
+adding layers to the map.
+
+* Implemented a `previous search` class variable to hold the string the user searched for last. This
+way, a complete data or address search wouldn't be done over and over each time the enter key was
+pressed on the same input string.
+
+### Bug Fixes ###
+
+* Fixed an issue where the filter input field wouldn't be updated correctly. If a user filtered
+an input string and hit enter, then selected the string and changed it to something else without
+explicitly deleting it (i.e. setting the input to an empty string), selected layers from the first
+search would still remain on the map. So if two addresses were searched this way, two markers and
+two highlighted features would display on the map. Now when enter is pressed, (if the user input
+has changed) a check for any currently highlighted layers is done, and any are removed before new
+selected highlight layers are added.
+
 # 0.1.2 #
 
 ### Bug Fixes ###

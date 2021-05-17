@@ -4,6 +4,8 @@ import * as $ from 'jquery';
  * A class that holds Leaflet and geoMapProject layer information and data. 
  */
 export class MapLayerItem {
+  /** A Marker to show where a filtered address resides on the map, connected to this LayerItem. */
+  private addressMarker: any;
   /** A boolean representing whether this Item's Leaflet layer has been added to the Leaflet map initially. */
   private addedToMainMap = false;
   /** A boolean representing whether this Item's Leaflet layer is currently being displayed on the map. */
@@ -45,6 +47,13 @@ export class MapLayerItem {
     this.init(leafletLayer, geoLayer, geoLayerView, geoLayerViewGroup, isRaster);
   }
 
+  /**
+   * Sets the given Marker to this LayerItem's @var addressMarker so it can be attached for layer toggling.
+   * @param addressMarker The Marker to be added to this LayerItem.
+   */
+  public addAddressMarker(addressMarker: any): void {
+    this.addressMarker = addressMarker;
+  }
 
   /**
    * Adds the Leaflet layer from this layer item back onto the Leaflet map, set the @var displayed to true, hides both the
@@ -56,6 +65,10 @@ export class MapLayerItem {
     // Check to see if a selected layer exists and add it to the map as well.
     if (this.selectedLayer) {
       this.selectedLayer.addTo(mainMap);
+    }
+    // Check to see if an address marker exists and add it to the map.
+    if (this.addressMarker) {
+      this.addressMarker.addTo(mainMap);
     }
     this.displayed = true;
 
@@ -95,6 +108,13 @@ export class MapLayerItem {
    */
   public getItemSelectBehavior(): string {
     return this.selectBehavior;
+  }
+
+  /**
+   * @returns Whether this LayerItem has any currently shown selected highlight layers or markers.
+   */
+  public hasSelectedLayers(): boolean {
+    return (this.selectedLayer || this.addressMarker) ? true : false;
   }
 
   /**
@@ -140,6 +160,10 @@ export class MapLayerItem {
     // Check to see if a selected layer exists and add it to the map as well.
     if (this.selectedLayer) {
       this.selectedLayer.addTo(mainMap);
+    }
+    // Check to see if an address marker exists and add it to the map.
+    if (this.addressMarker) {
+      this.addressMarker.addTo(mainMap);
     }
     this.addedToMainMap = true;
     this.displayed = true;
@@ -189,15 +213,35 @@ export class MapLayerItem {
   }
 
   /**
-   * Removes the Item Leaflet layer from the Leaflet map, sets the @var displayed to false, hides the description and symbol
-   * of the layer in the side bar, and toggles the slide toggle button from checked to off.
-   * @param mainMap The reference to the Leaflet map object
+   * Removes all selected highlighted layers connected to this LayerItem from the Leaflet map.
+   * @param mainMap The Leaflet map object reference.
    */
-  public removeItemLeafletLayerFromMainMap(mainMap: any): void {
-    mainMap.removeLayer(this.leafletLayer);
-    // Check to see if a selected layer exists and remove it from the map as well.
+  public removeAllSelectedLayers(mainMap: any): void {
+    // Check to see if a selected layer exists and remove it from the map.
     if (this.selectedLayer) {      
       mainMap.removeLayer(this.selectedLayer);
+    }
+    // Check to see if an address marker exists and remove it from the map.
+    if (this.addressMarker) {
+      mainMap.removeLayer(this.addressMarker);
+    }
+  }
+
+  /**
+   * Removes the Item Leaflet layer from the Leaflet map, sets the @var displayed to false, hides the description and symbol
+   * of the layer in the side bar, and toggles the slide toggle button from checked to off.
+   * @param mainMap The reference to the Leaflet map object.
+   */
+  public removeItemLeafletLayerFromMainMap(mainMap: any): void {
+    // Remove the main layer associated with this LayerItem.
+    mainMap.removeLayer(this.leafletLayer);
+    // Check to see if a selected layer exists and remove it from the map.
+    if (this.selectedLayer) {      
+      mainMap.removeLayer(this.selectedLayer);
+    }
+    // Check to see if an address marker exists and remove it from the map.
+    if (this.addressMarker) {
+      mainMap.removeLayer(this.addressMarker);
     }
     this.displayed = false;
 

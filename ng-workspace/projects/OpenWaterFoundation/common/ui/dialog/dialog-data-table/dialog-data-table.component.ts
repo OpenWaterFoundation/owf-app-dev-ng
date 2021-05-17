@@ -47,6 +47,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public attributeTable: TableVirtualScrollDataSource<any>;
 
   public currentLayer: any;
+  /** Used to determine which matInputFilterText option to display. */
+  public defaultRadioDisabled = true;
   /** Array containing the names of all header columns in the Material Table. */
   public displayedColumns: string[];
   /** EventEmitter that alerts the Map component (parent) that an update has happened, and sends the basin name. */
@@ -77,8 +79,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public matchedRows: number;
   /** Dynamic string to show in the filter input area to a user. Default is set on initialization. */
   public matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
-  /** Used to determine which matInputFilterText option to display. */
-  public defaultRadioDisabled = true;
+  /** Holds the string that was previously entered by the user. */
+  private prevSearch = '';
   /**
    * The type of search the filter is currently performing. Can be:
    * * `columns`
@@ -147,14 +149,22 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * @param event The event passed when a DOM event is detected (user inputs into filter field)
    */
   public applyFilter(event: KeyboardEvent) {
+    // Check to see if the filter value changed
+    if ((event.target as HTMLInputElement).value === this.prevSearch) {
+      return;
+    }
+
     // If the keyup event is an empty string, then the user has either selected text and deleted it, or backspaced until the
     // search field is empty. In that case, do the table search and if the selected layer exists, reset the highlighting.
     if ((event.target as HTMLInputElement).value === '') {
       const filterValue = (event.target as HTMLInputElement).value;
+      this.prevSearch = filterValue;
       this.attributeTable.filter = filterValue.trim().toUpperCase();
       this.matchedRows = this.attributeTable.data.length;
       if (this.selectedLayer) {
-        this.selectedLayer.setSelectedStyleInit();
+        var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
+        layerItem.removeAllSelectedLayers(this.mainMap);
+        this.selectedLayer = undefined;
       }
     }
     // If the keyup event is not empty, attempt to populate the selectedLayer object. If the Enter key was not pressed by the user,
@@ -162,15 +172,23 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     // features if it does. This should hopefully help with large datasets, as it only checks when enter is pressed, and not for
     // every letter that the keyup is detected.
     else {
-      if (event.code && (event.code.toUpperCase() === 'ENTER' || event.code.toUpperCase() === 'NUMPADENTER')) {        
+      if (event.code && (event.code.toUpperCase() === 'ENTER' || event.code.toUpperCase() === 'NUMPADENTER')) {
+        // Check if any selected layers need to be removed first.
+        var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
+        if (layerItem.hasSelectedLayers() === true) {
+          layerItem.removeAllSelectedLayers(this.mainMap);
+        }
+
         if (this.searchType === 'columns') {
           const filterValue = (event.target as HTMLInputElement).value;
+          this.prevSearch = filterValue;
           this.attributeTable.filter = filterValue.trim().toUpperCase();
           this.matchedRows = this.attributeTable.filteredData.length;
 
           this.highlightFeatures();
         } else if (this.searchType === 'address') {
           const filterValue = (event.target as HTMLInputElement).value;
+          this.prevSearch = filterValue;
           // Search for an address using the geocodio service.
           this.filterByAddress(filterValue);
         }
@@ -211,13 +229,22 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         this.addressLat = resultJSON.results[0].location.lat;
         this.addressLng = resultJSON.results[0].location.lng;
 
-        // var defaultMarker = L.icon({
-        //   iconUrl: 'assets/app/img/default-marker-25x41.png',
-        //   iconAnchor: [12, 41]
-        // });
-        // L.marker([this.addressLat, this.addressLng], { icon: defaultMarker }).addTo(this.mainMap);
+        var defaultIcon = L.icon({
+          className: 'selectedMarker',
+          iconUrl: 'assets/app/img/default-marker-25x41.png',
+          iconAnchor: [12, 41]
+        });
+        var addressMarker = L.marker([this.addressLat, this.addressLng], { icon: defaultIcon }).addTo(this.mainMap);
+        addressMarker.bindTooltip(resultJSON.results[0].formatted_address, {
+          className: 'address-marker',
+          direction: 'right',
+          permanent: true
+        });
+        // Obtain the MapLayerItem for this layer and the created selected layer to it.
+        var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
+        layerItem.addAddressMarker(addressMarker);
       }
-      console.log('GeoCodIO result ->', resultJSON);
+      console.log('GeoCodIO result ->', resultJSON.results[0]);
       // Call the filter function for addresses. The user given input itself won't be used, but this is how the function
       // is called. Set the data rows to show by using the filtered data.
       this.attributeTable.filter = filterAddress.trim().toUpperCase();
