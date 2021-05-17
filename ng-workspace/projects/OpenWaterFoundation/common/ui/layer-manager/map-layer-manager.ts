@@ -75,8 +75,8 @@ export class MapLayerManager {
   }
 
   /**
-   * @returns the MapLayerItem whose key matches the geoLayerId given, or null if not
-   * @param geoLayerId The desired layer's geoLayerId
+   * @returns the MapLayerItem whose key matches the geoLayerId given, or null if not.
+   * @param geoLayerId The desired layer's geoLayerId.
    */
   public getLayerItem(geoLayerId: string): MapLayerItem {
     return this.mapLayers[geoLayerId] ? this.mapLayers[geoLayerId] : null;

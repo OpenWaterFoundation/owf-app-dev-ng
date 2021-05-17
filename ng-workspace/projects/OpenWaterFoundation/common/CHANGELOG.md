@@ -10,6 +10,17 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.1.2 #
+
+### Bug Fixes ###
+
+* Updated the MapLayerItem class so that selected highlight layers are added. This way, when
+a user toggles the layer on/off, the selected layer will follow suit.
+
+### Features ###
+
+* Changed a selected highlight layer's opacity from `0.7` to `0.4`.
+
 # 0.1.0 #
 
 ### Bug Fixes ###

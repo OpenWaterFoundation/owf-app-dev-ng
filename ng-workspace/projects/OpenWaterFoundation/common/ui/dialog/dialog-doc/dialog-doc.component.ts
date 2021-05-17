@@ -105,7 +105,6 @@ export class DialogDocComponent implements OnInit, OnDestroy {
    * Closes the Mat Dialog popup when the Close button is clicked.
    */
   public onClose(): void {
-    console.log('Dialog closed and removed from the Window Manager');
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }

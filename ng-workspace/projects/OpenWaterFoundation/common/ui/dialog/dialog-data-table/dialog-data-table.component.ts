@@ -17,7 +17,8 @@ import * as FileSaver                   from 'file-saver';
 import { OwfCommonService }             from '@OpenWaterFoundation/common/services';
 import * as IM                          from '@OpenWaterFoundation/common/services';
 import { WindowManager }                from '@OpenWaterFoundation/common/ui/window-manager';
-import { MapLayerManager }              from '@OpenWaterFoundation/common/ui/layer-manager';
+import { MapLayerManager,
+          MapLayerItem }                from '@OpenWaterFoundation/common/ui/layer-manager';
 
 // import * as L from 'leaflet';
 declare var L: any;
@@ -222,27 +223,32 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
       this.attributeTable.filter = filterAddress.trim().toUpperCase();
       this.matchedRows = this.attributeTable.filteredData.length;
       
-      // // This uses type casting so that a 'correct' GeoJsonObject is created for the L.geoJSON function.
-      // // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37370#issuecomment-577504151
-      // var geoJsonObj = {
-      //   type: "FeatureCollection" as const,
-      //   bbox: [],
-      //   features: []
-      // };
+      // This uses type casting so that a 'correct' GeoJsonObject is created for the L.geoJSON function.
+      // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37370#issuecomment-577504151
+      var geoJsonObj = {
+        type: "FeatureCollection" as const,
+        bbox: [],
+        features: []
+      };
 
-      // // Iterate through each feature in the layer
-      // this.currentLayer.eachLayer((featureLayer: any) => {
-      //   console.log(featureLayer);
-      // });
-      // // Check to see if anything was actually found.
-      // if (geoJsonObj.features.length > 0) {
-      //   this.createSelectedLeafletClass(geoJsonObj);
-      // }
+      // Iterate through each feature in the layer
+      this.currentLayer.eachLayer((featureLayer: any) => {
+                
+        if (booleanPointInPolygon([this.addressLng, this.addressLat], featureLayer.feature.geometry) === true) {
+          geoJsonObj.features.push(featureLayer.feature.geometry);
+        }
+      });
+      // Check to see if anything was actually found.
+      if (geoJsonObj.features.length > 0) {
+        // Create the selected layer.
+        this.createSelectedLeafletClass(geoJsonObj);
+      }
     });
   }
 
   /**
    * 
+   * @param geoJsonObj The geoJson object created to be given to the -
    */
    private createSelectedLeafletClass(geoJsonObj: any): void {
 
@@ -285,37 +291,74 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
       this.layerClassificationInfo[this.geoLayerId] ? this.layerClassificationInfo[this.geoLayerId].symbolShape.toLowerCase() :
       'circle'
     )
-
-    if (geoJsonObj.features[0].geometry.type.toUpperCase().includes('POLYGON')) {
-      this.selectedLayer = L.geoJSON(geoJsonObj, {
-        style: function (feature: any) {
-          return {
-            className: _this.geoLayerId,
-            fillColor: '#ffff01',
-            fillOpacity: '0.7',
-            opacity: '0',
-            weight: 0
+    // This exists when this function is called with an address.
+    if (geoJsonObj.features[0].geometry) {
+      if (geoJsonObj.features[0].geometry.type.toUpperCase().includes('POLYGON')) {
+        this.selectedLayer = L.geoJSON(geoJsonObj, {
+          style: function (feature: any) {
+            return {
+              className: _this.geoLayerId,
+              fillColor: '#ffff01',
+              fillOpacity: '0.4',
+              opacity: '0',
+              weight: 0
+            }
           }
-        }
-      });
-    } else {
-      this.selectedLayer = L.geoJson(geoJsonObj, {
-        pointToLayer: (feature: any, latlng: any) => {
-          return L.shapeMarker(latlng, {
-            className: _this.geoLayerId,
-            color: 'red',
-            fillColor: '#ffff01',
-            fillOpacity: '1',
-            // Grab the radius from the feature, which was changed on initialization of the selected layer.
-            radius: parseInt(symbolSizeType) + 4,
-            shape: symbolShapeType,
-            opacity: '1',
-            weight: 2
-          });
-        }
-      });
+        });
+      } else {
+        this.selectedLayer = L.geoJson(geoJsonObj, {
+          pointToLayer: (feature: any, latlng: any) => {
+            return L.shapeMarker(latlng, {
+              className: _this.geoLayerId,
+              color: 'red',
+              fillColor: '#ffff01',
+              fillOpacity: '1',
+              // Grab the radius from the feature, which was changed on initialization of the selected layer.
+              radius: parseInt(symbolSizeType) + 4,
+              shape: symbolShapeType,
+              opacity: '1',
+              weight: 2
+            });
+          }
+        });
+      }
+    }
+    // The geometry property will exist when this function is called for a regular data search.
+    else {      
+      if (geoJsonObj.features[0].type.toUpperCase().includes('POLYGON')) {
+        this.selectedLayer = L.geoJSON(geoJsonObj, {
+          style: function (feature: any) {
+            return {
+              className: _this.geoLayerId,
+              fillColor: '#ffff01',
+              fillOpacity: '0.4',
+              opacity: '0',
+              weight: 0
+            }
+          }
+        });
+      } else {
+        this.selectedLayer = L.geoJson(geoJsonObj, {
+          pointToLayer: (feature: any, latlng: any) => {
+            return L.shapeMarker(latlng, {
+              className: _this.geoLayerId,
+              color: 'red',
+              fillColor: '#ffff01',
+              fillOpacity: '1',
+              // Grab the radius from the feature, which was changed on initialization of the selected layer.
+              radius: parseInt(symbolSizeType) + 4,
+              shape: symbolShapeType,
+              opacity: '1',
+              weight: 2
+            });
+          }
+        });
+      }
     }
     
+    // Obtain the MapLayerItem for this layer and the created selected layer to it.
+    var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
+    layerItem.addSelectedLayer(this.selectedLayer);
 
     this.selectedLayer.addTo(this.mainMap);
     this.selectedLayer.bringToBack();

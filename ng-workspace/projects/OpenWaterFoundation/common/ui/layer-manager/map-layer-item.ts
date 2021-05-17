@@ -4,43 +4,32 @@ import * as $ from 'jquery';
  * A class that holds Leaflet and geoMapProject layer information and data. 
  */
 export class MapLayerItem {
-  /**
-   * A boolean representing whether this Item's Leaflet layer has been added to the Leaflet map initially.
-   */
+  /** A boolean representing whether this Item's Leaflet layer has been added to the Leaflet map initially. */
   private addedToMainMap = false;
-  /**
-   * A boolean representing whether this Item's Leaflet layer is currently being displayed on the map.
-   */
+  /** A boolean representing whether this Item's Leaflet layer is currently being displayed on the map. */
   private displayed = false;
-  /**
-   * A boolean representing whether the Leaflet layer of this Item is a raster layer.
-   */
+  /** A boolean representing whether the Leaflet layer of this Item is a raster layer. */
   private isRaster: boolean;
-  /**
-   * A boolean representing whether the Leaflet layer iof this Item is a vector layer.
-   */
+  /** A boolean representing whether the Leaflet layer iof this Item is a vector layer. */
   private isVector: boolean;
-  /**
-   * The Item's geoLayerId that it belongs to.
-   */
+  /** The Item's geoLayerId that it belongs to. */
   private layerItemGeoLayerId: string;
-  /**
-   * The Item's geoLayerViewGroupId of the geoLayerViewGroup it belongs to.
-   */
+  /** The Item's geoLayerViewGroupId of the geoLayerViewGroup it belongs to. */
   private layerItemViewGroupId: string;
-  /**
-   * The Leaflet layer created to be shown on the Leaflet map.
-   */
+  /** The Leaflet layer created to be shown on the Leaflet map. */
   private leafletLayer: any;
   /**
    * The selectedBehavior property for this Item's Leaflet layer. Default is Any, signifying that the Item's geoLayerViewGroup
    * can have some, all or no layers opened or closed at given time.
    */
   private selectBehavior = 'Any';
-  /**
-   * The selectedInitial property for this Item's Leaflet layer for initially displaying the layer on the map.
-   */
+  /** The selectedInitial property for this Item's Leaflet layer for initially displaying the layer on the map. */
   private selectInitial: boolean;
+  /**
+   * A separate selected geoJSON layer used for highlighting on the map. Can be added to the MapLayerItem so a map toggle
+   * will effect both the selected highlighted layer and the regularly shown MapItem layer as well.
+   */
+  private selectedLayer: any;
 
 
   /**
@@ -64,6 +53,10 @@ export class MapLayerItem {
    */
   public addItemLeafletLayerToMainMap(mainMap: any): void {
     mainMap.addLayer(this.leafletLayer);
+    // Check to see if a selected layer exists and add it to the map as well.
+    if (this.selectedLayer) {
+      this.selectedLayer.addTo(mainMap);
+    }
     this.displayed = true;
 
     (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = true;
@@ -73,6 +66,14 @@ export class MapLayerItem {
     let symbols = $("#symbols-" + this.layerItemGeoLayerId);
     symbols.css('visibility', 'visible');
     symbols.css('height', '100%');
+  }
+
+  /**
+   * 
+   * @param selectedLayer The geoJSON created Leaflet layer to be added to the layer item.
+   */
+  public addSelectedLayer(selectedLayer: any): void {
+    this.selectedLayer = selectedLayer;
   }
 
   /**
@@ -136,6 +137,10 @@ export class MapLayerItem {
       this.leafletLayer.setZIndex(999);
     }
     this.leafletLayer.addTo(mainMap);
+    // Check to see if a selected layer exists and add it to the map as well.
+    if (this.selectedLayer) {
+      this.selectedLayer.addTo(mainMap);
+    }
     this.addedToMainMap = true;
     this.displayed = true;
 
@@ -190,6 +195,10 @@ export class MapLayerItem {
    */
   public removeItemLeafletLayerFromMainMap(mainMap: any): void {
     mainMap.removeLayer(this.leafletLayer);
+    // Check to see if a selected layer exists and remove it from the map as well.
+    if (this.selectedLayer) {      
+      mainMap.removeLayer(this.selectedLayer);
+    }
     this.displayed = false;
 
     (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = false;
