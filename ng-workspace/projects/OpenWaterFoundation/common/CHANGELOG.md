@@ -10,6 +10,14 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.1.4 #
+
+### Bug Fixes ###
+
+* Not really a bug, but added `& Search` to a layer Data Table button option.
+* Updated how the zoom to selected features and address buttons are enabled and disabled. One
+address does not need to be exact anymore for the button to be enabled. 
+
 # 0.1.3 #
 
 ### Features ###

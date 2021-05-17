@@ -131,7 +131,7 @@
         <button mat-menu-item
                 class="zoom-to-address"
                 (click)="zoomToAddress()"
-                [disabled]="searchType | zoomDisable : matchedRows : 'address-zoom'"
+                [disabled]="searchType | zoomDisable : addressMarkerDisplayed : 'address-zoom'"
                 [hidden]="geometryType | zoomDisable : 'null' : 'address-radio'">
           <i class="fa fa-search-plus fa-2x"></i>
           Zoom to address

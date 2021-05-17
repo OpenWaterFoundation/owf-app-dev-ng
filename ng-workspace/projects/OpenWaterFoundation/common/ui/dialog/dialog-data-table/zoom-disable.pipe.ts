@@ -17,7 +17,7 @@ export class ZoomDisablePipe implements PipeTransform {
           return true;
         }
       case 'address-zoom':
-        if (value === 'address' && args[0] === 1) {
+        if (value === 'address' && args[0] === true) {
           return false;
         } else {
           return true;

@@ -113,8 +113,12 @@ export class MapLayerItem {
   /**
    * @returns Whether this LayerItem has any currently shown selected highlight layers or markers.
    */
-  public hasSelectedLayers(): boolean {
+  public hasAnySelectedLayers(): boolean {
     return (this.selectedLayer || this.addressMarker) ? true : false;
+  }
+
+  public hasSelectedLayer(): boolean {
+    return this.selectedLayer ? true : false;
   }
 
   /**

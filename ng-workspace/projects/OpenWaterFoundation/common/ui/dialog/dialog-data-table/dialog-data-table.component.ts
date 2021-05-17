@@ -36,6 +36,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public addressLng: number;
   /** The Leaflet Marker object for displaying when an address is filtered on the map. */
   public addressMarker: any;
+  /** Whether an address marker is currently being displayed on the map. */
+  public addressMarkerDisplayed: boolean;
   /** Holds all features in the layer for determining if an address resides in a polygon. */
   public allLayerFeatures: any;
   /** The original object containing all features in the layer. */
@@ -165,6 +167,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
         layerItem.removeAllSelectedLayers(this.mainMap);
         this.selectedLayer = undefined;
+        this.addressMarkerDisplayed = false;
       }
     }
     // If the keyup event is not empty, attempt to populate the selectedLayer object. If the Enter key was not pressed by the user,
@@ -175,7 +178,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
       if (event.code && (event.code.toUpperCase() === 'ENTER' || event.code.toUpperCase() === 'NUMPADENTER')) {
         // Check if any selected layers need to be removed first.
         var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
-        if (layerItem.hasSelectedLayers() === true) {
+        if (layerItem.hasAnySelectedLayers() === true) {
           layerItem.removeAllSelectedLayers(this.mainMap);
         }
 
@@ -243,6 +246,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         // Obtain the MapLayerItem for this layer and the created selected layer to it.
         var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
         layerItem.addAddressMarker(addressMarker);
+        this.addressMarkerDisplayed = true;
       }
       console.log('GeoCodIO result ->', resultJSON.results[0]);
       // Call the filter function for addresses. The user given input itself won't be used, but this is how the function
