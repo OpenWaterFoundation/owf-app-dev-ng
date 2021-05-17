@@ -151,10 +151,14 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * @param event The event passed when a DOM event is detected (user inputs into filter field)
    */
   public applyFilter(event: KeyboardEvent) {
-    // Check to see if the filter value changed
-    if ((event.target as HTMLInputElement).value === this.prevSearch) {
-      return;
-    }
+    var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
+
+    // TODO jpkeahey 2021.05.17 - This will check to see if the filter value changed. It might be used in the future for 
+    // query suppression.
+    // if ((event.target as HTMLInputElement).value === this.prevSearch) {
+    //   return;
+    // }
+    
 
     // If the keyup event is an empty string, then the user has either selected text and deleted it, or backspaced until the
     // search field is empty. In that case, do the table search and if the selected layer exists, reset the highlighting.
@@ -164,7 +168,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
       this.attributeTable.filter = filterValue.trim().toUpperCase();
       this.matchedRows = this.attributeTable.data.length;
       if (this.selectedLayer) {
-        var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
         layerItem.removeAllSelectedLayers(this.mainMap);
         this.selectedLayer = undefined;
         this.addressMarkerDisplayed = false;
@@ -177,7 +180,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     else {
       if (event.code && (event.code.toUpperCase() === 'ENTER' || event.code.toUpperCase() === 'NUMPADENTER')) {
         // Check if any selected layers need to be removed first.
-        var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
         if (layerItem.hasAnySelectedLayers() === true) {
           layerItem.removeAllSelectedLayers(this.mainMap);
         }

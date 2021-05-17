@@ -10,6 +10,13 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.1.5 #
+
+### Bug Fixes ###
+
+* Removed a conditional checking for the same input for a user. This will be added later, but
+other checks will need to be done as well.
+
 # 0.1.4 #
 
 ### Bug Fixes ###
