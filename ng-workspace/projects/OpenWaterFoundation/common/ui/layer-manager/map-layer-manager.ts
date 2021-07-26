@@ -42,7 +42,7 @@ export class MapLayerManager {
    */
   public addLayerItem(leafletLayer: any, geoLayer: any, geoLayerView: any, geoLayerViewGroup: any, isRaster?: boolean): void {
     this.mapLayers[geoLayer.geoLayerId] = new MapLayerItem(leafletLayer, geoLayer, geoLayerView, geoLayerViewGroup, isRaster);
-    // Add to the layerViewGroup object, with the geoLayerViewGroupId as the key, and push/create to/the array
+    // Add to the layerViewGroup object, with the geoLayerViewGroupId as the key, and push/create to the array
     // with the geoLayerId as the value
     if ($.isEmptyObject(this.layerViewGroups) || !this.layerViewGroups[geoLayerViewGroup.geoLayerViewGroupId]) {
       let geoLayerIdArray: string[] = [geoLayer.geoLayerId];
@@ -120,9 +120,14 @@ export class MapLayerManager {
   public setLayerOrder() {
     // Iterate through the MapManager's mapConfigLayerOrder, and check to see if the geoLayerId is a key in the mapLayers object.
     // If it is, then bring that layer to the front of the map. Since we're going through backwards, the last layer will be
-    // brought to the front first, and the first layer will be brought to the front last, which will give us the ordering we want
+    // brought to the front first, and the first layer will be brought to the front last, which will give the desired ordering.
     for (let geoLayerId of this.mapConfigLayerOrder) {
       if (this.mapLayers[geoLayerId]) {
+
+        if (this.mapLayers[geoLayerId].hasSelectedLayer() === true) {
+          this.mapLayers[geoLayerId].getSelectedLayer().bringToFront();
+        }
+        
         this.mapLayers[geoLayerId].getItemLeafletLayer().bringToFront();
       }
     }

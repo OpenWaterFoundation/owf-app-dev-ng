@@ -4,6 +4,10 @@
 
 export * from '@OpenWaterFoundation/common/dwr/statemod';
 
+export * from '@OpenWaterFoundation/common/leaflet';
+
+export * from '@OpenWaterFoundation/common/pipes';
+
 export * from '@OpenWaterFoundation/common/services';
 
 export * from '@OpenWaterFoundation/common/ts';

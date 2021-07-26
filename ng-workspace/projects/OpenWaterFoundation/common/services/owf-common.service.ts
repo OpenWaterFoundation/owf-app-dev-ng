@@ -139,7 +139,7 @@ export class OwfCommonService {
    * @param pathType A Path enum representing what kind of path that needs to be built
    * @param arg An optional array for arguments needed to build the path, e.g. a filename or geoLayerId
    */
-  public buildPath(pathType: IM.Path, arg?: any[]): string {
+  public buildPath(pathType: string, arg?: any[]): string {
     // If a URL is given as the path that needs to be built, just return it so the http GET request can be performed
     if (arg) {
       if (arg[0].startsWith('https') || arg[0].startsWith('http') || arg[0].startsWith('www')) {

@@ -13,24 +13,21 @@ import { MatMenuModule }            from '@angular/material/menu';
 import { MatRadioModule }           from '@angular/material/radio';
 import { MatTableModule }           from '@angular/material/table';
 import { MatTooltipModule }         from '@angular/material/tooltip';
+import { PipesModule }              from '@OpenWaterFoundation/common/pipes';
 import { TableVirtualScrollModule } from 'ng-table-virtual-scroll';
 import { ScrollingModule }          from '@angular/cdk/scrolling';
 import { ShowdownModule }           from 'ngx-showdown';
 
 import { DialogDataTableComponent } from './dialog-data-table.component';
-import { DialogModule }             from '../dialog.module';
-import { ZoomDisablePipe }          from './zoom-disable.pipe';
 
 
 @NgModule({
   declarations: [
-    DialogDataTableComponent,
-    ZoomDisablePipe
+    DialogDataTableComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
-    DialogModule,
     DragDropModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -42,9 +39,10 @@ import { ZoomDisablePipe }          from './zoom-disable.pipe';
     MatRadioModule,
     MatTableModule,
     MatTooltipModule,
+    PipesModule,
     ScrollingModule,
     ShowdownModule,
-    TableVirtualScrollModule,
+    TableVirtualScrollModule
   ],
   exports: [
     DialogDataTableComponent

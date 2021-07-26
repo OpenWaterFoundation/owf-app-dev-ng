@@ -4,11 +4,64 @@ Optional elements to be added to each package version are as follows:
 
 * Bug Fixes
 * Code Refactoring
-* Features
+* Features / Enhancements
 * Performance Improvements
 * Breaking Changes
 
 These elements will only be added if they are applicable for the new version.
+
+# 0.2.0 #
+
+### Features / Enhancements ###
+
+* Migrated the Map Component over from the InfoMapper, to be potentially used as
+either a separate/stand-alone map, or in an InfoMapper-like application.
+
+* Created the **leaflet** entry point where the map component and other necessary
+files are located and can be exported for application to consume.
+
+* Created the **pipes** entry point, where all pipes used throughout the common
+package reside, and can be used by importing the pipes module from any other
+entry point. This also fixed an issue where more than one pipe could not be used
+in the same folder.
+
+
+### Code Refactoring ###
+
+* Made some repeated enums, interfaces, etc. DRY in some services and other utility
+code classes. Also updated paths and code in existing common library files that
+rely on map component code.
+
+# 0.1.6 #
+
+### Bug Fixes ###
+
+* Fixed a Window Manager windowID issue, where the variable in the InfoMapper was still called
+buttonID, an old leftover when the ID was only being created in a Leaflet popup button. This will
+stop a Text and Graph Dialog from opening just once.
+
+* Fixed a bug where a address would be added to the map regardless if it was in a feature or not.
+The new code will only create and add the Marker if the address is found in any of the layer's
+features.
+
+### Performance Improvements ###
+
+* Updated the way a filtered feature is added to a newly-created GeoJSON object, removing
+unnecessary n^2 time complexity nested for loops.
+
+* Changed what's sent to the Dialog from the more granular geoLayerId and geoLayerView name to the
+entire geoLayer and geoLayerView, to cut down on separate imports for each, cleaning up the code.
+
+* Added a selected layer and highlight layer (highlight currently unused) to be added as separate
+geoJSON layers to a layerItem object in the MapLayerItem class. This way when each Leaflet layer
+is added, 
+
+### Features / Enhancements ###
+
+* Updated how the selected layer is displayed on the Leaflet map, so that a selected fully opaque
+feature can still be discovered by a user, especially when adjacent to other fully opaque
+features.
+
 
 # 0.1.5 #
 
@@ -27,7 +80,7 @@ address does not need to be exact anymore for the button to be enabled.
 
 # 0.1.3 #
 
-### Features ###
+### Features / Enhancements ###
 
 * Added a marker to be displayed on an address when filtered in the Data Table. The address is
 attached to the layer so that toggling the layer on/off will affect the marker as well.
@@ -57,7 +110,7 @@ selected highlight layers are added.
 * Updated the MapLayerItem class so that selected highlight layers are added. This way, when
 a user toggles the layer on/off, the selected layer will follow suit.
 
-### Features ###
+### Features / Enhancements ###
 
 * Changed a selected highlight layer's opacity from `0.7` to `0.4`.
 
@@ -69,7 +122,7 @@ a user toggles the layer on/off, the selected layer will follow suit.
 of a polygon was not working correctly. Replace the single function with Turf.js, a geospatial
 analysis package, which seems to have fixed the issue.
 
-### Features ###
+### Features / Enhancements ###
 
 * Added ability to highlight polygons when filtered in the Data Table.
 * Added ability to zoom to polygons using a Turf.js created boundary box.
@@ -96,7 +149,7 @@ a relative path to the image from where the markdown file lives. The component n
 property from the InfoMapper so the library could set its own fullMarkdownPath in the top
 level service.
 
-### Feature ###
+### Feature / Enhancements ###
 
 * Not a feature per se, but `-alpha.X` was removed from the package version now that there is
 more confidence in building and publishing new versions of the package. In fact, publishing was
@@ -145,7 +198,7 @@ the address radio button when being displayed on a polygon layer.
 * Updated the zoom disable pipe code that wouldn't always enable/disable the button
 at the right times.
 
-### Features ###
+### Features / Enhancements ###
 
 * Zoom to address button added to the data table kebab menu for zooming to a point in a
 polygon. Is only enabled when on a polygon layer and after an address has been searched.
@@ -159,7 +212,7 @@ polygon. Is only enabled when on a polygon layer and after an address has been s
 should be enabled/disabled or visible/hidden. It's also easier to read and determine what
 the code is doing.
 
-### Features ###
+### Features / Enhancements ###
 
 * Search layer data and Find from address radio buttons added to Data Table Component.
 * The data table will filter by whatever is selected (default is Search layer data, used for looking

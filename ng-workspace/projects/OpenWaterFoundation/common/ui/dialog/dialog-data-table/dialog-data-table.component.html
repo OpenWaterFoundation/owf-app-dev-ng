@@ -5,7 +5,7 @@
     <!-- Display the geoLayerView name along with data table when showing an attribute table -->
     <div class="header-div">
       <p class="header-title">
-        {{geoLayerViewName}} - Data Table
+        {{geoLayerView.name}} - Data Table
       </p>
     </div>
     <!-- The close button on the upper right part of the dialog -->
@@ -27,7 +27,7 @@
       </mat-radio-button>
       <mat-radio-button value="address"
                         (click)="toggleSearchInfo()"
-                        [hidden]="geometryType | zoomDisable : 'null' : 'address-radio'"
+                        [hidden]="geoLayer.geometryType | zoomDisable : 'null' : 'address-radio'"
                         class="option">
         Find from address
       </mat-radio-button>
@@ -73,7 +73,6 @@
               {{property.key}}
             </b>
           </th>
-
           <td mat-cell
               *matCellDef="let element; let i = index"
               [ngClass]="element.properties[property.key] | justification"
@@ -132,15 +131,14 @@
                 class="zoom-to-address"
                 (click)="zoomToAddress()"
                 [disabled]="searchType | zoomDisable : addressMarkerDisplayed : 'address-zoom'"
-                [hidden]="geometryType | zoomDisable : 'null' : 'address-radio'">
+                [hidden]="geoLayer.geometryType | zoomDisable : 'null' : 'address-radio'">
           <i class="fa fa-search-plus fa-2x"></i>
           Zoom to address
         </button>
-
         <button mat-menu-item
                 class="zoom-to-selected"
                 (click)="zoomToFeatures()"
-                [disabled]="selectedLayer | zoomDisable : geoLayerId : 'selected-layers'">
+                [disabled]="selectedLayer | zoomDisable : geoLayer.geoLayerId : 'selected-layers'">
           <i class="fa fa-search-plus fa-2x"></i>
           Zoom to selected features
         </button>

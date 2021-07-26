@@ -73,7 +73,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
 
   /**
    * Creates and displays an Image Gallery with png, jpg, and similar files in a Material Dialog.
-   * @param appService The reference to the AppService injected object.
+   * @param owfCommonService The reference to the app service injected object.
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
    * @param dataObject The object containing data passed from the Component that created this Dialog.
    */
