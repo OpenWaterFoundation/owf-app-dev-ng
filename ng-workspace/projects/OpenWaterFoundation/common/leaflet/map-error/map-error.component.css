@@ -1,0 +1,14 @@
+#map-error {
+  height:100vh;
+}
+
+h1 {
+  font-size:5rem !important;
+}
+
+.content {
+    margin-left: 25%;
+}
+.content p {
+  margin-bottom: 5px;
+} 

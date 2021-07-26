@@ -85,8 +85,9 @@ export class MapLayerItem {
    * 
    * @param selectedLayer The geoJSON created Leaflet layer to be added to the layer item.
    */
-  public addSelectedLayer(selectedLayer: any): void {
+  public addSelectedLayerToMainMap(selectedLayer: any, mainMap: any): void {
     this.selectedLayer = selectedLayer;
+    this.selectedLayer.addTo(mainMap);
   }
 
   /**
@@ -108,6 +109,13 @@ export class MapLayerItem {
    */
   public getItemSelectBehavior(): string {
     return this.selectBehavior;
+  }
+
+  /**
+   * @returns The currently displayed selected geoJson layer.
+   */
+  public getSelectedLayer(): any {
+    return this.selectedLayer;
   }
 
   /**
@@ -217,13 +225,19 @@ export class MapLayerItem {
   }
 
   /**
-   * Removes all selected highlighted layers connected to this LayerItem from the Leaflet map.
+   * Removes all selected highlighted layers connected to this LayerItem from the Leaflet map. If the optional hide argument
+   * exists, treats the removal of the selected layer(s) as hidden on the map, keeping them in the layerItem.
    * @param mainMap The Leaflet map object reference.
    */
-  public removeAllSelectedLayers(mainMap: any): void {
+  public removeAllSelectedLayers(mainMap: any, hide?: any): void {
     // Check to see if a selected layer exists and remove it from the map.
     if (this.selectedLayer) {      
       mainMap.removeLayer(this.selectedLayer);
+      // If hide is undefined, also set the selectedLayer to undefined to permanently remove it from this layerItem until
+      // it is added back in.
+      if (!hide) {
+        this.selectedLayer = undefined;
+      }
     }
     // Check to see if an address marker exists and remove it from the map.
     if (this.addressMarker) {
@@ -240,13 +254,7 @@ export class MapLayerItem {
     // Remove the main layer associated with this LayerItem.
     mainMap.removeLayer(this.leafletLayer);
     // Check to see if a selected layer exists and remove it from the map.
-    if (this.selectedLayer) {      
-      mainMap.removeLayer(this.selectedLayer);
-    }
-    // Check to see if an address marker exists and remove it from the map.
-    if (this.addressMarker) {
-      mainMap.removeLayer(this.addressMarker);
-    }
+    this.removeAllSelectedLayers(mainMap, 'hide');
     this.displayed = false;
 
     (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = false;

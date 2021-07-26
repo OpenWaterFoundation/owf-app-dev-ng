@@ -150,6 +150,17 @@ in your `angular.json` file.
 
 ## Further help
 
+The common library uses some helper classes that use static methods. Angular libraries
+will run into a metadata error if these classes are used. The only solution is to
+"suppress" the error by adding the line
+
+```typescript
+// @dynamic
+```
+
+right above the class declaration. The error will be stopped, and the library
+can be built.
+
 To get more help on the Angular CLI use `ng help` or go check out the
 [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 

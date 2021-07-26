@@ -4,7 +4,9 @@
           OnDestroy,
           OnInit,
           Output }                      from '@angular/core';
-import { MatDialogRef,
+import { MatDialog,
+          MatDialogConfig,
+          MatDialogRef,
           MAT_DIALOG_DATA }             from '@angular/material/dialog';
 import { SelectionModel }               from '@angular/cdk/collections';
 
@@ -19,6 +21,12 @@ import * as IM                          from '@OpenWaterFoundation/common/servic
 import { WindowManager }                from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapLayerManager,
           MapLayerItem }                from '@OpenWaterFoundation/common/ui/layer-manager';
+// import { DialogGalleryComponent,
+//           DialogTSGraphComponent,
+//           DialogTextComponent }         from '@OpenWaterFoundation/common/ui/dialog';
+// import { DataTableMapUtil }             from './data-table-map-util';
+// import * as lodash                      from 'lodash'
+// import * as Papa                        from 'papaparse';
 
 // import * as L from 'leaflet';
 declare var L: any;
@@ -55,16 +63,14 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public displayedColumns: string[];
   /** EventEmitter that alerts the Map component (parent) that an update has happened, and sends the basin name. */
   @Output() featureHighlighted = new EventEmitter<boolean>();
-  /** The layer's geoLayerId. */
-  public geoLayerId: string;
-  /** The layer's geoLayerView name. */
-  public geoLayerViewName: string;
-  /** The type of layer being queried for the data table. Used for determining whether to enable the zoom to address button. */
-  public geometryType = 'WKT:Polygon';
-
+  /** The layer's geoLayer. */
+  public geoLayer: any;
+  /** The layer's geoLayerView. */
+  public geoLayerView: any;
+  /** The name of the geoMap the layer resides in. */
+  public geoMapName: string;
+  /** Object containing the a geoLayerId as the ID, and an object of properties set by a user-defined classification file. */
   public layerClassificationInfo: any;
-
-  public layerSymbol: any;
   /**
    * Object containing the URL as the key and value, so each link is unique.
    * Used by the template file to use as the link's href.
@@ -72,6 +78,10 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public links: {} = {};
   /** The reference to the Map Component's this.mainMap; the Leaflet map. */
   public mainMap: any;
+  /**
+   * 
+   */
+  public mapConfigPath: string;
   /**
    * The instance of the MapLayerManager, a helper class that manages MapLayerItem objects with Leaflet layers
    * and other layer data for displaying, ordering, and highlighting.
@@ -81,6 +91,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public matchedRows: number;
   /** Dynamic string to show in the filter input area to a user. Default is set on initialization. */
   public matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
+
+  public originalStyle: any;
   /** Holds the string that was previously entered by the user. */
   private prevSearch = '';
   /**
@@ -99,6 +111,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * the layer's features can be highlighted.
    */
   public selectedLayers: any;
+  /** Number to be assigned uniquely to a selected feature layer id. */
+  private selectedLeafletID = Number.MAX_SAFE_INTEGER;
   // TODO: jpkeahey 2020.10.27 - Commented out. Will be used for row selection
   /**
    * Used by the template file to display how many rows (features in the layer) are selected on the data table.
@@ -115,11 +129,11 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   /**
    * @constructor for the Dialog Data Table.
    * @param owfCommonService The reference to the OwfCommonService injected object.
-   * @param mapService The reference to the map service, for sending data between components and higher scoped map variables.
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
    * @param dataObject The object containing data passed from the Component that created this Dialog.
    */
   constructor(public owfCommonService: OwfCommonService,
+              public dialog: MatDialog,
               public dialogRef: MatDialogRef<DialogDataTableComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
@@ -131,18 +145,17 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     // Manually add the select column to the displayed Columns. This way checkboxes can be added below
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
     // this.displayedColumns.unshift('select');
-    this.geoLayerId = dataObject.data.geoLayerId;
-    this.geoLayerViewName = dataObject.data.geoLayerViewName;
-    this.geometryType = dataObject.data.geometryType;
+    this.geoLayer = dataObject.data.geoLayer;
+    this.geoLayerView = dataObject.data.geoLayerView;
+    this.geoMapName = dataObject.data.geoMapName;
     this.layerClassificationInfo = dataObject.data.layerClassificationInfo;
-    this.layerSymbol = dataObject.data.layerSymbol;
     // This is needed for testing the library.
     // this.geometryType = 'WKT:Polygon';
     this.mainMap = dataObject.data.mainMap;
     this.matchedRows = this.attributeTable.data.length;
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
     // this.selection = new SelectionModel<any>(true, []);
-    this.windowID = this.geoLayerId + '-dialog-data-table';
+    this.windowID = this.geoLayer.geoLayerId + '-dialog-data-table';
   }
 
 
@@ -151,7 +164,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * @param event The event passed when a DOM event is detected (user inputs into filter field)
    */
   public applyFilter(event: KeyboardEvent) {
-    var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
+    var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayer.geoLayerId);
 
     // TODO jpkeahey 2021.05.17 - This will check to see if the filter value changed. It might be used in the future for 
     // query suppression.
@@ -233,24 +246,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         // use the first result in the array, as it will be the most accurate.
         this.addressLat = resultJSON.results[0].location.lat;
         this.addressLng = resultJSON.results[0].location.lng;
-
-        var defaultIcon = L.icon({
-          className: 'selectedMarker',
-          iconUrl: 'assets/app/img/default-marker-25x41.png',
-          iconAnchor: [12, 41]
-        });
-        var addressMarker = L.marker([this.addressLat, this.addressLng], { icon: defaultIcon }).addTo(this.mainMap);
-        addressMarker.bindTooltip(resultJSON.results[0].formatted_address, {
-          className: 'address-marker',
-          direction: 'right',
-          permanent: true
-        });
-        // Obtain the MapLayerItem for this layer and the created selected layer to it.
-        var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
-        layerItem.addAddressMarker(addressMarker);
-        this.addressMarkerDisplayed = true;
       }
-      console.log('GeoCodIO result ->', resultJSON.results[0]);
+      console.log('GeoCodIO result', resultJSON.results[0]);
       // Call the filter function for addresses. The user given input itself won't be used, but this is how the function
       // is called. Set the data rows to show by using the filtered data.
       this.attributeTable.filter = filterAddress.trim().toUpperCase();
@@ -265,12 +262,38 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
       };
 
       // Iterate through each feature in the layer
-      this.currentLayer.eachLayer((featureLayer: any) => {
+      // this.currentLayer.eachLayer((featureLayer: any) => {
                 
-        if (booleanPointInPolygon([this.addressLng, this.addressLat], featureLayer.feature.geometry) === true) {
-          geoJsonObj.features.push(featureLayer.feature.geometry);
+      //   if (booleanPointInPolygon([this.addressLng, this.addressLat], featureLayer.feature.geometry) === true) {
+      //     geoJsonObj.features.push(featureLayer.feature);
+      //   }
+      // });
+
+      // Iterate over the array of filtered features from the data table, and IF the address is found in one, add it to the
+      // map and push it into the geoJson object to be used for selecting and styling the feature it's in.
+      this.attributeTable.filteredData.forEach((feature: any) => {
+        if (booleanPointInPolygon([this.addressLng, this.addressLat], feature.geometry) === true) {
+          // Create and add the Marker and tooltip to the map.
+          var defaultIcon = L.icon({
+            className: 'selectedMarker',
+            iconUrl: 'assets/app/img/default-marker-25x41.png',
+            iconAnchor: [12, 41]
+          });
+          var addressMarker = L.marker([this.addressLat, this.addressLng], { icon: defaultIcon }).addTo(this.mainMap);
+          addressMarker.bindTooltip(resultJSON.results[0].formatted_address, {
+            className: 'address-marker',
+            direction: 'right',
+            permanent: true
+          });
+          // Obtain the MapLayerItem for this layer and the created selected layer to it.
+          var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayer.geoLayerId);
+          layerItem.addAddressMarker(addressMarker);
+          this.addressMarkerDisplayed = true;
+          // Add it to the geoJson object.
+          geoJsonObj.features.push(feature);
         }
       });
+
       // Check to see if anything was actually found.
       if (geoJsonObj.features.length > 0) {
         // Create the selected layer.
@@ -280,127 +303,75 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * 
-   * @param geoJsonObj The geoJson object created to be given to the -
+   * Creates the polygon or point selected layer to be added to the Leaflet map right on top of the layerItem's original layer.
+   * @param geoJsonObj The geoJson object created to be given to the L.geoJSON class to create a selected geoJson layer.
    */
    private createSelectedLeafletClass(geoJsonObj: any): void {
 
-    var _this = this;
 
-    var SelectedClass = L.GeoJSON.include({
+    if (geoJsonObj.features[0].geometry.type.toUpperCase().includes('POLYGON')) {
+      var symbolWeight = (
+        this.geoLayerView.geoLayerSymbol.properties.weight ?
+        this.geoLayerView.geoLayerSymbol.properties.weight :
+        this.layerClassificationInfo[this.geoLayer.geoLayerId].weight ?
+        this.layerClassificationInfo[this.geoLayer.geoLayerId].weight :
+        2
+      )
 
-      highlightCount: 0,
-
-      addToHighlightCount: function() {
-        this.highlightCount += 1;
-      },
-
-      getHighlightCount: function() {
-        return this.highlightCount;
-      },
-
-      removeFromHighlightCount: function() {
-        this.highlightCount -= 1;
-      },
-
-      setSelectedStyleInit: function() {
-        this.setStyle({
-          opacity: '0',
-          fillOpacity: '0'
-        });
-      }
-
-    });
-
-    this.selectedLayer = new SelectedClass();
-
-    var symbolSizeType = (
-      this.layerSymbol.properties.symbolSize ? this.layerSymbol.properties.symbolSize :
-      this.layerClassificationInfo[this.geoLayerId] ? this.layerClassificationInfo[this.geoLayerId].symbolSize :
-      '4'
-    );
-    var symbolShapeType = (
-      this.layerSymbol.properties.symbolShape ? this.layerSymbol.properties.symbolShape.toLowerCase() :
-      this.layerClassificationInfo[this.geoLayerId] ? this.layerClassificationInfo[this.geoLayerId].symbolShape.toLowerCase() :
-      'circle'
-    )
-    // This exists when this function is called with an address.
-    if (geoJsonObj.features[0].geometry) {
-      if (geoJsonObj.features[0].geometry.type.toUpperCase().includes('POLYGON')) {
-        this.selectedLayer = L.geoJSON(geoJsonObj, {
-          style: function (feature: any) {
-            return {
-              className: _this.geoLayerId,
-              fillColor: '#ffff01',
-              fillOpacity: '0.4',
-              opacity: '0',
-              weight: 0
-            }
+      this.selectedLayer = L.geoJSON(geoJsonObj, {
+        style: function(feature: any) {
+          return {
+            fillOpacity: '0.4',
+            fillColor: '#ffff01',
+            color: '#ffff01',
+            opacity: '0.9',
+            weight: parseInt(symbolWeight) + 3
           }
-        });
-      } else {
-        this.selectedLayer = L.geoJson(geoJsonObj, {
-          pointToLayer: (feature: any, latlng: any) => {
-            return L.shapeMarker(latlng, {
-              className: _this.geoLayerId,
-              color: 'red',
-              fillColor: '#ffff01',
-              fillOpacity: '1',
-              // Grab the radius from the feature, which was changed on initialization of the selected layer.
-              radius: parseInt(symbolSizeType) + 4,
-              shape: symbolShapeType,
-              opacity: '1',
-              weight: 2
-            });
-          }
-        });
-      }
+        }
+      });
+    } else {
+      // Attempt to retrieve both the layer's symbol type and size if a point layer. This can be from the map configuration file
+      // under geoLayerSymbol, or in a classification file, which is in the layerClassificationInfo object.
+      var symbolSizeType = (
+        this.geoLayerView.geoLayerSymbol.properties.symbolSize ?
+        this.geoLayerView.geoLayerSymbol.properties.symbolSize :
+        this.layerClassificationInfo[this.geoLayer.geoLayerId] ?
+        this.layerClassificationInfo[this.geoLayer.geoLayerId].symbolSize :
+        '4'
+      );
+      var symbolShapeType = (
+        this.geoLayerView.geoLayerSymbol.properties.symbolShape ?
+        this.geoLayerView.geoLayerSymbol.properties.symbolShape.toLowerCase() :
+        this.layerClassificationInfo[this.geoLayer.geoLayerId] ?
+        this.layerClassificationInfo[this.geoLayer.geoLayerId].symbolShape.toLowerCase() :
+        'circle'
+      )
+
+      this.selectedLayer = L.geoJson(geoJsonObj, {
+        pointToLayer: (feature: any, latlng: any) => {
+          return L.shapeMarker(latlng, {
+            color: 'red',
+            fillColor: '#ffff01',
+            fillOpacity: '1',
+            // Grab the radius from the feature, which was changed on initialization of the selected layer.
+            radius: parseInt(symbolSizeType) + 3,
+            shape: symbolShapeType,
+            opacity: '1',
+            weight: 2
+          });
+        }
+      });
     }
-    // The geometry property will exist when this function is called for a regular data search.
-    else {      
-      if (geoJsonObj.features[0].type.toUpperCase().includes('POLYGON')) {
-        this.selectedLayer = L.geoJSON(geoJsonObj, {
-          style: function (feature: any) {
-            return {
-              className: _this.geoLayerId,
-              fillColor: '#ffff01',
-              fillOpacity: '0.4',
-              opacity: '0',
-              weight: 0
-            }
-          }
-        });
-      } else {
-        this.selectedLayer = L.geoJson(geoJsonObj, {
-          pointToLayer: (feature: any, latlng: any) => {
-            return L.shapeMarker(latlng, {
-              className: _this.geoLayerId,
-              color: 'red',
-              fillColor: '#ffff01',
-              fillOpacity: '1',
-              // Grab the radius from the feature, which was changed on initialization of the selected layer.
-              radius: parseInt(symbolSizeType) + 4,
-              shape: symbolShapeType,
-              opacity: '1',
-              weight: 2
-            });
-          }
-        });
-      }
-    }
-    
     // Obtain the MapLayerItem for this layer and the created selected layer to it.
-    var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
-    layerItem.addSelectedLayer(this.selectedLayer);
+    var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayer.geoLayerId);    
+    layerItem.addSelectedLayerToMainMap(this.selectedLayer, this.mainMap);
 
-    this.selectedLayer.addTo(this.mainMap);
-    this.selectedLayer.bringToBack();
-    
+    this.mapLayerManager.setLayerOrder();
   }
 
   /**
    * Looks through each feature and its properties to determine which should be highlighted on the Leaflet
-   * map. Not the fastest at the moment.
+   * map.
    */
   private highlightFeatures(): void {
 
@@ -412,27 +383,49 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
       features: []
     };
 
-    // Iterate through each feature in the layer
-    this.currentLayer.eachLayer((featureLayer: any) => {
-      // Iterate over each property in the feature
-      for (let property in featureLayer.feature.properties) {
-        if (featureLayer.feature.properties[property] !== null) {
-          if (typeof featureLayer.feature.properties[property] === 'string') {
-            if (featureLayer.feature.properties[property].toUpperCase().includes(this.attributeTable.filter)) {
-              // this.owfCommonService.featureHighlighted(true);
-              geoJsonObj.features.push(featureLayer.feature);
-              break;
-            }
-          } else if (typeof featureLayer.feature.properties[property] === 'number') {
-            if ((featureLayer.feature.properties[property] + '').indexOf(this.attributeTable.filter) > -1) {
-              geoJsonObj.features.push(featureLayer.feature);
-              // this.owfCommonService.featureHighlighted(true);
-              break;
-            }
-          }
-        }
-      }
+    // this.selectedLayer = L.geoJSON();
+    
+
+    // var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayer.geoLayerId);
+
+    // layerItem.getItemLeafletLayer().eachLayer((layer: any) => {
+    //   if (layer.feature.properties.DISTRICT === 64) {
+    //     var copiedLayer = lodash.cloneDeep(layer);
+    //     copiedLayer._leaflet_id = --this.selectedLeafletID;
+    //     console.log(layer === copiedLayer);
+    //     console.log(layer);
+    //     console.log(copiedLayer);
+    //     copiedLayer.setStyle({
+    //       fillOpacity: 0,
+    //       color: '#00ffff',
+    //       opacity: '0.8',
+    //       weight: parseInt(layer.options.weight) + 2
+    //     });
+    //     console.log(layer);
+    //     console.log(copiedLayer);
+    //     this.selectedLayer.addLayer(copiedLayer);
+    //   }
+    // });
+
+    // Iterate over the DataSource's filtered data array that matched the user input and add each feature to the
+    // geoJsonObj to be given for selected layer creation.
+    this.attributeTable.filteredData.forEach((feature: any) => {
+      geoJsonObj.features.push(feature);
     });
+
+    // this.selectedLayer.setStyle({
+    //     fillOpacity: 0,
+    //     color: '#00ffff',
+    //     opacity: '0.8',
+    //     weight: 4
+    // });
+    // this.selectedLayer.eachLayer((layer: any) => {
+    //   console.log('selected featureLayer: ', layer);
+    // });
+
+    // layerItem.addSelectedLayerToMainMap(this.selectedLayer, this.mainMap);
+
+    // this.mapLayerManager.setLayerOrder();
     // Check to see if anything was actually found.
     if (geoJsonObj.features.length > 0) {
       this.createSelectedLeafletClass(geoJsonObj);
@@ -585,7 +578,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     }
 
     var data = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
-    FileSaver.saveAs(data, this.owfCommonService.formatSaveFileName(this.geoLayerId, IM.SaveFileType.dataTable));
+    FileSaver.saveAs(data, this.owfCommonService.formatSaveFileName(this.geoLayer.geoLayerId, IM.SaveFileType.dataTable));
   }
 
   /**
