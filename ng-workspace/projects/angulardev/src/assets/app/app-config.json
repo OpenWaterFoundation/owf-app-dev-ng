@@ -1,0 +1,27 @@
+{
+  "title" : "InfoMapper",
+  "homePage": "/content-pages/home.md",
+  "favicon": "/img/OWF-Logo-Favicon-32x32.ico",
+  "dataUnitsPath": "/img/DATAUNIT",
+  "X_googleAnalyticsTrackingId": "UA-135465513-1",
+  "version": "1.0.0 (2020-12-01)",
+  "mainMenu" : [
+    {
+      "name": "Maps",
+      "id": "Maps", 
+      "align": "left",
+      "enabled": "true",
+      "tooltip": "Test maps for the InfoMapper",
+      "menus": [
+        {
+          "name": "Point Map",
+          "action": "displayMap",
+          "enabled": "true",
+          "id": "point-geometry-map",
+          "mapProject": "map-config.json",
+          "tooltip": "Display all point geometry test maps"
+        }
+      ]
+    }
+  ]
+}

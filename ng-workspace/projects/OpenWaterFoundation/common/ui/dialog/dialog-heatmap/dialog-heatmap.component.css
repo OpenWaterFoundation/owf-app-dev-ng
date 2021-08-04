@@ -1,0 +1,33 @@
+/*
+CLASSES USED IN MAIN-DIALOG-STYLE.CSS
+.cdk-drag
+.drag-header
+.drag-header-div
+.drag-header-title
+*/
+
+/* CLASSES */
+
+/* The div containing lower buttons in the Dialog. */
+.heatmap-components-group {
+  float: right;
+}
+
+/* Styling for each button in the .heatmap-components-group div. */
+.heatmap-components-group button {
+  margin: 0px 20px 0px 0px;
+  background-color: #c2c1c1;
+}
+
+/* The heatmap content container div. Sized relative to the .drag-header div and
+the .heatmap-components-group. One of the three major div containers in the Dialog. */
+.heatmap-contents {
+  height: calc(100% - 90px);
+}
+
+/* The div used by Plotly to create the heatmap. */
+.heatmap-div {
+  height: 95%;
+  width: 95%;
+  padding-top: 5%;
+}

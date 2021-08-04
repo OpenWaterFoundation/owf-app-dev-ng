@@ -21,12 +21,6 @@ import * as IM                          from '@OpenWaterFoundation/common/servic
 import { WindowManager }                from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapLayerManager,
           MapLayerItem }                from '@OpenWaterFoundation/common/ui/layer-manager';
-// import { DialogGalleryComponent,
-//           DialogTSGraphComponent,
-//           DialogTextComponent }         from '@OpenWaterFoundation/common/ui/dialog';
-// import { DataTableMapUtil }             from './data-table-map-util';
-// import * as lodash                      from 'lodash'
-// import * as Papa                        from 'papaparse';
 
 // import * as L from 'leaflet';
 declare var L: any;
@@ -122,7 +116,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public selection: SelectionModel<any>;
   /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
   public windowID: string;
-  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs from the InfoMapper. */
+  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
 
@@ -502,7 +496,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Closes the Mat Dialog popup when the Close button is clicked.
+   * Closes the Mat Dialog popup when the Close button is clicked, and removes this
+   * dialog's window ID from the windowManager.
    */
   public onClose(): void {
     this.dialogRef.close();

@@ -1,15 +1,16 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable }       from '@angular/core';
+import { HttpClient }       from '@angular/common/http';
 
 import { Observable,
-          of }        from 'rxjs';
+          of }              from 'rxjs';
+import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private owfCommonService: OwfCommonService) { }
 
 
   /**
@@ -38,6 +39,19 @@ export class AppService {
     // This next line is important, as it tells our response that it needs to return plain text, not a default JSON object.
     const obj: Object = { responseType: 'text' as 'text' };
     return this.http.get<any>(path, obj);
+  }
+
+  /**
+   * 
+   */
+  public async loadConfigFiles() {
+    // App Configuration
+    const appData = await this.http.get('assets/app/app-config.json').toPromise();
+    this.owfCommonService.setAppConfig(appData);
+
+    // Map Configuration
+    const mapData = await this.http.get('assets/app/map-config.json').toPromise();
+    this.owfCommonService.setMapConfig(mapData);
   }
 
   /**

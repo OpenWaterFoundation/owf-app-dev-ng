@@ -12,9 +12,10 @@
   </p>
 
   <div id="example-button-center">
+    <!-- Use $#13; to add a newline to the matTooltip. -->
     <button mat-raised-button
             id="owf-common-examples"
-            matTooltip="Click to view @OpenWaterFoundation/common&#13;TSGraph example"
+            matTooltip="Click to view @OpenWaterFoundation/common&#13;Dialog examples"
             [matTooltipShowDelay]="500"
             matTooltipPosition="left"
             [matMenuTriggerFor]="menu"
@@ -23,11 +24,6 @@
             routerLinkActive="link-active">OWF Common Library Examples</button>
 
     <mat-menu #menu>
-      <button mat-menu-item
-              (click)="openDataTableExampleDialog()">
-        <b>Data Table</b> Dialog
-      </button>
-
       <button mat-menu-item
               (click)="openDocMarkdownExampleDialog()">
         <b>Doc</b> Markdown Dialog
@@ -44,6 +40,16 @@
       </button>
 
       <button mat-menu-item
+              (click)="openHeatmapExampleDialog()">
+        <b>Heatmap</b> Dialog
+      </button>
+
+      <button mat-menu-item
+              routerLink="/map/point-geometry-map">
+        <b>Leaflet Map</b> Example
+      </button>
+
+      <button mat-menu-item
               (click)="openImageExampleDialog()">
         <b>Image</b> Dialog
       </button>
@@ -54,6 +60,12 @@
       </button>
 
       <hr id="divider"><!-- Separates the working examples above from the yet to be implemented below. -->
+
+      <button mat-menu-item
+              [disabled]="true"
+              (click)="openDataTableExampleDialog()">
+        <b>Data Table</b> Dialog
+      </button>
 
       <button mat-menu-item
               [disabled]="true"

@@ -58,6 +58,34 @@ export class StringUtil {
   static PAD_FRONT_MIDDLE_BACK = StringUtil.PAD_FRONT | StringUtil.PAD_MIDDLE|StringUtil.PAD_BACK;
 
 
+  /** Add a list of Strings to another list of Strings.  If the first list is
+  null, the second list will be returned.  If the second list is null, the
+  first list will be returned.  If both are null, null will be returned.
+  @return Combined list.
+  @param v list of Strings - will be modified if not null when passed in.
+  @param newv list of Strings to add.
+  */
+  public static addListToStringList ( v: string[], newv: string[] ): string[] {
+    if ( newv == null ) {
+      return v;
+    }
+    var vmain: string[] = null;
+    if ( v == null ) {
+      // Create a list...
+      vmain = [];
+    }
+    else {
+      // Modify the old list
+      vmain = v;
+    }
+
+    var length = newv.length;
+    for ( var i = 0; i < length; i++ ) {
+      vmain.push(newv[i]);
+    }
+    return vmain;
+  }
+
   /**
   Convert a String to a double.
   @param s String to convert.

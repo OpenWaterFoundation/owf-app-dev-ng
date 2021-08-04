@@ -1,3 +1,11 @@
+/*
+CLASSES USED IN MAIN-DIALOG-STYLE.CSS
+.cdk-drag
+.drag-header
+.drag-header-div
+.drag-header-title
+*/
+
 /* CLASSES */
 
 /* Since the <h1> takes up 5% of the dialog height, the rest of the documentation should take up 95% since this <div>
@@ -11,35 +19,6 @@ and the <h1> are sharing the space */
 .doc-contents-text {
   height: 100%;
   margin-bottom: 0px;
-}
-
-/* Div class that takes up 5.5% of the height of the dialog and is gray to differentiate itself from the dialog content */
-.drag-header-main {
-  background-color: #e6e6e6;
-  height: 40px;
-  margin: 0px;
-}
-
-.header-div {
-  display: inline-block;
-  height: 100%;
-  width: 80%;
-}
-
-.header-title {
-  font-size: medium;
-  padding-left: calc(20% + 40px);
-  text-align: center;
-  height: 100%;
-  width: 100%;
-}
-
-.upper-close-button {
-  background-color: #c2c1c1;
-  height: 100%;
-  width: 80px;
-  float: right;
-  outline: none;
 }
 
 /* ID's */

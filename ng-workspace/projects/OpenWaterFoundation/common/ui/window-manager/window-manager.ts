@@ -77,6 +77,7 @@ export class WindowManager {
  */
 export enum WindowType {
   DOC = 'Documentation',
+  HEAT = 'Heatmap',
   GAL = 'Gallery',
   PROJ = 'Project',
   TABLE = 'Table',

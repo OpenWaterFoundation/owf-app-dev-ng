@@ -21,7 +21,7 @@ h4 {
 
 .header-title {
   font-size: medium;
-  padding-left: 20%;
+  padding-left: calc(20% + 40px);
   text-align: center;
   height: 100%;
   width: 100%;
@@ -43,11 +43,11 @@ h4 {
   padding: 0px 10px 0px 0px;
 }
 
-.TS-table-components-group {
+.TS-graph-components-group {
   float: right;
 }
 
-.TS-table-components-group button {
+.TS-graph-components-group button {
   margin: 0px 20px 0px 0px;
   background-color: #c2c1c1;
 }

@@ -10,6 +10,35 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.3.0 #
+
+### Features / Enhancements ###
+
+* Added the **Heatmap Dialog** into the Common package. Used for displaying TS
+data in a plotly heatmap graph.
+
+* Added the ability to make plotly graphs dynamically resizable on Dialog resizing.
+This has been introduced as a 'beta' feature, since there are some undesired traits.
+For example, resizing does not take the graphs aspect ratio in account; the Dialog
+can be resized in any way on the X and Y axes, and the graph will follow suit. This
+will hopefully be updated in the future.
+
+### Code Refactoring ###
+
+* Added the DayTS class to accompany the YearTS and MonthTS classes that had already
+been implemented. It is not complete, but when files containing DayTS is used for
+testing, most of the core code will have been imported.
+
+* Added some methods and data members to already existing classes in the common
+library, such as `TS.ts`, `TSGraph.ts`, `TSData.ts`, etc.
+
+* Started removing the Dialog CSS classes from each individual Dialog and adding
+them to the shared `main-dialog-style.css` file. When finished, it will only
+contain CSS classes that deal with static parts of the Dialog, such as the close
+button alignment. In addition, each Dialog CSS file will start by declaring which
+of these shared classes are currently being used in the Dialog. This way, it's not
+ambiguous what styling those classes in the template file are using.
+
 # 0.2.0 #
 
 ### Features / Enhancements ###

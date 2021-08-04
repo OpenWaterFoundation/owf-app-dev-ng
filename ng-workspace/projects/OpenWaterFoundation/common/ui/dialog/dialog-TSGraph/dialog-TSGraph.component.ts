@@ -29,7 +29,8 @@ const moment = moment_;
 import { Chart }                  from 'chart.js';
 import                                 'chartjs-plugin-zoom';
 
-
+// I believe that if this type of 'import' is used, the package needs to be added
+// to the angular.json scripts array.
 declare var Plotly: any;
 
 @Component({
@@ -42,8 +43,6 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   public attributeTable: any[] = [];
   /** This variable lets the template file know if neither a CSV, DateValue, or StateMod file is given. */
   public badFile = false;
-  /** A string representing the button ID of the button clicked to open this dialog. */
-  public windowID: string;
   /** A string representing the chartPackage property given (or not) from a popup configuration file. */
   public chartPackage: string;
   /** A string containing the name to be passed to the TSTableComponent's first column name: DATE or DATE / TIME. */
@@ -82,7 +81,9 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * downloading files.
    */
   public valueColumns: string[] = [];
-  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs from the InfoMapper. */
+  /** A string representing the button ID of the button clicked to open this dialog. */
+  public windowID: string;
+  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
 
@@ -565,7 +566,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
       this.addToAttributeTable(data_table_x_axisLabels, axisObject, (TSAlias !== '') ? TSAlias : legendLabel,
                                 units, i, datePrecision);
 
-      // Create the PopulateGraph object to pass to the createGraph function
+      // Create the PopulateGraph object to pass to the createGraph function.
       var chartConfigObject: PopulateGraph = {
         chartMode: this.verifyGraphProp(chartType, GraphProp.cm),
         chartType: this.verifyGraphProp(chartType, GraphProp.ct),
@@ -584,7 +585,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
       configArray.push(chartConfigObject);
     }
-    // Determine whether a chartJS graph or Plotly graph needs to be made
+    // Determine whether a chartJS graph or Plotly graph needs to be made.
     if (!this.chartPackage) {
       chartJSGraph = false;
     } else if (this.chartPackage.toUpperCase() === 'PLOTLY') {
@@ -666,7 +667,9 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
         tickangle: 0
       },
       yaxis: {
-        // 'r' removes the k from the thousands place for large numbers
+        // 'r' removes the k from the thousands place for numbers larger than 10,000. 
+        // This formatting is taken from d3 formatting:
+        // https://github.com/d3/d3-format/blob/main/README.md#locale_format
         tickformat: 'r',
         title: config[0].yAxesLabelString,
         // Keeps the y-axis at a fixed range, so when the user zooms, an x-axis zoom takes place
@@ -839,7 +842,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Closes the Mat Dialog popup when the Close button is clicked.
+   * Closes the Mat Dialog popup when the Close button is clicked, and removes this
+   * dialog's window ID from the windowManager.
    */
   public onClose(): void {
     this.dialogRef.close();
@@ -947,13 +951,13 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   private parseTSFile(TSFile: IM.Path): void {
 
     var templateObject = this.owfCommonService.getChartTemplateObject();
-    // Instantiate a StateMod_TS instance so we can subscribe to its returned Observable later
+    // Defines a TSObject so it can be instantiated as the desired object later.
     var TSObject: any;
-    // Create an array to hold our Observables of each file read
+    // Create an array to hold the Observables of each file read.
     var dataArray: any[] = [];
-    // The file path string to the TS File
+    // The file path string to the TS File.
     var filePath: string;
-    // The TSID used by the readTimeSeries function in the converted Java code that utilizes it as a TS identifier
+    // The TSID used by the readTimeSeries function in the converted Java code that utilizes it as a TS identifier.
     var TSIDLocation: string;
 
     switch (TSFile) {
@@ -963,10 +967,10 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
     
     for (let data of templateObject['product']['subProducts'][0]['data']) {
-      // Obtain the TSID location for the readTimeSeries method
+      // Obtain the TSID location for the readTimeSeries method.
       TSIDLocation = data.properties.TSID.split('~')[0];
-      // Depending on whether it's a full TSID used in the graph template file, determine what the file path of the StateMod
-      // file is. (TSIDLocation~/path/to/filename.stm OR TSIDLocation~StateMod~/path/to/filename.stm)
+      // If a full TSID used in the graph template file, determine the file path of the StateMod
+      // file. (TSIDLocation~/path/to/filename.stm OR TSIDLocation~StateMod~/path/to/filename.stm)
       if (data.properties.TSID.split('~').length === 2) {
         filePath = data.properties.TSID.split('~')[1];
       } else if (data.properties.TSID.split('~').length === 3) {
@@ -1002,16 +1006,16 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
     let startDate: DateTime = timeSeries.getDate1();
     let endDate: DateTime = timeSeries.getDate2();
-    // The DateTime iterator for the the while loop
+    // The DateTime iterator for the the while loop.
     let iter: DateTime = startDate;
-    // The index of the x_axisLabel array to push into the chartJS_yAxisData as the x property
+    // The index of the x_axisLabel array to push into the chartJS_yAxisData as the x property.
     var labelIndex = 0;      
     
     do {
-      // Grab the value from the current Time Series that's being looked at
+      // Grab the value from the current Time Series that's being looked at.
       let value = timeSeries.getDataValue(iter);
       // This object will hold both the x and y values so the ChartJS object explicitly knows what value goes with what label
-      // This is very useful for displaying multiple Time Series on one graph with different dates used for both
+      // This is very useful for displaying multiple Time Series on one graph with different dates used for both.
       var dataObject: any = {};
 
       // Set the x value as the current date      

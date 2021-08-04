@@ -84,7 +84,7 @@ when imported here it only styles the provider dropdown a little bit but not all
 
 .header-title {
   font-size: medium;
-  padding-left: 20%;
+  padding-left: calc(20% + 40px);
   text-align: center;
   height: 100%;
   width: 100%;
