@@ -1,5 +1,6 @@
 
 export * from './DateValueTS'
+export * from './DayTS';
 export * from './MonthTS';
 export * from './TS';
 export * from './TSData';

@@ -14,6 +14,7 @@ import { MatSlideToggleChange }     from '@angular/material/slide-toggle';
 import { DialogDataTableComponent,
           DialogDocComponent,
           DialogGalleryComponent,
+          DialogHeatmapComponent,
           DialogPropertiesComponent,
           DialogTextComponent,
           DialogTSGraphComponent }  from '@OpenWaterFoundation/common/ui/dialog';
@@ -203,7 +204,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this.backgroundMapGroups.push(group);
     });
 
-    // Create the each background component asynchronously by using setTimeout. If no time is given to setTimeout, 0 is used by
+    // // Create the each background component asynchronously by using setTimeout. If no time is given to setTimeout, 0 is used by
     // default, which makes sure that viewContainerRef is defined by the time the components are created.
     // setTimeout(() => {
     //   backgroundMapGroups.forEach((backgroundGroup: any) => {
@@ -968,7 +969,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 // for the resourcePath only
                                 var resourcePath = MapUtil.obtainPropertiesFromLine(resourcePathArray[i], featureProperties);
                                 let fullResourcePath = _this.owfCommonService.buildPath(IM.Path.rP, [resourcePath]);
-                                // Add this button's id to the windowManager so a user can't open it more than once.
+                                // Add this window ID to the windowManager so a user can't open it more than once.
                                 _this.windowManager.addWindow(windowID, WindowType.TEXT);
 
                                 _this.owfCommonService.getPlainText(fullResourcePath, IM.Path.rP).subscribe((text: any) => {
@@ -979,7 +980,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                               else if (actionArray[i] === 'displayTimeSeries') {
 
                                 let fullResourcePath = _this.owfCommonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
-                                // Add this button's id to the windowManager so a user can't open it more than once.
+                                // Add this window ID to the windowManager so a user can't open it more than once.
                                 _this.windowManager.addWindow(windowID, WindowType.TSGRAPH);
 
                                 _this.owfCommonService.getJSONData(fullResourcePath, IM.Path.rP, _this.mapID)
@@ -1004,6 +1005,31 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                     _this.openTSGraphDialog(graphTemplateObject, graphFilePath, TSID_Location, chartPackageArray[i],
                                       featureProperties, downloadFileNameArray[i] ? downloadFileNameArray[i] : null, windowID);
                                   });
+                              }
+                              // Display a Heatmap Dialog.
+                              else if (actionArray[i].toUpperCase() === 'DISPLAYHEATMAP') {
+                                let fullResourcePath = _this.owfCommonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
+
+                                _this.owfCommonService.getJSONData(fullResourcePath).subscribe((graphTemplateObject: any) => {
+                                  // Replaces all ${} property notations with the correct feature in the TSTool graph template object
+                                  MapUtil.replaceProperties(graphTemplateObject, featureProperties);
+
+                                  if (graphTemplateObject['product']['subProducts'][0]['data'][0]['properties'].TSID) {
+                                    let TSID: string = graphTemplateObject['product']['subProducts'][0]['data'][0]['properties'].TSID;
+                                    // Split on the ~ and set the actual file path we want to use so our dialog-content
+                                    // component can determine what kind of file was given.
+                                    TSID_Location = TSID.split('~')[0];
+                                    // If the TSID has one tilde (~), set the path using the correct index compared to
+                                    // if the TSID contains two tildes.
+                                    if (TSID.split('~').length === 2) {
+                                      graphFilePath = TSID.split("~")[1];
+                                    } else if (TSID.split('~').length === 3) {
+                                      graphFilePath = TSID.split("~")[2];
+                                    }
+                                  } else console.error('The TSID has not been set in the graph template file');
+                                  _this.openHeatmapDialog(geoLayer, graphTemplateObject, graphFilePath);
+                                });
+                                
                               }
                               // Display a Map Feature Gallery Dialog.
                               else if (actionArray[i].toUpperCase() === 'DISPLAYIMAGEGALLERY') {
@@ -1541,6 +1567,39 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // });
 
     // // this.windowManager.addWindow(windowID, WindowType.GAP);
+  }
+
+  /**
+   * 
+   * @param geoLayer The geoLayer object from the map configuration file.
+   */
+  private openHeatmapDialog(geoLayer: any, graphTemplateFile: string, graphFilePath: string): void {
+
+    var windowID = geoLayer.geoLayerId + '-dialog-heatmap';
+    if (this.windowManager.windowExists(windowID)) {
+      return;
+    }
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      geoLayer: geoLayer,
+      graphFilePath: graphFilePath,
+      graphTemplateObject: graphTemplateFile,
+      windowID: windowID
+    }
+    const dialogRef: MatDialogRef<DialogHeatmapComponent, any> = this.dialog.open(DialogHeatmapComponent, {
+      data: dialogConfig,
+      hasBackdrop: false,
+      panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
+      height: "750px",
+      width: "910px",
+      minHeight: "425px",
+      minWidth: "675px",
+      maxHeight: "70vh",
+      maxWidth: "80vw"
+    });
+
+    this.windowManager.addWindow(windowID, WindowType.HEAT);
   }
 
   /**

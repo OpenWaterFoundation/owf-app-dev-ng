@@ -50,7 +50,7 @@ export class DialogTSTableComponent implements OnInit, OnDestroy {
   public valueColumns: string[];
   /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
   public windowID: string;
-  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs from the InfoMapper. */
+  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
 
@@ -88,7 +88,8 @@ export class DialogTSTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void { }
 
   /**
-   * Closes the Mat Dialog popup when the Close button is clicked.
+   * Closes the Mat Dialog popup when the Close button is clicked, and removes this
+   * dialog's window ID from the windowManager.
    */
   public onClose(): void {
     this.dialogRef.close();

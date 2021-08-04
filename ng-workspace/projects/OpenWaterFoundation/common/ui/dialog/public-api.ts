@@ -10,6 +10,9 @@ export * from './dialog-gallery/dialog-gallery.module';
 // // DIALOG GAPMINDER
 // export * from './dialog-gapminder/dialog-gapminder.component';
 // export * from './dialog-gapminder/dialog-gapminder.module';
+// DIALOG HEATMAP
+export * from './dialog-heatmap/dialog-heatmap.component';
+export * from './dialog-heatmap/dialog-heatmap.module';
 // // DIALOG PROPERTIES
 export * from './dialog-properties/dialog-properties.component';
 export * from './dialog-properties/dialog-properties.module';

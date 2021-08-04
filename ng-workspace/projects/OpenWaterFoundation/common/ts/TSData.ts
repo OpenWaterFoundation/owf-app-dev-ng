@@ -202,13 +202,13 @@ public getDataValue(): number {
 // {	return _data_flag;
 // }
 
-// /**
-// Return the data for the data.
-// @return The date associated with the value.  A copy is returned.
-// */
-// public DateTime getDate()
-// {	return new DateTime (_date);
-// }
+/**
+Return the data for the data.
+@return The date associated with the value.  A copy is returned.
+*/
+public getDate(): DateTime {
+  return new DateTime (this._date);
+}
 
 // /**
 // Return the duration (seconds) for the data.
@@ -290,7 +290,7 @@ Set the date.  A copy of the date is made.
 */
 public setDate( d: DateTime ): void {
   if( d != null ){
-		this._date = new DateTime ( d );
+		this._date = DateTime.copyConstructor ( d );
 	}
 }
 

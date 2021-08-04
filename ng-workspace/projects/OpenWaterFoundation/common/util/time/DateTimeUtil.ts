@@ -2812,6 +2812,16 @@ export class TimeUtil {
 
 
   /**
+  Return the absolute month, which is the year*12 + month.
+  @return The absolute month, which is the year*12 + month.
+  @param month Month number.
+  @param year Year.
+  */
+  public static absoluteMonth ( month: number, year: number ): number {
+    return ( year*12 + month );
+  }
+
+  /**
   Format a DateTime using the given format.  The year type defaults to CALENDAR.
   @param dt DateTime object to format
   @param format format string (see overloaded version for details)
@@ -3308,6 +3318,44 @@ export class TimeUtil {
       }
     }
     return ndays;
+  }
+
+  /**
+  Calculate the number of days in several months.
+  @return The number of days in several months.
+  @param month0 The initial month of interest (1-12).
+  @param year0 The initial year of interest (4-digit).
+  @param n The number of months, inclusive of the initial month.  For example, a
+  value of 1 would return the days in the initial month.  A value of 2 would
+  return the number of days in the initial month and its following month.
+  */
+  public static numDaysInMonthsThree ( month0: number, year0: number, n: number ): number {
+    var	i: number, month: number, ndays = 0, year: number;
+
+    month = month0;
+    year = year0;
+    for ( i = 0; i < n; i++ ) {
+      ndays += this.numDaysInMonth ( month, year );
+      ++month;
+      if ( month == 13 ) {
+        month = 1;
+        ++year;
+      }
+    }
+    return ndays;
+  }
+
+  /**
+  Calculate the number of days in several months.
+  @return The number of days in several months.
+  @param month0 The initial month of interest.
+  @param year0 The initial year of interest.
+  @param month1 The last month of interest.
+  @param year1 The last year of interest.
+  */
+  public static numDaysInMonths (	month0: number, year0: number, month1: number, year1: number ): number {
+    var nmonths = TimeUtil.absoluteMonth ( month1, year1 ) - TimeUtil.absoluteMonth ( month0, year0 ) + 1;
+    return TimeUtil.numDaysInMonthsThree ( month0, year0, nmonths );
   }
 
 }

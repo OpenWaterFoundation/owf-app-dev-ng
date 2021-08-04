@@ -213,7 +213,7 @@ export enum Path {
 }
 
 /**
- * Enum representing the 3 types of files that can be downloaded from the InfoMapper.
+ * Enum representing the 3 types of files that can be downloaded in an application.
  */
 export enum SaveFileType {
   dataTable,

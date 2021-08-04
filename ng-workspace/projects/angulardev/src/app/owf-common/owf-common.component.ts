@@ -6,9 +6,11 @@ import { MatDialog,
 
 import { DialogDataTableComponent,
           DialogDocComponent,
+          DialogHeatmapComponent,
           DialogImageComponent,
           DialogTextComponent,
           DialogTSGraphComponent } from '@OpenWaterFoundation/common/ui/dialog';
+
 import { WindowManager,
           WindowType }             from '@OpenWaterFoundation/common/ui/window-manager';
 import { OwfCommonService }        from '@OpenWaterFoundation/common/services';
@@ -25,16 +27,30 @@ import { take }                    from 'rxjs/operators';
 export class OwfCommonComponent implements OnInit {
 
   /**
-   * The windowManager instance, whose job it will be to create, maintain, and remove multiple open dialogs from the InfoMapper.
+   * The windowManager instance, whose job it will be to create, maintain, and remove multiple open dialogs in an application.
    */
   public windowManager: WindowManager = WindowManager.getInstance();
+  /**
+   * Whether the application is currently showing the map component.
+   */
+  public mapDisplay: boolean;
+  /**
+   * Whether the application is currently showing the dialog menus.
+   */
+  public menuDisplay: boolean;
 
 
+  /**
+   * 
+   * @param dialog 
+   * @param owfCommonService 
+   */
   constructor(public dialog: MatDialog,
               private owfCommonService: OwfCommonService) { }
 
 
   ngOnInit(): void {
+    this.menuDisplay = true;
   }
 
   /**
@@ -209,6 +225,36 @@ export class OwfCommonComponent implements OnInit {
   }
 
   /**
+   * Opens up a very basic plotly heatmap graph example dialog.
+   */
+  public openHeatmapExampleDialog(): void {
+    // streamflow-graph-template.json
+    this.owfCommonService.getJSONData('assets/app/data-maps/data-ts/streamflow-graph-template.json')
+    .subscribe((graphTemplateObject: any) => {
+
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.data = {
+        // 0300911.DWR.DivTotal.Month.stm
+        graphFilePath: 'assets/app/data-maps/data-ts/0300911.DWR.DivTotal.Month.stm',
+        graphTemplateObject: graphTemplateObject
+      }
+      const dialogRef: MatDialogRef<DialogHeatmapComponent, any> = this.dialog.open(DialogHeatmapComponent, {
+        data: dialogConfig,
+        hasBackdrop: false,
+        panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
+        height: "750px",
+        width: "910px",
+        minHeight: "425px",
+        minWidth: "675px",
+        maxHeight: "70vh",
+        maxWidth: "80vw"
+      });
+
+    });
+
+  }
+
+  /**
    * 
    */
   public openImageExampleDialog(): void {
@@ -231,9 +277,6 @@ export class OwfCommonComponent implements OnInit {
       }
       const dialogRef: MatDialogRef<DialogImageComponent, any> = this.dialog.open(DialogImageComponent, {
         data: dialogConfig,
-        // This stops the dialog from containing a backdrop, which means the background opacity is set to 0, and the
-        // entire InfoMapper is still navigable while having the dialog open. This way, you can have multiple dialogs
-        // open at the same time.
         hasBackdrop: false,
         panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
         height: "800px",

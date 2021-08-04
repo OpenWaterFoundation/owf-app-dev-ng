@@ -1,0 +1,27 @@
+<!-- The area that will be moved when dragged around the browser window. -->
+<div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+  <!-- The draggable <div> element at the top of the dialog that can be clicked and dragged. -->
+  <div mat-dialog-title cdkDragHandle class="drag-header">
+    <div class="drag-header-div">
+      <p class="drag-header-title">
+        Time Series - Heatmap
+      </p>
+    </div>
+    <!-- The close button on the upper right part of the dialog -->
+    <button mat-button (click)="onClose()" class="upper-dialog-close-button">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="heatmap-contents">
+    <div id="heatmap-div" class="heatmap-div"></div>
+  </div>
+
+  <!-- A button on the lower left for viewing the data table of the current time series graph -->
+  <div class="heatmap-components-group">
+    <button mat-raised-button (click)="onClose()" class="lower-dialog-close-button">
+      Close
+    </button>
+  </div>
+
+</div>

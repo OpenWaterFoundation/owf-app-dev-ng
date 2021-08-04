@@ -261,13 +261,76 @@ export class TS {
     this._editable = false;
   }
 
-  /**
-  Add a TSDataFlagMetadata instance to the list maintained with the time series, to explain flag meanings.
-  @param dataFlagMetadata instance of TSDataFlagMetadata to add to time series.
+  /**Add a TSDataFlagMetadata instance to the list maintained with the time series, to explain flag meanings.
+  @param dataFlagMetadata instance of TSDataFlagMetadata to add to time series. */
+  public addDataFlagMetadata ( dataFlagMetadata: TSDataFlagMetadata ): void {
+    this.__dataFlagMetadataList.push(dataFlagMetadata);
+  }
+
+  /** Copy one time series header to this one.  This copies everything except data
+  related to the data space.  Note that the dates are also copied and
+  allocateDataSpace() should be called if necessary to reset the data space.  The
+  following data is copied (the associated set method is shown to allow individual
+  changes to be applied after the copy, if appropriate).  See also the second
+  table that indicates what is NOT copied.  This method may need to be overloaded
+  in the future to allow only a partial copy of the header.
   */
-  public addDataFlagMetadata ( dataFlagMetadata: TSDataFlagMetadata ): void
-  {
-      this.__dataFlagMetadataList.push(dataFlagMetadata);
+  public copyHeader ( ts: TS ): void {
+    this.setVersion( ts.getVersion() );
+    this.setStatus ( ts.getStatus() );
+
+    this.setInputName ( ts.getInputName() );
+
+    // Copy TSIdent...
+
+    try {
+      this.setIdentifierTSIdent ( new TSIdent(ts.getIdentifier()) );
+    }
+    catch ( e ) {
+      // Should not happen.
+    }
+
+    // Need to initialize DateTime somehow, but how do you pick defaults?
+
+    // THIS IS DATA RELATED 13 JUL 1998
+    //_data_limits = new TSLimits ( ts.getDataLimits() );
+    this._date1 = new DateTime ( ts.getDate1() );
+    this._date2 = new DateTime ( ts.getDate2() );
+    this._date1_original = new DateTime ( ts.getDate1Original() );
+    this._date2_original = new DateTime ( ts.getDate2Original() );
+
+    this.setDataType( ts.getDataType() );
+
+    this._data_interval_base = ts.getDataIntervalBase();
+    this._data_interval_mult = ts.getDataIntervalMult();
+    this._data_interval_base_original = ts.getDataIntervalBaseOriginal ();
+    this._data_interval_mult_original = ts.getDataIntervalMultOriginal ();
+
+    this.setDescription( ts.getDescription() );
+
+    this._comments = [];
+    this._comments = StringUtil.addListToStringList ( this._comments, ts.getComments() );
+    this._genesis = [];
+    this._genesis = StringUtil.addListToStringList ( this._genesis, ts.getGenesis() );
+
+    this.setDataUnits( ts.getDataUnits() );
+    this.setDataUnitsOriginal( ts.getDataUnitsOriginal() );
+
+    // First set the missing data value...
+    this.setMissing( ts.getMissing() );
+    // Now set the range itself in case it has been reset...
+    this.setMissingRange ( ts.getMissingRange() );
+
+    // THIS IS DATA RELATED 13 Jul 1998
+    //_dirty = true;// We need to recompute limits when we get the chance
+
+    // Copy legend information...
+    this._legend = ts.getLegend();
+    this._extended_legend = ts.getExtendedLegend();
+
+    // Data flags...
+
+    this._has_data_flags = ts._has_data_flags;
   }
 
   /**
@@ -498,6 +561,14 @@ export class TS {
   }
 
   /**
+  Return the time series comments.
+  @return The comments list.
+  */
+  public getComments(): string[] {
+    return this._comments;
+  }
+
+  /**
   Return the data interval base.
   @return The data interval base (see TimeInterval.*).
   */
@@ -632,6 +703,38 @@ export class TS {
   }
 
   /**
+  Return the time series description.
+  @return The time series description.
+  */
+  public getDescription( ): string {
+    return this._description;
+  }
+
+  /**
+  Return the extended time series legend.
+  @return Time series extended legend.
+  */
+  public getExtendedLegend(): string {
+    return this._extended_legend;
+  }
+
+  /**
+  Return the genesis information.
+  @return The genesis comments.
+  */
+  public getGenesis (): string[] {
+    return this._genesis;
+  }
+
+  /**
+  Return the input name (file or database table) for the time series.
+  @return the input name.
+  */
+  public getInputName (): string {
+    return this._input_name;
+  }
+
+  /**
   Return the time series legend.
   @return Time series legend.
   */
@@ -647,16 +750,25 @@ export class TS {
     return this._id.getLocation();
   }
 
-  /**
-  Return the missing data value used for the time series (single value).
+  /** Return the missing data value used for the time series (single value).
   @return The value used for missing data.
   */
   public getMissing (): number {
     return this._missing;
   }
 
-  /**
-  Get a time series property's contents (case-specific).
+  /** Return the missing data range (2 values).
+  @return The range of values for missing data.  The first value is the lowest
+  value, the second the highest.  A new array instance is returned.
+  */
+  public getMissingRange (): number[] {
+    var missing_range = [];
+    missing_range[0] = this._missingl;
+    missing_range[1] = this._missingu;
+    return missing_range;
+  }
+
+  /** Get a time series property's contents (case-specific).
   @param propertyName name of property being retrieved.
   @return property object corresponding to the property name.
   */
@@ -692,6 +804,23 @@ export class TS {
   */
   public getInternDataFlagStrings(): boolean {  
     return this._internDataFlagStrings;
+  }
+
+  /**
+  Return the time series status.
+  @return The status flag for the time series.  This is a general purpose flag.
+  @see #setStatus
+  */
+  public getStatus ( ): string {
+    return this._status;
+  }
+
+  /**
+  Return the time series input format version.
+  @return The time series version, to be used to indicate input file formats.
+  */
+  public getVersion (): string {
+    return this._version;
   }
 
   // FIXME SAM 2010-08-20 Evaluate phasing this out.  setDataValue() now automatically turns on
@@ -877,9 +1006,23 @@ export class TS {
   Set the description.
   @param description Time series description (this is not the comments).
   */
-  setDescription( description: string ) {
+  public setDescription( description: string ) {
     if ( description != null ) {
       this._description = description;
+    }
+  }
+
+  /**
+  Set the time series identifier using a TSIdent.
+  Note that this only sets the identifier but
+  does not set the separate data fields (like data type).
+  @param id Time series identifier.
+  @see TSIdent
+  @exception Exception If there is an error setting the identifier.
+  */
+  public setIdentifierTSIdent ( id: TSIdent ): void {
+    if ( id != null ) {
+      this._id = new TSIdent ( id );
     }
   }
 
@@ -971,6 +1114,30 @@ export class TS {
   }
 
   /**
+  Set the missing data range for the time series.  The value returned from
+  getMissing() is computed as the average of the values.  Two values must be
+  specified, neither of which can be a NaN.
+  @param missing Missing data range for time series.
+  */
+  public setMissingRange (  missing: number[] ): void {
+    if ( missing === null ) {
+      return;
+    }
+    if ( missing.length !== 2 ) {
+      return;
+    }
+    this._missing = (missing[0] + missing[1])/2.0;
+    if ( missing[0] < missing[1] ) {
+      this._missingl = missing[0];
+      this._missingu = missing[1];
+    }
+    else {
+      this._missingl = missing[1];
+      this._missingu = missing[0];
+    }
+  }
+
+  /**
   Set a time series property's contents (case-specific).
   @param propertyName name of property being set.
   @param property property object corresponding to the property name.
@@ -988,6 +1155,31 @@ export class TS {
   */
   public setSequenceID ( sequenceID: string ): void {
     this._id.setSequenceID ( sequenceID );
+  }
+
+  /**
+  Set the status flag for the time series.  This is used by high-level code when
+  manipulating time series.  For example, a Vector of time series might be
+  passed to a routine for graphing.  Additionally, another display component may
+  list an extended legend.  The status allows the first component to disable some
+  time series because of incompatibility so the second component can detect.
+  This feature may be phased out.
+  @see #getStatus
+  */
+  public setStatus ( status: string ): void {
+    if ( status != null ) {
+      this._status = status;
+    }
+  }
+
+  /**
+  Set the time series version, to be used with input file formats.
+  @param version Version number for time series file.
+  */
+  public setVersion( version: string ): void {
+    if ( version != null ) {
+      this._version = version;
+    }
   }
 
 }
