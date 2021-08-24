@@ -1,16 +1,22 @@
 import { HashLocationStrategy,
           LocationStrategy  }      from '@angular/common';
 import { APP_INITIALIZER,
+          CUSTOM_ELEMENTS_SCHEMA,
+          Injector,
           NgModule }               from '@angular/core';
 import { HttpClientModule }        from '@angular/common/http';
 import { DragDropModule }          from '@angular/cdk/drag-drop';
+import { createCustomElement }     from '@angular/elements';
 import { MatButtonModule }         from '@angular/material/button';
 import { MatDialogModule }         from '@angular/material/dialog';
-import { MatIconModule }             from '@angular/material/icon';
+import { MatIconModule }           from '@angular/material/icon';
 import { MatMenuModule }           from '@angular/material/menu';
 import { MatTooltipModule }        from '@angular/material/tooltip';
 import { BrowserModule }           from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MapComponent,
+          MapModule }               from '@OpenWaterFoundation/common/leaflet';
 
 import { ShowdownModule }          from 'ngx-showdown';
 
@@ -64,6 +70,9 @@ const convert = new Showdown.Converter({
 
 
 @NgModule({
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ],
   declarations: [
     AppComponent,
     NavBarComponent,
@@ -76,6 +85,7 @@ const convert = new Showdown.Converter({
     BrowserAnimationsModule,
     DragDropModule,
     HttpClientModule,
+    MapModule,
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
@@ -103,6 +113,27 @@ const convert = new Showdown.Converter({
     },
     { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
-  bootstrap: [AppComponent]
+  // Comment out when running ng serve for testing or ng build --prod=true.
+  // Uncomment out when running ./create-common-package.sh -R for building the
+  // application so that only the MapComponent is seen.
+  // entryComponents: [
+  //   MapComponent
+  // ],
+  // Comment out when running ./create-common-package.sh -R for building the application
+  // so that only the Map Component can be seen. It will try to display the <app-root></app-root>
+  // element if it isn't. Uncomment out when ng serve or ng build --prod=true is
+  // being used for testing or building the project so that the application is used.
+  bootstrap: [
+    AppComponent
+  ]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private injector: Injector) {
+    // Creates a custom HTML element with the name `common-map`. Displays the Map
+    // Component in another application or website.
+    // const webComponent = createCustomElement(MapComponent, {injector});
+    // customElements.define('common-map', webComponent);
+  }
+
+  // ngDoBootstrap() {}
+}

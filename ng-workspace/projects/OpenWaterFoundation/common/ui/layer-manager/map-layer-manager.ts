@@ -3,21 +3,21 @@ import { MapLayerItem } from './map-layer-item';
 import * as $ from 'jquery';
 
 /**
- * A helper singleton class for creating, managing and maintaining Leaflet maps in the Infomapper. The fact that it is singleton
- * is important. The (at)dynamic line below needs to be declared before classes that declares static methods.
+ * A helper singleton class for creating, managing and maintaining Leaflet maps
+ * in the Infomapper. The fact that it is singleton is important. The (at)dynamic
+ * line below needs to be declared before classes that declares static methods.
  */
 // @dynamic
 export class MapLayerManager {
   /** The instance of this MapLayerManager object. */
   private static instance: MapLayerManager;
-  /** String array containing the geoLayerId of the reverse order each layer should be displayed in on the Leaflet map. */
+  /** String array containing the geoLayerId of the reverse order each layer should
+   * be displayed in on the Leaflet map. */
   private mapConfigLayerOrder: string[];
   /** The object to hold each MapLayerItem as the value, with the layer's geoLayerId as the key. */
   private mapLayers: {} = {};
-  /**
-   * The object with each geoLayerViewGroup in the geoMap as the key, and an array of all geoLayerId's in the geoLayerViewGroup
-   * as the value.
-   */
+  /** The object with each geoLayerViewGroup in the geoMap as the key, and an array
+   * of all geoLayerId's in the geoLayerViewGroup as the value. */
   private layerViewGroups: {} = {};
 
 
@@ -34,11 +34,11 @@ export class MapLayerManager {
   }
 
   /**
-   * The initial adding of the layer to the @var mapLayers object, with the layer's geoLayerId as the key, and a new MapLayerItem
-   * instance as the value
-   * @param leafletLayer The leaflet layer to add to the map
-   * @param geoLayer The geoMap geoLayer representing the layer added
-   * @param geoLayerView The geoMap geoLayerView representing the layer added
+   * The initial adding of the layer to the @var mapLayers object, with the layer's
+   * geoLayerId as the key, and a new MapLayerItem instance as the value.
+   * @param leafletLayer The leaflet layer to add to the map.
+   * @param geoLayer The geoMap geoLayer representing the layer added.
+   * @param geoLayerView The geoMap geoLayerView representing the layer added.
    */
   public addLayerItem(leafletLayer: any, geoLayer: any, geoLayerView: any, geoLayerViewGroup: any, isRaster?: boolean): void {
     this.mapLayers[geoLayer.geoLayerId] = new MapLayerItem(leafletLayer, geoLayer, geoLayerView, geoLayerViewGroup, isRaster);
@@ -103,8 +103,9 @@ export class MapLayerManager {
   }
 
   /**
-   * Resets each of the MapLayerManager's class variables, so when another map is created, they are using fresh new variables
-   * without having to worry about them containing previous map information.
+   * Resets each of the MapLayerManager's class variables, so when another map is
+   * created, they are using fresh new variables without having to worry about them
+   * containing previous map information.
    */
   public resetMapLayerManagerVariables(): void {
     this.layerViewGroups = {};
@@ -113,14 +114,18 @@ export class MapLayerManager {
   }
 
   /**
-   * Looks at what layers are being shown on the current Leaflet map and renders them in the correct order. This should
-   * be in the same order as each geoLayerView in the geoLayerViewGroups from top to bottom.
-   * @param mapLayers An object with the geoLayerId as the key, and the layer added to the leaflet map as the value
+   * Looks at what layers are being shown on the current Leaflet map and renders
+   * them in the correct order. This should be in the same order as each geoLayerView
+   * in the geoLayerViewGroups from top to bottom.
+   * @param mapLayers An object with the geoLayerId as the key, and the layer added
+   * to the leaflet map as the value
    */
   public setLayerOrder() {
-    // Iterate through the MapManager's mapConfigLayerOrder, and check to see if the geoLayerId is a key in the mapLayers object.
-    // If it is, then bring that layer to the front of the map. Since we're going through backwards, the last layer will be
-    // brought to the front first, and the first layer will be brought to the front last, which will give the desired ordering.
+    // Iterate through the MapManager's mapConfigLayerOrder, and check to see if
+    // the geoLayerId is a key in the mapLayers object. If it is, then bring that
+    // layer to the front of the map. Since we're going through backwards, the last
+    // layer will be brought to the front first, and the first layer will be brought
+    // to the front last, which will give the desired ordering.
     for (let geoLayerId of this.mapConfigLayerOrder) {
       if (this.mapLayers[geoLayerId]) {
 
@@ -134,8 +139,10 @@ export class MapLayerManager {
   }
 
   /**
-   * Sets the @var mapConfigLayerOrder as the reversed array set in the map service with the order of geoLayerId's
-   * @param mapConfigLayerOrder The string array of the order of layer geoLayerId's in reverse order
+   * Sets the @var mapConfigLayerOrder as the reversed array set in the map service
+   * with the order of geoLayerId's
+   * @param mapConfigLayerOrder The string array of the order of layer geoLayerId's
+   * in reverse order
    */
   public setMapConfigLayerOrder(mapConfigLayerOrder: string[]): void {
     this.mapConfigLayerOrder = mapConfigLayerOrder;
@@ -159,14 +166,19 @@ export class MapLayerManager {
   }
 
   /**
-   * A toggle slider button has been clicked, and the geoLayerViewGroup it's a part of has the selectBehavior property set
-   * to Single instead of the default 'Any'. 
-   * @param mainMap The reference to the Leaflet map object
+   * A toggle slider button has been clicked, and the geoLayerViewGroup it's a part
+   * of has the selectBehavior property set to Single instead of the default 'Any'. 
+   * @param geoLayerId The ID for the layer geoLayer.
+   * @param mainMap The reference to the Leaflet map object.
+   * @param geoLayerViewGroupId The ID for the layer geoLayerViewGroup.
+   * @param first 
    */
-  public toggleOffOtherLayersOnMainMap(geoLayerId: string, mainMap: any, geoLayerViewGroupId: string, first?: string): void {
-    // Iterate over the array value from the layerViewGroups object, and if the geoLayerId is the geoLayerId of the layer that
-    // needs to be turned on, skip it. Otherwise, retrieve the MapLayerItem object using the geoLayerId (ID), check if it's
-    // currently being show on the map, and remove it if it is.
+  public toggleOffOtherLayersOnMainMap(geoLayerId: string, mainMap: any,
+                                        geoLayerViewGroupId: string, first?: string): void {
+    // Iterate over each geoLayerView in the geoLayerViewGroup, and if the supplied
+    // geoLayerId equals the geoLayerId, skip it. Otherwise, retrieve the MapLayerItem
+    // object using the geoLayerId (ID), check if it's currently being show on the map,
+    // and remove it if it is.
     for (let ID of this.layerViewGroups[geoLayerViewGroupId]) {
       if (ID === geoLayerId) {
         continue;
@@ -187,7 +199,8 @@ export class MapLayerManager {
           selectedArray.push(false);
         }
       }
-      // If all layers are true for selectedInitial, or they're not given, perform the default of showing the top-most layer
+      // If all layers are true for selectedInitial, or they're not given, perform
+      // the default of showing the top-most layer.
       if (selectedArray.every(Boolean)) {
         var firstLayerGeoLayerId = this.layerViewGroups[geoLayerViewGroupId][this.layerViewGroups[geoLayerViewGroupId].length - 1];
         if (geoLayerId !== firstLayerGeoLayerId) {
@@ -197,7 +210,7 @@ export class MapLayerManager {
           this.toggleOffOtherLayersOnMainMap(firstLayerGeoLayerId, mainMap, geoLayerViewGroupId);
         }
       }
-      // If some layers are specifically marked false, show the top-most true layer
+      // If some layers are specifically marked false, show the top-most true layer.
       else {
         for (let bool of selectedArray) {
           if (bool === true) {

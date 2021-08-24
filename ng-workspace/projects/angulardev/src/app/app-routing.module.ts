@@ -14,8 +14,6 @@ const routes: Routes = [
   { path: 'map/:id', component: MapComponent },
   { path: '404', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent }
-  // { path: 'content-page/:markdownFilename', component: ContentPageComponent },
-  // { path: 'map-error', component: MapErrorComponent },
 ]
 
 @NgModule({

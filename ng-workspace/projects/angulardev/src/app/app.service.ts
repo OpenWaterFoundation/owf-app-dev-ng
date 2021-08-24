@@ -50,8 +50,8 @@ export class AppService {
     this.owfCommonService.setAppConfig(appData);
 
     // Map Configuration
-    const mapData = await this.http.get('assets/app/map-config.json').toPromise();
-    this.owfCommonService.setMapConfig(mapData);
+    // const mapData = await this.http.get('assets/app/map-config.json').toPromise();
+    // this.owfCommonService.setMapConfig(mapData);
   }
 
   /**

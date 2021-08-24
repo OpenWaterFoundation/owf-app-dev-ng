@@ -14,7 +14,6 @@ import { DialogDataTableComponent,
 import { WindowManager,
           WindowType }             from '@OpenWaterFoundation/common/ui/window-manager';
 import { OwfCommonService }        from '@OpenWaterFoundation/common/services';
-import * as IM                     from '@OpenWaterFoundation/common/services';
 
 import { take }                    from 'rxjs/operators';
 
@@ -26,18 +25,17 @@ import { take }                    from 'rxjs/operators';
 })
 export class OwfCommonComponent implements OnInit {
 
-  /**
-   * The windowManager instance, whose job it will be to create, maintain, and remove multiple open dialogs in an application.
-   */
+  /** The windowManager instance, whose job it will be to create, maintain, and remove
+   * multiple open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
-  /**
-   * Whether the application is currently showing the map component.
-   */
+  /** Whether the application is currently showing the map component. */
   public mapDisplay: boolean;
-  /**
-   * Whether the application is currently showing the dialog menus.
-   */
+  /** Whether the application is currently showing the dialog menus. */
   public menuDisplay: boolean;
+
+  public testObj = {
+    '1': 'stuff'
+  };
 
 
   /**

@@ -82,6 +82,16 @@ export class MapLayerItem {
   }
 
   /**
+   * Sets the given Leaflet layer to this LayerItem and adds it to the given Leaflet map.
+   * @param leafletLayer The leaflet layer to be added to this LayerItem.
+   * @param mainMap The leaflet map that the layer will be added to.
+   */
+  public addLeafletLayer(leafletLayer: any, mainMap: any): void {
+    this.leafletLayer = leafletLayer;
+    mainMap.addLayer(this.leafletLayer);
+  }
+
+  /**
    * 
    * @param selectedLayer The geoJSON created Leaflet layer to be added to the layer item.
    */
@@ -160,8 +170,8 @@ export class MapLayerItem {
   }
 
   /**
-   * Add the leaflet layer to the Leaflet map for the first time, doing the initializing step of setting the @var addedToMainMap
-   * to true
+   * Add the leaflet layer to the Leaflet map for the first time, doing the initializing step
+   * of setting the @var addedToMainMap to true.
    * @param mainMap The reference to the Leaflet map object
    */
   public initItemLeafletLayerToMainMap(mainMap: any): void {

@@ -143,7 +143,15 @@
                       <div *ngFor="let geoLayerView of geoLayerViewGroup.geoLayerViews; let numOfViews = index">
 
                         <div class="layer-control">
-                          <div class="layer-title">
+                          <!-- matTooltip="Time since last refresh: {{lastRefresh}}" -->
+                          <!-- matTooltip="Seconds since last refresh: {{elapsedSeconds}}" -->
+                          <div *ngIf="geoLayerView.properties.refreshInterval !== ''" class="layer-title"
+                                matTooltip="Time since last refresh: {{lastRefresh[geoLayerView.geoLayerId]}}"
+                                matTooltipPosition="above">
+                            {{geoLayerView.name}}
+                          </div>
+
+                          <div *ngIf="geoLayerView.properties.refreshInterval === ''" class="layer-title">
                             {{geoLayerView.name}}
                           </div>
 
@@ -202,7 +210,8 @@
 
                               <button mat-menu-item
                                       class="menu-button"
-                                      (click)="openPropertyDialog(geoLayerView.geoLayerId, geoLayerView.name)">
+                                      (click)="openPropertyDialog(geoLayerView.geoLayerId, geoLayerView.name)"
+                                      [hidden]="geoLayerView.properties.legendImagePath | menuDisable : 'imageCheck'">
                                 <i class="fa fa-list fa-2x"></i>
                                 Properties
                               </button>
@@ -211,7 +220,7 @@
                               <button mat-menu-item
                                       class="menu-button"
                                       (click)="clearSelections(geoLayerView.geoLayerId)"
-                                      
+                                      [hidden]="geoLayerView.properties.imageBounds | menuDisable : 'imageCheck'"
                                       matTooltip="Clear highlighted features in the layer"
                                       matTooltipPosition="after"
                                       matTooltipShowDelay="750">
@@ -326,8 +335,15 @@
                                 </div>
                               </div>
                               <ng-template #defaultLegend>
+                                <!-- Image -->
+                                <div *ngIf="geoLayerView.geoLayerSymbol.properties.legendImagePath">
+                                  <img [src]="geoLayerView.geoLayerSymbol.properties.legendImagePath">
+                                </div>
+                                <!-- Examine the geoLayerSymbol properties to determine if a default legend
+                                symbol needs to be shown. -->
                                 <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolImage === undefined &&
                                 geoLayerView.geoLayerSymbol.properties.builtinSymbolImage === undefined &&
+                                geoLayerView.geoLayerSymbol.properties.legendImagePath === undefined &&
                                 !this.getGeometryType(geoLayerView.geoLayerId).toUpperCase().includes('LINESTRING')">
                                   <svg class="layer-icon" width="18" height="18">
                                     <rect width="18" height="18" [ngStyle]="styleOuterShape(geoLayerView.geoLayerSymbol, 'ss')"/>

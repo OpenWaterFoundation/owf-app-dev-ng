@@ -42,7 +42,7 @@ The following libraries are included in this repository, in addition to AngularD
 
 | **Library** | **`npm` package** | **Description** |
 | -- | -- | -- |
-| `owf-common` | `@OpenWaterFoundation/common` | Useful common code, including application utilities, classes ported from Java, and UI components based on Angular Material. |
+| `common` | `@OpenWaterFoundation/common` | Useful common code, including application utilities, classes ported from Java, and UI components based on Angular Material. |
 | `owf-d3` | `@OpenWaterFoundation/d3` | [D3.js](https://d3js.org/) dynamic visualizations. |
 | `owf-plotly` | `@OpenWaterFoundation/plotly` | [Plotly.js](https://plotly.com/) chart visualizations. |
 | `owf-showdown` | `@OpenWaterFoundation/showdown` | Markdown to HTML package using [showdown.js](http://showdownjs.com/). |

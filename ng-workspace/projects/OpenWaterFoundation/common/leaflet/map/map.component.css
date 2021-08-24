@@ -93,6 +93,13 @@ td.name {
   margin: 0px 0px 4px 0px;
 }
 
+.dropdown-divider {
+  padding-top: 0%;
+  padding-bottom: 0%;
+  margin-bottom: 0%;
+  margin-top: 0%;
+}
+
 /*  */
 .fa-building {
   vertical-align: middle;
@@ -563,15 +570,14 @@ it will only break the line at default line-break points, such as dashes '-'. */
 
 #mapID {
   position: absolute;
-  width:100%!important;
-  height:100%!important;
+  width: 100%!important;
+  height: 100%!important;
 }
 
 #map-container {
   position: relative;
-  float: right;
   width:100%;
-  height: calc(100vh - 57px);
+  height: 100%;
 }
 
 #open-window {
@@ -595,20 +601,4 @@ it will only break the line at default line-break points, such as dashes '-'. */
   padding-left: 5px;
   padding-right: 5px;
   font-size: 14px;
-}
-
-/* Styling for the border, size, and padding/.margins around the layer
-component list items*/
-/* td {
-  width: 100%;
-  text-align: left;
-  padding:5px;
-  border-style: none;
-} */
-
-.dropdown-divider {
-  padding-top: 0%;
-  padding-bottom: 0%;
-  margin-bottom: 0%;
-  margin-top: 0%;
 }

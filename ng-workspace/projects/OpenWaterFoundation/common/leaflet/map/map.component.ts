@@ -1,8 +1,7 @@
 import { AfterViewInit,
           Component,
-          ComponentFactoryResolver,
+          Input,
           OnDestroy,
-          ViewChild,
           ViewContainerRef,
           ViewEncapsulation }       from '@angular/core';
 import { ActivatedRoute }           from '@angular/router';
@@ -20,14 +19,11 @@ import { DialogDataTableComponent,
           DialogTSGraphComponent }  from '@OpenWaterFoundation/common/ui/dialog';
 
 import { forkJoin,
+          timer,
+          interval,
           Observable,
           Subscription }            from 'rxjs';
 import { take }                     from 'rxjs/operators';
-
-// import { BackgroundLayerDirective } from '@OpenWaterFoundation/common/leaflet'
-import { BackgroundLayerComponent } from '../background-layer/background-layer.component';
-import { SidepanelInfoDirective }   from '../sidepanel-info/sidepanel-info.directive';
-import { SidepanelInfoComponent }   from '../sidepanel-info/sidepanel-info.component';
 
 import { OwfCommonService }         from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
@@ -49,7 +45,7 @@ declare var L: any;
 
 
 @Component({
-  selector: 'app-map',
+  selector: 'common-map',
   styleUrls: ['./map.component.css'],
   templateUrl: './map.component.html',
   encapsulation: ViewEncapsulation.None
@@ -65,6 +61,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   // @ViewChild(SidepanelInfoDirective, { static: true }) InfoComp: SidepanelInfoDirective;
   /** All features of a geoLayerView. Usually a FeatureCollection. */
   public allFeatures: {} = {};
+  /**
+   * Template input property used by consuming applications or websites for passing the path
+   * to the app configuration file.
+   */
+  @Input('app-config') appConfig: any;
   /** Application version. */
   public appVersion: string;
   /** Array of background map groups from the map config file. Used for displaying background maps
@@ -85,10 +86,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public count = 1;
   /** Used to indicate which background layer is currently displayed on the map. */
   public currentBackgroundLayer: string;
+  /** The number of seconds since the last layer refresh. */
+  public elapsedSeconds = 0;
   /** An object containing any event actions with their id as the key and the action object itself as the value. */
   public eventActions: {} = {};
   /** For the Leaflet map's config file subscription object so it can be closed on this component's destruction. */
-  private forkJoinSubscription$ = <any>Subscription;
+  private forkJoinSub$ = <any>Subscription;
   /** An array of Style-like objects for displaying a graduated symbol in the Leaflet legend. */
   public graduatedLayerColors = {};
   /** Global value to access container ref in order to add and remove sidebar info components dynamically. */
@@ -97,7 +100,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public interval: any = null;
   /** Boolean test variable for use with Angular Material slide toggle. */
   public isChecked = false;
-
+  /** Represents the Date string since the last time the layer was updated. */
+  public lastRefresh = {};
+  /**
+   * 
+   */
   public layerClassificationInfo = {};
   /** Class variable to access container ref in order to add and remove map layer component dynamically. */
   public layerViewContainerRef: ViewContainerRef;
@@ -105,34 +112,33 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public legendSymbolsViewContainerRef: ViewContainerRef;
   /** The reference for the Leaflet map. */
   public mainMap: any;
-  /** Class variable for the original route subscription object so it can be closed on this component's destruction. */
-  private mapConfigSubscription$ = <any>Subscription;
-  /**
-  * Determines whether the map config file path was correct, found, and read in. If true, the map will be displayed. If false,
-  * the 404 div will let the user know there was an issue with the URL/path to the 
-  */
+  /** The map configuration subscription, unsubscribed to on component destruction. */
+  private mapConfigSub$ = <any>Subscription;
+  /** Determines whether the map config file path was correct, found, and read in.
+   * If true, the map will be displayed. If false, the 404 div will let the user
+   * know there was an issue with the URL/path to the */
   public mapFilePresent: boolean;
-  /**
-  * A variable to keep track of whether or not the leaflet map has already been initialized. This is useful for resetting
-  * the page and clearing the map using map.remove() which can only be called on a previously initialized map.
-  */
+  /** A variable to keep track of whether or not the leaflet map has already been
+  * initialized. This is useful for resetting the page and clearing the map using
+  * map.remove() which can only be called on a previously initialized map. */
   public mapInitialized: boolean = false;
   /** The current map's ID from the app configuration file. */
   public mapID: string;
-  /**
-  * The instance of the MapLayerManager, a helper class that manages MapLayerItem objects with Leaflet layers
-  * and other layer data for displaying, ordering, and highlighting.
-  */
+  /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
+  * objects with Leaflet layers and other layer data for displaying, ordering, and
+  * highlighting. */
   public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
-  /**
-  * The MapManger singleton instance, that will keep a certain number of Leaflet map instances, so a new map won't have to be
-  * created every time the same map button is clicked.
-  */
+  /** The MapManger singleton instance, that will keep a certain number of Leaflet
+  * map instances, so a new map won't have to be created every time the same map
+  * button is clicked. */
   public mapManager: MapManager = MapManager.getInstance();
   /** InfoMapper project version. */
   public projectVersion: Observable<any>;
-  /** Class variable for the original route subscription object so it can be closed on this component's destruction. */
-  private routeSubscription$ = <any>Subscription;
+  /** The refresh subscription. Used with the rxjs timer, and unsubscribed on component
+   * destruction. */
+  private refreshSub$ = new Subscription();
+  /** The route subscription, unsubscribed to on component destruction. */
+  private routeSub$ = <any>Subscription;
   /** Boolean showing if the URL given for a layer is currently unavailable. */
   public serverUnavailable = false;
   /**
@@ -157,7 +163,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param route Used for getting the parameter 'id' passed in by the url and from the router.
   */
   constructor(public owfCommonService: OwfCommonService,
-    private componentFactoryResolver: ComponentFactoryResolver,
     public dialog: MatDialog,
     private route: ActivatedRoute) { }
 
@@ -323,12 +328,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Create background layers from the configuration file.
     let backgroundLayers: any[] = this.owfCommonService.getBackgroundLayers();
     // Iterate over each background layer, create them using tileLayer, and add them to the baseMaps class object
-    backgroundLayers.forEach((backgroundLayer) => {
-      let leafletBackgroundLayer = L.tileLayer(backgroundLayer.sourcePath, {
-        attribution: backgroundLayer.properties.attribution,
-        maxZoom: backgroundLayer.properties.zoomLevelMax ? parseInt(backgroundLayer.properties.zoomLevelMax) : 18
+    backgroundLayers.forEach((geoLayer: IM.GeoLayer) => {
+      let leafletBackgroundLayer = L.tileLayer(geoLayer.sourcePath, {
+        attribution: geoLayer.properties.attribution,
+        maxZoom: geoLayer.properties.zoomLevelMax ? parseInt(geoLayer.properties.zoomLevelMax) : 18
       });
-      this.baseMaps[this.owfCommonService.getBackgroundGeoLayerViewNameFromId(backgroundLayer.geoLayerId)] = leafletBackgroundLayer;
+      this.baseMaps[this.owfCommonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId).name] = leafletBackgroundLayer;
+
+      var bkgdGeoLayerView = this.owfCommonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId);
+      
+      if (bkgdGeoLayerView.properties.refreshInterval) {
+        var refreshInterval = this.owfCommonService.getRefreshInterval(bkgdGeoLayerView.geoLayerId);
+        var refreshOffset = this.owfCommonService.getRefreshOffset(bkgdGeoLayerView.geoLayerId, refreshInterval);
+        // Check if the parsing was successful. 
+        if (isNaN(refreshInterval)) {
+        } else {
+          this.refreshLayer(refreshOffset, refreshInterval, geoLayer, IM.RefreshType.tile,
+            null, null, leafletBackgroundLayer);
+        }
+  
+      }
     });
 
     // Create a Leaflet Map and set the default layers.
@@ -443,18 +462,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       div.innerHTML = divContents;
     }
 
-    var geoLayerViewGroups: any[] = this.owfCommonService.getLayerGroups();
+    var geoLayerViewGroups: IM.GeoLayerViewGroup[] = this.owfCommonService.getLayerGroups();
 
-    // Dynamically load layers into array. VERY IMPORTANT
-    geoLayerViewGroups.forEach((geoLayerViewGroup: any) => {
+    // Iterate through each geoLayerView in every geoLayerViewGroup, and create & add a Leaflet map layer for them.
+    geoLayerViewGroups.forEach((geoLayerViewGroup: IM.GeoLayerViewGroup) => {
       if (geoLayerViewGroup.properties.isBackground === undefined || geoLayerViewGroup.properties.isBackground === 'false') {
 
         for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
 
           // Obtain the geoLayer for use in creating this Leaflet layer
-          let geoLayer: any = this.owfCommonService.getGeoLayerFromId(geoLayerView.geoLayerId);
+          let geoLayer: IM.GeoLayer = this.owfCommonService.getGeoLayerFromId(geoLayerView.geoLayerId);
           // Obtain the symbol data for use in creating this Leaflet layer
-          let symbol: any = this.owfCommonService.getSymbolDataFromID(geoLayer.geoLayerId);
+          let symbol: IM.GeoLayerSymbol = this.owfCommonService.getSymbolDataFromID(geoLayer.geoLayerId);
           // A geoLayerSymbol object was not provided in the geoLayerView, so leave the user an error message and log an
           // error message that one needs to be added to show something other than default styling.
           if (!symbol) {
@@ -471,8 +490,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           // if (geoLayer.sourceFormat && geoLayer.sourceFormat.toUpperCase() === 'WFS') {
           // }
 
-          // Put the path to the file no matter what. If file is for a raster, the handleError function in the owfCommonService will
-          // skip it and won't log any errors
+          // Put the path to the layer data file no matter what. If file is for a raster,
+          // the handleError function in the owfCommonService will skip it and won't log any errors.
           asyncData.push(
             this.owfCommonService.getJSONData(
               this.owfCommonService.buildPath(IM.Path.gLGJP, [geoLayer.sourcePath]), IM.Path.gLGJP, geoLayer.geoLayerId
@@ -505,7 +524,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           }
           // Use forkJoin to go through the array and be able to subscribe to every
           // element and get the response back in the results array when finished.
-          this.forkJoinSubscription$ = forkJoin(asyncData).subscribe((results) => {
+          this.forkJoinSub$ = forkJoin(asyncData).subscribe((results) => {
 
             // The scope of this does not reach the leaflet event functions. _this will allow a reference to this.
             var _this = this;
@@ -640,7 +659,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                       weight: result.data[0].weight
                     };
 
-                    var geoLayerView = this.owfCommonService.getLayerViewFromId(geoLayer.geoLayerId);
+                    var geoLayerView = this.owfCommonService.getGeoLayerViewFromId(geoLayer.geoLayerId);
                     var results = result.data;
 
                     let data = new L.geoJson(this.allFeatures[geoLayer.geoLayerId], {
@@ -684,7 +703,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                       color: MapUtil.verify(MapUtil.getColor(symbol, classificationAttribute, colorTable), IM.Style.color),
                       fillOpacity: MapUtil.verify(symbol.properties.fillOpacity, IM.Style.fillOpacity),
                       opacity: MapUtil.verify(symbol.properties.opacity, IM.Style.opacity),
-                      stroke: symbol.properties.outlineColor == "" ? false : true,
+                      stroke: symbol.properties.outlineColor === "" ? false : true,
                       weight: MapUtil.verify(parseInt(symbol.properties.weight), IM.Style.weight)
                     }
                   }
@@ -703,6 +722,41 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 }
 
                 this.mapLayerManager.setLayerOrder();
+              }
+            }
+            // Display an image on the map.
+            else if (geoLayer.layerType.toUpperCase().includes('IMAGE')) {
+              var imageLayer = L.imageOverlay(
+                this.owfCommonService.buildPath(IM.Path.iP, [geoLayer.sourcePath]),
+                MapUtil.parseImageBounds(geoLayerView.properties.imageBounds),
+                {
+                  opacity: MapUtil.verify(symbol.properties.opacity, IM.Style.opacity)
+                }
+              );
+
+              // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
+              // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
+              this.mapLayerManager.addLayerItem(imageLayer, geoLayer, geoLayerView, geoLayerViewGroup);
+              let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+              if (layerItem.isSelectInitial()) {
+                layerItem.initItemLeafletLayerToMainMap(this.mainMap);
+                if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
+                  this.mapLayerManager.toggleOffOtherLayersOnMainMap(geoLayer.geoLayerId, this.mainMap,
+                    geoLayerViewGroup.geoLayerViewGroupId, 'init');
+                }
+              }
+
+              this.mapLayerManager.setLayerOrder();
+
+              // Check if the image layer needs to be refreshed.
+              if (geoLayerView.properties.refreshInterval) {
+                var refreshInterval = this.owfCommonService.getRefreshInterval(geoLayerView.geoLayerId);
+                var refreshOffset = this.owfCommonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
+                // Confirm the parsing was successful by checking if getRefreshInterval returned a number.
+                if (!isNaN(refreshInterval)) {
+                  this.refreshLayer(refreshOffset, refreshInterval, geoLayer, IM.RefreshType.image,
+                                      geoLayerView, symbol);
+                }
               }
             }
             // Display a Leaflet marker or custom point/SHAPEMARKER
@@ -757,7 +811,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
                           let leafletMarker = L.marker(latlng, { icon: markerIcon });
                           // Determine if there are eventHandlers on this layer by checking its geoLayerView object.
-                          var geoLayerView = this.owfCommonService.getLayerViewFromId(geoLayer.geoLayerId);
+                          var geoLayerView = this.owfCommonService.getGeoLayerViewFromId(geoLayer.geoLayerId);
 
                           MapUtil.createLayerTooltips(leafletMarker, eventObject, geoLayerView.properties.imageGalleryEventActionId,
                             geoLayerView.geoLayerSymbol.properties.labelText, this.count);
@@ -812,7 +866,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
                       let leafletMarker = L.marker(latlng, { icon: markerIcon });
                       // Determine if there are eventHandlers on this layer by checking its geoLayerView object.
-                      var geoLayerView = this.owfCommonService.getLayerViewFromId(geoLayer.geoLayerId);
+                      var geoLayerView = this.owfCommonService.getGeoLayerViewFromId(geoLayer.geoLayerId);
 
                       MapUtil.createLayerTooltips(leafletMarker, eventObject, geoLayerView.properties.imageGalleryEventActionId,
                         geoLayerView.geoLayerSymbol.properties.labelText, this.count);
@@ -846,11 +900,17 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 this.mapLayerManager.setLayerOrder();
               }
             }
-            // Check if refresh
-            // let refreshTime: string[] = this.owfCommonService.getRefreshTime(geoLayer.geoLayerId ? geoLayer.geoLayerId : geoLayer.geoLayerId)
-            // if (!(refreshTime.length == 1 && refreshTime[0] == "")) {
-            //   this.addRefreshDisplay(refreshTime, geoLayer.geoLayerId);
-            // }
+            // Refresh a map vector layer based on the refreshInterval property in the map config file.
+            // Make sure to check if it is a vector layer.
+            if (geoLayerView.properties.refreshInterval && geoLayer.layerType.toUpperCase().includes('VECTOR')) {
+              var refreshInterval = this.owfCommonService.getRefreshInterval(geoLayerView.geoLayerId);
+              var refreshOffset = this.owfCommonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
+              // Confirm the parsing was successful by checking if getRefreshInterval
+              // returned a number.
+              if (!isNaN(refreshInterval)) {
+                this.refreshLayer(refreshOffset, refreshInterval, geoLayer, IM.RefreshType.vector);
+              }
+            }
 
             /**
              * Adds event listeners to each feature in the Leaflet layer. 
@@ -1163,6 +1223,22 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           });
           this.badPath = false;
           this.serverUnavailable = false;
+
+          // // Shows rain radar worldwide.
+          // // var corner1 = L.latLng(36.99908337779402, -109.04522295278505),
+          // // corner2 = L.latLng(41.002358615428534, -102.05171697502318),
+          // // bounds = L.latLngBounds(corner1, corner2);
+
+          // var radar = L.tileLayer('https://tilecache.rainviewer.com/v2/radar/1629323400/256/{z}/{x}/{y}/2/1_1.png',
+          //   {
+          //     // bounds: bounds
+          //   }).addTo(this.mainMap);
+          // // To have the tileLayer clear all tiles and request them again, call the following.
+          // const delay = timer(15000, 60000);
+
+          // const test = delay.subscribe(() => {
+          //   radar.redraw();
+          // });
         }
       }
     });
@@ -1174,22 +1250,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     // If the sidebar has not already been initialized once then do so.
     if (this.sidebarInitialized == false) { this.createSidebar(); }
-  }
-
-  /**
-  * ON HOLD.
-  * @param featureCollection 
-  */
-  private checkCRS(featureCollection: any): void {
-    if (featureCollection && 'crs' in featureCollection) {
-      switch (featureCollection.crs.properties.name) {
-        case 'urn:ogc:def:crs:OGC:1.3:CRS84':
-          return;
-        default:
-        // L.Proj.geoJson
-      }
-    }
-  }
+  } // END OF MAP BUILDING.
 
   public checkIfHighlighted(geoLayerId: string): boolean {
     return;
@@ -1221,7 +1282,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param symbol The Symbol data object from the geoLayerView
   */
   private createRasterLayer(geoLayer: IM.GeoLayer, symbol: IM.GeoLayerSymbol, geoLayerView: IM.GeoLayerView,
-    geoLayerViewGroup: IM.GeoLayerViewGroup, eventObject?: any): void {
+                            geoLayerViewGroup: IM.GeoLayerViewGroup, eventObject?: any): void {
     if (!symbol) {
       console.warn('The geoLayerSymbol for geoLayerId: "' + geoLayerView.geoLayerId + '" and name: "' + geoLayerView.name +
         '" does not exist, and should be added to the geoLayerView for legend styling. Displaying the default.');
@@ -1230,118 +1291,133 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     // Uses the fetch API with the given path to get the tiff file in assets to create the raster layer.
     fetch(this.owfCommonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
-      .then((response: any) => response.arrayBuffer())
-      .then((arrayBuffer: any) => {
-        parse_georaster(arrayBuffer).then((georaster: any) => {
-          // The classificationFile attribute exists in the map configuration file, so use that file path for Papaparse.
-          if (symbol && symbol.properties.classificationFile) {
-            this.categorizedLayerColors[geoLayer.geoLayerId] = [];
+    .then((response: any) => response.arrayBuffer())
+    .then((arrayBuffer: any) => {
+      parse_georaster(arrayBuffer).then((georaster: any) => {
+        // The classificationFile attribute exists in the map configuration file, so use that file path for Papaparse.
+        if (symbol && symbol.properties.classificationFile) {
+          this.categorizedLayerColors[geoLayer.geoLayerId] = [];
 
-            Papa.parse(this.owfCommonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]),
-              {
-                delimiter: ",",
-                download: true,
-                comments: "#",
-                skipEmptyLines: true,
-                header: true,
-                complete: (result: any, file: any) => {
+          Papa.parse(this.owfCommonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+            delimiter: ",",
+            download: true,
+            comments: "#",
+            skipEmptyLines: true,
+            header: true,
+            complete: (result: any, file: any) => {
 
-                  if (symbol.classificationType.toUpperCase() === 'CATEGORIZED') {
-                    // Populate the categorizedLayerColors object with the results from the classification file if the geoLayerSymbol
-                    // attribute classificationType is Categorized.
-                    this.assignCategorizedFileColor(result.data, geoLayer.geoLayerId);
-                  } else if (symbol.classificationType.toUpperCase() === 'GRADUATED') {
-                    // Populate the graduatedLayerColors array with the results from the classification file if the geoLayerSymbol
-                    // attribute classificationType is Graduated.
-                    this.assignGraduatedFileColor(result.data, geoLayer.geoLayerId);
-                  }
-
-                  // Create a single band Raster layer.
-                  if (georaster.numberOfRasters === 1) {
-                    var geoRasterLayer = MapUtil.createSingleBandRaster(georaster, result, symbol)
-                  }
-                  // If there are multiple bands in the raster, take care of them accordingly.
-                  else {
-                    var geoRasterLayer = MapUtil.createMultiBandRaster(georaster, geoLayerView, result, symbol);
-                  }
-
-                  // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
-                  // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
-                  this.mapLayerManager.addLayerItem(geoRasterLayer, geoLayer, geoLayerView, geoLayerViewGroup, true);
-                  let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
-                  if (layerItem.isSelectInitial()) {
-                    layerItem.initItemLeafletLayerToMainMap(this.mainMap);
-                    if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
-                      this.mapLayerManager.toggleOffOtherLayersOnMainMap(geoLayer.geoLayerId, this.mainMap,
-                        geoLayerViewGroup.geoLayerViewGroupId, 'init');
-                    }
-                  }
-                  // With the help of GeoBlaze, use Leaflet Map Events for clicking and/or hovering over a raster layer.
-                  const blaze = geoblaze.load(this.owfCommonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
-                    .then((georaster: any) => {
-                      let layerItem = _this.mapLayerManager.getLayerItem(geoLayerView.geoLayerId);
-
-                      Object.keys(eventObject).forEach((key: any) => {
-                        if (key === 'hover-eCP') {
-                          let div = L.DomUtil.get('title-card');
-                          var originalDivContents: string = div.innerHTML;
-
-                          _this.mainMap.on('mousemove', (e: any) => {
-                            MapUtil.displayMultipleHTMLRasterCells(e, georaster, geoLayerView, originalDivContents,
-                              layerItem, symbol);
-
-                          });
-                        } else if (key === 'click-eCP') {
-                          // _this.mainMap.on('click', (e: any) => {
-                          //   const latlng = [e.latlng.lng, e.latlng.lat];
-                          //   const results = geoblaze.identify(georaster, latlng);
-                          //   _this.mainMap.openPopup('<b>Raster:</b> ' +
-                          //                           geoLayerView.name + '<br>' +
-                          //                           '<b>Cell Value:</b> ' +
-                          //                           results[0],
-                          //                           [e.latlng.lat, e.latlng.lng])
-                          // });
-                        }
-                      })
-                    });
-                }
-              });
-          }
-          // No classificationFile attribute was given in the config file, so just create a default raster layer.
-          else {
-            var geoRasterLayer = new GeoRasterLayer({
-              // Create a custom drawing scheme for the raster layer. This might overwrite pixelValuesToColorFn()
-              customDrawFunction: ({ context, values, x, y, width, height }) => {
-                if (values[0] === 255 || values[0] === 0) {
-                  context.fillStyle = `rgba(${values[0]}, ${values[0]}, ${values[0]}, 0)`;
-                } else {
-                  context.fillStyle = `rgba(${values[0]}, ${values[0]}, ${values[0]}, 0.7)`;
-                }
-                context.fillRect(x, y, width, height);
-              },
-              debugLevel: 2,
-              georaster: georaster,
-              opacity: 0.7
-            });
-            // If the CRS given is not 4326, log the error and let the user know the layer won't be shown.
-            if (geoRasterLayer.projection !== 4326) {
-              console.error('InfoMapper requires raster layers to use EPSG:4326 CRS. Layer \'' + geoLayerView.geoLayerId +
-                '\' is using EPSG:' + geoRasterLayer.projection + '. Layer will not be displayed on map.');
-            }
-            // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
-            // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
-            this.mapLayerManager.addLayerItem(geoRasterLayer, geoLayer, geoLayerView, geoLayerViewGroup, true);
-            let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
-            if (layerItem.isSelectInitial()) {
-              layerItem.initItemLeafletLayerToMainMap(this.mainMap);
-              if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
-                this.mapLayerManager.toggleOffOtherLayersOnMainMap(geoLayer.geoLayerId, this.mainMap,
-                  geoLayerViewGroup.geoLayerViewGroupId, 'init');
+              if (symbol.classificationType.toUpperCase() === 'CATEGORIZED') {
+                // Populate the categorizedLayerColors object with the results from the classification file if the geoLayerSymbol
+                // attribute classificationType is Categorized.
+                this.assignCategorizedFileColor(result.data, geoLayer.geoLayerId);
+              } else if (symbol.classificationType.toUpperCase() === 'GRADUATED') {
+                // Populate the graduatedLayerColors array with the results from the classification file if the geoLayerSymbol
+                // attribute classificationType is Graduated.
+                this.assignGraduatedFileColor(result.data, geoLayer.geoLayerId);
               }
+
+              // Create a single band Raster layer.
+              if (georaster.numberOfRasters === 1) {
+                var geoRasterLayer = MapUtil.createSingleBandRaster(georaster, result, symbol)
+              }
+              // If there are multiple bands in the raster, take care of them accordingly.
+              else {
+                var geoRasterLayer = MapUtil.createMultiBandRaster(georaster, geoLayerView, result, symbol);
+              }
+
+              // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
+              // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
+              this.mapLayerManager.addLayerItem(geoRasterLayer, geoLayer, geoLayerView, geoLayerViewGroup, true);
+              let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+              if (layerItem.isSelectInitial()) {
+                layerItem.initItemLeafletLayerToMainMap(this.mainMap);
+                if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
+                  this.mapLayerManager.toggleOffOtherLayersOnMainMap(geoLayer.geoLayerId, this.mainMap,
+                    geoLayerViewGroup.geoLayerViewGroupId, 'init');
+                }
+              }
+              // With the help of GeoBlaze, use Leaflet Map Events for clicking and/or hovering over a raster layer.
+              const blaze = geoblaze.load(this.owfCommonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
+              .then((georaster: any) => {
+                let layerItem = _this.mapLayerManager.getLayerItem(geoLayerView.geoLayerId);
+
+                Object.keys(eventObject).forEach((key: any) => {
+                  if (key === 'hover-eCP') {
+                    let div = L.DomUtil.get('title-card');
+                    var originalDivContents: string = div.innerHTML;
+
+                    _this.mainMap.on('mousemove', (e: any) => {
+                      MapUtil.displayMultipleHTMLRasterCells(e, georaster, geoLayerView, originalDivContents,
+                        layerItem, symbol);
+
+                    });
+                  }
+                  // Click events on a raster layer have not been implemented yet.
+                  else if (key === 'click-eCP') {
+                    // _this.mainMap.on('click', (e: any) => {
+                    //   const latlng = [e.latlng.lng, e.latlng.lat];
+                    //   const results = geoblaze.identify(georaster, latlng);
+                    //   _this.mainMap.openPopup('<b>Raster:</b> ' +
+                    //                           geoLayerView.name + '<br>' +
+                    //                           '<b>Cell Value:</b> ' +
+                    //                           results[0],
+                    //                           [e.latlng.lat, e.latlng.lng])
+                    // });
+                  }
+                })
+              });
+            }
+          });
+        }
+        // No classificationFile attribute was given in the config file, so just create a default raster layer.
+        else {
+          var geoRasterLayer = new GeoRasterLayer({
+            // Create a custom drawing scheme for the raster layer. This might overwrite pixelValuesToColorFn()
+            customDrawFunction: ({ context, values, x, y, width, height }) => {
+              if (values[0] === 255 || values[0] === 0) {
+                context.fillStyle = `rgba(${values[0]}, ${values[0]}, ${values[0]}, 0)`;
+              } else {
+                context.fillStyle = `rgba(${values[0]}, ${values[0]}, ${values[0]}, 0.7)`;
+              }
+              context.fillRect(x, y, width, height);
+            },
+            debugLevel: 2,
+            georaster: georaster,
+            opacity: 0.7
+          });
+          // If the CRS given is not 4326, log the error and let the user know the layer won't be shown.
+          if (geoRasterLayer.projection !== 4326) {
+            console.error('InfoMapper requires raster layers to use EPSG:4326 CRS. Layer \'' + geoLayerView.geoLayerId +
+              '\' is using EPSG:' + geoRasterLayer.projection + '. Layer will not be displayed on map.');
+          }
+          // Add the newly created Leaflet layer to the MapLayerManager, and if
+          // it has the selectedInitial field set to true (or it's not given) add
+          // it to the Leaflet map. If false, don't show it yet.
+          this.mapLayerManager.addLayerItem(geoRasterLayer, geoLayer, geoLayerView, geoLayerViewGroup, true);
+          let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+          if (layerItem.isSelectInitial()) {
+            layerItem.initItemLeafletLayerToMainMap(this.mainMap);
+            if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
+              this.mapLayerManager.toggleOffOtherLayersOnMainMap(geoLayer.geoLayerId, this.mainMap,
+                geoLayerViewGroup.geoLayerViewGroupId, 'init');
             }
           }
-        });
+        }
       });
+    });
+    // Check to see if the layer needs to be refreshed. Don't need to check if it's a raster
+    // layer, it has to be to get to this code.
+    if (geoLayerView.properties.refreshInterval) {
+      var refreshInterval = this.owfCommonService.getRefreshInterval(geoLayerView.geoLayerId);
+      var refreshOffset = this.owfCommonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
+      // Check if the parsing was successful. 
+      if (isNaN(refreshInterval)) {
+      } else {
+        this.refreshLayer(refreshOffset, refreshInterval, geoLayer,
+                          IM.RefreshType.raster, geoLayerView, symbol);
+      }
+
+    }
   }
 
   /**
@@ -1385,7 +1461,32 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @returns the geometryType of the current geoLayer to determine what shape should be drawn in the legend
   * @param geoLayerId The id of the current geoLayer
   */
-  public getGeometryType(geoLayerId: string): any { return this.owfCommonService.getGeometryType(geoLayerId); }
+  public getGeometryType(geoLayerId: string): any {
+    return this.owfCommonService.getGeometryType(geoLayerId);
+  }
+
+  /**
+   * 
+   */
+  private initMapSettings(standalone?: boolean): void {
+    let fullMapConfigPath = this.owfCommonService.getAppPath() +
+    this.owfCommonService.getFullMapConfigPath(this.mapID, standalone);
+
+    this.mapConfigSub$ = this.owfCommonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
+    .subscribe((mapConfig: any) => {
+      // this.owfCommonService.setGeoMapID(mapConfig.geoMaps[0].geoMapId);
+      // console.log(this.mapManager.mapAlreadyCreated(this.owfCommonService.getGeoMapID()));
+
+      // Set the configuration file class variable for the map service.
+      this.owfCommonService.setMapConfig(mapConfig);
+      // Once the mapConfig object is retrieved and set, set the order in which they should be displayed.
+      this.owfCommonService.setMapConfigLayerOrder();
+      // Add components to the sidebar.
+      this.addLayerToSidebar(mapConfig);
+      // Create the map.
+      this.buildMap();
+    });
+  }
 
   /**
   * @returns a boolean on whether the layer on the Leaflet map has a bad path so a red triangle is displayed
@@ -1403,51 +1504,88 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return this.owfCommonService.isServerUnavailable(geoLayerId);
   }
 
+  private startCounter(): void {
+    var test = interval(1000).subscribe(() => {
+      this.elapsedSeconds += 1;
+    });
+  }
+
   /**
   * This function is called on initialization of the map component, after the constructor.
   */
   public ngAfterViewInit() {
+
+    this.startCounter();
     // When the parameters in the URL are changed the map will refresh and load according to new configuration data.
-    this.routeSubscription$ = this.route.params.subscribe(() => {
+    this.routeSub$ = this.route.params.subscribe(() => {
 
       this.resetMapVariables();
 
       this.mapID = this.route.snapshot.paramMap.get('id');
 
-      // TODO: jpkeahey 2020.05.13 - This shows how the map config path isn't set on a hard refresh because of async issues.
-      // Fix has been found and now just needs to be implemented. Follow the APP_INITIALIZER token found in the SNODAS app
-      // to read all static files before the app initializes, therefore all info will have already been received.
-      setTimeout(() => {
-        let fullMapConfigPath = this.owfCommonService.getAppPath() + this.owfCommonService.getFullMapConfigPath(this.mapID);
-
-        this.mapConfigSubscription$ = this.owfCommonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
-          .subscribe((mapConfig: any) => {
-            // this.owfCommonService.setGeoMapID(mapConfig.geoMaps[0].geoMapId);
-            // console.log(this.mapManager.mapAlreadyCreated(this.owfCommonService.getGeoMapID()));
-
-            // Set the configuration file class variable for the map service
-            this.owfCommonService.setMapConfig(mapConfig);
-            // Once the mapConfig object is retrieved and set, set the order in which they should be displayed
-            this.owfCommonService.setMapConfigLayerOrder();
-            // Add components to the sidebar
-            this.addLayerToSidebar(mapConfig);
-            // Create the map.
-            this.buildMap();
-          });
-      }, 500);
+      // Standalone Map.
+      if (this.appConfig) {
+        this.owfCommonService.getJSONData(this.appConfig).subscribe((appConfig: any) => {
+          this.owfCommonService.setAppConfig(appConfig);
+          this.initMapSettings(true);
+        });
+      } else if (!this.appConfig) {
+        // TODO: jpkeahey 2020.05.13 - This shows how the map config path isn't
+        // set on a hard refresh because of async issues. Fix has been found and
+        // now just needs to be implemented. Follow the APP_INITIALIZER token found
+        // in the SNODAS app to read all static files before the app initializes,
+        // therefore all info will have already been received.
+        setTimeout(() => {
+          this.initMapSettings();
+        }, 500);
+      } else {
+        console.error('Error!');
+      }
     });
   }
+
+  // public ngAfterViewInit() {
+  //   // When the parameters in the URL are changed the map will refresh and load according to new configuration data.
+  //   this.routeSub$ = this.activatedRoute.params.subscribe(() => {
+
+  //     this.resetMapVariables();
+
+  //     this.mapID = this.activatedRoute.snapshot.paramMap.get('id');
+  //     if (this.mapID === null) return;
+
+  //     // Standalone Map.
+  //     if (this.appConfig) {
+  //       this.owfCommonService.getJSONData(this.appConfig).subscribe((appConfig: any) => {
+  //         this.owfCommonService.setAppConfig(appConfig);
+  //         this.initMapSettings(true);
+  //       });
+  //     } else if (!this.appConfig) {
+  //       // TODO: jpkeahey 2020.05.13 - This shows how the map config path isn't
+  //       // set on a hard refresh because of async issues. Fix has been found and
+  //       // now just needs to be implemented. Follow the APP_INITIALIZER token found
+  //       // in the SNODAS app to read all static files before the app initializes,
+  //       // therefore all info will have already been received.
+  //       setTimeout(() => {
+  //         this.initMapSettings();
+  //       }, 500);
+  //     } else {
+  //       console.error('Error!');
+  //     }
+  //   });
+  // }
 
   /**
   * Called once, before this Map Component instance is destroyed.
   */
   public ngOnDestroy(): void {
     // Unsubscribe from all subscriptions that occurred in the Map Component.
-    this.routeSubscription$.unsubscribe();
-    this.forkJoinSubscription$.unsubscribe();
-    this.mapConfigSubscription$.unsubscribe();
-    // If a popup is open on the map and a Content Page button is clicked on, then this Map Component will be destroyed. Instead
-    // of resetting the map variables, close the popup before the map is destroyed.
+    this.routeSub$.unsubscribe();
+    this.forkJoinSub$.unsubscribe();
+    this.refreshSub$.unsubscribe();
+    this.mapConfigSub$.unsubscribe();
+    // If a popup is open on the map and a Content Page button is clicked on, then
+    // this Map Component will be destroyed. Instead of resetting the map variables,
+    // close the popup before the map is destroyed.
     this.mainMap.closePopup();
     // Destroy the map and all attached event listeners.
     this.mainMap.remove();
@@ -1546,7 +1684,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // // if (this.windowManager.windowExists(windowID)) {
     // //   return;
     // // }
-    // console.log(window);
     // let fullResourcePath = this.owfCommonService.buildPath(IM.Path.rP, [resourcePath]);
     // const dialogConfig = new MatDialogConfig();
     // dialogConfig.data = {
@@ -1671,7 +1808,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
 
     var resourcePath = this.eventActions[geoLayerView.properties.imageGalleryEventActionId].resourcePath;
-    console.log(this.eventActions);
     let fullResourcePath = this.owfCommonService.buildPath(IM.Path.rP, [resourcePath]);
 
     Papa.parse(fullResourcePath, {
@@ -1829,6 +1965,136 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       maxHeight: "90vh",
       maxWidth: "90vw"
     });
+  }
+
+  /**
+   * Creates the rxjs timer with the delay between refreshes for a given layer.
+   * @param refreshInterval The number in seconds to wait for each layer refresh.
+   * @param geoLayer The geoLayer object from the map configuration file.
+   */
+  private refreshLayer(refreshOffset: number, refreshInterval: number, geoLayer: IM.GeoLayer,
+                        refreshType: IM.RefreshType, geoLayerView?: IM.GeoLayerView, symbol?: IM.GeoLayerSymbol,
+                        bgLayer?: any): void {
+    // Wait the refreshInterval, then keep waiting by the refreshInterval from then on.
+    const delay = timer(refreshOffset, refreshInterval);
+    // Adds each refresh subscription after the first as child subscriptions
+    // (in case of multiple refreshing layers), so when unsubscribing occurs
+    // at component destruction, all are unsubscribed from.
+    this.refreshSub$.add(delay.subscribe(() => {
+      // Update the MatTooltip date display string on the sidebar geoLayerView name.
+      this.lastRefresh[geoLayer.geoLayerId] = new Date(Date.now()).toTimeString().split(" ")[0];
+      // Vector layer refresh.
+      if (refreshType === IM.RefreshType.vector) {
+        
+        this.owfCommonService.getJSONData(
+          this.owfCommonService.buildPath(IM.Path.gLGJP, [geoLayer.sourcePath])
+        ).subscribe((geoJsonData: any) => {
+
+          // Use the Map Layer Manager to remove all layers from the Leaflet layer, and then add the new
+          // data back. This way, the layer will still be known to the manager.
+          this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().clearLayers();
+          this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().addData(geoJsonData);
+          // Reset the layer order.
+          this.mapLayerManager.setLayerOrder();
+  
+          this.elapsedSeconds = 0;
+        });
+      }
+      // Raster layer refresh.
+      else if (refreshType === IM.RefreshType.raster) {
+        // First remove the raster layer.
+        this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
+        
+        // Uses the fetch API with the given path to get the tiff file in assets to create the raster layer.
+        fetch(this.owfCommonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
+        .then((response: any) => response.arrayBuffer())
+        .then((arrayBuffer: any) => {
+          parse_georaster(arrayBuffer).then((georaster: any) => {
+            // The classificationFile attribute exists in the map configuration file, so use that file path for Papaparse.
+            if (symbol && symbol.properties.classificationFile) {
+              this.categorizedLayerColors[geoLayer.geoLayerId] = [];
+
+              Papa.parse(this.owfCommonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+                delimiter: ",",
+                download: true,
+                comments: "#",
+                skipEmptyLines: true,
+                header: true,
+                complete: (result: any, file: any) => {
+
+                  if (symbol.classificationType.toUpperCase() === 'CATEGORIZED') {
+                    // Populate the categorizedLayerColors object with the results from the classification file if the geoLayerSymbol
+                    // attribute classificationType is Categorized.
+                    this.assignCategorizedFileColor(result.data, geoLayer.geoLayerId);
+                  } else if (symbol.classificationType.toUpperCase() === 'GRADUATED') {
+                    // Populate the graduatedLayerColors array with the results from the classification file if the geoLayerSymbol
+                    // attribute classificationType is Graduated.
+                    this.assignGraduatedFileColor(result.data, geoLayer.geoLayerId);
+                  }
+
+                  // Create a single band Raster layer.
+                  if (georaster.numberOfRasters === 1) {
+                    var geoRasterLayer = MapUtil.createSingleBandRaster(georaster, result, symbol)
+                  }
+                  // If there are multiple bands in the raster, take care of them accordingly.
+                  else {
+                    var geoRasterLayer = MapUtil.createMultiBandRaster(georaster, geoLayerView, result, symbol);
+                  }
+                  this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).addLeafletLayer(geoRasterLayer, this.mainMap);
+                }
+              });
+            }
+            // No classificationFile attribute was given in the config file, so just create a default raster layer.
+            else {
+              var geoRasterLayer = new GeoRasterLayer({
+                // Create a custom drawing scheme for the raster layer. This might overwrite pixelValuesToColorFn()
+                customDrawFunction: ({ context, values, x, y, width, height }) => {
+                  if (values[0] === 255 || values[0] === 0) {
+                    context.fillStyle = `rgba(${values[0]}, ${values[0]}, ${values[0]}, 0)`;
+                  } else {
+                    context.fillStyle = `rgba(${values[0]}, ${values[0]}, ${values[0]}, 0.7)`;
+                  }
+                  context.fillRect(x, y, width, height);
+                },
+                debugLevel: 2,
+                georaster: georaster,
+                opacity: 0.7
+              });
+              // If the CRS given is not 4326, log the error and let the user know the layer won't be shown.
+              if (geoRasterLayer.projection !== 4326) {
+                console.error('InfoMapper requires raster layers to use EPSG:4326 CRS. Layer \'' + geoLayerView.geoLayerId +
+                  '\' is using EPSG:' + geoRasterLayer.projection + '. Layer will not be displayed on map.');
+              }
+              // Add the newly created Leaflet layer to the MapLayerManager, and if
+              // it has the selectedInitial field set to true (or it's not given) add
+              // it to the Leaflet map. If false, don't show it yet.
+              this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).addLeafletLayer(geoRasterLayer, this.mainMap);
+            }
+          });
+        });
+      }
+      // Tile layer refresh.
+      else if (refreshType === IM.RefreshType.tile) {
+        bgLayer.redraw();
+      }
+      // Refresh an image layer.
+      else if (refreshType === IM.RefreshType.image) {
+        this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
+
+        var imageLayer = L.imageOverlay(
+          this.owfCommonService.buildPath(IM.Path.iP, [geoLayer.sourcePath]),
+          MapUtil.parseImageBounds(geoLayerView.properties.imageBounds),
+          {
+            opacity: MapUtil.verify(symbol.properties.opacity, IM.Style.opacity)
+          }
+        );
+
+        // Add the newly created Leaflet layer to the MapLayerManager.
+        this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).addLeafletLayer(imageLayer, this.mainMap);
+        this.mapLayerManager.setLayerOrder();
+      }
+      
+    }));
   }
 
   /**

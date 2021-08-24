@@ -766,7 +766,6 @@ export class MapUtil {
      * and other layer data for displaying, ordering, and highlighting.
      */
     var mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
-    // console.log(mapLayerManager.displayedLayers());
 
     let div = L.DomUtil.get('title-card');
     // var originalDivContents: string = div.innerHTML;
@@ -1176,6 +1175,40 @@ export class MapUtil {
   }
 
   /**
+   * Parse the geoLayerView property `imageBounds` and handle any user errors.
+   * @param imageBounds The raw image bounds string obtained from the map config file.
+   * @returns The nested number array needed by the Leaflet imageOverlay constructor.
+   */
+  public static parseImageBounds(imageBounds: string): number[][] {
+    var splitBounds = imageBounds.split(',');
+    // If 2 sets of lat, lng bounds aren't given, inform the user and return the default value.
+    if (splitBounds.length !== 4) {
+      console.error('Incorrect number of bounds. Please provide two sets of latitude and longitude points.');
+      return [[0, 0], [0, 0]];
+    }
+
+    var corner1 = [];
+    var corner2 = [];
+
+    for (var i = 0; i < splitBounds.length; ++i) {
+      // If one of the provided lat, lng values isn't a number, inform the user
+      // and return the default.
+      if (isNaN(+splitBounds[i].trim())) {
+        console.error("A bound was not a number. Try again.");
+        break;
+      }
+      // Add the first two bounds to corner1, and the last two to corner2.
+      if (i < 2) {
+        corner1.push(+splitBounds[i].trim());
+      } else {
+        corner2.push(+splitBounds[i].trim());
+      }
+    }
+
+    return [corner1, corner2];
+  }
+
+  /**
    * This is a recursive function that goes through an object and replaces any value in
    * it that contains the ${property} notation with the actual property needed.
    * @param templateObject The object that will have its property notation expanded
@@ -1415,53 +1448,6 @@ export class MapUtil {
         case IM.Style.weight: return 3;
       }
     }
-  }
-
-  /**
-   * Takes a lengthy URL to display on a Leaflet popup and shortens it to a reasonable size.
-   * @param url The original URL to truncate.
-   * @param newLength The length of the maximum size for the truncated string in letters.
-   * NOTE: This function is no longer used, as a CSS solution was found as a better and more consistent way of line breaking.
-   */
-  public static x_truncateString(url: string, newLength: number): string {
-    var truncatedURL = '';
-    // This puts the three periods in the URL. Not used at the moment
-    // // Return the entire URL if it's shorter than 25 letters; That should be short enough
-    // if (url.length < 31) return url;
-
-    // for (let letter of url) {
-    //   if (truncatedURL.length < 26)
-    //     truncatedURL += letter;
-    // }
-    // // Add the three periods, and then the last three letters in the original URL
-    // truncatedURL += '...';
-    // for (let i = 10; i > 0; i--) {
-    //   truncatedURL += url[url.length - i]
-    // }
-    // return truncatedURL;
-    switch (newLength) {
-      case 40:
-        // This adds an arbitrary break after the newLength letter in the URL.
-        for (let i = 0; i < url.length; i++) {
-          if (i === newLength) {
-            truncatedURL += '<br>';
-            truncatedURL += url[i];
-          } else {
-            truncatedURL += url[i];
-          }
-        }
-        return truncatedURL;
-      case 20:
-        for (let i = 0; i < newLength; i++) {
-          if (i < url.length - 2) {
-            truncatedURL += url[i];
-          } else break;
-        }
-        truncatedURL += '...';
-
-        return truncatedURL;
-    }
-
   }
 
 }

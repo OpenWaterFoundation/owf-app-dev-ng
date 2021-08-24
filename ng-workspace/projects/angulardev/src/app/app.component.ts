@@ -20,11 +20,20 @@ export class AppComponent {
 
   public windowManager: WindowManager = WindowManager.getInstance();
 
+
+  /**
+   * Constructor for the Angular Dev App Component.
+   * Version: 3.0.0
+   * @param owfService 
+   * @param document 
+   */
   constructor(private owfService: OwfCommonService,
-              @Inject(DOCUMENT) private document: HTMLDocument) {
+              @Inject(DOCUMENT) private document: HTMLDocument) { }
 
-  }
 
+  /**
+   * 
+   */
   ngOnInit(): void {
     // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     // Set the app's favicon.
