@@ -3,8 +3,9 @@ import { MapLayerManager }     from '@OpenWaterFoundation/common/ui/layer-manage
 
 @Pipe({ name: 'menuDisable' })
 /**
- * A Pipe that determines whether a menu item in the kebab dropdown should be disabled or completely hidden. If the value exists
- * (e.g. layerView.properties.docPath) AND is a path, then return false since the menu button should NOT be disabled or hidden.
+ * A Pipe that determines whether a menu item in the kebab dropdown should be disabled
+ * or completely hidden. If the value exists (e.g. layerView.properties.docPath) AND is
+ * a path, then return false since the menu button should NOT be disabled or hidden.
  */
 export class MenuDisablePipe implements PipeTransform {
 
@@ -16,8 +17,8 @@ export class MenuDisablePipe implements PipeTransform {
 
     // Selected Initial check.
     if (geoLayerId) {
-      // If the geoLayerId is given, than the disableType is given as well, so check if it's toggleCheck for whether the
-      // toggle button is toggled off or on.
+      // If the geoLayerId is given, than the disableType is given as well, so check
+      // if it's toggleCheck for whether the toggle button is toggled off or on.
       if (pipeType === 'toggleCheck') {
         if (value === undefined || value.toUpperCase() === 'TRUE') {
           return true;
@@ -93,9 +94,7 @@ export class MenuDisablePipe implements PipeTransform {
           return this.addWhiteSpace(valueMin) + ' - ' + this.addWhiteSpace(valueMax);
         }
       } else if (pipeType === 'selectedCheck' && value) {
-        console.log('Pipe called here');
         value.eachLayer((layer: any) => {
-          console.log(layer);
           if (layer.options.fillColor === '#ffff01' && layer.options.className === geoLayerId) {
             return false;
           }
@@ -105,7 +104,8 @@ export class MenuDisablePipe implements PipeTransform {
     }
     // Menu disable or hide check.
     else {
-      // If vizCheck is a parameter, look for (the moment) if the hasVisualization attribute for e3ach event in the array is true
+      // If vizCheck is a parameter, look for (the moment) if the hasVisualization
+      // attribute for each event in the array is true.
       if (pipeType === 'vizCheck') {
         var visualization = false;
         // Iterate over each object and check for the click event.
@@ -120,6 +120,10 @@ export class MenuDisablePipe implements PipeTransform {
         } else {
           return true;
         }
+      }
+      // Hide the menu option if an image layer.
+      else if (pipeType === 'imageCheck') {
+        return value ? true : false;
       }
       // This would be for a 
       else if (value) {

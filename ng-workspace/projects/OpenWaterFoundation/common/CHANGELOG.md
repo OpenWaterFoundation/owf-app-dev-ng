@@ -10,6 +10,28 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.4.0 #
+
+### Features / Enhancements ###
+
+* Added the `refreshInterval` and `refreshOffset` geoLayerView properties. The
+`refreshInterval` tells a layer to refresh after N amount of time after its
+initially loaded. For example: `"refreshInterval": "1hour 15minutes 30 seconds"`
+
+The `refreshOffset` property is used to tell the layer when it should be refreshed
+the first time. The default is an offset of 0, starting at midnight. Therefore,
+if the `refreshInterval` is 30 minutes and the map is built at 2:33pm, the next
+interval of 30 would occur at 3:00pm, and the first refresh would occur then.
+
+If a `refreshOffset` of `15hours 30minutes` is provided and the map is built at
+2:33pm, the offset is added to midnight, and will do the refresh of the layer
+at 3:30pm, 15 hours and a half hours after the previous midnight.
+
+* Layer refreshing now works with all vector and raster layers.
+
+* Added the ability to create ImageOverlay layers on the map.
+
+
 # 0.3.0 #
 
 ### Features / Enhancements ###

@@ -33,7 +33,6 @@
    */
   public addMap(mapID: string, mapRef: any): void {
     this.maps[mapID] = mapRef;
-    console.log(this.maps);
   }
 
   /**

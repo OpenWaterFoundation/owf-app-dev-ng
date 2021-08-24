@@ -2,133 +2,94 @@ import { Injectable }      from '@angular/core';
 import { HttpClient }      from '@angular/common/http';
 import { MapLayerManager } from '@OpenWaterFoundation/common/ui/layer-manager';
 
-import * as IM             from './types';
-
+import { catchError }      from 'rxjs/operators';
 import { BehaviorSubject,
-          Observable }     from 'rxjs';
+          Observable, 
+          of }             from 'rxjs';
+
+import * as IM             from './types';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class OwfCommonService {
-  /**
-   * Object containing a geoLayerId as the key and a boolean representing whether the given geoLayer has been
-   * given a bad path as the value.
-   */
+  /** Object containing a geoLayerId as the key and a boolean representing whether
+   * the given geoLayer has been given a bad path as the value. */
   public badPath: {} = {};
-  /**
-   * Object containing the contents from the graph template configuration file.
-   */
+  /** Object containing the contents from the graph template configuration file. */
   public chartTemplateObject: Object;
-  /**
-   * Object that holds the application configuration contents from the app-config.json file.
-   */
+  /** Object that holds the application configuration contents from the app-config.json file. */
   public appConfig: any;
-  /**
-   * The hard-coded string of the name of the application configuration file. It is readonly, because it must be named
-   * app-config.json by the user.
-   */
+  /** The hard-coded string of the name of the application configuration file. It
+   * is readonly, because it must be named app-config.json by the user. */
   public readonly appConfigFile: string = 'app-config.json';
-  /**
-   * The hard-coded name of a deployed application configuration file. Similar to app-config.json, it must be named
-   * app-config-minimal.json by the user in the assets/app-default folder.
-   */
+  /** The hard-coded name of a deployed application configuration file. Similar to
+   * app-config.json, it must be named app-config-minimal.json by the user in the
+   * assets/app-default folder. */
   public readonly appMinFile: string = 'app-config-minimal.json';
-  /**
-   * A string representing the path to the correct assets directory for the InfoMapper. The InfoMapper assumes a user will
-   * supply their own user-defined config files under assets/app. If not, this string will be changed to 'assets/app-default'
-   * and the default InfoMapper set up will be used instead.
-   */
+  /** A string representing the path to the correct assets directory for the InfoMapper.
+   * The InfoMapper assumes a user will supply their own user-defined config files
+   * under assets/app. If not, this string will be changed to 'assets/app-default'
+   * and the default InfoMapper set up will be used instead. */
   public appPath: string = 'assets/app/';
-  /**
-   * An array of DataUnit objects that each contain the precision for different types of data, from degrees to mile per hour.
-   * Read from the application config file top level property dataUnitsPath.
-   */
+  /** An array of DataUnit objects that each contain the precision for different
+   * types of data, from degrees to mile per hour. Read from the application config
+   * file top level property dataUnitsPath. */
   public dataUnits: any[];
-  /**
-   * The hard-coded string of the path to the default icon path that will be used for the website if none is given.
-   */
+  /** The hard-coded string of the path to the default icon path that will be used
+   * for the website if none is given. */
   public readonly defaultFaviconPath = 'assets/app-default/img/OWF-Logo-Favicon-32x32.ico';
-  /**
-   * 
-   */
+  /** NOTE: Not currently in use. */
   public highlighted = new BehaviorSubject(false);
-  /**
-   * 
-   */
+  /** NOTE: Not currently in use. */
   public highlightedData = this.highlighted.asObservable();
-  /**
-   * The boolean representing if a favicon path has been provided by the user.
-   */
+  /** The boolean representing if a favicon path has been provided by the user. */
   public FAVICON_SET = false;
-  /**
-   * The path to the user-provided favicon .ico file.
-   */
+  /** The path to the user-provided favicon .ico file. */
   public faviconPath: string;
-  /**
-   * A string representing the path leading up to the geoJson file that was read in.
-   */
+  /** A string representing the path leading up to the geoJson file that was read in. */
   public geoJSONBasePath: string = '';
-  /**
-   * The layer's geoMapId property from the top level map configuration file.
-   */
+  /** The layer's geoMapId property from the top level map configuration file. */
   public geoMapID: string;
-  /**
-   * The string representing a user's google tracking ID, set in the upper level application config file.
-   */
+  /** The string representing a user's google tracking ID, set in the upper level
+   * application config file. */
   public googleAnalyticsTrackingId = '';
-  /**
-   * Boolean showing whether the google tracking ID has been set for the InfoMapper.
-   */
+  /** Boolean showing whether the google tracking ID has been set for the InfoMapper. */
   public googleAnalyticsTrackingIdSet = false;
-  /**
-   * The file path as a string obtained from a graph template file that shows where the graph data file can be found
-   */
+  /** The file path as a string obtained from a graph template file that shows where
+   * the graph data file can be found. */
   public graphFilePath: string;
-  /**
-   * Contains all information before the first tilde (~) in the TSID from the graph template file. 
-   */
+  /** Contains all information before the first tilde (~) in the TSID from the graph
+   * template file. */
   public graphTSID: string;
-  /**
-   *  Boolean showing whether the default home content page has been initialized.
-   */
+  /** Boolean showing whether the default home content page has been initialized. */
   public homeInit = true;
-  /**
-   * The string representing the current selected markdown path's full path starting from the @var appPath
-   */
+  /** The string representing the current selected markdown path's full path starting
+   * from the @var appPath */
   public fullMarkdownPath: string;
-  /**
-   * Array to hold maps that have already been created by the user so that they don't have to be created from scratch every time.
-   */
+  /** Array to hold maps that have already been created by the user so that they
+   * don't have to be created from scratch every time. */
   public leafletMapArray: any[] = [];
-  /**
-   * The object that holds the map configuration contents from the map configuration file for a Leaflet map
-   */
+  /** The object that holds the map configuration contents from the map configuration
+   * file for a Leaflet map. */
   public mapConfig: any;
-  /**
-   * Array of geoLayerId's in the correct geoLayerView order, retrieved from the geoMap. The order in which each layer should be
-   * displayed in on the map and side bar legend.
-   */
+  /** Array of geoLayerId's in the correct geoLayerView order, retrieved from the
+   * geoMap. The order in which each layer should be displayed in on the map and
+   * side bar legend. */
   public mapConfigLayerOrder: string[] = [];
-  /**
-   * A string representing the path to the map configuration file.
-   */
+  /** A string representing the path to the map configuration file. */
   public mapConfigPath: string = '';
-  /**
-   * Object containing the original style for a given feature.
-   */
+  /** Object containing the original style for a given feature. */
   public originalFeatureStyle: any;
-  /**
-   * Object containing a layer's geoLayerId as the key, and a boolean showing whether the URL for the layer is not currently
-   * working or does not exist.
-   */
+  /** Object containing a layer's geoLayerId as the key, and a boolean showing whether
+   * the URL for the layer is not currently working or does not exist. */
   public serverUnavailable: {} = {};
 
   
   /**
-   * 
-   * @param http 
+   * @constructor OWFCommonService.
+   * @param http The reference to the HttpClient class for HTTP requests.
    */
   constructor(public http: HttpClient) { }
 
@@ -146,7 +107,7 @@ export class OwfCommonService {
         return arg[0];
       }
     }
-    // Depending on the pathType, build the correct path
+    // Depending on the pathType, build the correct path.
     switch(pathType) {
       case IM.Path.cPP:
         return this.getAppPath() + this.getContentPathFromId(arg[0]);
@@ -162,6 +123,7 @@ export class OwfCommonService {
       case IM.Path.dUP:
       case IM.Path.dP:
       case IM.Path.iGP:
+      case IM.Path.iP:
       case IM.Path.sMP:
       case IM.Path.sIP:
       case IM.Path.raP:
@@ -229,6 +191,7 @@ export class OwfCommonService {
       case IM.Path.dVP:
       case IM.Path.dP:
       case IM.Path.iGP:
+      case IM.Path.iP:
       case IM.Path.sMP:
       case IM.Path.raP:
       case IM.Path.rP:
@@ -336,13 +299,13 @@ export class OwfCommonService {
    * @returns the name of the geoLayerView name
    * @param id The geoLayerId that needs to be matched
    */
-  public getBackgroundGeoLayerViewNameFromId(id: string) {
+  public getBkgdGeoLayerViewFromId(id: string) {
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
         if (geoLayerViewGroup.properties.isBackground === 'true') {
           for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-            if (geoLayerView.geoLayerId == id) {
-              return geoLayerView.name;
+            if (geoLayerView.geoLayerId === id) {
+              return geoLayerView;
             }
           }
         }
@@ -486,7 +449,24 @@ export class OwfCommonService {
    * for use of relative paths used by other files.
    * @param id The app config id assigned to each menu.
    */
-  public getFullMapConfigPath(id: string): string {
+  public getFullMapConfigPath(id: string, standalone?: boolean): string {
+
+    if (standalone === true) {
+      var path: string = '';
+      let splitPath = this.appConfig.standaloneMap.mapProject.split('/');
+      for (let i = 0; i < splitPath.length - 1; i++) {
+        path += splitPath[i] + '/';
+      }
+      if (path.startsWith('/')) {
+        this.setMapConfigPath(path.substring(1));
+        this.setGeoJSONBasePath(this.appConfig.standaloneMap.mapProject.substring(1));
+        return this.appConfig.standaloneMap.mapProject.substring(1);
+      } else {
+        this.setMapConfigPath(path);
+        this.setGeoJSONBasePath(this.appConfig.standaloneMap.mapProject);
+        return this.appConfig.standaloneMap.mapProject;
+      }
+    }
 
     for (let i = 0; i < this.appConfig.mainMenu.length; i++) {
       if (this.appConfig.mainMenu[i].menus) {
@@ -670,7 +650,10 @@ export class OwfCommonService {
     //     'Access-Control-Request-Method': 'GET'
     //   })
     // }
-    return this.http.get<any>(path);
+    return this.http.get<any>(path)
+    .pipe(
+      catchError(this.handleError<any>(path, type, id))
+    );
   }
 
   /**
@@ -705,21 +688,19 @@ export class OwfCommonService {
   }
 
   /**
-   * Return the geoLayerView that matches the given geoLayerId
+   * Return the geoLayerView that matches the given geoLayerId.
    * @param id The given geoLayerId to match with
    */
-  public getLayerViewFromId(id: string) {
+  public getGeoLayerViewFromId(id: string) {
 
     var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
     var layerView: any = null;
 
     for (let geoLayerViewGroup of geoLayerViewGroups) {
-      if (!geoLayerViewGroup.properties.isBackground || geoLayerViewGroup.properties.isBackground == 'false') {
-        for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-          if (geoLayerView.geoLayerId == id) {
-            layerView = geoLayerView;
-            break;
-          }
+      for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
+        if (geoLayerView.geoLayerId === id) {
+          layerView = geoLayerView;
+          break;
         }
       }
     }
@@ -754,27 +735,111 @@ export class OwfCommonService {
   public getPlainText(path: string, type?: string, id?: string): Observable<any> {
     // This next line is important, as it tells our response that it needs to return plain text, not a default JSON object.
     const obj: Object = { responseType: 'text' as 'text' };
-    return this.http.get<any>(path, obj);
+
+    return this.http.get<any>(path, obj)
+    .pipe(
+      catchError(this.handleError<any>(path, type, id))
+    );
   }
 
   /**
-   * @returns the upper level geoMapProject properties 
+   * @returns the upper level geoMapProject properties object.
    */
   public getProperties(): {} {
     return this.mapConfig.properties;
   }
 
   /**
-   * NOTE: This is not used at the moment, as refreshing the page is not an option. Maybe in the future
-   * @param id The geoLayerId to match with
+   * Returns the geoLayerView's refreshInterval property, converted to a number if it can
+   * be, and 0 if not.
+   * @param geoLayerId The geoLayerId to match with.
    */
-  public getRefreshTime(id: string): string[] {
-    return this.getLayerViewFromId(id).properties.refreshInterval.split(" ");
+  public getRefreshInterval(geoLayerId: string): number {
+    // Obtain the refreshInterval string and convert to upper case.
+    var rawInterval: string = this.getGeoLayerViewFromId(geoLayerId).properties.refreshInterval.toUpperCase();
+    var splitInterval = rawInterval.split(' ');
+    var refreshInterval = 0;
+
+    // Iterate over each spaced item in the string and insert each number in the delayArr in
+    // the order HR, MIN, SEC.
+    for (var elem of splitInterval) {
+      if (elem.includes('H')) {
+        var hours = elem.split('H')[0];
+        refreshInterval += (+hours * 3600000)
+      } else if (elem.includes('MIN')) {
+        var minutes = elem.split('MIN')[0];
+        refreshInterval += (+minutes * 60000)
+      } else if (elem.includes("SEC")) {
+        var seconds = elem.split('SEC')[0];
+        refreshInterval += (+seconds * 1000)
+      } else if (!isNaN(+elem)) {
+        // The refreshInterval string is attempted to be converted to a number. The + is only
+        // successful if the string contains only numeric characters, including periods, otherwise
+        // it returns NaN. Return the number given as seconds.
+        refreshInterval += (+elem * 1000);
+      }
+    }
+
+    if (refreshInterval < 30000) {
+      console.error('Refresh interval is less than 30 seconds, and must be greater. Skipping layer refresh');
+      return NaN;
+    }
+
+    return refreshInterval;
+  }
+
+  /**
+   * Obtain and parse the refreshOffset property from the geoLayerView. 
+   * @param geoLayerId 
+   * @param refreshInterval 
+   * @returns The offset in milliseconds, and 0 if none is given.
+   */
+  public getRefreshOffset(geoLayerId: string, refreshInterval: number): number {
+    var rawOffset = this.getGeoLayerViewFromId(geoLayerId).properties.refreshOffset;
+    var refreshOffset = 0;
+
+    // If no offset is given, use the refresh interval and start from midnight.
+    if (!rawOffset) {
+      return this.setRefreshOffset(refreshInterval);
+    }
+    // If refreshOffset is given, use it starting at midnight to determine the offset.
+    else {
+      // Obtain the refreshOffset string and convert to upper case.
+      var rawOffset = rawOffset.toUpperCase();
+      var splitOffset = rawOffset.split(' ');
+
+      // Iterate over each spaced item in the string and insert each number in the delayArr in
+      // the order HR, MIN, SEC.
+      for (var elem of splitOffset) {
+        if (elem.includes('H')) {
+          var hours = elem.split('H')[0];
+          refreshOffset += (+hours * 3600000);
+        } else if (elem.includes('MIN')) {
+          var minutes = elem.split('MIN')[0];
+          refreshOffset += (+minutes * 60000);
+        } else if (elem.includes("SEC")) {
+          var seconds = elem.split('SEC')[0];
+          refreshOffset += (+seconds * 1000);
+        } else if (!isNaN(+elem)) {
+          // The refreshInterval string is attempted to be converted to a number. The + is only
+          // successful if the string contains only numeric characters, including periods, otherwise
+          // it returns NaN. Return the number given as seconds.
+          refreshOffset += (+elem * 1000);
+        }
+      }
+      // If the offset is greater than 24 hours, let user know it must be less, and run the default.
+      if (refreshOffset > 86400000) {
+        console.error('Refresh interval is greater than 24 hours, and must be less. Setting offset to midnight.');
+        return this.setRefreshOffset(refreshInterval);
+      }
+      // Finally, find the offset.
+      return this.setRefreshOffset(refreshInterval, refreshOffset);
+    }
   }
 
   /**
    * @returns a geoLayerSymbol object from the geoLayerView whose geoLayerId matches with @param id
-   * @param id The geoLayerId to match with
+   * @param id The geoLayerId to match with.
    */
   public getSymbolDataFromID(id: string): any {
     var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
@@ -794,6 +859,74 @@ export class OwfCommonService {
    * @returns all information before the first tilde (~) in the TSID from the graph template file. 
    */
   public getTSIDLocation(): string { return this.graphTSID; }
+
+  /**
+   * Handles the HTTP operation that failed, and lets the app continue by returning
+   * an empty result.
+   * @param path - Name of the path used that failed.
+   * @param type - Optional type of the property error. Was it a home page, template, etc.
+   * @param result - Optional value to return as the observable result.
+   */
+   private handleError<T> (path: string, type?: string, id?: string, result?: T) {
+    return (error: any): Observable<T> => {
+
+      switch(error.status) {
+        case 404:
+          this.setBadPath(path, id); break;
+        case 400:
+          this.setServerUnavailable(id); break;
+      }
+      // If the error message includes a parsing issue, more often than not it is
+      // a badly created JSON file. Detect if .json is in the path, and if it is
+      // let the user know. If not, the file is somehow incorrect.
+      if (error.message.includes('Http failure during parsing')) {
+        // If the path contains an image file, then it is a raster, so just return.
+        // The raster will be read later.
+        if (path.toUpperCase().includes('.TIF') || path.toUpperCase().includes('.TIFF')) {
+          return of(result as T);
+        } else if (path.toUpperCase().includes('.JPG') || path.toUpperCase().includes('.PNG')) {
+          return of(result as T);
+        }
+
+        console.error('[' + type + '] error. InfoMapper could not parse a file. Confirm the \'' +
+        this.condensePath(path) +
+        '\' file is %s', (path.includes('.json') ? 'valid JSON.' : 'created correctly.'));
+        return of(result as T);
+      }
+
+      if (type) {
+        console.error('[' + type + '] error. There might have been a problem with the ' +
+        type + ' path. Confirm the path is correct in the configuration file.');
+      }
+
+      switch(type) {
+        case IM.Path.fMCP:
+          console.error('Confirm the app configuration property \'mapProject\' with id \'' + id + '\' is the correct path');
+          break;
+        case IM.Path.gLGJP:
+          console.error('Confirm the map configuration property \'sourcePath\' is the correct path');
+          break;
+        case IM.Path.eCP:
+          console.error('Confirm the map configuration EventHandler property \'eventConfigPath\' is the correct path');
+          break;
+        case IM.Path.aCP:
+          console.error('No app-config.json detected in ' + this.appPath + '. Confirm app-config.json exists in ' + this.appPath);
+          break;
+        case IM.Path.cPage:
+          console.error('Confirm the app configuration property \'markdownFilepath\' with id \'' + id + '\' is the correct path');
+          break;
+        case IM.Path.rP:
+          console.error('Confirm the popup configuration file property \'resourcePath\' is the correct path');
+          break;
+      }
+      // TODO: jpkeahey 2020.07.22 - Don't show a map error no matter what. I'll probably want to in some cases.
+      // this.router.navigateByUrl('map-error');
+      // Let the app keep running by returning an empty result. Because each service
+      // method returns a different kind of Observable result, this function takes a
+      // type parameter so it can return the safe value as the type that the application expects.
+      return of(result as T);
+    };
+  }
 
   /**
    * @returns a boolean showing whether the layer containing the given @var geoLayerId has been given a bad path
@@ -1043,6 +1176,10 @@ export class OwfCommonService {
    */
   public setDataUnitsArr(dataUnits: any[]): void { this.dataUnits = dataUnits; }
 
+  /**
+   * 
+   * @param path 
+   */
   public setFullMarkdownPath(path: string) {
     this.fullMarkdownPath = path;
   }
@@ -1135,6 +1272,46 @@ export class OwfCommonService {
    * @param style The style object of the feature to be saved
    */
   public setOriginalFeatureStyle(style: any): void { this.originalFeatureStyle = style; }
+
+  /**
+   * Sets the amount of time in milliseconds for the rxjs timer function to wait before
+   * starting to refresh a layer on the map.
+   * @param refreshInterval The user provided refreshInterval from the map config file.
+   * @param refreshOffset The user provided refreshOffset from the map config file.
+   * @returns The number of milliseconds given to the rxjs timer to wait until the first
+   * refresh is run.
+   */
+   private setRefreshOffset(refreshInterval: number, refreshOffset?: number): number {
+    var d = new Date();
+    d.setHours(0, 0, 0, 0);
+    // The default offset, the most recent midnight.
+    var initial = d.getTime();
+    var now = Date.now();
+    // Use the user-provided refreshOffset to determine the offset needed to wait.
+    if (refreshOffset) {
+      var fullOffset = initial + refreshOffset;
+      if (fullOffset - now < 15000) {
+        fullOffset += refreshInterval;
+      }
+
+      return fullOffset - now;
+    }
+    // Use the refreshInterval to determine the the offset.
+    else {
+      // Add the interval from midnight until it passes the time 'now'.
+      while (initial < now) {
+        initial += refreshInterval;
+      }
+      // If the offset is less than 15 seconds, add one more interval so the layer has
+      // been completely loaded.
+      if (initial - now < 15000) {
+        initial += refreshInterval;
+      }
+
+      return initial - now;
+    }
+    
+  }
 
   /**
    * Sets the @var serverUnavailable with a key of @var geoLayerId to true.

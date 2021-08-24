@@ -26,8 +26,48 @@
           "crs": "EPSG:4326",
           "geometryType": "WKT:Point",
           "layerType": "Vector",
-          "sourcePath": "map-layers/diversions.geojson",
+          "sourcePath": "data-maps/map-layers/diversions.geojson",
           "properties": {
+            "isBackground": "false"
+          },
+          "history:": []
+        },
+        {
+          "geoLayerId": "refresh-point-layer",
+          "name": "Things",
+          "description": "Things on a map.",
+          "crs": "EPSG:4326",
+          "geometryType": "WKT:Point",
+          "layerType": "Vector",
+          "sourcePath": "https://larimerco-ns5.trilynx-novastar.systems/novastar/data/api/v1/stationStatistics?dataType=Precip&statistic=Total&interval=1Day&format=geojson&statisticFormat=flat&statisticValueName=%24%7BdataType%7D.%24%7Binterval%7D",
+          "properties": {
+            "isBackground": "false"
+          },
+          "history:": []
+        },
+        {
+          "geoLayerId": "raster-water-district-boundaries",
+          "name": "Water District Boundaries",
+          "description": "A raster layer representing the Water District Boundaries for Division 1 from the Colorado Division of Water Resources, 2018-02-28",
+          "crs": "EPSG:4326",
+          "geometryType": "WKT:raster",
+          "layerType": "Raster",
+          "sourcePath": "data-maps/map-layers/districts-raster.tif",
+          "properties": {
+            "isBackground": "false"
+          },
+          "history:": []
+        },
+        {
+          "geoLayerId": "image-denver-layer",
+          "name": "Denver Image",
+          "description": "An image layer for displaying on a Leaflet map.",
+          "crs": "EPSG:4326",
+          "geometryType": "WKT:raster",
+          "layerType": "Image",
+          "sourcePath": "img/denver.jpg",
+          "properties": {
+            "imageBounds": "",
             "isBackground": "false"
           },
           "history:": []
@@ -114,8 +154,44 @@
                 "classificationType": "SingleSymbol",
                 "classificationAttribute": "",
                 "properties": {
-                  "color": "blue",
+                  "color": "cyan",
                   "fillColor": "black",
+                  "fillOpacity": "1.0",
+                  "opacity": "1.0",
+                  "symbolSize": "6",
+                  "sizeUnits": "pixels",
+                  "symbolShape": "Circle",
+                  "weight": "2"
+                }
+              },
+              "eventHandlers": [
+                {
+                  "eventType": "click",
+                  "action": "popup",
+                  "hasVisualization": true,
+                  "properties": {
+                    "eventConfigPath": "data-maps/map-template-files/diversion-popup-template.json"
+                  }
+                }
+              ]
+            },
+            {
+              "geoLayerViewId": "refresh-layer-view",
+              "name": "Northern Colorado NovaStar Stations",
+              "description": "Things on a map.",
+              "geoLayerId": "refresh-point-layer",
+              "properties": {
+                "refreshInterval": "",
+                "selectedInitial": "true"
+              },
+              "geoLayerSymbol": {
+                "name": "Things Single Symbol",
+                "description": "The symbol metadata for the things layer view",
+                "classificationType": "SingleSymbol",
+                "classificationAttribute": "",
+                "properties": {
+                  "color": "black",
+                  "fillColor": "blue",
                   "fillOpacity": "1.0",
                   "opacity": "1.0",
                   "symbolSize": "6",
@@ -124,15 +200,64 @@
                   "weight": "1.5"
                 }
               },
+              "eventHandlers": []
+            },
+            {
+              "geoLayerViewId": "raster-layer-view",
+              "name": "Water Districts Raster",
+              "description": "A polygonal representation of Water Districts in the Cache la Poudre watershed.",
+              "geoLayerId": "raster-water-district-boundaries",
+              "properties": {
+                "refreshInterval": "",
+                "selectedInitial": "true"
+              },
+              "geoLayerSymbol": {
+                "name": "Water Districts Symbol Data",
+                "description": "",
+                "classificationType": "Categorized",
+                "classificationAttribute": "1",
+                "properties": {
+                  "classificationFile": "data-maps/map-classification-files/dwr-division1-raster-classify.csv"
+                }
+              },
               "eventHandlers": [
                 {
-                  "eventType": "click",
-                  "action": "popup",
+                  "eventType": "hover",
+                  "action": "none",
                   "properties": {
-                    "eventConfigPath": "data-maps/map-template-files/diversion-popup-template.json"
+                    "eventConfigPath": "data-maps/map-template-files/county-popup-template.json"
+                  }
+                },
+                {
+                  "eventType": "click",
+                  "action": "none",
+                  "properties": {
+                    "eventConfigPath": "data-maps/map-template-files/county-popup-template.json"
                   }
                 }
               ]
+            },
+            {
+              "geoLayerViewId": "image-denver-layer-view",
+              "name": "Denver Map ",
+              "description": "An old image of Denver, Colorado.",
+              "geoLayerId": "image-denver-layer",
+              "properties": {
+                "imageBounds": "39.784503, -105.066773, 39.714058, -104.939362",
+                "refreshInterval": "",
+                "selectedInitial": "true"
+              },
+              "geoLayerSymbol": {
+                "name": "Denver Image Single Symbol",
+                "description": "The symbol metadata for the denver image layer view",
+                "classificationType": "SingleSymbol",
+                "classificationAttribute": "",
+                "properties": {
+                  "legendImagePath": "assets/app/img/denver-mini.png",
+                  "opacity": "0.6"
+                }
+              },
+              "eventHandlers": []
             }
           ]
         },
@@ -151,6 +276,7 @@
               "description": "The default topographic Map",
               "geoLayerId": "Topographic",
               "properties": {
+                "refreshInterval": "",
                 "selectedInitial": "true"
               },
               "geoLayerSymbol": null,
