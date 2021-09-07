@@ -29,8 +29,10 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   public docPath: string;
   /** The full path to the folder containing the markdown file. */
   public fullMarkdownPath: string;
-  /** The string to show as the DialogDoc title. */
-  public informationName: string;
+  /** The Id from the given geoMapId, geoLayerViewGroupId, or geoLayerViewId. */
+  public geoId: string;
+  /** The name property from the geoMap, geoLayerViewGroup, or geoLayerView. */
+  public geoName: string;
   /**
    * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
    * To be set in the app service for relative paths.
@@ -63,12 +65,8 @@ export class DialogDocComponent implements OnInit, OnDestroy {
     this.doc = dataObject.data.doc;
     this.docPath = dataObject.data.docPath;
     this.fullMarkdownPath = dataObject.data.fullMarkdownPath;
-
-    if (dataObject.data.geoLayerView.name) {
-      this.informationName = dataObject.data.geoLayerView.name;
-    } else if (dataObject.data.geoLayerView) {
-      this.informationName = dataObject.data.geoLayerView;
-    }
+    this.geoId = dataObject.data.geoId;
+    this.geoName = dataObject.data.geoName;
 
     if (dataObject.data.docText) this.docText = true;
     else if (dataObject.data.docMarkdown) this.docMarkdown = true;

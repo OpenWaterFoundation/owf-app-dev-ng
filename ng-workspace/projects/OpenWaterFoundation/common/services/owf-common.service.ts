@@ -68,6 +68,8 @@ export class OwfCommonService {
   /** The string representing the current selected markdown path's full path starting
    * from the @var appPath */
   public fullMarkdownPath: string;
+  /** Contains any layer geoLayerId's of a layer that has run into a critical error. */
+  public layerError = {};
   /** Array to hold maps that have already been created by the user so that they
    * don't have to be created from scratch every time. */
   public leafletMapArray: any[] = [];
@@ -93,6 +95,14 @@ export class OwfCommonService {
    */
   constructor(public http: HttpClient) { }
 
+
+  /**
+   * 
+   * @param geoLayerId The layer's geoLayerId to be added to the layerError array
+   */
+   public addLayerError(geoLayerId: string): void {
+    this.layerError[geoLayerId] = true;
+  }
 
   /**
    * Builds the correct path needed for an HTTP GET request for either a local file or URL, and does so whether
@@ -412,10 +422,10 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns an array of the three provided ExtentInitial numbers to be used for initial map creation.
+   * @returns An array of the three provided ExtentInitial numbers to be used for initial map creation.
    */
   public getExtentInitial(): number[] {
-    // Make sure to do some error handling for incorrect input
+    // Make sure to do some error handling for incorrect input.
     if (!this.mapConfig.geoMaps[0].properties.extentInitial) {
       console.error("Map Configuration property '" +
         this.mapConfig.geoMaps[0].properties.extentInitial +
@@ -606,6 +616,26 @@ export class OwfCommonService {
   }
 
   /**
+   * Return the geoLayerView that matches the given geoLayerId.
+   * @param id The given geoLayerId to match with
+   */
+   public getGeoLayerViewFromId(id: string) {
+
+    var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
+    var layerView: any = null;
+
+    for (let geoLayerViewGroup of geoLayerViewGroups) {
+      for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
+        if (geoLayerView.geoLayerId === id) {
+          layerView = geoLayerView;
+          break;
+        }
+      }
+    }
+    return layerView;
+  }
+
+  /**
    * @returns the name attribute to the FIRST geoMap in the geoMapProject
    */
   public getGeoMapName(): string {
@@ -688,23 +718,11 @@ export class OwfCommonService {
   }
 
   /**
-   * Return the geoLayerView that matches the given geoLayerId.
-   * @param id The given geoLayerId to match with
+   * @returns The layerError object, which contains any layer geoLayerId's of a
+   * layer that has run into a critical error.
    */
-  public getGeoLayerViewFromId(id: string) {
-
-    var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
-    var layerView: any = null;
-
-    for (let geoLayerViewGroup of geoLayerViewGroups) {
-      for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-        if (geoLayerView.geoLayerId === id) {
-          layerView = geoLayerView;
-          break;
-        }
-      }
-    }
-    return layerView;
+  public getLayerError(): any {
+    return this.layerError;
   }
 
   /**
@@ -943,7 +961,8 @@ export class OwfCommonService {
    * @param geoLayerId The geoLayerId from the layer to match to
    */
   public isServerUnavailable(geoLayerId: string): boolean {
-    if (this.serverUnavailable) {
+    if (this.serverUnavailable[geoLayerId] === true) {
+      // this.addLayerError(geoLayerId);
       return this.serverUnavailable[geoLayerId];
     } else return false;
   }

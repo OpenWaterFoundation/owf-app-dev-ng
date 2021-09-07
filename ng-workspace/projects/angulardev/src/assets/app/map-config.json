@@ -16,6 +16,7 @@
       "dataPath": ".",
       "crs": "EPSG:4326",
       "properties": {
+        "docPath": "Doc/doc-files/reservoir-levels-group.md",
         "extentInitial": "ZoomLevel:-105.385, 40, 8"
       },
       "geoLayers": [
@@ -71,6 +72,23 @@
             "isBackground": "false"
           },
           "history:": []
+        },
+        {
+          "geoLayerId": "fire-perimeter-layer",
+          "name": "Fire Perimeter Map",
+          "description": "Shows fire perimeters throughout the United States.",
+          "crs": "EPSG:4326",
+          "geometryType": "WKT:Polygon",
+          "layerType": "Vector",
+          "nationalWildFires": "https://opendata.arcgis.com/datasets/5da472c6d27b4b67970acc7b5044c862_0.geojson",
+          "sourcePath": "https://services3.arcgis.com/T4QMspbfLg3qTGWY/ArcGIS/rest/services/Public_Wildfire_Perimeters_View/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=-109.05%2C36.99%2C-102.05%2C41&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=",
+          "sourceFormat": "GeoJSON",
+          "properties": {
+            "isBackground": "false"
+          },
+          "history:": [
+            "Read GeoLayer from GeoJSON file:  'E:\\GeoMapProjects\\assets\\data-maps-default\\map-layers\\swrf-district03.geojson'"
+          ]
         },
         {
           "geoLayerId": "Topographic",
@@ -146,7 +164,7 @@
               "geoLayerId": "diversions-point-layer",
               "properties": {
                 "refreshInterval": "",
-                "selectedInitial": "true"
+                "selectedInitial": "false"
               },
               "geoLayerSymbol": {
                 "name": "Diversions Single Symbol",
@@ -182,7 +200,7 @@
               "geoLayerId": "refresh-point-layer",
               "properties": {
                 "refreshInterval": "",
-                "selectedInitial": "true"
+                "selectedInitial": "false"
               },
               "geoLayerSymbol": {
                 "name": "Things Single Symbol",
@@ -209,7 +227,7 @@
               "geoLayerId": "raster-water-district-boundaries",
               "properties": {
                 "refreshInterval": "",
-                "selectedInitial": "true"
+                "selectedInitial": "false"
               },
               "geoLayerSymbol": {
                 "name": "Water Districts Symbol Data",
@@ -245,7 +263,7 @@
               "properties": {
                 "imageBounds": "39.784503, -105.066773, 39.714058, -104.939362",
                 "refreshInterval": "",
-                "selectedInitial": "true"
+                "selectedInitial": "false"
               },
               "geoLayerSymbol": {
                 "name": "Denver Image Single Symbol",
@@ -255,6 +273,31 @@
                 "properties": {
                   "legendImagePath": "assets/app/img/denver-mini.png",
                   "opacity": "0.6"
+                }
+              },
+              "eventHandlers": []
+            },
+            {
+              "geoLayerViewId": "fire-perimeter-view",
+              "name": "Fire Perimeters",
+              "description": "An Esri feature layer that has been retrieved from the internet and shows fire perimeters throughout the United States.",
+              "geoLayerId": "fire-perimeter-layer",
+              "isWFS": "true",
+              "properties": {
+                "refreshInterval": "",
+                "selectedInitial": "false"
+              },
+              "geoLayerSymbol": {
+                "name": "Fire Perimeter Symbol",
+                "description": "The symbol metadata for the fire perimeters file.",
+                "classificationType": "SingleSymbol",
+                "classificationAttribute": "",
+                "properties": {
+                  "color": "red",
+                  "fillColor": "red",
+                  "fillOpacity": "0.5",
+                  "opacity": "1.0",
+                  "weight": "3"
                 }
               },
               "eventHandlers": []

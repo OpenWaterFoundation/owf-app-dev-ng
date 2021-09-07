@@ -1,7 +1,10 @@
 <!-- The draggable <div> element so a user can move a graph around anywhere on the screen -->
 <div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
   <!-- The draggable <div> element so a user can move a graph around anywhere on the screen, but only using the div header -->
-  <div mat-dialog-title cdkDragHandle class="drag-header-main">
+  <div mat-dialog-title
+        cdkDragHandle
+        class="drag-header-main"
+        data-cy="data-table-drag-header-main">
     <!-- Display the geoLayerView name along with data table when showing an attribute table -->
     <div class="header-div">
       <p class="header-title">
@@ -9,7 +12,10 @@
       </p>
     </div>
     <!-- The close button on the upper right part of the dialog -->
-    <button mat-button (click)="onClose()" class="upper-close-button">
+    <button mat-button
+            (click)="onClose()"
+            class="upper-close-button"
+            attr.data-cy="{{geoLayer.geoLayerId}}-data-table-upper-close">
       <i class="fa fa-times" aria-hidden="true"></i>
     </button>
   </div>
@@ -22,13 +28,15 @@
       <mat-radio-button value="columns"
                         checked="true"
                         (click)="toggleSearchInfo()"
-                        class="option">
+                        class="option"
+                        attr.data-cy="{{geoLayer.geoLayerId}}-radio-columns">
         Search layer data
       </mat-radio-button>
       <mat-radio-button value="address"
                         (click)="toggleSearchInfo()"
                         [hidden]="geoLayer.geometryType | zoomDisable : 'null' : 'address-radio'"
-                        class="option">
+                        class="option"
+                        attr.data-cy="{{geoLayer.geoLayerId}}-radio-address">
         Find from address
       </mat-radio-button>
     </mat-radio-group>
@@ -39,6 +47,7 @@
               (keyup)="applyFilter($event)"
               placeholder="{{matInputFilterText}}"
               cdkFocusInitial
+              attr.data-cy="{{geoLayer.geoLayerId}}-data-table-input"
               #input>
     </mat-form-field>
 
@@ -77,7 +86,7 @@
               *matCellDef="let element; let i = index"
               [ngClass]="element.properties[property.key] | justification"
               [attr.id]="'cell-' + element.properties[property.key]">
-
+            
             {{element.properties[property.key]}}
             <!-- If the property value is a URL, it has already been truncated (as attributeTable is a copy), so below the
             truncated version of the link above, display Link to open up in a new tab. Using a pipe so computations are done
@@ -104,7 +113,9 @@
 
 
   <div class="data-table-components-group">
-    <p class="table-rows-selected">{{attributeTableOriginal.length}} rows, {{matchedRows}} rows selected from filter</p>
+    <p class="table-rows-selected">
+      {{attributeTableOriginal.length}} {{attributeTableOriginal.length === 1 ? 'row' : 'rows'}}, {{matchedRows}} {{matchedRows === 1 ? 'row' : 'rows'}} selected from filter
+    </p>
 
     <div class="table-buttons">
       <button mat-raised-button
@@ -115,7 +126,10 @@
         Download
       </button>
 
-      <button mat-raised-button (click)="onClose()" class="lower-data-table-close-button">
+      <button mat-raised-button
+              (click)="onClose()"
+              class="lower-data-table-close-button"
+              attr.data-cy="{{geoLayer.geoLayerId}}-data-table-lower-close">
         Close
       </button>
 
@@ -123,7 +137,8 @@
               mat-icon-button
               [matMenuTriggerFor]="menuFriend"
               matTooltip="Click to view layer menu options"
-              [matTooltipShowDelay]="750">
+              [matTooltipShowDelay]="750"
+              attr.data-cy="{{geoLayer.geoLayerId}}-data-table-kebab">
         <mat-icon class="dots">more_vert</mat-icon>
       </button>
       <mat-menu #menuFriend="matMenu">
@@ -131,14 +146,16 @@
                 class="zoom-to-address"
                 (click)="zoomToAddress()"
                 [disabled]="searchType | zoomDisable : addressMarkerDisplayed : 'address-zoom'"
-                [hidden]="geoLayer.geometryType | zoomDisable : 'null' : 'address-radio'">
+                [hidden]="geoLayer.geometryType | zoomDisable : 'null' : 'address-radio'"
+                attr.data-cy="{{geoLayer.geoLayerId}}-zoom-to-address">
           <i class="fa fa-search-plus fa-2x"></i>
           Zoom to address
         </button>
         <button mat-menu-item
                 class="zoom-to-selected"
                 (click)="zoomToFeatures()"
-                [disabled]="selectedLayer | zoomDisable : geoLayer.geoLayerId : 'selected-layers'">
+                [disabled]="selectedLayer | zoomDisable : geoLayer.geoLayerId : 'selected-layers'"
+                attr.data-cy="{{geoLayer.geoLayerId}}-zoom-to-feature">
           <i class="fa fa-search-plus fa-2x"></i>
           Zoom to selected features
         </button>

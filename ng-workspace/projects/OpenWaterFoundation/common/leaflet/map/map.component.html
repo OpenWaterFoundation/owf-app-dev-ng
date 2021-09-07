@@ -12,7 +12,8 @@
           <a href="#home"
               role="tab"
               matTooltip="Main tools"
-              matTooltipShowDelay="750">
+              matTooltipShowDelay="750"
+              data-cy="sidebar-home">
                 <i class="fa fa-bars active"></i>
           </a>
         </li>
@@ -31,7 +32,8 @@
               role="tab"
               matTooltip="Help / About"
               matTooltipShowDelay="750"
-              matTooltipPosition="right">
+              matTooltipPosition="right"
+              data-cy="sidebar-information">
             <i class="fa fa-info-circle"></i>
           </a>
         </li>
@@ -49,7 +51,7 @@
           <div *ngIf="owfCommonService.getMapConfig()">
             <div *ngIf="owfCommonService.getMapConfig().geoMaps[0].properties.docPath" class="geoMap-doc-button">
               <button class="btn geoMap-info-circle"
-                      (click)="openDocDialog(owfCommonService.getMapConfig().geoMaps[0].properties.docPath, owfCommonService.getMapConfig().geoMaps[0].name)"
+                      (click)="openDocDialog(owfCommonService.getMapConfig().geoMaps[0].properties.docPath, owfCommonService.getMapConfig().geoMaps[0].geoMapId, owfCommonService.getMapConfig().geoMaps[0].name)"
                       matTooltip="Click to view map documentation"
                       [matTooltipShowDelay]="750">
                 <i class="fa fa-info-circle fa-lg"></i>
@@ -59,7 +61,8 @@
           
           <span matTooltip="Close sidebar"
                 [matTooltipShowDelay]="750"
-                class="leaflet-sidebar-close">
+                class="leaflet-sidebar-close"
+                data-cy="sidebar-close">
                   <i class="fa fa-caret-left"></i>
           </span>
           
@@ -79,7 +82,7 @@
                   <div *ngIf="geoLayerViewGroup.properties.docPath">
                     <div class="btn-group geoLayerViewGroupMain">
 
-                      <button class="btn geoLayerViewGroupName"
+                      <button class="btn geoLayerViewGroupNameDoc"
                               data-toggle="collapse"
                               matTooltip="Click to expand/collapse layer controls"
                               matTooltipPosition="above"
@@ -87,7 +90,7 @@
                               [attr.aria-controls]='"collapse-" + geoLayerViewGroup.geoLayerViewGroupId'
                               [attr.data-target]='"#collapse-" + geoLayerViewGroup.geoLayerViewGroupId'
                               aria-expanded="true"
-                              style="text-align: left; width: 100%;">
+                              data-cy="geoLayerViewGroupNameDoc">
                         {{geoLayerViewGroup.name}}
                       </button>
 
@@ -97,17 +100,19 @@
                                 [matMenuTriggerFor]="geoLayerViewGroupMenu"
                                 matTooltip="Click to view layer group menu options"
                                 [matTooltipShowDelay]="750"
-                                matTooltipPosition="above">
+                                matTooltipPosition="above"
+                                data-cy="geoLayerViewGroupKebab">
                           <mat-icon class="white-dots">more_vert</mat-icon>
                         </button>
                         <mat-menu #geoLayerViewGroupMenu="matMenu">
                           <button mat-menu-item
                                   class="menu-button"
-                                  (click)="openDocDialog(geoLayerViewGroup.properties.docPath, geoLayerViewGroup)"
+                                  (click)="openDocDialog(geoLayerViewGroup.properties.docPath, geoLayerViewGroup.geoLayerViewGroupId, geoLayerViewGroup.name)"
                                   [disabled]="geoLayerViewGroup.properties.docPath | menuDisable"
                                   matTooltip="Click to view layer group documentation"
                                   [matTooltipShowDelay]="750"
-                                  matTooltipPosition="after">
+                                  matTooltipPosition="after"
+                                  data-cy="geoLayerViewGroupInformation">
                             <i class="fa fa-info-circle fa-2x info-circle"></i>
                           Information
                           </button>
@@ -127,7 +132,7 @@
                               matTooltip="Click to expand/collapse layer controls"
                               [matTooltipShowDelay]="750"
                               aria-expanded="true"
-                              style="text-align: left; width: 80%;">
+                              data-cy="geoLayerViewGroupName">
                         {{geoLayerViewGroup.name}}
                       </button>
   
@@ -162,7 +167,7 @@
                                     [disabled]="true"
                                     [hidden]="geoLayerView.eventHandlers | menuDisable: 'vizCheck'">
                               <!-- For displaying a graph looking icon in the layer control -->
-                              <mat-icon matTooltip="Click on features for this layer for data visualization"
+                              <mat-icon matTooltip="Click features on this layer for data visualization"
                                         [matTooltipShowDelay]="750">
                                 timeline
                               </mat-icon>
@@ -178,14 +183,16 @@
                             <button mat-icon-button
                                     [matMenuTriggerFor]="geoLayerMenu"
                                     matTooltip="Click to view layer menu options"
-                                    [matTooltipShowDelay]="750">
+                                    [matTooltipShowDelay]="750"
+                                    attr.data-cy="{{geoLayerView.geoLayerId}}-kebab">
                               <mat-icon class="green-dots">more_vert</mat-icon>
                             </button>
                             <mat-menu #geoLayerMenu="matMenu">
                               <button mat-menu-item
                                       class="menu-button"
-                                      (click)="openDocDialog(geoLayerView.properties.docPath, geoLayerView)"
-                                      [disabled]="geoLayerView.properties.docPath | menuDisable">
+                                      (click)="openDocDialog(geoLayerView.properties.docPath, geoLayerView.geoLayerViewId, geoLayerView.name)"
+                                      [disabled]="geoLayerView.properties.docPath | menuDisable"
+                                      attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-information">
                                 <i class="fa fa-info-circle fa-2x info-circle"></i>
                               Information
                               </button>
@@ -195,7 +202,8 @@
                               <button mat-menu-item
                                       class="menu-button"
                                       (click)="openDataTableDialog(geoLayerView)"
-                                      [hidden]="allFeatures[geoLayerView.geoLayerId] | menuDisable">
+                                      [hidden]="allFeatures[geoLayerView.geoLayerId] | menuDisable"
+                                      attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-data-table">
                                 <i class="fa fa-table fa-2x"></i>
                                 Data Table & Search
                               </button>
@@ -203,7 +211,8 @@
                               <button mat-menu-item
                                       class="menu-button"
                                       (click)="openImageGalleryDialogFromKebab(geoLayerView.geoLayerId, geoLayerView)"
-                                      [hidden]="geoLayerView.properties.imageGalleryEventActionId | menuDisable">
+                                      [hidden]="geoLayerView.properties.imageGalleryEventActionId | menuDisable"
+                                      attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-image-gallery">
                                 <i class="fa fa-picture-o fa-2x"></i>
                               Image Gallery
                               </button>
@@ -211,7 +220,8 @@
                               <button mat-menu-item
                                       class="menu-button"
                                       (click)="openPropertyDialog(geoLayerView.geoLayerId, geoLayerView.name)"
-                                      [hidden]="geoLayerView.properties.legendImagePath | menuDisable : 'imageCheck'">
+                                      [hidden]="geoLayerView.properties.imageBounds | menuDisable : 'imageCheck'"
+                                      attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-properties">
                                 <i class="fa fa-list fa-2x"></i>
                                 Properties
                               </button>
@@ -223,7 +233,8 @@
                                       [hidden]="geoLayerView.properties.imageBounds | menuDisable : 'imageCheck'"
                                       matTooltip="Clear highlighted features in the layer"
                                       matTooltipPosition="after"
-                                      matTooltipShowDelay="750">
+                                      matTooltipShowDelay="750"
+                                      attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-clear-selection">
                                 <i class="fa fa-dot-circle-o fa-2x"></i>
                                 Clear Selection
                               </button>
@@ -417,11 +428,13 @@
                             </div> -->
                             <div *ngIf="isServerUnavailable(geoLayerView.geoLayerId)" class="status">
                               <mat-icon matTooltip="Data service unavailable. Refresh at a later time"
-                                        [matTooltipShowDelay]="250">warning</mat-icon>
+                                        [matTooltipShowDelay]="250"
+                                        data-cy="serverUnavailable">warning</mat-icon>
                             </div>
                             <div *ngIf="isBadPath(geoLayerView.geoLayerId)" class="status">
                               <mat-icon [matTooltip]="'Bad Resource Path: ' + getBadPath(geoLayerView.geoLayerId)"
-                                        [matTooltipShowDelay]="250">warning</mat-icon>
+                                        [matTooltipShowDelay]="250"
+                                        data-cy="badPath">warning</mat-icon>
                             </div>
 
                           </div>
@@ -445,7 +458,7 @@
                 <div class="card">
                   <div class="card-header" id="background-layers">
                     <h5 class="mb-0">
-                      <button class="btn btn-link"
+                      <button class="btn backgroundViewGroup"
                               data-target="#collapse-background"
                               data-toggle="collapse"
                               matTooltip="Click to expand/collapse background layer controls"
@@ -453,7 +466,7 @@
                               matTooltipPosition="above"
                               aria-expanded="true"
                               aria-controls="collapseOne"
-                              style="text-align: left; width: 100%;">
+                              data-cy="backgroundViewGroup">
                         {{geoLayerViewGroup.name}}
                       </button>
                     </h5>

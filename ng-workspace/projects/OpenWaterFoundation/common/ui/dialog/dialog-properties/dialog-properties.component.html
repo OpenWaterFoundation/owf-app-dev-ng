@@ -14,14 +14,16 @@
     </button>
   </div>
 
-  <div class="property-content">
+  <div class="property-content" attr.data-cy="{{geoLayer.geoLayerId}}-property-content">
     <showdown [value]="showdownHTML" [options]="showdownOptions" class="markdown-div"></showdown>
   </div>  
 
   <!-- A button on the lower left for viewing the data table of the current time series graph -->
   <div class="properties-components-group">
 
-    <button mat-raised-button (click)="onClose()">
+    <button mat-raised-button
+            (click)="onClose()"
+            attr.data-cy="{{geoLayer.geoLayerId}}-property-lower-close">
       Close
     </button>
   </div>

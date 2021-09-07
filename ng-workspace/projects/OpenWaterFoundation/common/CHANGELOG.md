@@ -10,6 +10,19 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.5.0 #
+
+### Bug Fixes ###
+
+* Fixed a bug that displayed `1 rows selected` in the Data Table instead of
+`1 row selected`.
+
+### Features / Enhancements ###
+
+* Started Cypress testing for the InfoMapper, which uses the common library. Necessary
+tags had the `data-cy=""` attribute so they can be uniquely identified by Cypress
+without having to worry about changes in the future.
+
 # 0.4.0 #
 
 ### Features / Enhancements ###
@@ -34,17 +47,6 @@ at 3:30pm, 15 hours and a half hours after the previous midnight.
 
 # 0.3.0 #
 
-### Features / Enhancements ###
-
-* Added the **Heatmap Dialog** into the Common package. Used for displaying TS
-data in a plotly heatmap graph.
-
-* Added the ability to make plotly graphs dynamically resizable on Dialog resizing.
-This has been introduced as a 'beta' feature, since there are some undesired traits.
-For example, resizing does not take the graphs aspect ratio in account; the Dialog
-can be resized in any way on the X and Y axes, and the graph will follow suit. This
-will hopefully be updated in the future.
-
 ### Code Refactoring ###
 
 * Added the DayTS class to accompany the YearTS and MonthTS classes that had already
@@ -60,6 +62,17 @@ contain CSS classes that deal with static parts of the Dialog, such as the close
 button alignment. In addition, each Dialog CSS file will start by declaring which
 of these shared classes are currently being used in the Dialog. This way, it's not
 ambiguous what styling those classes in the template file are using.
+
+### Features / Enhancements ###
+
+* Added the **Heatmap Dialog** into the Common package. Used for displaying TS
+data in a plotly heatmap graph.
+
+* Added the ability to make plotly graphs dynamically resizable on Dialog resizing.
+This has been introduced as a 'beta' feature, since there are some undesired traits.
+For example, resizing does not take the graphs aspect ratio in account; the Dialog
+can be resized in any way on the X and Y axes, and the graph will follow suit. This
+will hopefully be updated in the future.
 
 # 0.2.0 #
 

@@ -55,13 +55,15 @@ td.name {
 
 /* CLASSES */
 
-.btn-link {
-	color:white;
+.backgroundViewGroup {
+  color: white;
+  text-align: left;
+  width: 100%;
 }
 
-.btn-link:hover{
-	color:white;
-	text-decoration:none;
+.backgroundViewGroup:hover {
+  color: white;
+  text-decoration: none;
 }
 
 .btn-link:focus{
@@ -152,11 +154,27 @@ td.name {
 /* The default color is black for text in this class. Change it to white */
 .geoLayerViewGroupName {
   color: white;
-  text-indent: 15px;
+  text-align: left;
+  text-indent: 16px;
+  width: 80%;
 }
-/* When the geoLayerViewGroup name button is hovered over, override the magical hover to black back to white so it doesn't change */
+
 .geoLayerViewGroupName:hover {
+  color:white;
+	text-decoration:none;
+}
+
+.geoLayerViewGroupNameDoc {
   color: white;
+  text-align: left;
+  text-indent: 16px;
+  width: 100%;
+}
+
+/* When the geoLayerViewGroup name button is hovered over, override the magical hover to black back to white so it doesn't change */
+.geoLayerViewGroupNameDoc:hover {
+  color: white;
+  text-decoration: none;
 }
 
 /* When the actual information button itself is hovered over, change the icon (and only the icon's) color to the same color

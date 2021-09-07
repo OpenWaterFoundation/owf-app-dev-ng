@@ -163,8 +163,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param route Used for getting the parameter 'id' passed in by the url and from the router.
   */
   constructor(public owfCommonService: OwfCommonService,
-    public dialog: MatDialog,
-    private route: ActivatedRoute) { }
+              public dialog: MatDialog,
+              private route: ActivatedRoute) {
+    if (window['Cypress']) window['MapComponent'] = this;
+  }
 
 
   /**
@@ -525,12 +527,23 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           // Use forkJoin to go through the array and be able to subscribe to every
           // element and get the response back in the results array when finished.
           this.forkJoinSub$ = forkJoin(asyncData).subscribe((results) => {
-
             // The scope of this does not reach the leaflet event functions. _this will allow a reference to this.
             var _this = this;
-            // The first element in the results array will always be the features returned from the geoJSON file.
-            // this.checkCRS(results[0]);
-            this.allFeatures[geoLayer.geoLayerId] = results[0];
+            // The first element in the results array will always be the features
+            // returned from the geoJSON file. If it's undefined, it's for an Image
+            // layer. An error occurred if an error attribute exists in the object.
+            if (results[0] && !results[0].error) {
+              this.allFeatures[geoLayer.geoLayerId] = results[0];
+            }
+            
+            // There was an error retrieving the layer JSON data.
+            if (results[0] && results[0].error) {
+              console.error('An error retrieving the "' + geoLayer.geoLayerId +
+              '" layer data occurred. Error code: ' + results[0].error.code +
+              '. Error message: "' + results[0].error.message + '". Turning layer off.');
+              this.owfCommonService.addLayerError(geoLayer.geoLayerId);
+              return;
+            }
 
             // Prints out how many features each geoLayerView contains. Helpful for debugging.
             if (this.allFeatures[geoLayer.geoLayerId]) {
@@ -1518,7 +1531,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.startCounter();
     // When the parameters in the URL are changed the map will refresh and load according to new configuration data.
     this.routeSub$ = this.route.params.subscribe(() => {
-
       this.resetMapVariables();
 
       this.mapID = this.route.snapshot.paramMap.get('id');
@@ -1631,8 +1643,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param docPath The string representing the path to the documentation
   * @param 
   */
-  public openDocDialog(docPath: string, geoLayerView: any): void {
-    var windowID = geoLayerView.geoLayerId + '-dialog-doc';
+  public openDocDialog(docPath: string, geoId: string, geoName: string): void {
+    var windowID = geoId + '-dialog-doc';
     if (this.windowManager.windowExists(windowID)) {
       return;
     }
@@ -1655,7 +1667,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           docMarkdown: markdown,
           docHtml: html,
           fullMarkdownPath: this.owfCommonService.getFullMarkdownPath(),
-          geoLayerView: geoLayerView,
+          geoId: geoId,
+          geoName: geoName,
           mapConfigPath: this.owfCommonService.getMapConfigPath(),
           windowID: windowID
         }
