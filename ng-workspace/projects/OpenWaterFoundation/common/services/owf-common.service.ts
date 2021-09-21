@@ -129,6 +129,7 @@ export class OwfCommonService {
         return this.getAppPath() + this.getMapConfigPath() + arg[0];
       case IM.Path.cP:
       case IM.Path.csvPath:
+      case IM.Path.d3P:
       case IM.Path.dVP:
       case IM.Path.dUP:
       case IM.Path.dP:
@@ -198,6 +199,7 @@ export class OwfCommonService {
     switch (pathType) {
       case IM.Path.cP:
       case IM.Path.csvPath:
+      case IM.Path.d3P:
       case IM.Path.dVP:
       case IM.Path.dP:
       case IM.Path.iGP:

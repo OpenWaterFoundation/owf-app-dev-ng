@@ -10,7 +10,8 @@ import { MatDialog,
           MatDialogConfig }         from '@angular/material/dialog';
 import { MatSlideToggleChange }     from '@angular/material/slide-toggle';
 
-import { DialogDataTableComponent,
+import { DialogD3Component,
+          DialogDataTableComponent,
           DialogDocComponent,
           DialogGalleryComponent,
           DialogHeatmapComponent,
@@ -1037,7 +1038,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                               }
 
                               // Display a plain text file in a Dialog popup.
-                              if (actionArray[i] === 'displayText') {
+                              if (actionArray[i].toUpperCase() === 'DISPLAYTEXT') {
                                 // Since the popup template file is not replacing any ${properties}, replace the ${property}
                                 // for the resourcePath only
                                 var resourcePath = MapUtil.obtainPropertiesFromLine(resourcePathArray[i], featureProperties);
@@ -1050,7 +1051,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 });
                               }
                               // Display a Time Series graph in a Dialog popup
-                              else if (actionArray[i] === 'displayTimeSeries') {
+                              else if (actionArray[i].toUpperCase() === 'DISPLAYTIMESERIES') {
 
                                 let fullResourcePath = _this.owfCommonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
                                 // Add this window ID to the windowManager so a user can't open it more than once.
@@ -1103,6 +1104,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                   _this.openHeatmapDialog(geoLayer, graphTemplateObject, graphFilePath);
                                 });
                                 
+                              } else if (actionArray[i].toUpperCase() === 'DISPLAYD3VIZ') {
+                                var fullVizPath = _this.owfCommonService.buildPath(IM.Path.d3P, [resourcePathArray[i]])
+                                _this.owfCommonService.getJSONData(fullVizPath).subscribe((d3Prop: IM.D3Prop) => {
+                                  _this.openD3VizDialog(geoLayer, d3Prop);
+                                });
                               }
                               // Display a Map Feature Gallery Dialog.
                               else if (actionArray[i].toUpperCase() === 'DISPLAYIMAGEGALLERY') {
@@ -1110,13 +1116,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                   geoLayerViewGroup.geoLayerViews[i], eventObject);
                               }
                               // Display a Gapminder Visualization
-                              else if (actionArray[i] === 'displayGapminder') {
+                              else if (actionArray[i].toUpperCase() === 'DISPLAYGAPMINDER') {
                                 _this.openGapminderDialog(geoLayer.geoLayerId, resourcePathArray[i]);
                               }
                               // If the attribute is neither displayTimeSeries nor displayText
                               else {
                                 console.error(
-                                  'Action attribute is not supplied or incorrect. Please specify either "displayText" or "displayTimeSeries" as the action.'
+                                  'Action attribute is not supplied or incorrect. Please specify a supported action:\n' +
+                                  '  displayText\n' +
+                                  '  displayTimeSeries\n' +
+                                  '  displayHeatmap\n' +
+                                  '  displayD3Viz\n' +
+                                  '  displayImageGallery'
                                 );
                               }
                             });
@@ -1604,7 +1615,40 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-  * Opens up an attribute (data) table Dialog with the necessary configuration data.
+   * Opens a D3 visualization Dialog with the necessary configuration data.
+   * @param geoLayer The layer geoLayer object.
+   * @param d3Prop The D3 visualization's property object from the config file.
+   */
+  public openD3VizDialog(geoLayer: IM.GeoLayer, d3Prop: IM.D3Prop): void {
+    var windowID = geoLayer.geoLayerId + '-dialog-d3-viz';
+    if (this.windowManager.windowExists(windowID)) {
+      return;
+    }
+
+    const dialogConfig = new MatDialogConfig();
+      dialogConfig.data = {
+        d3Prop: d3Prop,
+        geoLayer: geoLayer,
+        windowID: windowID
+      }
+        
+      var dialogRef: MatDialogRef<DialogD3Component, any> = this.dialog.open(DialogD3Component, {
+        data: dialogConfig,
+        hasBackdrop: false,
+        panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
+        height: "650px",
+        width: "815px",
+        minHeight: "650px",
+        minWidth: "615px",
+        maxHeight: "100vh",
+        maxWidth: "100vw"
+      });
+
+    this.windowManager.addWindow(windowID, WindowType.D3);
+  }
+
+  /**
+  * Opens an attribute (data) table Dialog with the necessary configuration data.
   * @param geoLayerId The geoLayerView's geoLayerId to be matched so the correct features are displayed
   */
   public openDataTableDialog(geoLayerView: any): void {

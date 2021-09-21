@@ -10,7 +10,7 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
-# 0.5.0 # (not yet out)
+# 0.5.0 #
 
 ### Bug Fixes ###
 
@@ -22,6 +22,9 @@ These elements will only be added if they are applicable for the new version.
 * Started Cypress testing for the InfoMapper, which uses the common library. Necessary
 tags had the `data-cy=""` attribute so they can be uniquely identified by Cypress
 without having to worry about changes in the future.
+
+* Added basic D3 Dialog code. A dialog can be opened and display a either a Tidy
+Tree or Treemap using D3.
 
 # 0.4.0 #
 

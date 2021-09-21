@@ -1,0 +1,77 @@
+{
+  "The name": "Colorado Water Basins",
+  "assets": [
+    {
+      "The name": "South Platte Basin",
+      "assets": [
+        {
+          "The name": "River A",
+          "SWE": 3938
+        },
+        {
+          "The name": "River B",
+          "SWE": 3812
+        },
+        {
+          "The name": "River C",
+          "SWE": 6714
+        },
+        {
+          "The name": "River D",
+          "SWE": 743
+        }
+      ]
+    },
+    {
+      "The name": "Arkansas Basin",
+      "assets": [
+        {
+          "The name": "River E",
+          "SWE": 3534
+        },
+        {
+          "The name": "River F",
+          "SWE": 5731
+        },
+        {
+          "The name": "River G",
+          "SWE": 7840
+        },
+        {
+          "The name": "River H",
+          "SWE": 5914
+        },
+        {
+          "The name": "River I",
+          "SWE": 3416
+        }
+      ]
+    },
+    {
+      "The name": "North Platte Basin",
+      "assets": [
+        {
+          "The name": "River J",
+          "SWE": 7074
+        }
+      ]
+    },
+    {
+      "The name": "Colorado Basin",
+      "assets": [
+        {
+          "The name": "River K",
+          "SWE": 6969
+        },
+        {
+          "The name": "River L",
+          "SWE": 1714
+        },
+        {
+          "The name": "River M",
+          "SWE": 2997
+        }
+      ]
+    }
+  ]
+}

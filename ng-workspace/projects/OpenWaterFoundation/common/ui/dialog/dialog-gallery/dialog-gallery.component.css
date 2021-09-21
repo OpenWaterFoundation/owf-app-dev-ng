@@ -48,7 +48,7 @@ ngx-gallery /deep/ .fa-dot-circle-o {
 
 /* This can replace the CSS in main-dialog-style */
 .drag-header-title-test {
-  font-size: medium;
+  font-size: large;
   padding-left: 80px;
   text-align: center;
   height: 100%;

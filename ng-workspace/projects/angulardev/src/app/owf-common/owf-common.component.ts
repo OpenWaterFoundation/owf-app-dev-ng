@@ -4,7 +4,8 @@ import { MatDialog,
           MatDialogConfig,
           MatDialogRef }           from '@angular/material/dialog';
 
-import { DialogDataTableComponent,
+import { DialogD3Component,
+          DialogDataTableComponent,
           DialogDocComponent,
           DialogHeatmapComponent,
           DialogImageComponent,
@@ -14,6 +15,7 @@ import { DialogDataTableComponent,
 import { WindowManager,
           WindowType }             from '@OpenWaterFoundation/common/ui/window-manager';
 import { OwfCommonService }        from '@OpenWaterFoundation/common/services';
+import * as IM                     from '@OpenWaterFoundation/common/services'
 
 import { take }                    from 'rxjs/operators';
 
@@ -33,10 +35,6 @@ export class OwfCommonComponent implements OnInit {
   /** Whether the application is currently showing the dialog menus. */
   public menuDisplay: boolean;
 
-  public testObj = {
-    '1': 'stuff'
-  };
-
 
   /**
    * 
@@ -49,6 +47,76 @@ export class OwfCommonComponent implements OnInit {
 
   ngOnInit(): void {
     this.menuDisplay = true;
+  }
+
+
+  /**
+   * Opens the D3 Dialog example.
+   */
+  public openD3ExampleDialog(): void {
+    var windowID = 'geoLayerId-dialog-d3';
+    if (this.windowManager.windowExists(windowID)) {
+      return;
+    }
+
+    this.owfCommonService.getJSONData(this.owfCommonService.buildPath(
+    IM.Path.d3P, ['/data-maps/data-ts/d3-treemap-config.json']))
+    .subscribe((d3Config: IM.D3Prop) => {
+      d3Config.chartType = IM.D3Chart.treemap;
+      // console.log(d3Config);
+    });
+
+    var geoLayer = {
+      name: 'Tree Stuff'
+    };
+
+    var colorScheme = ['#b30000', '#ff6600', '#ffb366', '#ffff00', '#59b300', '#33cc33',
+      '#b3ff66', '#00ffff', '#66a3ff', '#003cb3'];
+
+    var treeMapConfig: IM.D3Prop = {
+      chartType: IM.D3Chart.treemap,
+      dataPath: '/data-maps/data-ts/data.json',
+      name: 'The name',
+      parent: 'Parent Basin',
+      children: 'assets',
+      title: 'Tree Map Example Graph',
+      colorScheme: colorScheme,
+      value: 'SWE',
+      height: 500,
+      width: 500
+    };
+
+    var treeConfig: IM.D3Prop = {
+      chartType: IM.D3Chart.tree,
+      dataPath: '/data-maps/data-ts/data.json',
+      name: 'Basin River Name',
+      parent: 'Parent Basin',
+      children: 'assets',
+      title: 'Tree Example Graph',
+      height: 3300,
+      width: 935
+    };
+
+    const dialogConfig = new MatDialogConfig();
+      dialogConfig.data = {
+        d3Prop: treeMapConfig,
+        geoLayer: geoLayer,
+        windowID: windowID
+      }
+        
+      var dialogRef: MatDialogRef<DialogD3Component, any> = this.dialog.open(DialogD3Component, {
+        data: dialogConfig,
+        hasBackdrop: false,
+        panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
+        height: "650px",
+        width: "815px",
+        minHeight: "650px",
+        minWidth: "615px",
+        maxHeight: "100vh",
+        maxWidth: "100vw"
+      });
+
+    this.windowManager.addWindow(windowID, WindowType.D3);
   }
 
   /**

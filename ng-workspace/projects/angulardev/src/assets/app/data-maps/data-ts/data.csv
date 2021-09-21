@@ -1,0 +1,15 @@
+Basin,Parent Basin,water,snow
+Colorado River Basins,,
+Arkansas,Colorado River Basins,
+North Platte,Colorado River Basins,
+South Platte,Colorado River Basins,
+River A,Arkansas,3938,1
+River B,Arkansas,3812,2
+River C,Arkansas,6714,3
+River D,Arkansas,743,4
+River E,North Platte,3534,5
+River F,North Platte,5731,6
+River G,North Platte,7840,7
+River H,North Platte,5914,8
+River I,North Platte,3416,9
+River J,South Platte,7074,10

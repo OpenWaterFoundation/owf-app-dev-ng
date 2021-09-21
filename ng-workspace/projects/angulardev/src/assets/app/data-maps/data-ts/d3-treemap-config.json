@@ -1,0 +1,21 @@
+{
+  "dataPath": "/data-maps/data-ts/data.json",
+  "height": 500,
+  "width": 500,
+  "name": "Basin",
+  "parent": "Parent Basin",
+  "value": "water",
+  "title": "Tree Map Example Graph",
+  "colorScheme": [
+    "#b30000",
+    "#ff6600",
+    "#ffb366",
+    "#ffff00",
+    "#59b300",
+    "#33cc33",
+    "#b3ff66",
+    "#00ffff",
+    "#66a3ff",
+    "#003cb3"
+  ]
+}

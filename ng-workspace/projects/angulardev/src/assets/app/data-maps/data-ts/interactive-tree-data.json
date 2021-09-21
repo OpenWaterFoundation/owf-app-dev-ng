@@ -1,0 +1,24 @@
+{
+  "name": "Thengel, son of Fengel",
+  "parent": "null",
+  "children": [
+    {
+      "name": "Theodwyn, son of Thengel",
+      "parent": "Thengel, son of Fengel",
+      "children": [
+        {
+          "name": "Eomer, Son of Theodwyn",
+          "parent": "Theodwyn, son of Thengel"
+        },
+        {
+          "name": "Eowyn, Daughter of Theodwyn",
+          "parent": "Theodwyn, son of Thengel"
+        }
+      ]
+    },
+    {
+      "name": "Theoden, son of Thengel",
+      "parent": "Thengel, son of Fengel"
+    }
+  ]
+}

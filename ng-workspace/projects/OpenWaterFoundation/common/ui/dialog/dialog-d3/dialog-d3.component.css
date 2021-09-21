@@ -21,28 +21,57 @@
   width: 100%;
 }
 
-.property-content {
+.d3-content {
   height: calc(100% - 91px);
-  padding: 0px 10px 0px 10px;
+  padding: 0px 40px 0px 40px;
   overflow-x: auto;
   overflow-y: auto;
 }
 
-.properties-components-group {
+.d3-components-group {
   float: right;
   height: 50px;
 }
 
-.properties-components-group button {
+.d3-components-group button {
   margin: 5px 25px 0px 0px;
   background-color: #c2c1c1;
 }
 
 /*  */
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 60px;
+  height: 28px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
 .upper-close-button {
   background-color: #c2c1c1;
   height: 100%;
   width: 80px;
   float: right;
   outline: none;
+}
+
+/* ID's */
+#d3-chart {
+  height: 95%;
+  max-width: 100%;
+}
+
+#bar {
+  height: 85%;
+  width: 100%;
+}
+
+#chart-title {
+  height: 3%;
+  text-align: center;
 }

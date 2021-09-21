@@ -1,6 +1,17 @@
 // The interfaces below are typed for use throughout the common library, as well as the ability to be utilized by
 // outside consuming applications. It helps define different objects mainly related to the InfoMapper at the moment.
 
+/** Interface for Typing the main AppConfig JSON object created by the user. */
+export interface AppConfig {
+  title?: string;
+  homePage?: string;
+  favicon?: string;
+  dataUnitsPath?: string;
+  googleAnalyticsTrackingId?: string;
+  version?: string;
+  mainMenu?: MainMenu[];
+}
+
 /** Interface for Typing the GeoMapProject JSON object created by the GeoProcessor. */
 export interface GeoMapProject {
   geoMapProjectId?: string;
@@ -135,17 +146,6 @@ export interface EventHandler {
   }
 }
 
-/** Interface for Typing the main AppConfig JSON object created by the user. */
-export interface AppConfig {
-  title?: string;
-  homePage?: string;
-  favicon?: string;
-  dataUnitsPath?: string;
-  googleAnalyticsTrackingId?: string;
-  version?: string;
-  mainMenu?: MainMenu[];
-}
-
 /** Interface for Typing the MainMenu JSON object created by the user. */
 export interface MainMenu {
   id?: string;
@@ -177,6 +177,7 @@ export enum Path {
   cP = 'classificationPath',
   cPP = 'contentPagePath',
   cPage = 'Content Page',
+  d3P = 'D3Path',
   dP = 'docPath',
   dVP = 'dateValuePath',
   dUP = 'dataUnitsPath',
@@ -254,4 +255,29 @@ export interface LeafletEvent {
   geoLayerViewGroup?: any;
   index?: number;
   symbol?: any;
+}
+
+/** Interface for containing properties to be used with creating a D3 chart. */
+export interface D3Prop {
+  chartType: D3Chart;
+  dataPath: string;
+  name: string;
+  parent?: string;
+  children?: string;
+  value?: string;
+  height?: number;
+  width?: number;
+  title?: string;
+  colorScheme?: string[];
+  margin?: number;
+}
+
+/** Enum for each supported D3 chart type. */
+export enum D3Chart {
+  tree = 'tidyTree',
+  treemap = 'treeMap',
+  // sankey,
+  bar = 'bar'
+  // line,
+  // scatter
 }
