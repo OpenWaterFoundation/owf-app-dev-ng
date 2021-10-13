@@ -7,6 +7,7 @@ import { MatDialog,
 import { DialogD3Component,
           DialogDataTableComponent,
           DialogDocComponent,
+          DialogGapminderComponent,
           DialogHeatmapComponent,
           DialogImageComponent,
           DialogTextComponent,
@@ -288,6 +289,41 @@ export class OwfCommonComponent implements OnInit {
       });
       this.windowManager.addWindow(windowID, WindowType.DOC);
     });
+  }
+
+  /**
+   * 
+   */
+  public openGapminderExampleDialog(): void {
+    var windowID = 'uniqueGapminderExampleID' + '-dialog-doc';
+    if (this.windowManager.windowExists(windowID)) {
+      return;
+    }
+
+    var geoLayer: IM.GeoLayerView = {
+      geoLayerId: 'geoLayerId',
+      name: 'Gapminder Test'
+    }
+    this.owfCommonService.setGapminderConfigPath('assets/app/data-maps/data-viz/viz-config/viz-config.json');
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      configPath: 'assets/app/data-maps/data-viz/viz-config/viz-config.json',
+      geoLayer: geoLayer,
+      windowID: windowID
+    }
+    const dialogRef: MatDialogRef<DialogGapminderComponent, any> = this.dialog.open(DialogGapminderComponent, {
+      data: dialogConfig,
+      hasBackdrop: false,
+      panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
+      height: "750px",
+      width: "910px",
+      minHeight: "425px",
+      minWidth: "675px",
+      maxHeight: "100vh",
+      maxWidth: "100vw"
+    });
+    this.windowManager.addWindow(windowID, WindowType.GAP);
   }
 
   /**

@@ -10,6 +10,28 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.6.0 #
+
+### Code Refactoring ###
+
+* Since the Javascript Gapminder code was brought over and needed to be updated,
+many lines of code was changed, refactored, updated, and generally improved
+scoping and the deletion of any uses of the absolute global window object.
+
+### Features / Enhancements ###
+
+* Added the first working instance of a Gapminder Dialog. Buttons that play, pause,
+replay, step backwards & forwards were added. Hovering and clicking over data 'dots'
+on the visualization, along with styling & events for each was also added.
+
+* The Gapminder Dialog can open a Doc Dialog or Data Table Light Dialog if a path
+to either exist in the Gapminder configuration file. The Data Table Light is a version
+of the Data Table that does not have any advanced zooming or address search capabilities,
+or any map integrated abilities.
+
+* A Gapminder section has been added to the Visualizations tab under the InfoMapper
+documentation for users.
+
 # 0.5.0 #
 
 ### Bug Fixes ###

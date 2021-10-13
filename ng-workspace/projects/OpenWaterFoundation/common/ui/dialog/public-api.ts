@@ -4,6 +4,9 @@ export * from './dialog-d3/dialog-d3.module';
 // DIALOG DATA TABLE
 export * from './dialog-data-table/dialog-data-table.component';
 export * from './dialog-data-table/dialog-data-table.module';
+// DIALOG DATA TABLE LIGHT
+export * from './dialog-data-table-light/dialog-data-table-light.component';
+export * from './dialog-data-table-light/dialog-data-table-light.module';
 // DIALOG DOC
 export * from './dialog-doc/dialog-doc.component';
 export * from './dialog-doc/dialog-doc.module';
@@ -11,8 +14,8 @@ export * from './dialog-doc/dialog-doc.module';
 export * from './dialog-gallery/dialog-gallery.component';
 export * from './dialog-gallery/dialog-gallery.module';
 // DIALOG GAPMINDER
-// export * from './dialog-gapminder/dialog-gapminder.component';
-// export * from './dialog-gapminder/dialog-gapminder.module';
+export * from './dialog-gapminder/dialog-gapminder.component';
+export * from './dialog-gapminder/dialog-gapminder.module';
 // DIALOG HEATMAP
 export * from './dialog-heatmap/dialog-heatmap.component';
 export * from './dialog-heatmap/dialog-heatmap.module';

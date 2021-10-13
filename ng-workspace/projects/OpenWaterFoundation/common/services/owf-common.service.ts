@@ -40,6 +40,8 @@ export class OwfCommonService {
   /** The hard-coded string of the path to the default icon path that will be used
    * for the website if none is given. */
   public readonly defaultFaviconPath = 'assets/app-default/img/OWF-Logo-Favicon-32x32.ico';
+
+  public gapminderConfigPath = '';
   /** NOTE: Not currently in use. */
   public highlighted = new BehaviorSubject(false);
   /** NOTE: Not currently in use. */
@@ -151,6 +153,12 @@ export class OwfCommonService {
         } else {
           return this.getFullMarkdownPath() + this.formatPath(arg[0], pathType);
         }
+      case IM.Path.gP:
+        if (arg[0].startsWith('/')) {
+          return this.getAppPath() + arg[0].substring(1);
+        } else {
+          return this.formatPath(arg[0], pathType);
+        }
       default:
         return '';
     }
@@ -230,6 +238,8 @@ export class OwfCommonService {
         } else {
           return path;
         }
+      case IM.Path.gP:
+        return this.getGapminderConfigPath() + path;
     }
 
   }
@@ -520,6 +530,14 @@ export class OwfCommonService {
    * @returns the current selected markdown path's full path starting from the @var appPath
    */
   public getFullMarkdownPath(): string { return this.fullMarkdownPath }
+
+  /**
+   * @returns The path to the Gapminder config path. Is an empty string if no path
+   * was previously set.
+   */
+  public getGapminderConfigPath(): string {
+    return this.gapminderConfigPath;
+  }
 
   /**
    * Goes through each geoLayer in the GeoMapProject and if one matches with the given geoLayerId parameter,
@@ -1178,7 +1196,7 @@ export class OwfCommonService {
   public setAppPath(path: string): void { this.appPath = path; }
 
   /**
-   * Sets, or possibly creates the badPath object with the geo
+   *cs, or possibly creates the badPath object with the geo
    * @param geoLayerId The geoLayerId from the geoLayer where the bad path was set
    */
   public setBadPath(path: string, geoLayerId: string): void { this.badPath[geoLayerId] = [true, path]; }
@@ -1203,6 +1221,15 @@ export class OwfCommonService {
    */
   public setFullMarkdownPath(path: string) {
     this.fullMarkdownPath = path;
+  }
+
+  /**
+   * Sets @var gapminderConfigPath to the supplied absolute path. Used for using
+   * relative paths from the Gapminder configuration file path.
+   * @param configPath The absolute path to the Gapminder configuration file.
+   */
+  public setGapminderConfigPath(configPath: string): void {
+    this.gapminderConfigPath = configPath.substring(0, configPath.lastIndexOf('/') + 1);
   }
 
   /**

@@ -6,7 +6,7 @@ including:<br>
       <li>csv data</li>
       <li>json formatted data - converted from csv </li>
       <li>annotations data </li>
-      <li>also initializes demensions which contains:</li>
+      <li>also initializes dimensions which contains:</li>
         <ul>
          <li>xMin</li>
          <li>xMax</li>

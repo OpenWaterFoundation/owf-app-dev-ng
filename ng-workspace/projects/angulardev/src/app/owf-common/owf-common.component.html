@@ -45,6 +45,11 @@
       </button>
 
       <button mat-menu-item
+              (click)="openGapminderExampleDialog()">
+        <b>Gapminder</b> Dialog
+      </button>
+
+      <button mat-menu-item
               (click)="openHeatmapExampleDialog()">
         <b>Heatmap</b> Dialog
       </button>
@@ -76,12 +81,6 @@
               [disabled]="true"
               (click)="openTSGraphExampleDialog()">
         <b>Gallery</b> Dialog
-      </button>
-
-      <button mat-menu-item
-              [disabled]="true"
-              (click)="openTSGraphExampleDialog()">
-        <b>Gapminder</b> Dialog
       </button>
 
       <button mat-menu-item

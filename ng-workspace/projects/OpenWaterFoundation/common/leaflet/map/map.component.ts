@@ -14,6 +14,7 @@ import { DialogD3Component,
           DialogDataTableComponent,
           DialogDocComponent,
           DialogGalleryComponent,
+          DialogGapminderComponent,
           DialogHeatmapComponent,
           DialogPropertiesComponent,
           DialogTextComponent,
@@ -40,9 +41,7 @@ import * as GeoRasterLayer          from 'georaster-layer-for-leaflet';
 import geoblaze                     from 'geoblaze';
 import * as parse_georaster         from 'georaster';
 /** The globally used L object for Leaflet object creation and manipulation. */
-// (L as any)
 declare var L: any;
-// import * as L from 'leaflet';
 
 
 @Component({
@@ -1117,7 +1116,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                               }
                               // Display a Gapminder Visualization
                               else if (actionArray[i].toUpperCase() === 'DISPLAYGAPMINDER') {
-                                _this.openGapminderDialog(geoLayer.geoLayerId, resourcePathArray[i]);
+
+                                _this.openGapminderDialog(geoLayer, resourcePathArray[i]);
                               }
                               // If the attribute is neither displayTimeSeries nor displayText
                               else {
@@ -1684,8 +1684,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /**
   * When the info button by the side bar slider is clicked, it will either show a popup or separate tab containing the documentation
   * for the selected geoLayerViewGroup or geoLayerView.
-  * @param docPath The string representing the path to the documentation
-  * @param 
+  * @param docPath The string representing the path to the documentation file.
+  * @param geoId The geoMapId, geoLayerViewGroupId, or geoLayerViewId for the layer. Can also just be 
   */
   public openDocDialog(docPath: string, geoId: string, geoName: string): void {
     var windowID = geoId + '-dialog-doc';
@@ -1736,31 +1736,35 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * When a Gapminder button is clicked from the Leaflet popup, create the Gapminder Dialog and sent it the data it needs.
   * @param resourcePath The resourcePath string representing the absolute or relative path to the 
   */
-  private openGapminderDialog(geoLayerId: string, resourcePath: string): any {
-    // var windowID = geoLayerId + '-' + resourcePath;
-    // // if (this.windowManager.windowExists(windowID)) {
-    // //   return;
-    // // }
-    // let fullResourcePath = this.owfCommonService.buildPath(IM.Path.rP, [resourcePath]);
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.data = {
-    //   windowID: windowID,
-    //   resourcePath: fullResourcePath
-    // }
+  private openGapminderDialog(geoLayer: IM.GeoLayer, resourcePath: string): any {
+    var windowID = geoLayer.geoLayerId + '-dialog-gapminder';
+    if (this.windowManager.windowExists(windowID)) {
+      return;
+    }
 
-    // const dialogRef: MatDialogRef<DialogGapminderComponent, any> = this.dialog.open(DialogGapminderComponent, {
-    //   data: dialogConfig,
-    //   hasBackdrop: false,
-    //   panelClass: ['custom-dialog-container', 'mat-elevation-z24'],
-    //   height: "900px",
-    //   width: "910px",
-    //   minHeight: "900px",
-    //   minWidth: "910px",
-    //   maxHeight: "900px",
-    //   maxWidth: "910px"
-    // });
+    let fullGapminderPath = this.owfCommonService.buildPath(IM.Path.rP, [resourcePath]);
+    this.owfCommonService.setGapminderConfigPath(fullGapminderPath);
+    
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      configPath: fullGapminderPath,
+      geoLayer: geoLayer,
+      windowID: windowID
+    }
 
-    // // this.windowManager.addWindow(windowID, WindowType.GAP);
+    const dialogRef: MatDialogRef<DialogGapminderComponent, any> = this.dialog.open(DialogGapminderComponent, {
+      data: dialogConfig,
+      hasBackdrop: false,
+      panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
+      height: "750px",
+      width: "910px",
+      minHeight: "425px",
+      minWidth: "675px",
+      maxHeight: "100vh",
+      maxWidth: "100vw"
+    });
+
+    this.windowManager.addWindow(windowID, WindowType.GAP);
   }
 
   /**
@@ -2231,28 +2235,35 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     let defaultName: string = this.owfCommonService.getDefaultBackgroundLayer();
     this.currentBackgroundLayer = defaultName;
 
-    // Callback executed when canvas was found
+    // Callback executed when canvas was found.
     function handleCanvas(canvas: any) {
       canvas.checked = "checked";
     }
-    // Set up the mutation observer
+    // Set up the mutation observer.
     var observer = new MutationObserver(function (mutations, me) {
       // `mutations` is an array of mutations that occurred
       // `me` is the MutationObserver instance
       var canvas = document.getElementById(defaultName + "-radio");
       if (canvas) {
         handleCanvas(canvas);
-        me.disconnect(); // stop observing
+        // Stop observing.
+        me.disconnect();
         return;
       }
     });
-    // Start observing
+    // Start observing..
     observer.observe(document, {
       childList: true,
       subtree: true
     });
   }
 
+  /**
+   * 
+   * @param symbolProperties 
+   * @param styleType 
+   * @returns 
+   */
   public styleInnerShape(symbolProperties: any, styleType: string): Object {
     switch (styleType) {
       case 'g':

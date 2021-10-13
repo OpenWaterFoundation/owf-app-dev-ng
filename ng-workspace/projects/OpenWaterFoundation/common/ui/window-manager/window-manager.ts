@@ -80,9 +80,9 @@ export enum WindowType {
   DOC = 'Documentation',
   HEAT = 'Heatmap',
   GAL = 'Gallery',
+  GAP = 'Gapminder',
   PROJ = 'Project',
   TABLE = 'Table',
   TEXT = 'Text',
-  TSGRAPH = 'TSGraph',
-  GAP = 'Gapminder'
+  TSGRAPH = 'TSGraph'
 }

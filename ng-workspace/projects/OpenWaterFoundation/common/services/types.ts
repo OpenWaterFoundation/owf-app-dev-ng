@@ -183,6 +183,7 @@ export enum Path {
   dUP = 'dataUnitsPath',
   eCP = 'eventConfigPath',
   fMCP = 'fullMapConfigPath',
+  gP = 'gapminderPath',
   gLGJP = 'geoLayerGeoJsonPath',
   hPP = 'homePagePath',
   iGP = 'imageGalleryPath',

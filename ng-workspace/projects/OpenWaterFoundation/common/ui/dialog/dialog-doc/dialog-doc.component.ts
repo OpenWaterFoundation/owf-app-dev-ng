@@ -17,11 +17,11 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
   styleUrls: ['./dialog-doc.component.css', '../main-dialog-style.css']
 })
 export class DialogDocComponent implements OnInit, OnDestroy {
-  /** Boolean showing if the current documentation type is a regular text file. */
+  /** Shows if the current documentation type is a regular text file. */
   public docText: boolean;
-  /** Boolean showing if the current documentation type is a markdown file. */
+  /** Shows if the current documentation type is a markdown file. */
   public docMarkdown: boolean;
-  /** Boolean showing if the current documentation type is an HTML file. */
+  /** Shows if the current documentation type is an HTML file. */
   public docHTML: boolean;
   /** The string containing the documentation that needs to be displayed in this DialogDocComponent. */
   public doc: string;
@@ -34,8 +34,8 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   /** The name property from the geoMap, geoLayerViewGroup, or geoLayerView. */
   public geoName: string;
   /**
-   * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
-   * To be set in the app service for relative paths.
+   * Used as a path resolver and contains the path to the map configuration that
+   * is using this TSGraphComponent. To be set in the app service for relative paths.
    */
    public mapConfigPath: string;
   /** The Showdown config option object. Overrides an app `app.module.ts` config option object. */
@@ -76,12 +76,15 @@ export class DialogDocComponent implements OnInit, OnDestroy {
     this.windowID = dataObject.data.windowID;
   }
 
+
   /**
    * This function is called on initialization of the map component, right after the constructor.
    */
   ngOnInit(): void {
-    this.owfCommonService.setMapConfigPath(this.mapConfigPath);
-    this.owfCommonService.setFullMarkdownPath(this.fullMarkdownPath);
+    if (this.mapConfigPath && this.fullMarkdownPath) {
+      this.owfCommonService.setMapConfigPath(this.mapConfigPath);
+      this.owfCommonService.setFullMarkdownPath(this.fullMarkdownPath);
+    }
 
     if (this.docMarkdown) {
       // Check to see if the markdown file has any input that is an image link syntax. If it does, we want users to

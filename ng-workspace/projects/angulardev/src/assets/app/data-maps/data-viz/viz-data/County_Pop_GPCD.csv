@@ -1,0 +1,3024 @@
+Date,County,Population_DOLA,WaterUse,GPCD,GPCDChange_Absolute,GPCDChange_Percent,PopPercentChange,Basin
+1995,Adams,312593,,,,,186,Metro
+1996,Adams,323042,,,,,,Metro
+1997,Adams,332744,,,,,,Metro
+1998,Adams,344024,,,,,,Metro
+1999,Adams,355308,,,,,,Metro
+2000,Adams,351734,112423,160.68,,,,Metro
+2001,Adams,359437,112322,160.16,,,,Metro
+2002,Adams,371181,112410,159.11,,,,Metro
+2003,Adams,377665,111689,157.31,,,,Metro
+2004,Adams,385945,111373,156.12,,,,Metro
+2005,Adams,395384,111987,150.03,,,,Metro
+2006,Adams,407587,116147,146.31,,,,Metro
+2007,Adams,415915,116147,145.68,,,,Metro
+2008,Adams,425138,108631,130.48,,,,Metro
+2009,Adams,436323,108631,130.48,,,,Metro
+2010,Adams,443711,108631,130.48,,,,Metro
+2011,Adams,451926,108631,130.48,,,,Metro
+2012,Adams,460254,108631,130.48,,,,Metro
+2013,Adams,469936,54602,112.47,,,,Metro
+2014,Adams,480317,100131,113.39,,,,Metro
+2015,Adams,490066,98665,115.37,-45.3,-39.3,,Metro
+2016,Adams,500890,,,,,,Metro
+2017,Adams,511806,,,,,,Metro
+2018,Adams,522828,,,,,,Metro
+2019,Adams,533968,,,,,,Metro
+2020,Adams,545237,,,,,,Metro
+2021,Adams,556641,,,,,,Metro
+2022,Adams,568187,,,,,,Metro
+2023,Adams,579881,,,,,,Metro
+2024,Adams,591725,,,,,,Metro
+2025,Adams,603716,,,,,,Metro
+2026,Adams,615843,,,,,,Metro
+2027,Adams,628091,,,,,,Metro
+2028,Adams,640439,,,,,,Metro
+2029,Adams,652869,,,,,,Metro
+2030,Adams,665364,,,,,,Metro
+2031,Adams,677912,,,,,,Metro
+2032,Adams,689988,,,,,,Metro
+2033,Adams,702084,,,,,,Metro
+2034,Adams,714199,,,,,,Metro
+2035,Adams,726331,,,,,,Metro
+2036,Adams,738481,,,,,,Metro
+2037,Adams,750657,,,,,,Metro
+2038,Adams,762866,,,,,,Metro
+2039,Adams,775114,,,,,,Metro
+2040,Adams,787411,,,,,,Metro
+2041,Adams,799770,,,,,,Metro
+2042,Adams,810101,,,,,,Metro
+2043,Adams,820423,,,,,,Metro
+2044,Adams,830751,,,,,,Metro
+2045,Adams,841102,,,,,,Metro
+2046,Adams,851488,,,,,,Metro
+2047,Adams,861921,,,,,,Metro
+2048,Adams,872404,,,,,,Metro
+2049,Adams,882949,,,,,,Metro
+2050,Adams,893563,,,,,,Metro
+1995,Alamosa,14097,,,,,65,Rio Grande
+1996,Alamosa,14322,,,,,,Rio Grande
+1997,Alamosa,14478,,,,,,Rio Grande
+1998,Alamosa,14623,,,,,,Rio Grande
+1999,Alamosa,14822,,,,,,Rio Grande
+2000,Alamosa,15097,2595,245.3,,,,Rio Grande
+2001,Alamosa,15231,2595,242.33,,,,Rio Grande
+2002,Alamosa,15266,2595,239.32,,,,Rio Grande
+2003,Alamosa,15360,2595,236.34,,,,Rio Grande
+2004,Alamosa,15406,2595,235.17,,,,Rio Grande
+2005,Alamosa,15395,2595,233.53,,,,Rio Grande
+2006,Alamosa,15350,2595,233.53,,,,Rio Grande
+2007,Alamosa,15293,2595,29.72,,,,Rio Grande
+2008,Alamosa,15346,2573,29.48,,,,Rio Grande
+2009,Alamosa,15301,2573,29.48,,,,Rio Grande
+2010,Alamosa,15474,2573,29.48,,,,Rio Grande
+2011,Alamosa,15679,2573,29.48,,,,Rio Grande
+2012,Alamosa,15691,2573,29.48,,,,Rio Grande
+2013,Alamosa,15821,2573,29.48,,,,Rio Grande
+2014,Alamosa,15870,2573,29.48,,,,Rio Grande
+2015,Alamosa,15989,2573,29.48,-215.8,-732.1,,Rio Grande
+2016,Alamosa,16108,,,,,,Rio Grande
+2017,Alamosa,16278,,,,,,Rio Grande
+2018,Alamosa,16476,,,,,,Rio Grande
+2019,Alamosa,16683,,,,,,Rio Grande
+2020,Alamosa,16898,,,,,,Rio Grande
+2021,Alamosa,17122,,,,,,Rio Grande
+2022,Alamosa,17338,,,,,,Rio Grande
+2023,Alamosa,17547,,,,,,Rio Grande
+2024,Alamosa,17756,,,,,,Rio Grande
+2025,Alamosa,17967,,,,,,Rio Grande
+2026,Alamosa,18182,,,,,,Rio Grande
+2027,Alamosa,18401,,,,,,Rio Grande
+2028,Alamosa,18622,,,,,,Rio Grande
+2029,Alamosa,18846,,,,,,Rio Grande
+2030,Alamosa,19070,,,,,,Rio Grande
+2031,Alamosa,19294,,,,,,Rio Grande
+2032,Alamosa,19514,,,,,,Rio Grande
+2033,Alamosa,19729,,,,,,Rio Grande
+2034,Alamosa,19941,,,,,,Rio Grande
+2035,Alamosa,20149,,,,,,Rio Grande
+2036,Alamosa,20355,,,,,,Rio Grande
+2037,Alamosa,20557,,,,,,Rio Grande
+2038,Alamosa,20755,,,,,,Rio Grande
+2039,Alamosa,20952,,,,,,Rio Grande
+2040,Alamosa,21149,,,,,,Rio Grande
+2041,Alamosa,21346,,,,,,Rio Grande
+2042,Alamosa,21543,,,,,,Rio Grande
+2043,Alamosa,21742,,,,,,Rio Grande
+2044,Alamosa,21943,,,,,,Rio Grande
+2045,Alamosa,22145,,,,,,Rio Grande
+2046,Alamosa,22350,,,,,,Rio Grande
+2047,Alamosa,22558,,,,,,Rio Grande
+2048,Alamosa,22770,,,,,,Rio Grande
+2049,Alamosa,22985,,,,,,Rio Grande
+2050,Alamosa,23203,,,,,,Rio Grande
+1995,Arapahoe,442539,,,,,130,Metro
+1996,Arapahoe,451065,,,,,,Metro
+1997,Arapahoe,459058,,,,,,Metro
+1998,Arapahoe,472399,,,,,,Metro
+1999,Arapahoe,481306,,,,,,Metro
+2000,Arapahoe,490722,72144,108.97,,,,Metro
+2001,Arapahoe,501671,72144,108.97,,,,Metro
+2002,Arapahoe,510503,72144,108.97,,,,Metro
+2003,Arapahoe,516354,72144,108.97,,,,Metro
+2004,Arapahoe,523715,72144,108.97,,,,Metro
+2005,Arapahoe,528214,72144,104.06,,,,Metro
+2006,Arapahoe,536051,73967,103.91,,,,Metro
+2007,Arapahoe,545882,73967,103.41,,,,Metro
+2008,Arapahoe,556246,67287,93.11,,,,Metro
+2009,Arapahoe,566480,67287,93.11,,,,Metro
+2010,Arapahoe,574819,67287,93.11,,,,Metro
+2011,Arapahoe,585552,67287,93.11,,,,Metro
+2012,Arapahoe,595779,67287,93.11,,,,Metro
+2013,Arapahoe,607438,17545,43.65,,,,Metro
+2014,Arapahoe,618341,60387,75.57,,,,Metro
+2015,Arapahoe,628323,62079,89.17,-19.8,-22.2,,Metro
+2016,Arapahoe,639337,,,,,,Metro
+2017,Arapahoe,651191,,,,,,Metro
+2018,Arapahoe,663277,,,,,,Metro
+2019,Arapahoe,675386,,,,,,Metro
+2020,Arapahoe,687520,,,,,,Metro
+2021,Arapahoe,699672,,,,,,Metro
+2022,Arapahoe,711843,,,,,,Metro
+2023,Arapahoe,724032,,,,,,Metro
+2024,Arapahoe,736243,,,,,,Metro
+2025,Arapahoe,748470,,,,,,Metro
+2026,Arapahoe,760705,,,,,,Metro
+2027,Arapahoe,772939,,,,,,Metro
+2028,Arapahoe,785162,,,,,,Metro
+2029,Arapahoe,797878,,,,,,Metro
+2030,Arapahoe,810672,,,,,,Metro
+2031,Arapahoe,823531,,,,,,Metro
+2032,Arapahoe,836445,,,,,,Metro
+2033,Arapahoe,849410,,,,,,Metro
+2034,Arapahoe,862424,,,,,,Metro
+2035,Arapahoe,875381,,,,,,Metro
+2036,Arapahoe,888280,,,,,,Metro
+2037,Arapahoe,900105,,,,,,Metro
+2038,Arapahoe,911856,,,,,,Metro
+2039,Arapahoe,923533,,,,,,Metro
+2040,Arapahoe,935138,,,,,,Metro
+2041,Arapahoe,946681,,,,,,Metro
+2042,Arapahoe,956076,,,,,,Metro
+2043,Arapahoe,965032,,,,,,Metro
+2044,Arapahoe,973557,,,,,,Metro
+2045,Arapahoe,981660,,,,,,Metro
+2046,Arapahoe,989354,,,,,,Metro
+2047,Arapahoe,996646,,,,,,Metro
+2048,Arapahoe,1003538,,,,,,Metro
+2049,Arapahoe,1010047,,,,,,Metro
+2050,Arapahoe,1016184,,,,,,Metro
+1995,Archuleta,7108,,,,,286,Southwest
+1996,Archuleta,7928,,,,,,Southwest
+1997,Archuleta,8534,,,,,,Southwest
+1998,Archuleta,9133,,,,,,Southwest
+1999,Archuleta,9570,,,,,,Southwest
+2000,Archuleta,10042,1936,178.92,,,,Southwest
+2001,Archuleta,10465,1936,178.92,,,,Southwest
+2002,Archuleta,10700,1936,178.92,,,,Southwest
+2003,Archuleta,10964,1936,178.92,,,,Southwest
+2004,Archuleta,11171,1936,178.92,,,,Southwest
+2005,Archuleta,11402,1936,178.92,,,,Southwest
+2006,Archuleta,11798,1936,178.92,,,,Southwest
+2007,Archuleta,12108,1936,178.92,,,,Southwest
+2008,Archuleta,12074,1936,178.92,,,,Southwest
+2009,Archuleta,11899,1936,178.92,,,,Southwest
+2010,Archuleta,12060,1936,178.92,,,,Southwest
+2011,Archuleta,12007,1936,178.92,,,,Southwest
+2012,Archuleta,12117,1936,178.92,,,,Southwest
+2013,Archuleta,12208,1752,138.06,,,,Southwest
+2014,Archuleta,12249,1752,138.06,,,,Southwest
+2015,Archuleta,12465,1752,138.06,-40.9,-29.6,,Southwest
+2016,Archuleta,12680,,,,,,Southwest
+2017,Archuleta,12914,,,,,,Southwest
+2018,Archuleta,13176,,,,,,Southwest
+2019,Archuleta,13456,,,,,,Southwest
+2020,Archuleta,13778,,,,,,Southwest
+2021,Archuleta,14143,,,,,,Southwest
+2022,Archuleta,14551,,,,,,Southwest
+2023,Archuleta,15002,,,,,,Southwest
+2024,Archuleta,15470,,,,,,Southwest
+2025,Archuleta,15961,,,,,,Southwest
+2026,Archuleta,16462,,,,,,Southwest
+2027,Archuleta,16965,,,,,,Southwest
+2028,Archuleta,17456,,,,,,Southwest
+2029,Archuleta,17949,,,,,,Southwest
+2030,Archuleta,18424,,,,,,Southwest
+2031,Archuleta,18909,,,,,,Southwest
+2032,Archuleta,19387,,,,,,Southwest
+2033,Archuleta,19859,,,,,,Southwest
+2034,Archuleta,20333,,,,,,Southwest
+2035,Archuleta,20804,,,,,,Southwest
+2036,Archuleta,21265,,,,,,Southwest
+2037,Archuleta,21733,,,,,,Southwest
+2038,Archuleta,22194,,,,,,Southwest
+2039,Archuleta,22656,,,,,,Southwest
+2040,Archuleta,23112,,,,,,Southwest
+2041,Archuleta,23563,,,,,,Southwest
+2042,Archuleta,24008,,,,,,Southwest
+2043,Archuleta,24450,,,,,,Southwest
+2044,Archuleta,24888,,,,,,Southwest
+2045,Archuleta,25322,,,,,,Southwest
+2046,Archuleta,25753,,,,,,Southwest
+2047,Archuleta,26181,,,,,,Southwest
+2048,Archuleta,26606,,,,,,Southwest
+2049,Archuleta,27028,,,,,,Southwest
+2050,Archuleta,27448,,,,,,Southwest
+1995,Baca,4428,,,,,-9,Arkansas
+1996,Baca,4526,,,,,,Arkansas
+1997,Baca,4562,,,,,,Arkansas
+1998,Baca,4531,,,,,,Arkansas
+1999,Baca,4523,,,,,,Arkansas
+2000,Baca,4500,589,317.91,,,,Arkansas
+2001,Baca,4447,589,317.91,,,,Arkansas
+2002,Baca,4315,589,317.91,,,,Arkansas
+2003,Baca,4258,589,317.91,,,,Arkansas
+2004,Baca,4166,589,317.91,,,,Arkansas
+2005,Baca,4098,589,317.91,,,,Arkansas
+2006,Baca,4088,589,329.05,,,,Arkansas
+2007,Baca,3993,589,329.05,,,,Arkansas
+2008,Baca,3906,589,329.05,,,,Arkansas
+2009,Baca,3814,589,329.05,,,,Arkansas
+2010,Baca,3795,589,329.05,,,,Arkansas
+2011,Baca,3797,589,329.05,,,,Arkansas
+2012,Baca,3746,589,329.05,,,,Arkansas
+2013,Baca,3675,589,329.05,,,,Arkansas
+2014,Baca,3624,589,329.05,,,,Arkansas
+2015,Baca,3622,589,329.05,11.1,3.4,,Arkansas
+2016,Baca,3621,,,,,,Arkansas
+2017,Baca,3621,,,,,,Arkansas
+2018,Baca,3623,,,,,,Arkansas
+2019,Baca,3625,,,,,,Arkansas
+2020,Baca,3629,,,,,,Arkansas
+2021,Baca,3634,,,,,,Arkansas
+2022,Baca,3639,,,,,,Arkansas
+2023,Baca,3645,,,,,,Arkansas
+2024,Baca,3652,,,,,,Arkansas
+2025,Baca,3660,,,,,,Arkansas
+2026,Baca,3669,,,,,,Arkansas
+2027,Baca,3679,,,,,,Arkansas
+2028,Baca,3689,,,,,,Arkansas
+2029,Baca,3701,,,,,,Arkansas
+2030,Baca,3713,,,,,,Arkansas
+2031,Baca,3726,,,,,,Arkansas
+2032,Baca,3739,,,,,,Arkansas
+2033,Baca,3752,,,,,,Arkansas
+2034,Baca,3766,,,,,,Arkansas
+2035,Baca,3780,,,,,,Arkansas
+2036,Baca,3794,,,,,,Arkansas
+2037,Baca,3808,,,,,,Arkansas
+2038,Baca,3823,,,,,,Arkansas
+2039,Baca,3839,,,,,,Arkansas
+2040,Baca,3854,,,,,,Arkansas
+2041,Baca,3870,,,,,,Arkansas
+2042,Baca,3887,,,,,,Arkansas
+2043,Baca,3903,,,,,,Arkansas
+2044,Baca,3921,,,,,,Arkansas
+2045,Baca,3938,,,,,,Arkansas
+2046,Baca,3956,,,,,,Arkansas
+2047,Baca,3974,,,,,,Arkansas
+2048,Baca,3992,,,,,,Arkansas
+2049,Baca,4011,,,,,,Arkansas
+2050,Baca,4031,,,,,,Arkansas
+1995,Bent,5549,,,,,16,Arkansas
+1996,Bent,5623,,,,,,Arkansas
+1997,Bent,5640,,,,,,Arkansas
+1998,Bent,5993,,,,,,Arkansas
+1999,Bent,5996,,,,,,Arkansas
+2000,Bent,5966,506,91.53,,,,Arkansas
+2001,Bent,5882,506,91.53,,,,Arkansas
+2002,Bent,6203,506,91.53,,,,Arkansas
+2003,Bent,6653,506,91.53,,,,Arkansas
+2004,Bent,6357,506,91.53,,,,Arkansas
+2005,Bent,6261,506,91.53,,,,Arkansas
+2006,Bent,6076,506,90.47,,,,Arkansas
+2007,Bent,5773,634,85.24,,,,Arkansas
+2008,Bent,6008,634,85.24,,,,Arkansas
+2009,Bent,6481,634,93.86,,,,Arkansas
+2010,Bent,6506,634,93.86,,,,Arkansas
+2011,Bent,6306,634,93.86,,,,Arkansas
+2012,Bent,5775,634,93.86,,,,Arkansas
+2013,Bent,5697,634,93.86,,,,Arkansas
+2014,Bent,5539,634,93.86,,,,Arkansas
+2015,Bent,5683,634,93.86,2.3,2.5,,Arkansas
+2016,Bent,5722,,,,,,Arkansas
+2017,Bent,5764,,,,,,Arkansas
+2018,Bent,5805,,,,,,Arkansas
+2019,Bent,5848,,,,,,Arkansas
+2020,Bent,5893,,,,,,Arkansas
+2021,Bent,5926,,,,,,Arkansas
+2022,Bent,5962,,,,,,Arkansas
+2023,Bent,6002,,,,,,Arkansas
+2024,Bent,6036,,,,,,Arkansas
+2025,Bent,6079,,,,,,Arkansas
+2026,Bent,6111,,,,,,Arkansas
+2027,Bent,6139,,,,,,Arkansas
+2028,Bent,6154,,,,,,Arkansas
+2029,Bent,6166,,,,,,Arkansas
+2030,Bent,6178,,,,,,Arkansas
+2031,Bent,6190,,,,,,Arkansas
+2032,Bent,6200,,,,,,Arkansas
+2033,Bent,6210,,,,,,Arkansas
+2034,Bent,6219,,,,,,Arkansas
+2035,Bent,6229,,,,,,Arkansas
+2036,Bent,6239,,,,,,Arkansas
+2037,Bent,6249,,,,,,Arkansas
+2038,Bent,6259,,,,,,Arkansas
+2039,Bent,6270,,,,,,Arkansas
+2040,Bent,6281,,,,,,Arkansas
+2041,Bent,6293,,,,,,Arkansas
+2042,Bent,6306,,,,,,Arkansas
+2043,Bent,6319,,,,,,Arkansas
+2044,Bent,6333,,,,,,Arkansas
+2045,Bent,6348,,,,,,Arkansas
+2046,Bent,6363,,,,,,Arkansas
+2047,Bent,6379,,,,,,Arkansas
+2048,Bent,6396,,,,,,Arkansas
+2049,Bent,6413,,,,,,Arkansas
+2050,Bent,6431,,,,,,Arkansas
+1995,Boulder,257500,,,,,69,South Platte
+1996,Boulder,261765,,,,,,South Platte
+1997,Boulder,266063,,,,,,South Platte
+1998,Boulder,274115,,,,,,South Platte
+1999,Boulder,283924,,,,,,South Platte
+2000,Boulder,276254,58382,192.36,,,,South Platte
+2001,Boulder,283510,58431,189.5,,,,South Platte
+2002,Boulder,284433,58295,187.61,,,,South Platte
+2003,Boulder,282763,56825,179.87,,,,South Platte
+2004,Boulder,283288,56041,174.36,,,,South Platte
+2005,Boulder,282910,59698,181.08,,,,South Platte
+2006,Boulder,286133,60266,194.14,,,,South Platte
+2007,Boulder,288757,59151,189.87,,,,South Platte
+2008,Boulder,291827,54072,161.57,,,,South Platte
+2009,Boulder,293641,54072,161.57,,,,South Platte
+2010,Boulder,295605,54072,161.57,,,,South Platte
+2011,Boulder,300217,54072,161.57,,,,South Platte
+2012,Boulder,305148,54072,161.57,,,,South Platte
+2013,Boulder,310368,50025,140.89,,,,South Platte
+2014,Boulder,313708,48923,136.84,,,,South Platte
+2015,Boulder,317814,45838,126.78,-65.6,-51.7,,South Platte
+2016,Boulder,321872,,,,,,South Platte
+2017,Boulder,325892,,,,,,South Platte
+2018,Boulder,329891,,,,,,South Platte
+2019,Boulder,333871,,,,,,South Platte
+2020,Boulder,337897,,,,,,South Platte
+2021,Boulder,342338,,,,,,South Platte
+2022,Boulder,346758,,,,,,South Platte
+2023,Boulder,351165,,,,,,South Platte
+2024,Boulder,355546,,,,,,South Platte
+2025,Boulder,359908,,,,,,South Platte
+2026,Boulder,364037,,,,,,South Platte
+2027,Boulder,367936,,,,,,South Platte
+2028,Boulder,371698,,,,,,South Platte
+2029,Boulder,375725,,,,,,South Platte
+2030,Boulder,379714,,,,,,South Platte
+2031,Boulder,383659,,,,,,South Platte
+2032,Boulder,387562,,,,,,South Platte
+2033,Boulder,391422,,,,,,South Platte
+2034,Boulder,395231,,,,,,South Platte
+2035,Boulder,398988,,,,,,South Platte
+2036,Boulder,402690,,,,,,South Platte
+2037,Boulder,406337,,,,,,South Platte
+2038,Boulder,409929,,,,,,South Platte
+2039,Boulder,413464,,,,,,South Platte
+2040,Boulder,416942,,,,,,South Platte
+2041,Boulder,420363,,,,,,South Platte
+2042,Boulder,422385,,,,,,South Platte
+2043,Boulder,424328,,,,,,South Platte
+2044,Boulder,426195,,,,,,South Platte
+2045,Boulder,427993,,,,,,South Platte
+2046,Boulder,429730,,,,,,South Platte
+2047,Boulder,431410,,,,,,South Platte
+2048,Boulder,433037,,,,,,South Platte
+2049,Boulder,434619,,,,,,South Platte
+2050,Boulder,436166,,,,,,South Platte
+1995,Broomfield,,,,,,148,Metro
+1996,Broomfield,,,,,,,Metro
+1997,Broomfield,,,,,,,Metro
+1998,Broomfield,,,,,,,Metro
+1999,Broomfield,,,,,,,Metro
+2000,Broomfield,38545,9670,225.57,,,,Metro
+2001,Broomfield,41387,9420,203.13,,,,Metro
+2002,Broomfield,42432,10100,209.69,,,,Metro
+2003,Broomfield,44960,9390,188.8,,,,Metro
+2004,Broomfield,46406,9390,180.66,,,,Metro
+2005,Broomfield,48251,9390,180.66,,,,Metro
+2006,Broomfield,51152,9390,180.66,,,,Metro
+2007,Broomfield,53328,9390,180.66,,,,Metro
+2008,Broomfield,54400,10723,177.27,,,,Metro
+2009,Broomfield,55378,10723,177.27,,,,Metro
+2010,Broomfield,56107,10723,177.27,,,,Metro
+2011,Broomfield,57219,10723,177.27,,,,Metro
+2012,Broomfield,58784,10723,177.27,,,,Metro
+2013,Broomfield,60172,10723,177.27,,,,Metro
+2014,Broomfield,61826,10723,177.27,,,,Metro
+2015,Broomfield,63423,10723,177.27,-48.3,-27.2,,Metro
+2016,Broomfield,65130,,,,,,Metro
+2017,Broomfield,66847,,,,,,Metro
+2018,Broomfield,68679,,,,,,Metro
+2019,Broomfield,70525,,,,,,Metro
+2020,Broomfield,72388,,,,,,Metro
+2021,Broomfield,74370,,,,,,Metro
+2022,Broomfield,76270,,,,,,Metro
+2023,Broomfield,78189,,,,,,Metro
+2024,Broomfield,80126,,,,,,Metro
+2025,Broomfield,82081,,,,,,Metro
+2026,Broomfield,84052,,,,,,Metro
+2027,Broomfield,86038,,,,,,Metro
+2028,Broomfield,88035,,,,,,Metro
+2029,Broomfield,90040,,,,,,Metro
+2030,Broomfield,92051,,,,,,Metro
+2031,Broomfield,92535,,,,,,Metro
+2032,Broomfield,92992,,,,,,Metro
+2033,Broomfield,93419,,,,,,Metro
+2034,Broomfield,93815,,,,,,Metro
+2035,Broomfield,94178,,,,,,Metro
+2036,Broomfield,94505,,,,,,Metro
+2037,Broomfield,94796,,,,,,Metro
+2038,Broomfield,95051,,,,,,Metro
+2039,Broomfield,95270,,,,,,Metro
+2040,Broomfield,95453,,,,,,Metro
+2041,Broomfield,95601,,,,,,Metro
+2042,Broomfield,95714,,,,,,Metro
+2043,Broomfield,95795,,,,,,Metro
+2044,Broomfield,95846,,,,,,Metro
+2045,Broomfield,95870,,,,,,Metro
+2046,Broomfield,95869,,,,,,Metro
+2047,Broomfield,95845,,,,,,Metro
+2048,Broomfield,95800,,,,,,Metro
+2049,Broomfield,95737,,,,,,Metro
+2050,Broomfield,95658,,,,,,Metro
+1995,Chaffee,14656,,,,,97,Arkansas
+1996,Chaffee,15125,,,,,,Arkansas
+1997,Chaffee,15406,,,,,,Arkansas
+1998,Chaffee,15526,,,,,,Arkansas
+1999,Chaffee,15936,,,,,,Arkansas
+2000,Chaffee,16312,2976,303.22,,,,Arkansas
+2001,Chaffee,16410,2976,303.22,,,,Arkansas
+2002,Chaffee,16646,2976,303.22,,,,Arkansas
+2003,Chaffee,16794,2976,303.22,,,,Arkansas
+2004,Chaffee,16946,2976,303.22,,,,Arkansas
+2005,Chaffee,17022,2976,299.63,,,,Arkansas
+2006,Chaffee,16984,2976,297.38,,,,Arkansas
+2007,Chaffee,17238,2976,297.38,,,,Arkansas
+2008,Chaffee,17403,2976,297.38,,,,Arkansas
+2009,Chaffee,17604,2976,297.38,,,,Arkansas
+2010,Chaffee,17797,2976,297.38,,,,Arkansas
+2011,Chaffee,18009,2976,297.38,,,,Arkansas
+2012,Chaffee,18124,2976,297.38,,,,Arkansas
+2013,Chaffee,18278,2976,297.38,,,,Arkansas
+2014,Chaffee,18454,2976,297.38,,,,Arkansas
+2015,Chaffee,18736,2976,297.38,-5.8,-2,,Arkansas
+2016,Chaffee,19040,,,,,,Arkansas
+2017,Chaffee,19393,,,,,,Arkansas
+2018,Chaffee,19796,,,,,,Arkansas
+2019,Chaffee,20250,,,,,,Arkansas
+2020,Chaffee,20754,,,,,,Arkansas
+2021,Chaffee,21307,,,,,,Arkansas
+2022,Chaffee,21838,,,,,,Arkansas
+2023,Chaffee,22245,,,,,,Arkansas
+2024,Chaffee,22588,,,,,,Arkansas
+2025,Chaffee,22976,,,,,,Arkansas
+2026,Chaffee,23565,,,,,,Arkansas
+2027,Chaffee,24049,,,,,,Arkansas
+2028,Chaffee,24307,,,,,,Arkansas
+2029,Chaffee,24561,,,,,,Arkansas
+2030,Chaffee,24809,,,,,,Arkansas
+2031,Chaffee,25149,,,,,,Arkansas
+2032,Chaffee,25356,,,,,,Arkansas
+2033,Chaffee,25584,,,,,,Arkansas
+2034,Chaffee,25806,,,,,,Arkansas
+2035,Chaffee,26028,,,,,,Arkansas
+2036,Chaffee,26231,,,,,,Arkansas
+2037,Chaffee,26430,,,,,,Arkansas
+2038,Chaffee,26627,,,,,,Arkansas
+2039,Chaffee,26820,,,,,,Arkansas
+2040,Chaffee,27012,,,,,,Arkansas
+2041,Chaffee,27202,,,,,,Arkansas
+2042,Chaffee,27391,,,,,,Arkansas
+2043,Chaffee,27579,,,,,,Arkansas
+2044,Chaffee,27768,,,,,,Arkansas
+2045,Chaffee,27957,,,,,,Arkansas
+2046,Chaffee,28147,,,,,,Arkansas
+2047,Chaffee,28338,,,,,,Arkansas
+2048,Chaffee,28531,,,,,,Arkansas
+2049,Chaffee,28725,,,,,,Arkansas
+2050,Chaffee,28920,,,,,,Arkansas
+1995,Clear Creek,8684,,,,,89,South Platte
+1996,Clear Creek,8716,,,,,,South Platte
+1997,Clear Creek,8880,,,,,,South Platte
+1998,Clear Creek,8998,,,,,,South Platte
+1999,Clear Creek,9183,,,,,,South Platte
+2000,Clear Creek,9360,614,290.17,,,,South Platte
+2001,Clear Creek,9464,614,290.17,,,,South Platte
+2002,Clear Creek,9466,614,290.17,,,,South Platte
+2003,Clear Creek,9517,614,295.65,,,,South Platte
+2004,Clear Creek,9461,614,295.65,,,,South Platte
+2005,Clear Creek,9392,614,295.65,,,,South Platte
+2006,Clear Creek,9279,614,297.9,,,,South Platte
+2007,Clear Creek,9333,614,297.9,,,,South Platte
+2008,Clear Creek,9294,614,297.9,,,,South Platte
+2009,Clear Creek,9060,614,297.9,,,,South Platte
+2010,Clear Creek,9155,614,297.9,,,,South Platte
+2011,Clear Creek,9069,614,297.9,,,,South Platte
+2012,Clear Creek,9092,614,297.9,,,,South Platte
+2013,Clear Creek,9068,614,297.9,,,,South Platte
+2014,Clear Creek,9153,614,297.9,,,,South Platte
+2015,Clear Creek,9125,614,297.9,7.7,2.6,,South Platte
+2016,Clear Creek,9119,,,,,,South Platte
+2017,Clear Creek,9138,,,,,,South Platte
+2018,Clear Creek,9257,,,,,,South Platte
+2019,Clear Creek,9429,,,,,,South Platte
+2020,Clear Creek,9627,,,,,,South Platte
+2021,Clear Creek,9880,,,,,,South Platte
+2022,Clear Creek,10135,,,,,,South Platte
+2023,Clear Creek,10394,,,,,,South Platte
+2024,Clear Creek,10630,,,,,,South Platte
+2025,Clear Creek,10873,,,,,,South Platte
+2026,Clear Creek,11110,,,,,,South Platte
+2027,Clear Creek,11350,,,,,,South Platte
+2028,Clear Creek,11593,,,,,,South Platte
+2029,Clear Creek,11839,,,,,,South Platte
+2030,Clear Creek,12088,,,,,,South Platte
+2031,Clear Creek,12318,,,,,,South Platte
+2032,Clear Creek,12539,,,,,,South Platte
+2033,Clear Creek,12762,,,,,,South Platte
+2034,Clear Creek,12986,,,,,,South Platte
+2035,Clear Creek,13210,,,,,,South Platte
+2036,Clear Creek,13436,,,,,,South Platte
+2037,Clear Creek,13662,,,,,,South Platte
+2038,Clear Creek,13889,,,,,,South Platte
+2039,Clear Creek,14116,,,,,,South Platte
+2040,Clear Creek,14344,,,,,,South Platte
+2041,Clear Creek,14574,,,,,,South Platte
+2042,Clear Creek,14793,,,,,,South Platte
+2043,Clear Creek,15009,,,,,,South Platte
+2044,Clear Creek,15220,,,,,,South Platte
+2045,Clear Creek,15427,,,,,,South Platte
+2046,Clear Creek,15630,,,,,,South Platte
+2047,Clear Creek,15829,,,,,,South Platte
+2048,Clear Creek,16024,,,,,,South Platte
+2049,Clear Creek,16221,,,,,,South Platte
+2050,Clear Creek,16419,,,,,,South Platte
+1995,Conejos,7906,,,,,30,Rio Grande
+1996,Conejos,8019,,,,,,Rio Grande
+1997,Conejos,8100,,,,,,Rio Grande
+1998,Conejos,8187,,,,,,Rio Grande
+1999,Conejos,8308,,,,,,Rio Grande
+2000,Conejos,8407,360,159.18,,,,Rio Grande
+2001,Conejos,8365,360,159.18,,,,Rio Grande
+2002,Conejos,8389,360,159.18,,,,Rio Grande
+2003,Conejos,8387,360,159.18,,,,Rio Grande
+2004,Conejos,8501,360,159.18,,,,Rio Grande
+2005,Conejos,8500,360,159.18,,,,Rio Grande
+2006,Conejos,8470,360,192.56,,,,Rio Grande
+2007,Conejos,8433,360,192.56,,,,Rio Grande
+2008,Conejos,8384,360,192.56,,,,Rio Grande
+2009,Conejos,8210,360,192.56,,,,Rio Grande
+2010,Conejos,8282,360,192.56,,,,Rio Grande
+2011,Conejos,8288,360,192.56,,,,Rio Grande
+2012,Conejos,8254,360,192.56,,,,Rio Grande
+2013,Conejos,8219,360,192.56,,,,Rio Grande
+2014,Conejos,8229,360,192.56,,,,Rio Grande
+2015,Conejos,8270,360,192.56,33.4,17.3,,Rio Grande
+2016,Conejos,8309,,,,,,Rio Grande
+2017,Conejos,8344,,,,,,Rio Grande
+2018,Conejos,8371,,,,,,Rio Grande
+2019,Conejos,8406,,,,,,Rio Grande
+2020,Conejos,8457,,,,,,Rio Grande
+2021,Conejos,8490,,,,,,Rio Grande
+2022,Conejos,8517,,,,,,Rio Grande
+2023,Conejos,8570,,,,,,Rio Grande
+2024,Conejos,8633,,,,,,Rio Grande
+2025,Conejos,8706,,,,,,Rio Grande
+2026,Conejos,8781,,,,,,Rio Grande
+2027,Conejos,8861,,,,,,Rio Grande
+2028,Conejos,8940,,,,,,Rio Grande
+2029,Conejos,9004,,,,,,Rio Grande
+2030,Conejos,9073,,,,,,Rio Grande
+2031,Conejos,9139,,,,,,Rio Grande
+2032,Conejos,9205,,,,,,Rio Grande
+2033,Conejos,9259,,,,,,Rio Grande
+2034,Conejos,9322,,,,,,Rio Grande
+2035,Conejos,9381,,,,,,Rio Grande
+2036,Conejos,9442,,,,,,Rio Grande
+2037,Conejos,9501,,,,,,Rio Grande
+2038,Conejos,9568,,,,,,Rio Grande
+2039,Conejos,9630,,,,,,Rio Grande
+2040,Conejos,9691,,,,,,Rio Grande
+2041,Conejos,9751,,,,,,Rio Grande
+2042,Conejos,9812,,,,,,Rio Grande
+2043,Conejos,9872,,,,,,Rio Grande
+2044,Conejos,9933,,,,,,Rio Grande
+2045,Conejos,9994,,,,,,Rio Grande
+2046,Conejos,10055,,,,,,Rio Grande
+2047,Conejos,10116,,,,,,Rio Grande
+2048,Conejos,10178,,,,,,Rio Grande
+2049,Conejos,10239,,,,,,Rio Grande
+2050,Conejos,10301,,,,,,Rio Grande
+1995,Costilla,3511,,,,,27,Rio Grande
+1996,Costilla,3581,,,,,,Rio Grande
+1997,Costilla,3641,,,,,,Rio Grande
+1998,Costilla,3700,,,,,,Rio Grande
+1999,Costilla,3679,,,,,,Rio Grande
+2000,Costilla,3673,151,154.95,,,,Rio Grande
+2001,Costilla,3741,151,154.95,,,,Rio Grande
+2002,Costilla,3734,151,154.95,,,,Rio Grande
+2003,Costilla,3800,151,154.95,,,,Rio Grande
+2004,Costilla,3802,151,154.95,,,,Rio Grande
+2005,Costilla,3695,151,154.95,,,,Rio Grande
+2006,Costilla,3698,151,193.4,,,,Rio Grande
+2007,Costilla,3676,151,193.4,,,,Rio Grande
+2008,Costilla,3611,151,193.4,,,,Rio Grande
+2009,Costilla,3505,151,193.4,,,,Rio Grande
+2010,Costilla,3532,151,193.4,,,,Rio Grande
+2011,Costilla,3647,151,193.4,,,,Rio Grande
+2012,Costilla,3600,151,193.4,,,,Rio Grande
+2013,Costilla,3541,151,193.4,,,,Rio Grande
+2014,Costilla,3556,151,193.4,,,,Rio Grande
+2015,Costilla,3599,151,193.4,38.5,19.9,,Rio Grande
+2016,Costilla,3613,,,,,,Rio Grande
+2017,Costilla,3651,,,,,,Rio Grande
+2018,Costilla,3672,,,,,,Rio Grande
+2019,Costilla,3704,,,,,,Rio Grande
+2020,Costilla,3717,,,,,,Rio Grande
+2021,Costilla,3740,,,,,,Rio Grande
+2022,Costilla,3759,,,,,,Rio Grande
+2023,Costilla,3788,,,,,,Rio Grande
+2024,Costilla,3811,,,,,,Rio Grande
+2025,Costilla,3837,,,,,,Rio Grande
+2026,Costilla,3858,,,,,,Rio Grande
+2027,Costilla,3879,,,,,,Rio Grande
+2028,Costilla,3911,,,,,,Rio Grande
+2029,Costilla,3935,,,,,,Rio Grande
+2030,Costilla,3943,,,,,,Rio Grande
+2031,Costilla,3965,,,,,,Rio Grande
+2032,Costilla,3988,,,,,,Rio Grande
+2033,Costilla,4008,,,,,,Rio Grande
+2034,Costilla,4021,,,,,,Rio Grande
+2035,Costilla,4040,,,,,,Rio Grande
+2036,Costilla,4064,,,,,,Rio Grande
+2037,Costilla,4079,,,,,,Rio Grande
+2038,Costilla,4101,,,,,,Rio Grande
+2039,Costilla,4128,,,,,,Rio Grande
+2040,Costilla,4155,,,,,,Rio Grande
+2041,Costilla,4183,,,,,,Rio Grande
+2042,Costilla,4212,,,,,,Rio Grande
+2043,Costilla,4241,,,,,,Rio Grande
+2044,Costilla,4271,,,,,,Rio Grande
+2045,Costilla,4301,,,,,,Rio Grande
+2046,Costilla,4332,,,,,,Rio Grande
+2047,Costilla,4364,,,,,,Rio Grande
+2048,Costilla,4396,,,,,,Rio Grande
+2049,Costilla,4428,,,,,,Rio Grande
+2050,Costilla,4460,,,,,,Rio Grande
+1995,Delta,25193,,,,,103,Gunnison
+1996,Delta,25718,,,,,,Gunnison
+1997,Delta,26005,,,,,,Gunnison
+1998,Delta,26821,,,,,,Gunnison
+1999,Delta,27400,,,,,,Gunnison
+2000,Delta,27910,6537,230.25,,,,Gunnison
+2001,Delta,28387,6537,230.25,,,,Gunnison
+2002,Delta,28778,6537,230.25,,,,Gunnison
+2003,Delta,29061,6537,230.25,,,,Gunnison
+2004,Delta,29453,6537,230.25,,,,Gunnison
+2005,Delta,29412,6537,230.25,,,,Gunnison
+2006,Delta,29702,6537,229.46,,,,Gunnison
+2007,Delta,29877,6900,222.54,,,,Gunnison
+2008,Delta,30342,6933,163.04,,,,Gunnison
+2009,Delta,30625,6933,163.04,,,,Gunnison
+2010,Delta,30889,6933,163.04,,,,Gunnison
+2011,Delta,30380,6933,163.04,,,,Gunnison
+2012,Delta,30478,6933,163.04,,,,Gunnison
+2013,Delta,30355,6644,142.69,,,,Gunnison
+2014,Delta,30027,6644,142.69,,,,Gunnison
+2015,Delta,30267,6563,140.61,-89.6,-63.8,,Gunnison
+2016,Delta,30552,,,,,,Gunnison
+2017,Delta,30932,,,,,,Gunnison
+2018,Delta,31357,,,,,,Gunnison
+2019,Delta,31828,,,,,,Gunnison
+2020,Delta,32344,,,,,,Gunnison
+2021,Delta,32906,,,,,,Gunnison
+2022,Delta,33566,,,,,,Gunnison
+2023,Delta,34324,,,,,,Gunnison
+2024,Delta,35178,,,,,,Gunnison
+2025,Delta,36025,,,,,,Gunnison
+2026,Delta,36866,,,,,,Gunnison
+2027,Delta,37599,,,,,,Gunnison
+2028,Delta,38326,,,,,,Gunnison
+2029,Delta,39047,,,,,,Gunnison
+2030,Delta,39761,,,,,,Gunnison
+2031,Delta,40451,,,,,,Gunnison
+2032,Delta,41127,,,,,,Gunnison
+2033,Delta,41806,,,,,,Gunnison
+2034,Delta,42460,,,,,,Gunnison
+2035,Delta,43118,,,,,,Gunnison
+2036,Delta,43767,,,,,,Gunnison
+2037,Delta,44413,,,,,,Gunnison
+2038,Delta,45057,,,,,,Gunnison
+2039,Delta,45689,,,,,,Gunnison
+2040,Delta,46220,,,,,,Gunnison
+2041,Delta,46744,,,,,,Gunnison
+2042,Delta,47262,,,,,,Gunnison
+2043,Delta,47775,,,,,,Gunnison
+2044,Delta,48282,,,,,,Gunnison
+2045,Delta,48786,,,,,,Gunnison
+2046,Delta,49285,,,,,,Gunnison
+2047,Delta,49781,,,,,,Gunnison
+2048,Delta,50275,,,,,,Gunnison
+2049,Delta,50766,,,,,,Gunnison
+2050,Delta,51256,,,,,,Gunnison
+1995,Denver,507723,,,,,82,Metro
+1996,Denver,518255,,,,,,Metro
+1997,Denver,527442,,,,,,Metro
+1998,Denver,533406,,,,,,Metro
+1999,Denver,545517,,,,,,Metro
+2000,Denver,556740,211000,376.73,,,,Metro
+2001,Denver,563300,211000,376.73,,,,Metro
+2002,Denver,559090,211000,376.73,,,,Metro
+2003,Denver,560348,211000,376.73,,,,Metro
+2004,Denver,560230,211000,376.73,,,,Metro
+2005,Denver,559459,211000,376.73,,,,Metro
+2006,Denver,562862,211000,376.73,,,,Metro
+2007,Denver,570437,211000,376.73,,,,Metro
+2008,Denver,581903,211000,163.23,,,,Metro
+2009,Denver,595573,211000,163.23,,,,Metro
+2010,Denver,604879,211000,163.23,,,,Metro
+2011,Denver,620807,211000,163.23,,,,Metro
+2012,Denver,634814,211000,163.23,,,,Metro
+2013,Denver,648978,176315,135.57,,,,Metro
+2014,Denver,664220,177563,135.25,,,,Metro
+2015,Denver,677861,174829,128.99,-247.7,-192.1,,Metro
+2016,Denver,691406,,,,,,Metro
+2017,Denver,703823,,,,,,Metro
+2018,Denver,715092,,,,,,Metro
+2019,Denver,725188,,,,,,Metro
+2020,Denver,734079,,,,,,Metro
+2021,Denver,741770,,,,,,Metro
+2022,Denver,749276,,,,,,Metro
+2023,Denver,756625,,,,,,Metro
+2024,Denver,763830,,,,,,Metro
+2025,Denver,770900,,,,,,Metro
+2026,Denver,777861,,,,,,Metro
+2027,Denver,784724,,,,,,Metro
+2028,Denver,791498,,,,,,Metro
+2029,Denver,798190,,,,,,Metro
+2030,Denver,804797,,,,,,Metro
+2031,Denver,811340,,,,,,Metro
+2032,Denver,817827,,,,,,Metro
+2033,Denver,824265,,,,,,Metro
+2034,Denver,830648,,,,,,Metro
+2035,Denver,836961,,,,,,Metro
+2036,Denver,843211,,,,,,Metro
+2037,Denver,849403,,,,,,Metro
+2038,Denver,855526,,,,,,Metro
+2039,Denver,861577,,,,,,Metro
+2040,Denver,867545,,,,,,Metro
+2041,Denver,873436,,,,,,Metro
+2042,Denver,879246,,,,,,Metro
+2043,Denver,884960,,,,,,Metro
+2044,Denver,890583,,,,,,Metro
+2045,Denver,896110,,,,,,Metro
+2046,Denver,901551,,,,,,Metro
+2047,Denver,906912,,,,,,Metro
+2048,Denver,912188,,,,,,Metro
+2049,Denver,917390,,,,,,Metro
+2050,Denver,922512,,,,,,Metro
+1995,Dolores,1566,,,,,73,Southwest
+1996,Dolores,1636,,,,,,Southwest
+1997,Dolores,1674,,,,,,Southwest
+1998,Dolores,1766,,,,,,Southwest
+1999,Dolores,1811,,,,,,Southwest
+2000,Dolores,1847,61,265.64,,,,Southwest
+2001,Dolores,1865,61,265.64,,,,Southwest
+2002,Dolores,1880,61,265.64,,,,Southwest
+2003,Dolores,1879,61,217.83,,,,Southwest
+2004,Dolores,1873,61,217.83,,,,Southwest
+2005,Dolores,1888,61,217.83,,,,Southwest
+2006,Dolores,1990,61,242.03,,,,Southwest
+2007,Dolores,2001,61,242.03,,,,Southwest
+2008,Dolores,2074,61,242.03,,,,Southwest
+2009,Dolores,2052,61,242.03,,,,Southwest
+2010,Dolores,2060,61,242.03,,,,Southwest
+2011,Dolores,2022,61,242.03,,,,Southwest
+2012,Dolores,1984,61,242.03,,,,Southwest
+2013,Dolores,2017,61,242.03,,,,Southwest
+2014,Dolores,1933,61,242.03,,,,Southwest
+2015,Dolores,1960,61,242.03,-23.6,-9.8,,Southwest
+2016,Dolores,2000,,,,,,Southwest
+2017,Dolores,2022,,,,,,Southwest
+2018,Dolores,2037,,,,,,Southwest
+2019,Dolores,2041,,,,,,Southwest
+2020,Dolores,2054,,,,,,Southwest
+2021,Dolores,2068,,,,,,Southwest
+2022,Dolores,2082,,,,,,Southwest
+2023,Dolores,2097,,,,,,Southwest
+2024,Dolores,2112,,,,,,Southwest
+2025,Dolores,2128,,,,,,Southwest
+2026,Dolores,2143,,,,,,Southwest
+2027,Dolores,2155,,,,,,Southwest
+2028,Dolores,2164,,,,,,Southwest
+2029,Dolores,2177,,,,,,Southwest
+2030,Dolores,2206,,,,,,Southwest
+2031,Dolores,2236,,,,,,Southwest
+2032,Dolores,2263,,,,,,Southwest
+2033,Dolores,2292,,,,,,Southwest
+2034,Dolores,2317,,,,,,Southwest
+2035,Dolores,2350,,,,,,Southwest
+2036,Dolores,2381,,,,,,Southwest
+2037,Dolores,2412,,,,,,Southwest
+2038,Dolores,2444,,,,,,Southwest
+2039,Dolores,2476,,,,,,Southwest
+2040,Dolores,2503,,,,,,Southwest
+2041,Dolores,2528,,,,,,Southwest
+2042,Dolores,2551,,,,,,Southwest
+2043,Dolores,2572,,,,,,Southwest
+2044,Dolores,2593,,,,,,Southwest
+2045,Dolores,2614,,,,,,Southwest
+2046,Dolores,2634,,,,,,Southwest
+2047,Dolores,2655,,,,,,Southwest
+2048,Dolores,2675,,,,,,Southwest
+2049,Dolores,2696,,,,,,Southwest
+2050,Dolores,2716,,,,,,Southwest
+1995,Douglas,103839,,,,,376,Metro
+1996,Douglas,114713,,,,,,Metro
+1997,Douglas,129331,,,,,,Metro
+1998,Douglas,144354,,,,,,Metro
+1999,Douglas,162323,,,,,,Metro
+2000,Douglas,180511,33066,162.8,,,,Metro
+2001,Douglas,199038,33066,161.64,,,,Metro
+2002,Douglas,209705,33066,160.89,,,,Metro
+2003,Douglas,221146,33066,160.13,,,,Metro
+2004,Douglas,233646,33066,159.48,,,,Metro
+2005,Douglas,244442,32857,158.08,,,,Metro
+2006,Douglas,257833,32969,128.66,,,,Metro
+2007,Douglas,268599,31561,127.48,,,,Metro
+2008,Douglas,276740,31839,124.11,,,,Metro
+2009,Douglas,282163,31839,124.11,,,,Metro
+2010,Douglas,287124,31839,124.11,,,,Metro
+2011,Douglas,292462,31839,124.11,,,,Metro
+2012,Douglas,298550,31839,124.11,,,,Metro
+2013,Douglas,306524,33056,116.92,,,,Metro
+2014,Douglas,314592,33592,116.74,,,,Metro
+2015,Douglas,319920,32767,110.28,-52.5,-47.6,,Metro
+2016,Douglas,326306,,,,,,Metro
+2017,Douglas,332647,,,,,,Metro
+2018,Douglas,339199,,,,,,Metro
+2019,Douglas,346028,,,,,,Metro
+2020,Douglas,352955,,,,,,Metro
+2021,Douglas,360012,,,,,,Metro
+2022,Douglas,367304,,,,,,Metro
+2023,Douglas,374641,,,,,,Metro
+2024,Douglas,382021,,,,,,Metro
+2025,Douglas,389462,,,,,,Metro
+2026,Douglas,396961,,,,,,Metro
+2027,Douglas,404507,,,,,,Metro
+2028,Douglas,411567,,,,,,Metro
+2029,Douglas,418626,,,,,,Metro
+2030,Douglas,425395,,,,,,Metro
+2031,Douglas,431844,,,,,,Metro
+2032,Douglas,437986,,,,,,Metro
+2033,Douglas,444003,,,,,,Metro
+2034,Douglas,449884,,,,,,Metro
+2035,Douglas,455617,,,,,,Metro
+2036,Douglas,461200,,,,,,Metro
+2037,Douglas,466637,,,,,,Metro
+2038,Douglas,471929,,,,,,Metro
+2039,Douglas,477075,,,,,,Metro
+2040,Douglas,482079,,,,,,Metro
+2041,Douglas,486945,,,,,,Metro
+2042,Douglas,488305,,,,,,Metro
+2043,Douglas,489489,,,,,,Metro
+2044,Douglas,490512,,,,,,Metro
+2045,Douglas,491393,,,,,,Metro
+2046,Douglas,492150,,,,,,Metro
+2047,Douglas,492796,,,,,,Metro
+2048,Douglas,493341,,,,,,Metro
+2049,Douglas,493799,,,,,,Metro
+2050,Douglas,494181,,,,,,Metro
+1995,Eagle,30883,,,,,247,Colorado
+1996,Eagle,32928,,,,,,Colorado
+1997,Eagle,35206,,,,,,Colorado
+1998,Eagle,37614,,,,,,Colorado
+1999,Eagle,39909,,,,,,Colorado
+2000,Eagle,43288,17250,150.01,,,,Colorado
+2001,Eagle,44440,17250,150.01,,,,Colorado
+2002,Eagle,45100,17250,150.01,,,,Colorado
+2003,Eagle,45758,17250,150.01,,,,Colorado
+2004,Eagle,46485,17250,150.01,,,,Colorado
+2005,Eagle,47278,17250,150.01,,,,Colorado
+2006,Eagle,48214,17250,161.16,,,,Colorado
+2007,Eagle,49284,17250,161.16,,,,Colorado
+2008,Eagle,50301,15211,146.53,,,,Colorado
+2009,Eagle,51520,15211,146.53,,,,Colorado
+2010,Eagle,52057,15211,146.53,,,,Colorado
+2011,Eagle,51643,15211,146.53,,,,Colorado
+2012,Eagle,51845,15211,146.53,,,,Colorado
+2013,Eagle,52360,17097,184.39,,,,Colorado
+2014,Eagle,52831,14623,179.5,,,,Colorado
+2015,Eagle,53303,17603,215.99,66,30.5,,Colorado
+2016,Eagle,53861,,,,,,Colorado
+2017,Eagle,54529,,,,,,Colorado
+2018,Eagle,55311,,,,,,Colorado
+2019,Eagle,56209,,,,,,Colorado
+2020,Eagle,57226,,,,,,Colorado
+2021,Eagle,58305,,,,,,Colorado
+2022,Eagle,59486,,,,,,Colorado
+2023,Eagle,61306,,,,,,Colorado
+2024,Eagle,63161,,,,,,Colorado
+2025,Eagle,65046,,,,,,Colorado
+2026,Eagle,66958,,,,,,Colorado
+2027,Eagle,68892,,,,,,Colorado
+2028,Eagle,70844,,,,,,Colorado
+2029,Eagle,72807,,,,,,Colorado
+2030,Eagle,74776,,,,,,Colorado
+2031,Eagle,76747,,,,,,Colorado
+2032,Eagle,78715,,,,,,Colorado
+2033,Eagle,80675,,,,,,Colorado
+2034,Eagle,82626,,,,,,Colorado
+2035,Eagle,84565,,,,,,Colorado
+2036,Eagle,86491,,,,,,Colorado
+2037,Eagle,88406,,,,,,Colorado
+2038,Eagle,90309,,,,,,Colorado
+2039,Eagle,92201,,,,,,Colorado
+2040,Eagle,94085,,,,,,Colorado
+2041,Eagle,95962,,,,,,Colorado
+2042,Eagle,97506,,,,,,Colorado
+2043,Eagle,98835,,,,,,Colorado
+2044,Eagle,100051,,,,,,Colorado
+2045,Eagle,101260,,,,,,Colorado
+2046,Eagle,102465,,,,,,Colorado
+2047,Eagle,103669,,,,,,Colorado
+2048,Eagle,104875,,,,,,Colorado
+2049,Eagle,106089,,,,,,Colorado
+2050,Eagle,107312,,,,,,Colorado
+1995,El Paso,469693,,,,,128,Arkansas
+1996,El Paso,476989,,,,,,Arkansas
+1997,El Paso,486805,,,,,,Arkansas
+1998,El Paso,498021,,,,,,Arkansas
+1999,El Paso,508815,,,,,,Arkansas
+2000,El Paso,519803,100589,191.23,,,,Arkansas
+2001,El Paso,536336,100589,191.23,,,,Arkansas
+2002,El Paso,545240,100589,191.23,,,,Arkansas
+2003,El Paso,551668,100589,191.23,,,,Arkansas
+2004,El Paso,558455,100589,191.23,,,,Arkansas
+2005,El Paso,569322,100589,191.23,,,,Arkansas
+2006,El Paso,582502,100225,174.95,,,,Arkansas
+2007,El Paso,588772,100225,174.95,,,,Arkansas
+2008,El Paso,599060,98670,169.96,,,,Arkansas
+2009,El Paso,608518,98670,169.96,,,,Arkansas
+2010,El Paso,627232,98670,169.96,,,,Arkansas
+2011,El Paso,638095,98670,169.96,,,,Arkansas
+2012,El Paso,647282,98670,169.96,,,,Arkansas
+2013,El Paso,657103,77175,124.97,,,,Arkansas
+2014,El Paso,665070,106959,170.79,,,,Arkansas
+2015,El Paso,674630,77834,123.07,-68.2,-55.4,,Arkansas
+2016,El Paso,684579,,,,,,Arkansas
+2017,El Paso,694967,,,,,,Arkansas
+2018,El Paso,705585,,,,,,Arkansas
+2019,El Paso,716623,,,,,,Arkansas
+2020,El Paso,727807,,,,,,Arkansas
+2021,El Paso,739226,,,,,,Arkansas
+2022,El Paso,750706,,,,,,Arkansas
+2023,El Paso,762387,,,,,,Arkansas
+2024,El Paso,774255,,,,,,Arkansas
+2025,El Paso,786295,,,,,,Arkansas
+2026,El Paso,798208,,,,,,Arkansas
+2027,El Paso,810184,,,,,,Arkansas
+2028,El Paso,822129,,,,,,Arkansas
+2029,El Paso,834058,,,,,,Arkansas
+2030,El Paso,845985,,,,,,Arkansas
+2031,El Paso,857304,,,,,,Arkansas
+2032,El Paso,869110,,,,,,Arkansas
+2033,El Paso,880990,,,,,,Arkansas
+2034,El Paso,892957,,,,,,Arkansas
+2035,El Paso,905014,,,,,,Arkansas
+2036,El Paso,916910,,,,,,Arkansas
+2037,El Paso,928781,,,,,,Arkansas
+2038,El Paso,940629,,,,,,Arkansas
+2039,El Paso,952462,,,,,,Arkansas
+2040,El Paso,964290,,,,,,Arkansas
+2041,El Paso,976125,,,,,,Arkansas
+2042,El Paso,986538,,,,,,Arkansas
+2043,El Paso,996945,,,,,,Arkansas
+2044,El Paso,1007363,,,,,,Arkansas
+2045,El Paso,1017813,,,,,,Arkansas
+2046,El Paso,1028307,,,,,,Arkansas
+2047,El Paso,1038852,,,,,,Arkansas
+2048,El Paso,1049446,,,,,,Arkansas
+2049,El Paso,1060104,,,,,,Arkansas
+2050,El Paso,1070833,,,,,,Arkansas
+1995,Elbert,14328,,,,,384,Arkansas
+1996,Elbert,15806,,,,,,Arkansas
+1997,Elbert,16987,,,,,,Arkansas
+1998,Elbert,18032,,,,,,Arkansas
+1999,Elbert,19087,,,,,,Arkansas
+2000,Elbert,20102,74,113.7,,,,Arkansas
+2001,Elbert,21294,74,113.7,,,,Arkansas
+2002,Elbert,21604,74,113.7,,,,Arkansas
+2003,Elbert,21933,74,113.7,,,,Arkansas
+2004,Elbert,22041,74,113.7,,,,Arkansas
+2005,Elbert,22259,74,113.7,,,,Arkansas
+2006,Elbert,22527,74,110.84,,,,Arkansas
+2007,Elbert,22478,74,110.84,,,,Arkansas
+2008,Elbert,22663,74,110.84,,,,Arkansas
+2009,Elbert,22890,74,110.84,,,,Arkansas
+2010,Elbert,23107,74,110.84,,,,Arkansas
+2011,Elbert,23215,74,110.84,,,,Arkansas
+2012,Elbert,23386,74,110.84,,,,Arkansas
+2013,Elbert,23659,74,110.84,,,,Arkansas
+2014,Elbert,24144,74,110.84,,,,Arkansas
+2015,Elbert,25252,74,110.84,-2.9,-2.6,,Arkansas
+2016,Elbert,26641,,,,,,Arkansas
+2017,Elbert,28259,,,,,,Arkansas
+2018,Elbert,30177,,,,,,Arkansas
+2019,Elbert,32089,,,,,,Arkansas
+2020,Elbert,33896,,,,,,Arkansas
+2021,Elbert,35597,,,,,,Arkansas
+2022,Elbert,37292,,,,,,Arkansas
+2023,Elbert,38979,,,,,,Arkansas
+2024,Elbert,40658,,,,,,Arkansas
+2025,Elbert,42326,,,,,,Arkansas
+2026,Elbert,43981,,,,,,Arkansas
+2027,Elbert,45318,,,,,,Arkansas
+2028,Elbert,46639,,,,,,Arkansas
+2029,Elbert,47843,,,,,,Arkansas
+2030,Elbert,49029,,,,,,Arkansas
+2031,Elbert,50196,,,,,,Arkansas
+2032,Elbert,51344,,,,,,Arkansas
+2033,Elbert,52472,,,,,,Arkansas
+2034,Elbert,53581,,,,,,Arkansas
+2035,Elbert,54671,,,,,,Arkansas
+2036,Elbert,55743,,,,,,Arkansas
+2037,Elbert,56798,,,,,,Arkansas
+2038,Elbert,57838,,,,,,Arkansas
+2039,Elbert,58862,,,,,,Arkansas
+2040,Elbert,59873,,,,,,Arkansas
+2041,Elbert,60870,,,,,,Arkansas
+2042,Elbert,61855,,,,,,Arkansas
+2043,Elbert,62829,,,,,,Arkansas
+2044,Elbert,63791,,,,,,Arkansas
+2045,Elbert,64743,,,,,,Arkansas
+2046,Elbert,65683,,,,,,Arkansas
+2047,Elbert,66612,,,,,,Arkansas
+2048,Elbert,67531,,,,,,Arkansas
+2049,Elbert,68437,,,,,,Arkansas
+2050,Elbert,69333,,,,,,Arkansas
+1995,Fremont,40522,,,,,70,Arkansas
+1996,Fremont,41828,,,,,,Arkansas
+1997,Fremont,42844,,,,,,Arkansas
+1998,Fremont,43813,,,,,,Arkansas
+1999,Fremont,45144,,,,,,Arkansas
+2000,Fremont,46369,7359,146.94,,,,Arkansas
+2001,Fremont,46733,7359,146.94,,,,Arkansas
+2002,Fremont,46969,7359,146.94,,,,Arkansas
+2003,Fremont,46828,7359,146.94,,,,Arkansas
+2004,Fremont,46540,7359,146.94,,,,Arkansas
+2005,Fremont,46447,7359,146.94,,,,Arkansas
+2006,Fremont,46703,7359,147.17,,,,Arkansas
+2007,Fremont,46654,7359,147.17,,,,Arkansas
+2008,Fremont,46774,7359,147.17,,,,Arkansas
+2009,Fremont,46635,7359,147.17,,,,Arkansas
+2010,Fremont,46854,7359,147.17,,,,Arkansas
+2011,Fremont,47390,7359,147.17,,,,Arkansas
+2012,Fremont,47038,7359,147.17,,,,Arkansas
+2013,Fremont,46385,7359,147.17,,,,Arkansas
+2014,Fremont,46294,7359,147.17,,,,Arkansas
+2015,Fremont,46771,7359,147.17,0.2,0.2,,Arkansas
+2016,Fremont,47353,,,,,,Arkansas
+2017,Fremont,47966,,,,,,Arkansas
+2018,Fremont,48714,,,,,,Arkansas
+2019,Fremont,49434,,,,,,Arkansas
+2020,Fremont,50190,,,,,,Arkansas
+2021,Fremont,50929,,,,,,Arkansas
+2022,Fremont,51680,,,,,,Arkansas
+2023,Fremont,52427,,,,,,Arkansas
+2024,Fremont,53154,,,,,,Arkansas
+2025,Fremont,53876,,,,,,Arkansas
+2026,Fremont,54594,,,,,,Arkansas
+2027,Fremont,55301,,,,,,Arkansas
+2028,Fremont,55994,,,,,,Arkansas
+2029,Fremont,56689,,,,,,Arkansas
+2030,Fremont,57348,,,,,,Arkansas
+2031,Fremont,58017,,,,,,Arkansas
+2032,Fremont,58666,,,,,,Arkansas
+2033,Fremont,59311,,,,,,Arkansas
+2034,Fremont,59954,,,,,,Arkansas
+2035,Fremont,60601,,,,,,Arkansas
+2036,Fremont,61244,,,,,,Arkansas
+2037,Fremont,61872,,,,,,Arkansas
+2038,Fremont,62506,,,,,,Arkansas
+2039,Fremont,63159,,,,,,Arkansas
+2040,Fremont,63809,,,,,,Arkansas
+2041,Fremont,64422,,,,,,Arkansas
+2042,Fremont,65012,,,,,,Arkansas
+2043,Fremont,65580,,,,,,Arkansas
+2044,Fremont,66125,,,,,,Arkansas
+2045,Fremont,66647,,,,,,Arkansas
+2046,Fremont,67148,,,,,,Arkansas
+2047,Fremont,67627,,,,,,Arkansas
+2048,Fremont,68084,,,,,,Arkansas
+2049,Fremont,68544,,,,,,Arkansas
+2050,Fremont,69009,,,,,,Arkansas
+1995,Garfield,36417,,,,,211,Colorado
+1996,Garfield,37677,,,,,,Colorado
+1997,Garfield,38894,,,,,,Colorado
+1998,Garfield,41231,,,,,,Colorado
+1999,Garfield,42691,,,,,,Colorado
+2000,Garfield,44239,7652,227.87,,,,Colorado
+2001,Garfield,45907,7652,227.87,,,,Colorado
+2002,Garfield,46728,7652,227.87,,,,Colorado
+2003,Garfield,47484,7652,227.87,,,,Colorado
+2004,Garfield,48156,7652,227.87,,,,Colorado
+2005,Garfield,49256,7652,227.87,,,,Colorado
+2006,Garfield,51106,7652,221.45,,,,Colorado
+2007,Garfield,52676,7865,227.61,,,,Colorado
+2008,Garfield,54226,7429,188.37,,,,Colorado
+2009,Garfield,55400,7429,188.37,,,,Colorado
+2010,Garfield,56150,7429,188.37,,,,Colorado
+2011,Garfield,56069,7429,188.37,,,,Colorado
+2012,Garfield,56862,7429,188.37,,,,Colorado
+2013,Garfield,57157,7429,188.37,,,,Colorado
+2014,Garfield,57548,7429,188.37,,,,Colorado
+2015,Garfield,58367,7429,188.37,-39.5,-21,,Colorado
+2016,Garfield,59386,,,,,,Colorado
+2017,Garfield,60406,,,,,,Colorado
+2018,Garfield,61528,,,,,,Colorado
+2019,Garfield,62751,,,,,,Colorado
+2020,Garfield,64080,,,,,,Colorado
+2021,Garfield,65514,,,,,,Colorado
+2022,Garfield,67054,,,,,,Colorado
+2023,Garfield,68704,,,,,,Colorado
+2024,Garfield,70364,,,,,,Colorado
+2025,Garfield,72030,,,,,,Colorado
+2026,Garfield,73806,,,,,,Colorado
+2027,Garfield,75587,,,,,,Colorado
+2028,Garfield,77269,,,,,,Colorado
+2029,Garfield,78950,,,,,,Colorado
+2030,Garfield,80631,,,,,,Colorado
+2031,Garfield,82308,,,,,,Colorado
+2032,Garfield,83983,,,,,,Colorado
+2033,Garfield,85652,,,,,,Colorado
+2034,Garfield,87316,,,,,,Colorado
+2035,Garfield,88974,,,,,,Colorado
+2036,Garfield,90624,,,,,,Colorado
+2037,Garfield,92266,,,,,,Colorado
+2038,Garfield,93902,,,,,,Colorado
+2039,Garfield,95531,,,,,,Colorado
+2040,Garfield,97153,,,,,,Colorado
+2041,Garfield,98770,,,,,,Colorado
+2042,Garfield,100382,,,,,,Colorado
+2043,Garfield,101992,,,,,,Colorado
+2044,Garfield,103599,,,,,,Colorado
+2045,Garfield,105205,,,,,,Colorado
+2046,Garfield,106811,,,,,,Colorado
+2047,Garfield,108418,,,,,,Colorado
+2048,Garfield,110025,,,,,,Colorado
+2049,Garfield,111635,,,,,,Colorado
+2050,Garfield,113249,,,,,,Colorado
+1995,Grand,9953,,,,,184,Colorado
+1996,Grand,10511,,,,,,Colorado
+1997,Grand,10966,,,,,,Colorado
+1998,Grand,11409,,,,,,Colorado
+1999,Grand,11995,,,,,,Colorado
+2000,Grand,12852,1861,253.3,,,,Colorado
+2001,Grand,13283,1861,253.3,,,,Colorado
+2002,Grand,13461,1861,253.3,,,,Colorado
+2003,Grand,13688,1861,253.3,,,,Colorado
+2004,Grand,13912,1861,253.3,,,,Colorado
+2005,Grand,13897,1861,253.3,,,,Colorado
+2006,Grand,14135,1861,249.83,,,,Colorado
+2007,Grand,14339,1861,249.83,,,,Colorado
+2008,Grand,14535,1861,249.83,,,,Colorado
+2009,Grand,14664,1861,249.83,,,,Colorado
+2010,Grand,14790,1861,249.83,,,,Colorado
+2011,Grand,14559,1861,249.83,,,,Colorado
+2012,Grand,14188,1861,249.83,,,,Colorado
+2013,Grand,14321,1861,249.83,,,,Colorado
+2014,Grand,14505,1861,249.83,,,,Colorado
+2015,Grand,14847,1861,249.83,-3.5,-1.4,,Colorado
+2016,Grand,15186,,,,,,Colorado
+2017,Grand,15532,,,,,,Colorado
+2018,Grand,15873,,,,,,Colorado
+2019,Grand,16210,,,,,,Colorado
+2020,Grand,16544,,,,,,Colorado
+2021,Grand,16927,,,,,,Colorado
+2022,Grand,17365,,,,,,Colorado
+2023,Grand,17817,,,,,,Colorado
+2024,Grand,18255,,,,,,Colorado
+2025,Grand,18699,,,,,,Colorado
+2026,Grand,19127,,,,,,Colorado
+2027,Grand,19560,,,,,,Colorado
+2028,Grand,19988,,,,,,Colorado
+2029,Grand,20403,,,,,,Colorado
+2030,Grand,20809,,,,,,Colorado
+2031,Grand,21220,,,,,,Colorado
+2032,Grand,21627,,,,,,Colorado
+2033,Grand,22031,,,,,,Colorado
+2034,Grand,22430,,,,,,Colorado
+2035,Grand,22835,,,,,,Colorado
+2036,Grand,23222,,,,,,Colorado
+2037,Grand,23607,,,,,,Colorado
+2038,Grand,23985,,,,,,Colorado
+2039,Grand,24367,,,,,,Colorado
+2040,Grand,24731,,,,,,Colorado
+2041,Grand,25091,,,,,,Colorado
+2042,Grand,25449,,,,,,Colorado
+2043,Grand,25803,,,,,,Colorado
+2044,Grand,26155,,,,,,Colorado
+2045,Grand,26505,,,,,,Colorado
+2046,Grand,26854,,,,,,Colorado
+2047,Grand,27203,,,,,,Colorado
+2048,Grand,27551,,,,,,Colorado
+2049,Grand,27900,,,,,,Colorado
+2050,Grand,28249,,,,,,Colorado
+1995,Gunnison,11974,,,,,98,Gunnison
+1996,Gunnison,12244,,,,,,Gunnison
+1997,Gunnison,12405,,,,,,Gunnison
+1998,Gunnison,13442,,,,,,Gunnison
+1999,Gunnison,13736,,,,,,Gunnison
+2000,Gunnison,13988,3000,229.16,,,,Gunnison
+2001,Gunnison,14345,3000,229.16,,,,Gunnison
+2002,Gunnison,14316,3000,229.16,,,,Gunnison
+2003,Gunnison,14206,3000,229.16,,,,Gunnison
+2004,Gunnison,14230,3000,229.16,,,,Gunnison
+2005,Gunnison,14473,3000,229.16,,,,Gunnison
+2006,Gunnison,14650,3000,229.16,,,,Gunnison
+2007,Gunnison,14957,3000,225.48,,,,Gunnison
+2008,Gunnison,15137,2818,211.8,,,,Gunnison
+2009,Gunnison,15266,2818,211.8,,,,Gunnison
+2010,Gunnison,15309,2818,211.8,,,,Gunnison
+2011,Gunnison,15395,2818,211.8,,,,Gunnison
+2012,Gunnison,15413,2818,211.8,,,,Gunnison
+2013,Gunnison,15455,2818,211.8,,,,Gunnison
+2014,Gunnison,15660,2818,211.8,,,,Gunnison
+2015,Gunnison,15906,2818,211.8,-17.4,-8.2,,Gunnison
+2016,Gunnison,16145,,,,,,Gunnison
+2017,Gunnison,16389,,,,,,Gunnison
+2018,Gunnison,16638,,,,,,Gunnison
+2019,Gunnison,16904,,,,,,Gunnison
+2020,Gunnison,17148,,,,,,Gunnison
+2021,Gunnison,17401,,,,,,Gunnison
+2022,Gunnison,17651,,,,,,Gunnison
+2023,Gunnison,17899,,,,,,Gunnison
+2024,Gunnison,18143,,,,,,Gunnison
+2025,Gunnison,18386,,,,,,Gunnison
+2026,Gunnison,18626,,,,,,Gunnison
+2027,Gunnison,18865,,,,,,Gunnison
+2028,Gunnison,19103,,,,,,Gunnison
+2029,Gunnison,19341,,,,,,Gunnison
+2030,Gunnison,19577,,,,,,Gunnison
+2031,Gunnison,19812,,,,,,Gunnison
+2032,Gunnison,20046,,,,,,Gunnison
+2033,Gunnison,20278,,,,,,Gunnison
+2034,Gunnison,20509,,,,,,Gunnison
+2035,Gunnison,20738,,,,,,Gunnison
+2036,Gunnison,20966,,,,,,Gunnison
+2037,Gunnison,21192,,,,,,Gunnison
+2038,Gunnison,21417,,,,,,Gunnison
+2039,Gunnison,21640,,,,,,Gunnison
+2040,Gunnison,21860,,,,,,Gunnison
+2041,Gunnison,22077,,,,,,Gunnison
+2042,Gunnison,22262,,,,,,Gunnison
+2043,Gunnison,22443,,,,,,Gunnison
+2044,Gunnison,22623,,,,,,Gunnison
+2045,Gunnison,22800,,,,,,Gunnison
+2046,Gunnison,22977,,,,,,Gunnison
+2047,Gunnison,23152,,,,,,Gunnison
+2048,Gunnison,23327,,,,,,Gunnison
+2049,Gunnison,23500,,,,,,Gunnison
+2050,Gunnison,23673,,,,,,Gunnison
+1995,Hinsdale,659,,,,,151,Gunnison
+1996,Hinsdale,707,,,,,,Gunnison
+1997,Hinsdale,739,,,,,,Gunnison
+1998,Hinsdale,776,,,,,,Gunnison
+1999,Hinsdale,784,,,,,,Gunnison
+2000,Hinsdale,792,571,375.37,,,,Gunnison
+2001,Hinsdale,804,571,375.37,,,,Gunnison
+2002,Hinsdale,806,571,375.37,,,,Gunnison
+2003,Hinsdale,784,571,375.37,,,,Gunnison
+2004,Hinsdale,831,571,375.37,,,,Gunnison
+2005,Hinsdale,813,571,375.37,,,,Gunnison
+2006,Hinsdale,830,571,375.37,,,,Gunnison
+2007,Hinsdale,845,571,375.37,,,,Gunnison
+2008,Hinsdale,824,571,375.37,,,,Gunnison
+2009,Hinsdale,827,571,375.37,,,,Gunnison
+2010,Hinsdale,843,571,375.37,,,,Gunnison
+2011,Hinsdale,824,571,375.37,,,,Gunnison
+2012,Hinsdale,795,571,375.37,,,,Gunnison
+2013,Hinsdale,803,571,375.37,,,,Gunnison
+2014,Hinsdale,769,571,375.37,,,,Gunnison
+2015,Hinsdale,791,571,375.37,0,0,,Gunnison
+2016,Hinsdale,808,,,,,,Gunnison
+2017,Hinsdale,832,,,,,,Gunnison
+2018,Hinsdale,852,,,,,,Gunnison
+2019,Hinsdale,869,,,,,,Gunnison
+2020,Hinsdale,896,,,,,,Gunnison
+2021,Hinsdale,913,,,,,,Gunnison
+2022,Hinsdale,936,,,,,,Gunnison
+2023,Hinsdale,960,,,,,,Gunnison
+2024,Hinsdale,984,,,,,,Gunnison
+2025,Hinsdale,1009,,,,,,Gunnison
+2026,Hinsdale,1034,,,,,,Gunnison
+2027,Hinsdale,1060,,,,,,Gunnison
+2028,Hinsdale,1086,,,,,,Gunnison
+2029,Hinsdale,1112,,,,,,Gunnison
+2030,Hinsdale,1139,,,,,,Gunnison
+2031,Hinsdale,1166,,,,,,Gunnison
+2032,Hinsdale,1193,,,,,,Gunnison
+2033,Hinsdale,1221,,,,,,Gunnison
+2034,Hinsdale,1250,,,,,,Gunnison
+2035,Hinsdale,1278,,,,,,Gunnison
+2036,Hinsdale,1307,,,,,,Gunnison
+2037,Hinsdale,1336,,,,,,Gunnison
+2038,Hinsdale,1365,,,,,,Gunnison
+2039,Hinsdale,1395,,,,,,Gunnison
+2040,Hinsdale,1424,,,,,,Gunnison
+2041,Hinsdale,1454,,,,,,Gunnison
+2042,Hinsdale,1479,,,,,,Gunnison
+2043,Hinsdale,1504,,,,,,Gunnison
+2044,Hinsdale,1529,,,,,,Gunnison
+2045,Hinsdale,1550,,,,,,Gunnison
+2046,Hinsdale,1570,,,,,,Gunnison
+2047,Hinsdale,1590,,,,,,Gunnison
+2048,Hinsdale,1610,,,,,,Gunnison
+2049,Hinsdale,1631,,,,,,Gunnison
+2050,Hinsdale,1651,,,,,,Gunnison
+1995,Huerfano,7162,,,,,17,Arkansas
+1996,Huerfano,7389,,,,,,Arkansas
+1997,Huerfano,7672,,,,,,Arkansas
+1998,Huerfano,7781,,,,,,Arkansas
+1999,Huerfano,7827,,,,,,Arkansas
+2000,Huerfano,7826,809,108.38,,,,Arkansas
+2001,Huerfano,7905,809,108.38,,,,Arkansas
+2002,Huerfano,7916,809,108.38,,,,Arkansas
+2003,Huerfano,8042,809,108.38,,,,Arkansas
+2004,Huerfano,7729,809,108.38,,,,Arkansas
+2005,Huerfano,7823,809,108.38,,,,Arkansas
+2006,Huerfano,7750,809,108.38,,,,Arkansas
+2007,Huerfano,7658,809,108.38,,,,Arkansas
+2008,Huerfano,7680,809,108.38,,,,Arkansas
+2009,Huerfano,6710,809,108.38,,,,Arkansas
+2010,Huerfano,6655,809,108.38,,,,Arkansas
+2011,Huerfano,6499,809,108.38,,,,Arkansas
+2012,Huerfano,6565,809,108.38,,,,Arkansas
+2013,Huerfano,6483,809,108.38,,,,Arkansas
+2014,Huerfano,6428,809,108.38,,,,Arkansas
+2015,Huerfano,6514,809,108.38,0,0,,Arkansas
+2016,Huerfano,6617,,,,,,Arkansas
+2017,Huerfano,6725,,,,,,Arkansas
+2018,Huerfano,6831,,,,,,Arkansas
+2019,Huerfano,6932,,,,,,Arkansas
+2020,Huerfano,7032,,,,,,Arkansas
+2021,Huerfano,7128,,,,,,Arkansas
+2022,Huerfano,7222,,,,,,Arkansas
+2023,Huerfano,7312,,,,,,Arkansas
+2024,Huerfano,7401,,,,,,Arkansas
+2025,Huerfano,7489,,,,,,Arkansas
+2026,Huerfano,7575,,,,,,Arkansas
+2027,Huerfano,7660,,,,,,Arkansas
+2028,Huerfano,7744,,,,,,Arkansas
+2029,Huerfano,7824,,,,,,Arkansas
+2030,Huerfano,7901,,,,,,Arkansas
+2031,Huerfano,7974,,,,,,Arkansas
+2032,Huerfano,8042,,,,,,Arkansas
+2033,Huerfano,8083,,,,,,Arkansas
+2034,Huerfano,8097,,,,,,Arkansas
+2035,Huerfano,8110,,,,,,Arkansas
+2036,Huerfano,8123,,,,,,Arkansas
+2037,Huerfano,8135,,,,,,Arkansas
+2038,Huerfano,8147,,,,,,Arkansas
+2039,Huerfano,8160,,,,,,Arkansas
+2040,Huerfano,8173,,,,,,Arkansas
+2041,Huerfano,8186,,,,,,Arkansas
+2042,Huerfano,8201,,,,,,Arkansas
+2043,Huerfano,8216,,,,,,Arkansas
+2044,Huerfano,8233,,,,,,Arkansas
+2045,Huerfano,8251,,,,,,Arkansas
+2046,Huerfano,8270,,,,,,Arkansas
+2047,Huerfano,8290,,,,,,Arkansas
+2048,Huerfano,8312,,,,,,Arkansas
+2049,Huerfano,8336,,,,,,Arkansas
+2050,Huerfano,8361,,,,,,Arkansas
+1995,Jackson,1609,,,,,5,North Platte
+1996,Jackson,1594,,,,,,North Platte
+1997,Jackson,1596,,,,,,North Platte
+1998,Jackson,1587,,,,,,North Platte
+1999,Jackson,1582,,,,,,North Platte
+2000,Jackson,1574,215,261.5,,,,North Platte
+2001,Jackson,1590,215,261.5,,,,North Platte
+2002,Jackson,1591,215,261.5,,,,North Platte
+2003,Jackson,1586,215,261.5,,,,North Platte
+2004,Jackson,1521,215,261.5,,,,North Platte
+2005,Jackson,1492,215,261.5,,,,North Platte
+2006,Jackson,1443,215,297.12,,,,North Platte
+2007,Jackson,1422,215,297.12,,,,North Platte
+2008,Jackson,1381,218,310.39,,,,North Platte
+2009,Jackson,1386,218,310.39,,,,North Platte
+2010,Jackson,1387,218,310.39,,,,North Platte
+2011,Jackson,1374,218,310.39,,,,North Platte
+2012,Jackson,1340,218,310.39,,,,North Platte
+2013,Jackson,1355,218,310.39,,,,North Platte
+2014,Jackson,1388,218,310.39,,,,North Platte
+2015,Jackson,1405,218,310.39,48.9,15.8,,North Platte
+2016,Jackson,1420,,,,,,North Platte
+2017,Jackson,1431,,,,,,North Platte
+2018,Jackson,1443,,,,,,North Platte
+2019,Jackson,1463,,,,,,North Platte
+2020,Jackson,1483,,,,,,North Platte
+2021,Jackson,1503,,,,,,North Platte
+2022,Jackson,1508,,,,,,North Platte
+2023,Jackson,1523,,,,,,North Platte
+2024,Jackson,1528,,,,,,North Platte
+2025,Jackson,1535,,,,,,North Platte
+2026,Jackson,1547,,,,,,North Platte
+2027,Jackson,1553,,,,,,North Platte
+2028,Jackson,1565,,,,,,North Platte
+2029,Jackson,1570,,,,,,North Platte
+2030,Jackson,1579,,,,,,North Platte
+2031,Jackson,1588,,,,,,North Platte
+2032,Jackson,1599,,,,,,North Platte
+2033,Jackson,1607,,,,,,North Platte
+2034,Jackson,1608,,,,,,North Platte
+2035,Jackson,1630,,,,,,North Platte
+2036,Jackson,1636,,,,,,North Platte
+2037,Jackson,1649,,,,,,North Platte
+2038,Jackson,1665,,,,,,North Platte
+2039,Jackson,1671,,,,,,North Platte
+2040,Jackson,1673,,,,,,North Platte
+2041,Jackson,1675,,,,,,North Platte
+2042,Jackson,1677,,,,,,North Platte
+2043,Jackson,1678,,,,,,North Platte
+2044,Jackson,1680,,,,,,North Platte
+2045,Jackson,1682,,,,,,North Platte
+2046,Jackson,1684,,,,,,North Platte
+2047,Jackson,1686,,,,,,North Platte
+2048,Jackson,1688,,,,,,North Platte
+2049,Jackson,1690,,,,,,North Platte
+2050,Jackson,1692,,,,,,North Platte
+1995,Jefferson,491314,,,,,43,Metro
+1996,Jefferson,498046,,,,,,Metro
+1997,Jefferson,504234,,,,,,Metro
+1998,Jefferson,512483,,,,,,Metro
+1999,Jefferson,520810,,,,,,Metro
+2000,Jefferson,526716,45685,80.2,,,,Metro
+2001,Jefferson,528067,45685,80.2,,,,Metro
+2002,Jefferson,527539,45685,80.2,,,,Metro
+2003,Jefferson,525429,45685,80.2,,,,Metro
+2004,Jefferson,524876,45685,80.2,,,,Metro
+2005,Jefferson,523517,45685,80.2,,,,Metro
+2006,Jefferson,524579,45685,79.59,,,,Metro
+2007,Jefferson,527120,45685,79.59,,,,Metro
+2008,Jefferson,530565,44755,74.25,,,,Metro
+2009,Jefferson,532606,44755,74.4,,,,Metro
+2010,Jefferson,535651,44755,74.4,,,,Metro
+2011,Jefferson,539680,44755,74.4,,,,Metro
+2012,Jefferson,545739,44755,74.4,,,,Metro
+2013,Jefferson,551281,36812,62.11,,,,Metro
+2014,Jefferson,558532,37278,62.53,,,,Metro
+2015,Jefferson,565106,37281,62.32,-17.9,-28.7,,Metro
+2016,Jefferson,571459,,,,,,Metro
+2017,Jefferson,577590,,,,,,Metro
+2018,Jefferson,583699,,,,,,Metro
+2019,Jefferson,589786,,,,,,Metro
+2020,Jefferson,595849,,,,,,Metro
+2021,Jefferson,601889,,,,,,Metro
+2022,Jefferson,607902,,,,,,Metro
+2023,Jefferson,613884,,,,,,Metro
+2024,Jefferson,619826,,,,,,Metro
+2025,Jefferson,625516,,,,,,Metro
+2026,Jefferson,631138,,,,,,Metro
+2027,Jefferson,636677,,,,,,Metro
+2028,Jefferson,642115,,,,,,Metro
+2029,Jefferson,647335,,,,,,Metro
+2030,Jefferson,652326,,,,,,Metro
+2031,Jefferson,657079,,,,,,Metro
+2032,Jefferson,661588,,,,,,Metro
+2033,Jefferson,665952,,,,,,Metro
+2034,Jefferson,670170,,,,,,Metro
+2035,Jefferson,674241,,,,,,Metro
+2036,Jefferson,678164,,,,,,Metro
+2037,Jefferson,680425,,,,,,Metro
+2038,Jefferson,682532,,,,,,Metro
+2039,Jefferson,684494,,,,,,Metro
+2040,Jefferson,686319,,,,,,Metro
+2041,Jefferson,688021,,,,,,Metro
+2042,Jefferson,689613,,,,,,Metro
+2043,Jefferson,691109,,,,,,Metro
+2044,Jefferson,692525,,,,,,Metro
+2045,Jefferson,693880,,,,,,Metro
+2046,Jefferson,695189,,,,,,Metro
+2047,Jefferson,696462,,,,,,Metro
+2048,Jefferson,697706,,,,,,Metro
+2049,Jefferson,698938,,,,,,Metro
+2050,Jefferson,700173,,,,,,Metro
+1995,Kiowa,1643,,,,,15,Arkansas
+1996,Kiowa,1662,,,,,,Arkansas
+1997,Kiowa,1661,,,,,,Arkansas
+1998,Kiowa,1644,,,,,,Arkansas
+1999,Kiowa,1632,,,,,,Arkansas
+2000,Kiowa,1612,255,277.62,,,,Arkansas
+2001,Kiowa,1606,255,277.62,,,,Arkansas
+2002,Kiowa,1566,255,277.62,,,,Arkansas
+2003,Kiowa,1548,255,277.62,,,,Arkansas
+2004,Kiowa,1523,255,277.62,,,,Arkansas
+2005,Kiowa,1543,255,277.62,,,,Arkansas
+2006,Kiowa,1514,255,277.62,,,,Arkansas
+2007,Kiowa,1471,255,277.62,,,,Arkansas
+2008,Kiowa,1432,255,277.62,,,,Arkansas
+2009,Kiowa,1392,255,325.21,,,,Arkansas
+2010,Kiowa,1399,255,325.21,,,,Arkansas
+2011,Kiowa,1442,255,325.21,,,,Arkansas
+2012,Kiowa,1423,255,325.21,,,,Arkansas
+2013,Kiowa,1402,255,325.21,,,,Arkansas
+2014,Kiowa,1385,255,325.21,,,,Arkansas
+2015,Kiowa,1393,255,325.21,47.6,14.6,,Arkansas
+2016,Kiowa,1400,,,,,,Arkansas
+2017,Kiowa,1409,,,,,,Arkansas
+2018,Kiowa,1424,,,,,,Arkansas
+2019,Kiowa,1434,,,,,,Arkansas
+2020,Kiowa,1443,,,,,,Arkansas
+2021,Kiowa,1458,,,,,,Arkansas
+2022,Kiowa,1472,,,,,,Arkansas
+2023,Kiowa,1481,,,,,,Arkansas
+2024,Kiowa,1492,,,,,,Arkansas
+2025,Kiowa,1502,,,,,,Arkansas
+2026,Kiowa,1518,,,,,,Arkansas
+2027,Kiowa,1534,,,,,,Arkansas
+2028,Kiowa,1546,,,,,,Arkansas
+2029,Kiowa,1560,,,,,,Arkansas
+2030,Kiowa,1576,,,,,,Arkansas
+2031,Kiowa,1592,,,,,,Arkansas
+2032,Kiowa,1610,,,,,,Arkansas
+2033,Kiowa,1628,,,,,,Arkansas
+2034,Kiowa,1644,,,,,,Arkansas
+2035,Kiowa,1654,,,,,,Arkansas
+2036,Kiowa,1667,,,,,,Arkansas
+2037,Kiowa,1681,,,,,,Arkansas
+2038,Kiowa,1696,,,,,,Arkansas
+2039,Kiowa,1719,,,,,,Arkansas
+2040,Kiowa,1734,,,,,,Arkansas
+2041,Kiowa,1749,,,,,,Arkansas
+2042,Kiowa,1764,,,,,,Arkansas
+2043,Kiowa,1779,,,,,,Arkansas
+2044,Kiowa,1794,,,,,,Arkansas
+2045,Kiowa,1809,,,,,,Arkansas
+2046,Kiowa,1824,,,,,,Arkansas
+2047,Kiowa,1839,,,,,,Arkansas
+2048,Kiowa,1854,,,,,,Arkansas
+2049,Kiowa,1869,,,,,,Arkansas
+2050,Kiowa,1884,,,,,,Arkansas
+1995,Kit Carson,7413,,,,,40,South Platte
+1996,Kit Carson,7486,,,,,,South Platte
+1997,Kit Carson,7599,,,,,,South Platte
+1998,Kit Carson,7754,,,,,,South Platte
+1999,Kit Carson,7901,,,,,,South Platte
+2000,Kit Carson,7975,1528,321.95,,,,South Platte
+2001,Kit Carson,8073,1528,321.95,,,,South Platte
+2002,Kit Carson,8289,1528,321.95,,,,South Platte
+2003,Kit Carson,8185,1528,321.95,,,,South Platte
+2004,Kit Carson,8257,1528,321.95,,,,South Platte
+2005,Kit Carson,7998,1528,321.95,,,,South Platte
+2006,Kit Carson,7946,1528,334.09,,,,South Platte
+2007,Kit Carson,7835,1528,334.09,,,,South Platte
+2008,Kit Carson,8042,1528,334.09,,,,South Platte
+2009,Kit Carson,8269,1528,334.09,,,,South Platte
+2010,Kit Carson,8267,1528,334.09,,,,South Platte
+2011,Kit Carson,8181,1528,334.09,,,,South Platte
+2012,Kit Carson,8083,1528,334.09,,,,South Platte
+2013,Kit Carson,8022,1528,334.09,,,,South Platte
+2014,Kit Carson,7818,1528,334.09,,,,South Platte
+2015,Kit Carson,7888,1528,334.09,12.1,3.6,,South Platte
+2016,Kit Carson,7964,,,,,,South Platte
+2017,Kit Carson,8034,,,,,,South Platte
+2018,Kit Carson,8091,,,,,,South Platte
+2019,Kit Carson,8147,,,,,,South Platte
+2020,Kit Carson,8208,,,,,,South Platte
+2021,Kit Carson,8276,,,,,,South Platte
+2022,Kit Carson,8344,,,,,,South Platte
+2023,Kit Carson,8418,,,,,,South Platte
+2024,Kit Carson,8484,,,,,,South Platte
+2025,Kit Carson,8557,,,,,,South Platte
+2026,Kit Carson,8631,,,,,,South Platte
+2027,Kit Carson,8700,,,,,,South Platte
+2028,Kit Carson,8770,,,,,,South Platte
+2029,Kit Carson,8840,,,,,,South Platte
+2030,Kit Carson,8912,,,,,,South Platte
+2031,Kit Carson,8983,,,,,,South Platte
+2032,Kit Carson,9054,,,,,,South Platte
+2033,Kit Carson,9124,,,,,,South Platte
+2034,Kit Carson,9195,,,,,,South Platte
+2035,Kit Carson,9266,,,,,,South Platte
+2036,Kit Carson,9338,,,,,,South Platte
+2037,Kit Carson,9411,,,,,,South Platte
+2038,Kit Carson,9484,,,,,,South Platte
+2039,Kit Carson,9558,,,,,,South Platte
+2040,Kit Carson,9631,,,,,,South Platte
+2041,Kit Carson,9706,,,,,,South Platte
+2042,Kit Carson,9780,,,,,,South Platte
+2043,Kit Carson,9856,,,,,,South Platte
+2044,Kit Carson,9931,,,,,,South Platte
+2045,Kit Carson,10008,,,,,,South Platte
+2046,Kit Carson,10085,,,,,,South Platte
+2047,Kit Carson,10164,,,,,,South Platte
+2048,Kit Carson,10243,,,,,,South Platte
+2049,Kit Carson,10324,,,,,,South Platte
+2050,Kit Carson,10405,,,,,,South Platte
+1995,La Plata,38760,,,,,147,Southwest
+1996,La Plata,39704,,,,,,Southwest
+1997,La Plata,40318,,,,,,Southwest
+1998,La Plata,41173,,,,,,Southwest
+1999,La Plata,42757,,,,,,Southwest
+2000,La Plata,44578,5032,201.46,,,,Southwest
+2001,La Plata,45645,5032,201.46,,,,Southwest
+2002,La Plata,46089,5032,201.46,,,,Southwest
+2003,La Plata,46447,5032,201.46,,,,Southwest
+2004,La Plata,46926,5032,201.46,,,,Southwest
+2005,La Plata,47713,5032,201.46,,,,Southwest
+2006,La Plata,48408,5032,226.45,,,,Southwest
+2007,La Plata,49146,5032,226.45,,,,Southwest
+2008,La Plata,50073,4264,158.83,,,,Southwest
+2009,La Plata,50759,4264,158.83,,,,Southwest
+2010,La Plata,51441,4264,158.83,,,,Southwest
+2011,La Plata,51886,4264,158.83,,,,Southwest
+2012,La Plata,52444,4264,158.83,,,,Southwest
+2013,La Plata,53407,4892,198.57,,,,Southwest
+2014,La Plata,54014,314,12.75,,,,Southwest
+2015,La Plata,55135,314,12.75,-188.7,-1480.6,,Southwest
+2016,La Plata,56291,,,,,,Southwest
+2017,La Plata,57603,,,,,,Southwest
+2018,La Plata,58979,,,,,,Southwest
+2019,La Plata,60410,,,,,,Southwest
+2020,La Plata,61785,,,,,,Southwest
+2021,La Plata,63158,,,,,,Southwest
+2022,La Plata,64518,,,,,,Southwest
+2023,La Plata,65884,,,,,,Southwest
+2024,La Plata,67225,,,,,,Southwest
+2025,La Plata,68573,,,,,,Southwest
+2026,La Plata,69837,,,,,,Southwest
+2027,La Plata,71097,,,,,,Southwest
+2028,La Plata,72317,,,,,,Southwest
+2029,La Plata,73530,,,,,,Southwest
+2030,La Plata,74728,,,,,,Southwest
+2031,La Plata,75915,,,,,,Southwest
+2032,La Plata,77068,,,,,,Southwest
+2033,La Plata,78213,,,,,,Southwest
+2034,La Plata,79350,,,,,,Southwest
+2035,La Plata,80475,,,,,,Southwest
+2036,La Plata,81565,,,,,,Southwest
+2037,La Plata,82641,,,,,,Southwest
+2038,La Plata,83692,,,,,,Southwest
+2039,La Plata,84744,,,,,,Southwest
+2040,La Plata,85770,,,,,,Southwest
+2041,La Plata,86785,,,,,,Southwest
+2042,La Plata,87790,,,,,,Southwest
+2043,La Plata,88785,,,,,,Southwest
+2044,La Plata,89772,,,,,,Southwest
+2045,La Plata,90752,,,,,,Southwest
+2046,La Plata,91726,,,,,,Southwest
+2047,La Plata,92695,,,,,,Southwest
+2048,La Plata,93659,,,,,,Southwest
+2049,La Plata,94619,,,,,,Southwest
+2050,La Plata,95578,,,,,,Southwest
+1995,Larimer,221622,,,,,145,South Platte
+1996,Larimer,227248,,,,,,South Platte
+1997,Larimer,232796,,,,,,South Platte
+1998,Larimer,239080,,,,,,South Platte
+1999,Larimer,246156,,,,,,South Platte
+2000,Larimer,253087,67351,243.45,,,,South Platte
+2001,Larimer,260911,67277,236.8,,,,South Platte
+2002,Larimer,266171,67710,230.49,,,,South Platte
+2003,Larimer,268146,65132,216.65,,,,South Platte
+2004,Larimer,273269,64986,213.79,,,,South Platte
+2005,Larimer,275873,65144,210.94,,,,South Platte
+2006,Larimer,281027,69667,208.66,,,,South Platte
+2007,Larimer,286754,69667,208.66,,,,South Platte
+2008,Larimer,292394,59592,173.85,,,,South Platte
+2009,Larimer,297502,59592,173.85,,,,South Platte
+2010,Larimer,300532,59592,173.85,,,,South Platte
+2011,Larimer,305066,59592,173.85,,,,South Platte
+2012,Larimer,310611,59592,173.85,,,,South Platte
+2013,Larimer,316154,78621,223.55,,,,South Platte
+2014,Larimer,323863,61040,172.74,,,,South Platte
+2015,Larimer,329559,61642,172.4,-71.1,-41.2,,South Platte
+2016,Larimer,335427,,,,,,South Platte
+2017,Larimer,341680,,,,,,South Platte
+2018,Larimer,347931,,,,,,South Platte
+2019,Larimer,354178,,,,,,South Platte
+2020,Larimer,360434,,,,,,South Platte
+2021,Larimer,366933,,,,,,South Platte
+2022,Larimer,373652,,,,,,South Platte
+2023,Larimer,380303,,,,,,South Platte
+2024,Larimer,386925,,,,,,South Platte
+2025,Larimer,393517,,,,,,South Platte
+2026,Larimer,400081,,,,,,South Platte
+2027,Larimer,406544,,,,,,South Platte
+2028,Larimer,412690,,,,,,South Platte
+2029,Larimer,418807,,,,,,South Platte
+2030,Larimer,424882,,,,,,South Platte
+2031,Larimer,430911,,,,,,South Platte
+2032,Larimer,436910,,,,,,South Platte
+2033,Larimer,442854,,,,,,South Platte
+2034,Larimer,448750,,,,,,South Platte
+2035,Larimer,454593,,,,,,South Platte
+2036,Larimer,460379,,,,,,South Platte
+2037,Larimer,466123,,,,,,South Platte
+2038,Larimer,471822,,,,,,South Platte
+2039,Larimer,477487,,,,,,South Platte
+2040,Larimer,483322,,,,,,South Platte
+2041,Larimer,489332,,,,,,South Platte
+2042,Larimer,495303,,,,,,South Platte
+2043,Larimer,501237,,,,,,South Platte
+2044,Larimer,507134,,,,,,South Platte
+2045,Larimer,513003,,,,,,South Platte
+2046,Larimer,518847,,,,,,South Platte
+2047,Larimer,524671,,,,,,South Platte
+2048,Larimer,530474,,,,,,South Platte
+2049,Larimer,536261,,,,,,South Platte
+2050,Larimer,542039,,,,,,South Platte
+1995,Las Animas,14909,,,,,51,Arkansas
+1996,Las Animas,14967,,,,,,Arkansas
+1997,Las Animas,15045,,,,,,Arkansas
+1998,Las Animas,15054,,,,,,Arkansas
+1999,Las Animas,15142,,,,,,Arkansas
+2000,Las Animas,15286,3041,278.78,,,,Arkansas
+2001,Las Animas,15310,3041,278.78,,,,Arkansas
+2002,Las Animas,15659,3041,278.78,,,,Arkansas
+2003,Las Animas,16089,3041,278.78,,,,Arkansas
+2004,Las Animas,15700,3041,278.78,,,,Arkansas
+2005,Las Animas,15570,3041,278.78,,,,Arkansas
+2006,Las Animas,15552,3041,219.2,,,,Arkansas
+2007,Las Animas,15525,3041,219.2,,,,Arkansas
+2008,Las Animas,15486,3041,219.2,,,,Arkansas
+2009,Las Animas,15477,3041,219.2,,,,Arkansas
+2010,Las Animas,15407,3041,219.2,,,,Arkansas
+2011,Las Animas,15042,3041,219.2,,,,Arkansas
+2012,Las Animas,14965,3041,219.2,,,,Arkansas
+2013,Las Animas,14374,3041,219.2,,,,Arkansas
+2014,Las Animas,14060,2217,185.67,,,,Arkansas
+2015,Las Animas,14258,2217,185.67,-93.1,-50.2,,Arkansas
+2016,Las Animas,14515,,,,,,Arkansas
+2017,Las Animas,14712,,,,,,Arkansas
+2018,Las Animas,14960,,,,,,Arkansas
+2019,Las Animas,15209,,,,,,Arkansas
+2020,Las Animas,15508,,,,,,Arkansas
+2021,Las Animas,15807,,,,,,Arkansas
+2022,Las Animas,16104,,,,,,Arkansas
+2023,Las Animas,16401,,,,,,Arkansas
+2024,Las Animas,16722,,,,,,Arkansas
+2025,Las Animas,17041,,,,,,Arkansas
+2026,Las Animas,17368,,,,,,Arkansas
+2027,Las Animas,17710,,,,,,Arkansas
+2028,Las Animas,18050,,,,,,Arkansas
+2029,Las Animas,18365,,,,,,Arkansas
+2030,Las Animas,18675,,,,,,Arkansas
+2031,Las Animas,18970,,,,,,Arkansas
+2032,Las Animas,19242,,,,,,Arkansas
+2033,Las Animas,19460,,,,,,Arkansas
+2034,Las Animas,19648,,,,,,Arkansas
+2035,Las Animas,19834,,,,,,Arkansas
+2036,Las Animas,20016,,,,,,Arkansas
+2037,Las Animas,20195,,,,,,Arkansas
+2038,Las Animas,20373,,,,,,Arkansas
+2039,Las Animas,20549,,,,,,Arkansas
+2040,Las Animas,20723,,,,,,Arkansas
+2041,Las Animas,20897,,,,,,Arkansas
+2042,Las Animas,21071,,,,,,Arkansas
+2043,Las Animas,21244,,,,,,Arkansas
+2044,Las Animas,21417,,,,,,Arkansas
+2045,Las Animas,21591,,,,,,Arkansas
+2046,Las Animas,21765,,,,,,Arkansas
+2047,Las Animas,21941,,,,,,Arkansas
+2048,Las Animas,22117,,,,,,Arkansas
+2049,Las Animas,22295,,,,,,Arkansas
+2050,Las Animas,22474,,,,,,Arkansas
+1995,Lincoln,5983,,,,,41,Arkansas
+1996,Lincoln,6112,,,,,,Arkansas
+1997,Lincoln,6094,,,,,,Arkansas
+1998,Lincoln,6107,,,,,,Arkansas
+1999,Lincoln,6096,,,,,,Arkansas
+2000,Lincoln,6164,178,39.38,,,,Arkansas
+2001,Lincoln,6076,178,39.38,,,,Arkansas
+2002,Lincoln,6047,178,39.38,,,,Arkansas
+2003,Lincoln,6052,178,39.38,,,,Arkansas
+2004,Lincoln,5907,178,39.38,,,,Arkansas
+2005,Lincoln,5787,178,39.38,,,,Arkansas
+2006,Lincoln,5665,178,40.24,,,,Arkansas
+2007,Lincoln,5571,178,40.24,,,,Arkansas
+2008,Lincoln,5522,178,40.24,,,,Arkansas
+2009,Lincoln,5463,178,40.24,,,,Arkansas
+2010,Lincoln,5474,178,40.24,,,,Arkansas
+2011,Lincoln,5406,178,40.24,,,,Arkansas
+2012,Lincoln,5447,178,40.24,,,,Arkansas
+2013,Lincoln,5424,178,40.24,,,,Arkansas
+2014,Lincoln,5508,178,40.24,,,,Arkansas
+2015,Lincoln,5533,178,40.24,0.9,2.1,,Arkansas
+2016,Lincoln,5585,,,,,,Arkansas
+2017,Lincoln,5649,,,,,,Arkansas
+2018,Lincoln,5713,,,,,,Arkansas
+2019,Lincoln,5784,,,,,,Arkansas
+2020,Lincoln,5869,,,,,,Arkansas
+2021,Lincoln,5949,,,,,,Arkansas
+2022,Lincoln,6041,,,,,,Arkansas
+2023,Lincoln,6118,,,,,,Arkansas
+2024,Lincoln,6189,,,,,,Arkansas
+2025,Lincoln,6266,,,,,,Arkansas
+2026,Lincoln,6353,,,,,,Arkansas
+2027,Lincoln,6443,,,,,,Arkansas
+2028,Lincoln,6523,,,,,,Arkansas
+2029,Lincoln,6614,,,,,,Arkansas
+2030,Lincoln,6699,,,,,,Arkansas
+2031,Lincoln,6787,,,,,,Arkansas
+2032,Lincoln,6877,,,,,,Arkansas
+2033,Lincoln,6964,,,,,,Arkansas
+2034,Lincoln,7046,,,,,,Arkansas
+2035,Lincoln,7148,,,,,,Arkansas
+2036,Lincoln,7242,,,,,,Arkansas
+2037,Lincoln,7331,,,,,,Arkansas
+2038,Lincoln,7421,,,,,,Arkansas
+2039,Lincoln,7517,,,,,,Arkansas
+2040,Lincoln,7604,,,,,,Arkansas
+2041,Lincoln,7690,,,,,,Arkansas
+2042,Lincoln,7775,,,,,,Arkansas
+2043,Lincoln,7861,,,,,,Arkansas
+2044,Lincoln,7946,,,,,,Arkansas
+2045,Lincoln,8030,,,,,,Arkansas
+2046,Lincoln,8114,,,,,,Arkansas
+2047,Lincoln,8198,,,,,,Arkansas
+2048,Lincoln,8280,,,,,,Arkansas
+2049,Lincoln,8363,,,,,,Arkansas
+2050,Lincoln,8445,,,,,,Arkansas
+1995,Logan,19368,,,,,67,South Platte
+1996,Logan,19661,,,,,,South Platte
+1997,Logan,20008,,,,,,South Platte
+1998,Logan,20003,,,,,,South Platte
+1999,Logan,20289,,,,,,South Platte
+2000,Logan,20656,4500,313.78,,,,South Platte
+2001,Logan,22354,4500,313.78,,,,South Platte
+2002,Logan,22095,4500,313.78,,,,South Platte
+2003,Logan,22371,4500,313.78,,,,South Platte
+2004,Logan,22181,4500,313.78,,,,South Platte
+2005,Logan,22088,4500,313.78,,,,South Platte
+2006,Logan,22267,4500,319.11,,,,South Platte
+2007,Logan,22403,4500,319.11,,,,South Platte
+2008,Logan,22324,4500,319.11,,,,South Platte
+2009,Logan,22517,4500,319.11,,,,South Platte
+2010,Logan,22293,4500,319.11,,,,South Platte
+2011,Logan,22263,4500,319.11,,,,South Platte
+2012,Logan,22028,4500,319.11,,,,South Platte
+2013,Logan,21836,4500,319.11,,,,South Platte
+2014,Logan,22088,4500,319.11,,,,South Platte
+2015,Logan,22201,4500,319.11,5.3,1.7,,South Platte
+2016,Logan,22369,,,,,,South Platte
+2017,Logan,22566,,,,,,South Platte
+2018,Logan,22741,,,,,,South Platte
+2019,Logan,22968,,,,,,South Platte
+2020,Logan,23247,,,,,,South Platte
+2021,Logan,23529,,,,,,South Platte
+2022,Logan,23811,,,,,,South Platte
+2023,Logan,24095,,,,,,South Platte
+2024,Logan,24379,,,,,,South Platte
+2025,Logan,24663,,,,,,South Platte
+2026,Logan,24947,,,,,,South Platte
+2027,Logan,25229,,,,,,South Platte
+2028,Logan,25560,,,,,,South Platte
+2029,Logan,25890,,,,,,South Platte
+2030,Logan,26213,,,,,,South Platte
+2031,Logan,26541,,,,,,South Platte
+2032,Logan,26864,,,,,,South Platte
+2033,Logan,27184,,,,,,South Platte
+2034,Logan,27496,,,,,,South Platte
+2035,Logan,27807,,,,,,South Platte
+2036,Logan,28116,,,,,,South Platte
+2037,Logan,28431,,,,,,South Platte
+2038,Logan,28748,,,,,,South Platte
+2039,Logan,29053,,,,,,South Platte
+2040,Logan,29350,,,,,,South Platte
+2041,Logan,29646,,,,,,South Platte
+2042,Logan,29942,,,,,,South Platte
+2043,Logan,30237,,,,,,South Platte
+2044,Logan,30531,,,,,,South Platte
+2045,Logan,30823,,,,,,South Platte
+2046,Logan,31115,,,,,,South Platte
+2047,Logan,31405,,,,,,South Platte
+2048,Logan,31695,,,,,,South Platte
+2049,Logan,31983,,,,,,South Platte
+2050,Logan,32271,,,,,,South Platte
+1995,Mesa,105406,,,,,127,Colorado
+1996,Mesa,107529,,,,,,Colorado
+1997,Mesa,109762,,,,,,Colorado
+1998,Mesa,112327,,,,,,Colorado
+1999,Mesa,114573,,,,,,Colorado
+2000,Mesa,117649,20345,136.07,,,,Colorado
+2001,Mesa,119864,20345,136.07,,,,Colorado
+2002,Mesa,121787,20345,136.07,,,,Colorado
+2003,Mesa,124152,20345,136.07,,,,Colorado
+2004,Mesa,126626,20345,136.07,,,,Colorado
+2005,Mesa,128999,20345,136.07,,,,Colorado
+2006,Mesa,133128,21082,122.7,,,,Colorado
+2007,Mesa,137390,21171,121.12,,,,Colorado
+2008,Mesa,140680,20841,126.61,,,,Colorado
+2009,Mesa,144795,20841,126.61,,,,Colorado
+2010,Mesa,147112,20841,126.61,,,,Colorado
+2011,Mesa,148061,20841,126.61,,,,Colorado
+2012,Mesa,148286,20841,126.61,,,,Colorado
+2013,Mesa,148293,20114,149.22,,,,Colorado
+2014,Mesa,148348,20171,121.82,,,,Colorado
+2015,Mesa,150232,20001,120.8,-15.3,-12.6,,Colorado
+2016,Mesa,152357,,,,,,Colorado
+2017,Mesa,154569,,,,,,Colorado
+2018,Mesa,156969,,,,,,Colorado
+2019,Mesa,159457,,,,,,Colorado
+2020,Mesa,162034,,,,,,Colorado
+2021,Mesa,164701,,,,,,Colorado
+2022,Mesa,167458,,,,,,Colorado
+2023,Mesa,170207,,,,,,Colorado
+2024,Mesa,172947,,,,,,Colorado
+2025,Mesa,175675,,,,,,Colorado
+2026,Mesa,178391,,,,,,Colorado
+2027,Mesa,181101,,,,,,Colorado
+2028,Mesa,183800,,,,,,Colorado
+2029,Mesa,186487,,,,,,Colorado
+2030,Mesa,189162,,,,,,Colorado
+2031,Mesa,191821,,,,,,Colorado
+2032,Mesa,194464,,,,,,Colorado
+2033,Mesa,197088,,,,,,Colorado
+2034,Mesa,199687,,,,,,Colorado
+2035,Mesa,202261,,,,,,Colorado
+2036,Mesa,204908,,,,,,Colorado
+2037,Mesa,207531,,,,,,Colorado
+2038,Mesa,210126,,,,,,Colorado
+2039,Mesa,212695,,,,,,Colorado
+2040,Mesa,215237,,,,,,Colorado
+2041,Mesa,217753,,,,,,Colorado
+2042,Mesa,220244,,,,,,Colorado
+2043,Mesa,222713,,,,,,Colorado
+2044,Mesa,225162,,,,,,Colorado
+2045,Mesa,227593,,,,,,Colorado
+2046,Mesa,230012,,,,,,Colorado
+2047,Mesa,232422,,,,,,Colorado
+2048,Mesa,234823,,,,,,Colorado
+2049,Mesa,237221,,,,,,Colorado
+2050,Mesa,239618,,,,,,Colorado
+1995,Moffat,12187,,,,,26,Yampa
+1996,Moffat,12291,,,,,,Yampa
+1997,Moffat,12572,,,,,,Yampa
+1998,Moffat,12812,,,,,,Yampa
+1999,Moffat,13025,,,,,,Yampa
+2000,Moffat,13182,2048,192.29,,,,Yampa
+2001,Moffat,13089,2048,192.29,,,,Yampa
+2002,Moffat,13134,2048,192.29,,,,Yampa
+2003,Moffat,13054,2048,192.29,,,,Yampa
+2004,Moffat,13063,2048,192.29,,,,Yampa
+2005,Moffat,12965,2048,192.29,,,,Yampa
+2006,Moffat,13102,2048,192.8,,,,Yampa
+2007,Moffat,13270,2048,192.8,,,,Yampa
+2008,Moffat,13446,2198,194.61,,,,Yampa
+2009,Moffat,13544,2198,194.61,,,,Yampa
+2010,Moffat,13806,2198,194.61,,,,Yampa
+2011,Moffat,13407,2198,194.61,,,,Yampa
+2012,Moffat,13147,2198,194.61,,,,Yampa
+2013,Moffat,13098,2198,194.61,,,,Yampa
+2014,Moffat,12870,2198,194.61,,,,Yampa
+2015,Moffat,12874,2198,194.61,2.3,1.2,,Yampa
+2016,Moffat,12875,,,,,,Yampa
+2017,Moffat,12874,,,,,,Yampa
+2018,Moffat,12897,,,,,,Yampa
+2019,Moffat,12942,,,,,,Yampa
+2020,Moffat,12987,,,,,,Yampa
+2021,Moffat,13034,,,,,,Yampa
+2022,Moffat,13079,,,,,,Yampa
+2023,Moffat,13150,,,,,,Yampa
+2024,Moffat,13245,,,,,,Yampa
+2025,Moffat,13366,,,,,,Yampa
+2026,Moffat,13512,,,,,,Yampa
+2027,Moffat,13633,,,,,,Yampa
+2028,Moffat,13754,,,,,,Yampa
+2029,Moffat,13850,,,,,,Yampa
+2030,Moffat,13947,,,,,,Yampa
+2031,Moffat,14044,,,,,,Yampa
+2032,Moffat,14140,,,,,,Yampa
+2033,Moffat,14237,,,,,,Yampa
+2034,Moffat,14333,,,,,,Yampa
+2035,Moffat,14403,,,,,,Yampa
+2036,Moffat,14472,,,,,,Yampa
+2037,Moffat,14540,,,,,,Yampa
+2038,Moffat,14606,,,,,,Yampa
+2039,Moffat,14670,,,,,,Yampa
+2040,Moffat,14733,,,,,,Yampa
+2041,Moffat,14795,,,,,,Yampa
+2042,Moffat,14856,,,,,,Yampa
+2043,Moffat,14915,,,,,,Yampa
+2044,Moffat,14974,,,,,,Yampa
+2045,Moffat,15033,,,,,,Yampa
+2046,Moffat,15091,,,,,,Yampa
+2047,Moffat,15150,,,,,,Yampa
+2048,Moffat,15208,,,,,,Yampa
+2049,Moffat,15267,,,,,,Yampa
+2050,Moffat,15325,,,,,,Yampa
+1995,Montezuma,22159,,,,,119,Southwest
+1996,Montezuma,22650,,,,,,Southwest
+1997,Montezuma,22973,,,,,,Southwest
+1998,Montezuma,23117,,,,,,Southwest
+1999,Montezuma,23524,,,,,,Southwest
+2000,Montezuma,23852,3851,163.41,,,,Southwest
+2001,Montezuma,23873,3851,163.41,,,,Southwest
+2002,Montezuma,24109,3851,163.41,,,,Southwest
+2003,Montezuma,24378,3851,163.41,,,,Southwest
+2004,Montezuma,24607,3851,163.41,,,,Southwest
+2005,Montezuma,24603,3851,163.41,,,,Southwest
+2006,Montezuma,25017,3851,173.29,,,,Southwest
+2007,Montezuma,25177,3851,173.29,,,,Southwest
+2008,Montezuma,25200,3851,156.84,,,,Southwest
+2009,Montezuma,25365,3851,156.84,,,,Southwest
+2010,Montezuma,25532,3851,156.84,,,,Southwest
+2011,Montezuma,25453,3851,156.84,,,,Southwest
+2012,Montezuma,25441,3851,156.84,,,,Southwest
+2013,Montezuma,25669,3470,143.21,,,,Southwest
+2014,Montezuma,25812,3542,146.18,,,,Southwest
+2015,Montezuma,26385,3542,146.18,-17.2,-11.8,,Southwest
+2016,Montezuma,26948,,,,,,Southwest
+2017,Montezuma,27532,,,,,,Southwest
+2018,Montezuma,28108,,,,,,Southwest
+2019,Montezuma,28693,,,,,,Southwest
+2020,Montezuma,29293,,,,,,Southwest
+2021,Montezuma,29943,,,,,,Southwest
+2022,Montezuma,30590,,,,,,Southwest
+2023,Montezuma,31239,,,,,,Southwest
+2024,Montezuma,31886,,,,,,Southwest
+2025,Montezuma,32544,,,,,,Southwest
+2026,Montezuma,33199,,,,,,Southwest
+2027,Montezuma,33850,,,,,,Southwest
+2028,Montezuma,34500,,,,,,Southwest
+2029,Montezuma,35135,,,,,,Southwest
+2030,Montezuma,35751,,,,,,Southwest
+2031,Montezuma,36372,,,,,,Southwest
+2032,Montezuma,36995,,,,,,Southwest
+2033,Montezuma,37622,,,,,,Southwest
+2034,Montezuma,38246,,,,,,Southwest
+2035,Montezuma,38872,,,,,,Southwest
+2036,Montezuma,39490,,,,,,Southwest
+2037,Montezuma,40116,,,,,,Southwest
+2038,Montezuma,40747,,,,,,Southwest
+2039,Montezuma,41372,,,,,,Southwest
+2040,Montezuma,42000,,,,,,Southwest
+2041,Montezuma,42629,,,,,,Southwest
+2042,Montezuma,43261,,,,,,Southwest
+2043,Montezuma,43896,,,,,,Southwest
+2044,Montezuma,44535,,,,,,Southwest
+2045,Montezuma,45178,,,,,,Southwest
+2046,Montezuma,45825,,,,,,Southwest
+2047,Montezuma,46478,,,,,,Southwest
+2048,Montezuma,47135,,,,,,Southwest
+2049,Montezuma,47798,,,,,,Southwest
+2050,Montezuma,48468,,,,,,Southwest
+1995,Montrose,29670,,,,,178,Gunnison
+1996,Montrose,30487,,,,,,Gunnison
+1997,Montrose,31252,,,,,,Gunnison
+1998,Montrose,31837,,,,,,Gunnison
+1999,Montrose,32748,,,,,,Gunnison
+2000,Montrose,33579,7974,277.83,,,,Gunnison
+2001,Montrose,34442,7974,277.83,,,,Gunnison
+2002,Montrose,34926,7974,277.83,,,,Gunnison
+2003,Montrose,35640,7974,277.83,,,,Gunnison
+2004,Montrose,36131,7974,277.83,,,,Gunnison
+2005,Montrose,36997,7974,277.83,,,,Gunnison
+2006,Montrose,37968,7974,277.78,,,,Gunnison
+2007,Montrose,39131,7974,254.24,,,,Gunnison
+2008,Montrose,39952,8046,186.65,,,,Gunnison
+2009,Montrose,40680,8046,186.65,,,,Gunnison
+2010,Montrose,41188,8046,186.65,,,,Gunnison
+2011,Montrose,40923,8046,186.65,,,,Gunnison
+2012,Montrose,40753,8046,186.65,,,,Gunnison
+2013,Montrose,40765,7757,164.53,,,,Gunnison
+2014,Montrose,40904,7193,143.2,,,,Gunnison
+2015,Montrose,41790,7112,141.26,-136.6,-96.7,,Gunnison
+2016,Montrose,42769,,,,,,Gunnison
+2017,Montrose,44150,,,,,,Gunnison
+2018,Montrose,45577,,,,,,Gunnison
+2019,Montrose,47000,,,,,,Gunnison
+2020,Montrose,48422,,,,,,Gunnison
+2021,Montrose,49859,,,,,,Gunnison
+2022,Montrose,51363,,,,,,Gunnison
+2023,Montrose,52844,,,,,,Gunnison
+2024,Montrose,54310,,,,,,Gunnison
+2025,Montrose,55723,,,,,,Gunnison
+2026,Montrose,57137,,,,,,Gunnison
+2027,Montrose,58551,,,,,,Gunnison
+2028,Montrose,59946,,,,,,Gunnison
+2029,Montrose,61338,,,,,,Gunnison
+2030,Montrose,62737,,,,,,Gunnison
+2031,Montrose,64127,,,,,,Gunnison
+2032,Montrose,65290,,,,,,Gunnison
+2033,Montrose,66352,,,,,,Gunnison
+2034,Montrose,67402,,,,,,Gunnison
+2035,Montrose,68439,,,,,,Gunnison
+2036,Montrose,69461,,,,,,Gunnison
+2037,Montrose,70470,,,,,,Gunnison
+2038,Montrose,71467,,,,,,Gunnison
+2039,Montrose,72450,,,,,,Gunnison
+2040,Montrose,73421,,,,,,Gunnison
+2041,Montrose,74381,,,,,,Gunnison
+2042,Montrose,75329,,,,,,Gunnison
+2043,Montrose,76268,,,,,,Gunnison
+2044,Montrose,77197,,,,,,Gunnison
+2045,Montrose,78117,,,,,,Gunnison
+2046,Montrose,79030,,,,,,Gunnison
+2047,Montrose,79935,,,,,,Gunnison
+2048,Montrose,80834,,,,,,Gunnison
+2049,Montrose,81727,,,,,,Gunnison
+2050,Montrose,82615,,,,,,Gunnison
+1995,Morgan,25362,,,,,72,South Platte
+1996,Morgan,26042,,,,,,South Platte
+1997,Morgan,26647,,,,,,South Platte
+1998,Morgan,26662,,,,,,South Platte
+1999,Morgan,26953,,,,,,South Platte
+2000,Morgan,27250,6376,258.75,,,,South Platte
+2001,Morgan,27475,6376,257.54,,,,South Platte
+2002,Morgan,27662,6376,253.53,,,,South Platte
+2003,Morgan,27855,6376,248.36,,,,South Platte
+2004,Morgan,27912,6376,242.39,,,,South Platte
+2005,Morgan,27947,6767,256.14,,,,South Platte
+2006,Morgan,27983,6767,255.57,,,,South Platte
+2007,Morgan,27848,6767,255.57,,,,South Platte
+2008,Morgan,27746,6767,255.57,,,,South Platte
+2009,Morgan,28026,6767,255.57,,,,South Platte
+2010,Morgan,28196,6767,255.57,,,,South Platte
+2011,Morgan,28449,6767,255.57,,,,South Platte
+2012,Morgan,28295,6767,255.57,,,,South Platte
+2013,Morgan,28317,7501,286.31,,,,South Platte
+2014,Morgan,28254,7501,286.31,,,,South Platte
+2015,Morgan,28500,7501,286.31,27.6,9.6,,South Platte
+2016,Morgan,28796,,,,,,South Platte
+2017,Morgan,29118,,,,,,South Platte
+2018,Morgan,29464,,,,,,South Platte
+2019,Morgan,29835,,,,,,South Platte
+2020,Morgan,30232,,,,,,South Platte
+2021,Morgan,30655,,,,,,South Platte
+2022,Morgan,31077,,,,,,South Platte
+2023,Morgan,31498,,,,,,South Platte
+2024,Morgan,31918,,,,,,South Platte
+2025,Morgan,32336,,,,,,South Platte
+2026,Morgan,32755,,,,,,South Platte
+2027,Morgan,33174,,,,,,South Platte
+2028,Morgan,33595,,,,,,South Platte
+2029,Morgan,34016,,,,,,South Platte
+2030,Morgan,34436,,,,,,South Platte
+2031,Morgan,34855,,,,,,South Platte
+2032,Morgan,35273,,,,,,South Platte
+2033,Morgan,35714,,,,,,South Platte
+2034,Morgan,36154,,,,,,South Platte
+2035,Morgan,36619,,,,,,South Platte
+2036,Morgan,37081,,,,,,South Platte
+2037,Morgan,37567,,,,,,South Platte
+2038,Morgan,38052,,,,,,South Platte
+2039,Morgan,38536,,,,,,South Platte
+2040,Morgan,39017,,,,,,South Platte
+2041,Morgan,39496,,,,,,South Platte
+2042,Morgan,39974,,,,,,South Platte
+2043,Morgan,40449,,,,,,South Platte
+2044,Morgan,40921,,,,,,South Platte
+2045,Morgan,41391,,,,,,South Platte
+2046,Morgan,41859,,,,,,South Platte
+2047,Morgan,42325,,,,,,South Platte
+2048,Morgan,42788,,,,,,South Platte
+2049,Morgan,43250,,,,,,South Platte
+2050,Morgan,43710,,,,,,South Platte
+1995,Otero,20695,,,,,-8,Arkansas
+1996,Otero,20747,,,,,,Arkansas
+1997,Otero,20767,,,,,,Arkansas
+1998,Otero,20516,,,,,,Arkansas
+1999,Otero,20399,,,,,,Arkansas
+2000,Otero,20244,5209,241.76,,,,Arkansas
+2001,Otero,19900,5209,241.76,,,,Arkansas
+2002,Otero,19624,5209,241.76,,,,Arkansas
+2003,Otero,19667,5209,241.76,,,,Arkansas
+2004,Otero,19561,5209,241.76,,,,Arkansas
+2005,Otero,19370,5209,241.76,,,,Arkansas
+2006,Otero,19193,5209,270.36,,,,Arkansas
+2007,Otero,18937,5209,270.36,,,,Arkansas
+2008,Otero,18853,5209,270.36,,,,Arkansas
+2009,Otero,18844,3913,190.2,,,,Arkansas
+2010,Otero,18838,3913,190.2,,,,Arkansas
+2011,Otero,18833,3913,190.2,,,,Arkansas
+2012,Otero,18663,3913,190.2,,,,Arkansas
+2013,Otero,18520,3913,190.2,,,,Arkansas
+2014,Otero,18380,3913,190.2,,,,Arkansas
+2015,Otero,18550,3913,190.2,-51.6,-27.1,,Arkansas
+2016,Otero,18711,,,,,,Arkansas
+2017,Otero,18842,,,,,,Arkansas
+2018,Otero,18949,,,,,,Arkansas
+2019,Otero,19054,,,,,,Arkansas
+2020,Otero,19160,,,,,,Arkansas
+2021,Otero,19266,,,,,,Arkansas
+2022,Otero,19354,,,,,,Arkansas
+2023,Otero,19422,,,,,,Arkansas
+2024,Otero,19470,,,,,,Arkansas
+2025,Otero,19497,,,,,,Arkansas
+2026,Otero,19517,,,,,,Arkansas
+2027,Otero,19528,,,,,,Arkansas
+2028,Otero,19510,,,,,,Arkansas
+2029,Otero,19490,,,,,,Arkansas
+2030,Otero,19469,,,,,,Arkansas
+2031,Otero,19448,,,,,,Arkansas
+2032,Otero,19426,,,,,,Arkansas
+2033,Otero,19404,,,,,,Arkansas
+2034,Otero,19382,,,,,,Arkansas
+2035,Otero,19360,,,,,,Arkansas
+2036,Otero,19337,,,,,,Arkansas
+2037,Otero,19315,,,,,,Arkansas
+2038,Otero,19293,,,,,,Arkansas
+2039,Otero,19272,,,,,,Arkansas
+2040,Otero,19250,,,,,,Arkansas
+2041,Otero,19228,,,,,,Arkansas
+2042,Otero,19207,,,,,,Arkansas
+2043,Otero,19187,,,,,,Arkansas
+2044,Otero,19167,,,,,,Arkansas
+2045,Otero,19147,,,,,,Arkansas
+2046,Otero,19127,,,,,,Arkansas
+2047,Otero,19108,,,,,,Arkansas
+2048,Otero,19089,,,,,,Arkansas
+2049,Otero,19070,,,,,,Arkansas
+2050,Otero,19051,,,,,,Arkansas
+1995,Ouray,3085,,,,,91,Gunnison
+1996,Ouray,3252,,,,,,Gunnison
+1997,Ouray,3322,,,,,,Gunnison
+1998,Ouray,3453,,,,,,Gunnison
+1999,Ouray,3618,,,,,,Gunnison
+2000,Ouray,3776,2863,359.83,,,,Gunnison
+2001,Ouray,3809,2863,359.83,,,,Gunnison
+2002,Ouray,3903,2863,359.83,,,,Gunnison
+2003,Ouray,3905,2863,359.83,,,,Gunnison
+2004,Ouray,4023,2863,359.83,,,,Gunnison
+2005,Ouray,4084,2863,359.83,,,,Gunnison
+2006,Ouray,4137,2799,351.79,,,,Gunnison
+2007,Ouray,4274,2799,401.73,,,,Gunnison
+2008,Ouray,4407,2799,151.77,,,,Gunnison
+2009,Ouray,4372,2799,151.77,,,,Gunnison
+2010,Ouray,4446,2799,151.77,,,,Gunnison
+2011,Ouray,4423,2799,151.77,,,,Gunnison
+2012,Ouray,4516,2799,151.77,,,,Gunnison
+2013,Ouray,4547,2510,111.65,,,,Gunnison
+2014,Ouray,4587,2510,111.65,,,,Gunnison
+2015,Ouray,4724,2429,107.5,-252.3,-234.7,,Gunnison
+2016,Ouray,4856,,,,,,Gunnison
+2017,Ouray,4942,,,,,,Gunnison
+2018,Ouray,5028,,,,,,Gunnison
+2019,Ouray,5104,,,,,,Gunnison
+2020,Ouray,5172,,,,,,Gunnison
+2021,Ouray,5230,,,,,,Gunnison
+2022,Ouray,5251,,,,,,Gunnison
+2023,Ouray,5278,,,,,,Gunnison
+2024,Ouray,5302,,,,,,Gunnison
+2025,Ouray,5319,,,,,,Gunnison
+2026,Ouray,5342,,,,,,Gunnison
+2027,Ouray,5360,,,,,,Gunnison
+2028,Ouray,5374,,,,,,Gunnison
+2029,Ouray,5397,,,,,,Gunnison
+2030,Ouray,5414,,,,,,Gunnison
+2031,Ouray,5429,,,,,,Gunnison
+2032,Ouray,5444,,,,,,Gunnison
+2033,Ouray,5462,,,,,,Gunnison
+2034,Ouray,5479,,,,,,Gunnison
+2035,Ouray,5498,,,,,,Gunnison
+2036,Ouray,5507,,,,,,Gunnison
+2037,Ouray,5524,,,,,,Gunnison
+2038,Ouray,5537,,,,,,Gunnison
+2039,Ouray,5552,,,,,,Gunnison
+2040,Ouray,5578,,,,,,Gunnison
+2041,Ouray,5604,,,,,,Gunnison
+2042,Ouray,5632,,,,,,Gunnison
+2043,Ouray,5661,,,,,,Gunnison
+2044,Ouray,5690,,,,,,Gunnison
+2045,Ouray,5720,,,,,,Gunnison
+2046,Ouray,5752,,,,,,Gunnison
+2047,Ouray,5784,,,,,,Gunnison
+2048,Ouray,5816,,,,,,Gunnison
+2049,Ouray,5850,,,,,,Gunnison
+2050,Ouray,5884,,,,,,Gunnison
+1995,Park,10577,,,,,211,South Platte
+1996,Park,11377,,,,,,South Platte
+1997,Park,12362,,,,,,South Platte
+1998,Park,13065,,,,,,South Platte
+1999,Park,13900,,,,,,South Platte
+2000,Park,14728,52,197.54,,,,South Platte
+2001,Park,15172,52,197.54,,,,South Platte
+2002,Park,15417,52,197.54,,,,South Platte
+2003,Park,15789,52,197.54,,,,South Platte
+2004,Park,15913,52,197.54,,,,South Platte
+2005,Park,16061,52,197.54,,,,South Platte
+2006,Park,16128,52,253.67,,,,South Platte
+2007,Park,16336,52,253.67,,,,South Platte
+2008,Park,16278,52,253.67,,,,South Platte
+2009,Park,15971,52,253.67,,,,South Platte
+2010,Park,16262,52,253.67,,,,South Platte
+2011,Park,16094,52,253.67,,,,South Platte
+2012,Park,16055,52,253.67,,,,South Platte
+2013,Park,16189,52,253.67,,,,South Platte
+2014,Park,16383,52,253.67,,,,South Platte
+2015,Park,16865,52,253.67,56.1,22.1,,South Platte
+2016,Park,17394,,,,,,South Platte
+2017,Park,18022,,,,,,South Platte
+2018,Park,18751,,,,,,South Platte
+2019,Park,19477,,,,,,South Platte
+2020,Park,20339,,,,,,South Platte
+2021,Park,21299,,,,,,South Platte
+2022,Park,22331,,,,,,South Platte
+2023,Park,23261,,,,,,South Platte
+2024,Park,24074,,,,,,South Platte
+2025,Park,24788,,,,,,South Platte
+2026,Park,25497,,,,,,South Platte
+2027,Park,26197,,,,,,South Platte
+2028,Park,26839,,,,,,South Platte
+2029,Park,27474,,,,,,South Platte
+2030,Park,28101,,,,,,South Platte
+2031,Park,28693,,,,,,South Platte
+2032,Park,29251,,,,,,South Platte
+2033,Park,29774,,,,,,South Platte
+2034,Park,30260,,,,,,South Platte
+2035,Park,30710,,,,,,South Platte
+2036,Park,31124,,,,,,South Platte
+2037,Park,31477,,,,,,South Platte
+2038,Park,31770,,,,,,South Platte
+2039,Park,32003,,,,,,South Platte
+2040,Park,32176,,,,,,South Platte
+2041,Park,32291,,,,,,South Platte
+2042,Park,32399,,,,,,South Platte
+2043,Park,32501,,,,,,South Platte
+2044,Park,32599,,,,,,South Platte
+2045,Park,32693,,,,,,South Platte
+2046,Park,32784,,,,,,South Platte
+2047,Park,32822,,,,,,South Platte
+2048,Park,32859,,,,,,South Platte
+2049,Park,32894,,,,,,South Platte
+2050,Park,32928,,,,,,South Platte
+1995,Phillips,4479,,,,,5,South Platte
+1996,Phillips,4504,,,,,,South Platte
+1997,Phillips,4574,,,,,,South Platte
+1998,Phillips,4570,,,,,,South Platte
+1999,Phillips,4518,,,,,,South Platte
+2000,Phillips,4451,1000,320.09,,,,South Platte
+2001,Phillips,4487,1000,320.09,,,,South Platte
+2002,Phillips,4496,1000,320.09,,,,South Platte
+2003,Phillips,4477,1000,320.09,,,,South Platte
+2004,Phillips,4580,1000,320.09,,,,South Platte
+2005,Phillips,4548,1000,320.09,,,,South Platte
+2006,Phillips,4504,1000,390.01,,,,South Platte
+2007,Phillips,4484,1000,390.01,,,,South Platte
+2008,Phillips,4451,1000,390.01,,,,South Platte
+2009,Phillips,4454,1000,390.01,,,,South Platte
+2010,Phillips,4465,1000,390.01,,,,South Platte
+2011,Phillips,4375,1000,390.01,,,,South Platte
+2012,Phillips,4379,1000,390.01,,,,South Platte
+2013,Phillips,4350,1000,390.01,,,,South Platte
+2014,Phillips,4380,1000,390.01,,,,South Platte
+2015,Phillips,4360,1000,390.01,69.9,17.9,,South Platte
+2016,Phillips,4346,,,,,,South Platte
+2017,Phillips,4339,,,,,,South Platte
+2018,Phillips,4342,,,,,,South Platte
+2019,Phillips,4347,,,,,,South Platte
+2020,Phillips,4355,,,,,,South Platte
+2021,Phillips,4366,,,,,,South Platte
+2022,Phillips,4380,,,,,,South Platte
+2023,Phillips,4395,,,,,,South Platte
+2024,Phillips,4412,,,,,,South Platte
+2025,Phillips,4430,,,,,,South Platte
+2026,Phillips,4449,,,,,,South Platte
+2027,Phillips,4462,,,,,,South Platte
+2028,Phillips,4481,,,,,,South Platte
+2029,Phillips,4482,,,,,,South Platte
+2030,Phillips,4496,,,,,,South Platte
+2031,Phillips,4510,,,,,,South Platte
+2032,Phillips,4517,,,,,,South Platte
+2033,Phillips,4530,,,,,,South Platte
+2034,Phillips,4541,,,,,,South Platte
+2035,Phillips,4554,,,,,,South Platte
+2036,Phillips,4562,,,,,,South Platte
+2037,Phillips,4579,,,,,,South Platte
+2038,Phillips,4592,,,,,,South Platte
+2039,Phillips,4594,,,,,,South Platte
+2040,Phillips,4605,,,,,,South Platte
+2041,Phillips,4616,,,,,,South Platte
+2042,Phillips,4627,,,,,,South Platte
+2043,Phillips,4638,,,,,,South Platte
+2044,Phillips,4649,,,,,,South Platte
+2045,Phillips,4661,,,,,,South Platte
+2046,Phillips,4672,,,,,,South Platte
+2047,Phillips,4684,,,,,,South Platte
+2048,Phillips,4696,,,,,,South Platte
+2049,Phillips,4708,,,,,,South Platte
+2050,Phillips,4720,,,,,,South Platte
+1995,Prowers,13823,,,,,-3,Arkansas
+1996,Prowers,14002,,,,,,Arkansas
+1997,Prowers,14117,,,,,,Arkansas
+1998,Prowers,14224,,,,,,Arkansas
+1999,Prowers,14372,,,,,,Arkansas
+2000,Prowers,14452,2166,178.71,,,,Arkansas
+2001,Prowers,14109,2166,178.71,,,,Arkansas
+2002,Prowers,14011,2166,178.71,,,,Arkansas
+2003,Prowers,13822,2166,178.71,,,,Arkansas
+2004,Prowers,13656,2166,178.71,,,,Arkansas
+2005,Prowers,13510,2166,178.71,,,,Arkansas
+2006,Prowers,13208,2166,181.33,,,,Arkansas
+2007,Prowers,12772,2166,181.33,,,,Arkansas
+2008,Prowers,12682,2166,181.33,,,,Arkansas
+2009,Prowers,12576,2419,194.52,,,,Arkansas
+2010,Prowers,12531,2419,194.52,,,,Arkansas
+2011,Prowers,12456,2419,194.52,,,,Arkansas
+2012,Prowers,12361,2419,194.52,,,,Arkansas
+2013,Prowers,12243,2419,194.52,,,,Arkansas
+2014,Prowers,11985,2111,186.72,,,,Arkansas
+2015,Prowers,11880,2111,186.72,8,4.3,,Arkansas
+2016,Prowers,11822,,,,,,Arkansas
+2017,Prowers,11819,,,,,,Arkansas
+2018,Prowers,11848,,,,,,Arkansas
+2019,Prowers,11880,,,,,,Arkansas
+2020,Prowers,11917,,,,,,Arkansas
+2021,Prowers,11968,,,,,,Arkansas
+2022,Prowers,12013,,,,,,Arkansas
+2023,Prowers,12051,,,,,,Arkansas
+2024,Prowers,12093,,,,,,Arkansas
+2025,Prowers,12132,,,,,,Arkansas
+2026,Prowers,12175,,,,,,Arkansas
+2027,Prowers,12208,,,,,,Arkansas
+2028,Prowers,12237,,,,,,Arkansas
+2029,Prowers,12260,,,,,,Arkansas
+2030,Prowers,12288,,,,,,Arkansas
+2031,Prowers,12310,,,,,,Arkansas
+2032,Prowers,12344,,,,,,Arkansas
+2033,Prowers,12360,,,,,,Arkansas
+2034,Prowers,12383,,,,,,Arkansas
+2035,Prowers,12400,,,,,,Arkansas
+2036,Prowers,12419,,,,,,Arkansas
+2037,Prowers,12490,,,,,,Arkansas
+2038,Prowers,12565,,,,,,Arkansas
+2039,Prowers,12651,,,,,,Arkansas
+2040,Prowers,12722,,,,,,Arkansas
+2041,Prowers,12794,,,,,,Arkansas
+2042,Prowers,12867,,,,,,Arkansas
+2043,Prowers,12940,,,,,,Arkansas
+2044,Prowers,13013,,,,,,Arkansas
+2045,Prowers,13088,,,,,,Arkansas
+2046,Prowers,13163,,,,,,Arkansas
+2047,Prowers,13238,,,,,,Arkansas
+2048,Prowers,13315,,,,,,Arkansas
+2049,Prowers,13392,,,,,,Arkansas
+2050,Prowers,13470,,,,,,Arkansas
+1995,Pueblo,130832,,,,,71,Arkansas
+1996,Pueblo,132498,,,,,,Arkansas
+1997,Pueblo,134794,,,,,,Arkansas
+1998,Pueblo,137381,,,,,,Arkansas
+1999,Pueblo,139718,,,,,,Arkansas
+2000,Pueblo,141854,34950,234.62,,,,Arkansas
+2001,Pueblo,143996,34950,234.62,,,,Arkansas
+2002,Pueblo,146481,34950,234.62,,,,Arkansas
+2003,Pueblo,147972,34950,234.62,,,,Arkansas
+2004,Pueblo,148720,34950,234.62,,,,Arkansas
+2005,Pueblo,149969,34950,234.62,,,,Arkansas
+2006,Pueblo,152064,34950,236.62,,,,Arkansas
+2007,Pueblo,154759,34950,215.25,,,,Arkansas
+2008,Pueblo,156252,34950,212.41,,,,Arkansas
+2009,Pueblo,157324,34311,202.55,,,,Arkansas
+2010,Pueblo,159496,34311,200.89,,,,Arkansas
+2011,Pueblo,160269,34311,200.89,,,,Arkansas
+2012,Pueblo,160884,34311,200.89,,,,Arkansas
+2013,Pueblo,161219,6425,37.71,,,,Arkansas
+2014,Pueblo,161782,33285,195.39,,,,Arkansas
+2015,Pueblo,162835,32347,189.54,-45.1,-23.8,,Arkansas
+2016,Pueblo,163874,,,,,,Arkansas
+2017,Pueblo,165003,,,,,,Arkansas
+2018,Pueblo,166624,,,,,,Arkansas
+2019,Pueblo,168539,,,,,,Arkansas
+2020,Pueblo,170451,,,,,,Arkansas
+2021,Pueblo,172364,,,,,,Arkansas
+2022,Pueblo,174279,,,,,,Arkansas
+2023,Pueblo,176198,,,,,,Arkansas
+2024,Pueblo,178118,,,,,,Arkansas
+2025,Pueblo,180029,,,,,,Arkansas
+2026,Pueblo,181928,,,,,,Arkansas
+2027,Pueblo,183816,,,,,,Arkansas
+2028,Pueblo,185695,,,,,,Arkansas
+2029,Pueblo,187569,,,,,,Arkansas
+2030,Pueblo,189431,,,,,,Arkansas
+2031,Pueblo,191276,,,,,,Arkansas
+2032,Pueblo,193094,,,,,,Arkansas
+2033,Pueblo,194879,,,,,,Arkansas
+2034,Pueblo,196631,,,,,,Arkansas
+2035,Pueblo,198349,,,,,,Arkansas
+2036,Pueblo,200036,,,,,,Arkansas
+2037,Pueblo,201693,,,,,,Arkansas
+2038,Pueblo,203320,,,,,,Arkansas
+2039,Pueblo,204919,,,,,,Arkansas
+2040,Pueblo,206493,,,,,,Arkansas
+2041,Pueblo,208094,,,,,,Arkansas
+2042,Pueblo,209779,,,,,,Arkansas
+2043,Pueblo,211549,,,,,,Arkansas
+2044,Pueblo,213309,,,,,,Arkansas
+2045,Pueblo,215063,,,,,,Arkansas
+2046,Pueblo,216816,,,,,,Arkansas
+2047,Pueblo,218568,,,,,,Arkansas
+2048,Pueblo,220322,,,,,,Arkansas
+2049,Pueblo,222082,,,,,,Arkansas
+2050,Pueblo,223852,,,,,,Arkansas
+1995,Rio Blanco,6403,,,,,21,Yampa
+1996,Rio Blanco,6341,,,,,,Yampa
+1997,Rio Blanco,6322,,,,,,Yampa
+1998,Rio Blanco,6232,,,,,,Yampa
+1999,Rio Blanco,6091,,,,,,Yampa
+2000,Rio Blanco,5967,1381,262.76,,,,Yampa
+2001,Rio Blanco,5880,1381,262.76,,,,Yampa
+2002,Rio Blanco,5936,1381,262.76,,,,Yampa
+2003,Rio Blanco,5855,1381,262.76,,,,Yampa
+2004,Rio Blanco,5904,1381,262.76,,,,Yampa
+2005,Rio Blanco,5818,1381,262.76,,,,Yampa
+2006,Rio Blanco,5981,1381,289.41,,,,Yampa
+2007,Rio Blanco,6093,1381,289.41,,,,Yampa
+2008,Rio Blanco,6160,1297,262.08,,,,Yampa
+2009,Rio Blanco,6317,1297,262.08,,,,Yampa
+2010,Rio Blanco,6617,1297,262.08,,,,Yampa
+2011,Rio Blanco,6740,1297,262.08,,,,Yampa
+2012,Rio Blanco,6759,1297,262.08,,,,Yampa
+2013,Rio Blanco,6714,1297,262.08,,,,Yampa
+2014,Rio Blanco,6607,1297,262.08,,,,Yampa
+2015,Rio Blanco,6604,1297,262.08,-0.7,-0.3,,Yampa
+2016,Rio Blanco,6615,,,,,,Yampa
+2017,Rio Blanco,6636,,,,,,Yampa
+2018,Rio Blanco,6655,,,,,,Yampa
+2019,Rio Blanco,6672,,,,,,Yampa
+2020,Rio Blanco,6688,,,,,,Yampa
+2021,Rio Blanco,6704,,,,,,Yampa
+2022,Rio Blanco,6718,,,,,,Yampa
+2023,Rio Blanco,6733,,,,,,Yampa
+2024,Rio Blanco,6748,,,,,,Yampa
+2025,Rio Blanco,6787,,,,,,Yampa
+2026,Rio Blanco,6827,,,,,,Yampa
+2027,Rio Blanco,6867,,,,,,Yampa
+2028,Rio Blanco,6907,,,,,,Yampa
+2029,Rio Blanco,6946,,,,,,Yampa
+2030,Rio Blanco,6985,,,,,,Yampa
+2031,Rio Blanco,7025,,,,,,Yampa
+2032,Rio Blanco,7065,,,,,,Yampa
+2033,Rio Blanco,7105,,,,,,Yampa
+2034,Rio Blanco,7145,,,,,,Yampa
+2035,Rio Blanco,7185,,,,,,Yampa
+2036,Rio Blanco,7224,,,,,,Yampa
+2037,Rio Blanco,7264,,,,,,Yampa
+2038,Rio Blanco,7302,,,,,,Yampa
+2039,Rio Blanco,7340,,,,,,Yampa
+2040,Rio Blanco,7377,,,,,,Yampa
+2041,Rio Blanco,7414,,,,,,Yampa
+2042,Rio Blanco,7450,,,,,,Yampa
+2043,Rio Blanco,7486,,,,,,Yampa
+2044,Rio Blanco,7522,,,,,,Yampa
+2045,Rio Blanco,7556,,,,,,Yampa
+2046,Rio Blanco,7591,,,,,,Yampa
+2047,Rio Blanco,7624,,,,,,Yampa
+2048,Rio Blanco,7658,,,,,,Yampa
+2049,Rio Blanco,7691,,,,,,Yampa
+2050,Rio Blanco,7724,,,,,,Yampa
+1995,Rio Grande,11698,,,,,18,Rio Grande
+1996,Rio Grande,11820,,,,,,Rio Grande
+1997,Rio Grande,11966,,,,,,Rio Grande
+1998,Rio Grande,12123,,,,,,Rio Grande
+1999,Rio Grande,12289,,,,,,Rio Grande
+2000,Rio Grande,12429,1882,190.56,,,,Rio Grande
+2001,Rio Grande,12406,1882,190.56,,,,Rio Grande
+2002,Rio Grande,12409,1882,190.56,,,,Rio Grande
+2003,Rio Grande,12619,1882,190.56,,,,Rio Grande
+2004,Rio Grande,12824,1882,190.56,,,,Rio Grande
+2005,Rio Grande,12696,1882,190.56,,,,Rio Grande
+2006,Rio Grande,12439,1882,199.33,,,,Rio Grande
+2007,Rio Grande,12167,1882,188.42,,,,Rio Grande
+2008,Rio Grande,12105,1060,106.12,,,,Rio Grande
+2009,Rio Grande,11995,1060,106.12,,,,Rio Grande
+2010,Rio Grande,12001,1060,106.12,,,,Rio Grande
+2011,Rio Grande,11910,1060,106.12,,,,Rio Grande
+2012,Rio Grande,11874,1060,106.12,,,,Rio Grande
+2013,Rio Grande,11710,1060,106.12,,,,Rio Grande
+2014,Rio Grande,11574,1060,106.12,,,,Rio Grande
+2015,Rio Grande,11543,1060,106.12,-84.4,-79.6,,Rio Grande
+2016,Rio Grande,11535,,,,,,Rio Grande
+2017,Rio Grande,11552,,,,,,Rio Grande
+2018,Rio Grande,11619,,,,,,Rio Grande
+2019,Rio Grande,11686,,,,,,Rio Grande
+2020,Rio Grande,11753,,,,,,Rio Grande
+2021,Rio Grande,11818,,,,,,Rio Grande
+2022,Rio Grande,11910,,,,,,Rio Grande
+2023,Rio Grande,12027,,,,,,Rio Grande
+2024,Rio Grande,12144,,,,,,Rio Grande
+2025,Rio Grande,12235,,,,,,Rio Grande
+2026,Rio Grande,12301,,,,,,Rio Grande
+2027,Rio Grande,12365,,,,,,Rio Grande
+2028,Rio Grande,12429,,,,,,Rio Grande
+2029,Rio Grande,12492,,,,,,Rio Grande
+2030,Rio Grande,12554,,,,,,Rio Grande
+2031,Rio Grande,12666,,,,,,Rio Grande
+2032,Rio Grande,12777,,,,,,Rio Grande
+2033,Rio Grande,12863,,,,,,Rio Grande
+2034,Rio Grande,12922,,,,,,Rio Grande
+2035,Rio Grande,12981,,,,,,Rio Grande
+2036,Rio Grande,13038,,,,,,Rio Grande
+2037,Rio Grande,13095,,,,,,Rio Grande
+2038,Rio Grande,13152,,,,,,Rio Grande
+2039,Rio Grande,13209,,,,,,Rio Grande
+2040,Rio Grande,13265,,,,,,Rio Grande
+2041,Rio Grande,13322,,,,,,Rio Grande
+2042,Rio Grande,13378,,,,,,Rio Grande
+2043,Rio Grande,13435,,,,,,Rio Grande
+2044,Rio Grande,13493,,,,,,Rio Grande
+2045,Rio Grande,13551,,,,,,Rio Grande
+2046,Rio Grande,13610,,,,,,Rio Grande
+2047,Rio Grande,13669,,,,,,Rio Grande
+2048,Rio Grande,13729,,,,,,Rio Grande
+2049,Rio Grande,13789,,,,,,Rio Grande
+2050,Rio Grande,13851,,,,,,Rio Grande
+1995,Routt,17254,,,,,194,Yampa
+1996,Routt,17718,,,,,,Yampa
+1997,Routt,18117,,,,,,Yampa
+1998,Routt,18606,,,,,,Yampa
+1999,Routt,19224,,,,,,Yampa
+2000,Routt,20122,3471,135.54,,,,Yampa
+2001,Routt,20436,3471,135.54,,,,Yampa
+2002,Routt,20892,3471,135.54,,,,Yampa
+2003,Routt,21128,3471,135.54,,,,Yampa
+2004,Routt,21293,3471,135.54,,,,Yampa
+2005,Routt,21453,3471,135.54,,,,Yampa
+2006,Routt,21886,3471,136.58,,,,Yampa
+2007,Routt,22415,3471,136.58,,,,Yampa
+2008,Routt,22931,5262,190.22,,,,Yampa
+2009,Routt,23325,5262,190.22,,,,Yampa
+2010,Routt,23439,5262,190.22,,,,Yampa
+2011,Routt,23237,5262,190.22,,,,Yampa
+2012,Routt,23228,5262,190.22,,,,Yampa
+2013,Routt,23478,5262,239.75,,,,Yampa
+2014,Routt,23896,5262,321.44,,,,Yampa
+2015,Routt,24443,5262,321.44,185.9,57.8,,Yampa
+2016,Routt,24971,,,,,,Yampa
+2017,Routt,25510,,,,,,Yampa
+2018,Routt,26027,,,,,,Yampa
+2019,Routt,26550,,,,,,Yampa
+2020,Routt,27060,,,,,,Yampa
+2021,Routt,27579,,,,,,Yampa
+2022,Routt,28131,,,,,,Yampa
+2023,Routt,28731,,,,,,Yampa
+2024,Routt,29435,,,,,,Yampa
+2025,Routt,30240,,,,,,Yampa
+2026,Routt,31087,,,,,,Yampa
+2027,Routt,31935,,,,,,Yampa
+2028,Routt,32788,,,,,,Yampa
+2029,Routt,33637,,,,,,Yampa
+2030,Routt,34488,,,,,,Yampa
+2031,Routt,35344,,,,,,Yampa
+2032,Routt,36201,,,,,,Yampa
+2033,Routt,37052,,,,,,Yampa
+2034,Routt,37896,,,,,,Yampa
+2035,Routt,38745,,,,,,Yampa
+2036,Routt,39578,,,,,,Yampa
+2037,Routt,40419,,,,,,Yampa
+2038,Routt,41257,,,,,,Yampa
+2039,Routt,42087,,,,,,Yampa
+2040,Routt,42905,,,,,,Yampa
+2041,Routt,43717,,,,,,Yampa
+2042,Routt,44523,,,,,,Yampa
+2043,Routt,45323,,,,,,Yampa
+2044,Routt,46118,,,,,,Yampa
+2045,Routt,46906,,,,,,Yampa
+2046,Routt,47688,,,,,,Yampa
+2047,Routt,48465,,,,,,Yampa
+2048,Routt,49236,,,,,,Yampa
+2049,Routt,50002,,,,,,Yampa
+2050,Routt,50764,,,,,,Yampa
+1995,San Miguel,5489,,,,,236,Southwest
+1996,San Miguel,5804,,,,,,Southwest
+1997,San Miguel,5953,,,,,,Southwest
+1998,San Miguel,6453,,,,,,Southwest
+1999,San Miguel,6533,,,,,,Southwest
+2000,San Miguel,6614,736,284.93,,,,Southwest
+2001,San Miguel,6900,736,284.93,,,,Southwest
+2002,San Miguel,7042,736,284.93,,,,Southwest
+2003,San Miguel,7010,736,284.93,,,,Southwest
+2004,San Miguel,7027,736,284.93,,,,Southwest
+2005,San Miguel,7045,736,284.93,,,,Southwest
+2006,San Miguel,7059,736,275.15,,,,Southwest
+2007,San Miguel,7276,736,275.15,,,,Southwest
+2008,San Miguel,7304,736,275.15,,,,Southwest
+2009,San Miguel,7267,736,275.15,,,,Southwest
+2010,San Miguel,7356,736,275.15,,,,Southwest
+2011,San Miguel,7487,736,275.15,,,,Southwest
+2012,San Miguel,7601,736,275.15,,,,Southwest
+2013,San Miguel,7683,736,275.15,,,,Southwest
+2014,San Miguel,7823,736,275.15,,,,Southwest
+2015,San Miguel,8063,736,275.15,-9.8,-3.6,,Southwest
+2016,San Miguel,8325,,,,,,Southwest
+2017,San Miguel,8598,,,,,,Southwest
+2018,San Miguel,8870,,,,,,Southwest
+2019,San Miguel,9140,,,,,,Southwest
+2020,San Miguel,9408,,,,,,Southwest
+2021,San Miguel,9681,,,,,,Southwest
+2022,San Miguel,9958,,,,,,Southwest
+2023,San Miguel,10250,,,,,,Southwest
+2024,San Miguel,10567,,,,,,Southwest
+2025,San Miguel,10884,,,,,,Southwest
+2026,San Miguel,11199,,,,,,Southwest
+2027,San Miguel,11513,,,,,,Southwest
+2028,San Miguel,11826,,,,,,Southwest
+2029,San Miguel,12138,,,,,,Southwest
+2030,San Miguel,12450,,,,,,Southwest
+2031,San Miguel,12762,,,,,,Southwest
+2032,San Miguel,13074,,,,,,Southwest
+2033,San Miguel,13385,,,,,,Southwest
+2034,San Miguel,13696,,,,,,Southwest
+2035,San Miguel,14005,,,,,,Southwest
+2036,San Miguel,14312,,,,,,Southwest
+2037,San Miguel,14618,,,,,,Southwest
+2038,San Miguel,14921,,,,,,Southwest
+2039,San Miguel,15223,,,,,,Southwest
+2040,San Miguel,15523,,,,,,Southwest
+2041,San Miguel,15822,,,,,,Southwest
+2042,San Miguel,16119,,,,,,Southwest
+2043,San Miguel,16414,,,,,,Southwest
+2044,San Miguel,16709,,,,,,Southwest
+2045,San Miguel,17003,,,,,,Southwest
+2046,San Miguel,17295,,,,,,Southwest
+2047,San Miguel,17587,,,,,,Southwest
+2048,San Miguel,17878,,,,,,Southwest
+2049,San Miguel,18168,,,,,,Southwest
+2050,San Miguel,18458,,,,,,Southwest
+1995,Sedgwick,2650,,,,,14,South Platte
+1996,Sedgwick,2686,,,,,,South Platte
+1997,Sedgwick,2731,,,,,,South Platte
+1998,Sedgwick,2681,,,,,,South Platte
+1999,Sedgwick,2719,,,,,,South Platte
+2000,Sedgwick,2742,114,272.85,,,,South Platte
+2001,Sedgwick,2694,114,272.85,,,,South Platte
+2002,Sedgwick,2694,114,272.85,,,,South Platte
+2003,Sedgwick,2715,114,272.85,,,,South Platte
+2004,Sedgwick,2606,114,272.85,,,,South Platte
+2005,Sedgwick,2578,114,272.85,,,,South Platte
+2006,Sedgwick,2515,114,322.06,,,,South Platte
+2007,Sedgwick,2422,114,322.06,,,,South Platte
+2008,Sedgwick,2420,114,322.06,,,,South Platte
+2009,Sedgwick,2376,114,322.06,,,,South Platte
+2010,Sedgwick,2367,114,322.06,,,,South Platte
+2011,Sedgwick,2368,114,322.06,,,,South Platte
+2012,Sedgwick,2371,114,322.06,,,,South Platte
+2013,Sedgwick,2348,114,322.06,,,,South Platte
+2014,Sedgwick,2331,114,322.06,,,,South Platte
+2015,Sedgwick,2332,114,322.06,49.2,15.3,,South Platte
+2016,Sedgwick,2333,,,,,,South Platte
+2017,Sedgwick,2335,,,,,,South Platte
+2018,Sedgwick,2337,,,,,,South Platte
+2019,Sedgwick,2339,,,,,,South Platte
+2020,Sedgwick,2341,,,,,,South Platte
+2021,Sedgwick,2349,,,,,,South Platte
+2022,Sedgwick,2363,,,,,,South Platte
+2023,Sedgwick,2391,,,,,,South Platte
+2024,Sedgwick,2412,,,,,,South Platte
+2025,Sedgwick,2437,,,,,,South Platte
+2026,Sedgwick,2461,,,,,,South Platte
+2027,Sedgwick,2476,,,,,,South Platte
+2028,Sedgwick,2495,,,,,,South Platte
+2029,Sedgwick,2523,,,,,,South Platte
+2030,Sedgwick,2540,,,,,,South Platte
+2031,Sedgwick,2555,,,,,,South Platte
+2032,Sedgwick,2585,,,,,,South Platte
+2033,Sedgwick,2603,,,,,,South Platte
+2034,Sedgwick,2617,,,,,,South Platte
+2035,Sedgwick,2639,,,,,,South Platte
+2036,Sedgwick,2656,,,,,,South Platte
+2037,Sedgwick,2678,,,,,,South Platte
+2038,Sedgwick,2702,,,,,,South Platte
+2039,Sedgwick,2713,,,,,,South Platte
+2040,Sedgwick,2741,,,,,,South Platte
+2041,Sedgwick,2768,,,,,,South Platte
+2042,Sedgwick,2796,,,,,,South Platte
+2043,Sedgwick,2825,,,,,,South Platte
+2044,Sedgwick,2854,,,,,,South Platte
+2045,Sedgwick,2883,,,,,,South Platte
+2046,Sedgwick,2912,,,,,,South Platte
+2047,Sedgwick,2942,,,,,,South Platte
+2048,Sedgwick,2972,,,,,,South Platte
+2049,Sedgwick,3003,,,,,,South Platte
+2050,Sedgwick,3033,,,,,,South Platte
+1995,Summit,18270,,,,,210,Colorado
+1996,Summit,19396,,,,,,Colorado
+1997,Summit,20349,,,,,,Colorado
+1998,Summit,21281,,,,,,Colorado
+1999,Summit,22568,,,,,,Colorado
+2000,Summit,25708,6106,317.55,,,,Colorado
+2001,Summit,26293,6106,317.55,,,,Colorado
+2002,Summit,26514,6106,317.55,,,,Colorado
+2003,Summit,26706,6106,317.55,,,,Colorado
+2004,Summit,26707,6106,317.55,,,,Colorado
+2005,Summit,26623,6106,317.55,,,,Colorado
+2006,Summit,26839,6106,244.64,,,,Colorado
+2007,Summit,27163,6106,244.64,,,,Colorado
+2008,Summit,27464,6327,245.64,,,,Colorado
+2009,Summit,27783,6327,245.64,,,,Colorado
+2010,Summit,28073,6327,245.64,,,,Colorado
+2011,Summit,27941,6327,245.64,,,,Colorado
+2012,Summit,28218,6327,245.64,,,,Colorado
+2013,Summit,28759,5781,226.02,,,,Colorado
+2014,Summit,29399,5658,221.21,,,,Colorado
+2015,Summit,29777,5658,221.21,-96.3,-43.6,,Colorado
+2016,Summit,30248,,,,,,Colorado
+2017,Summit,30809,,,,,,Colorado
+2018,Summit,31567,,,,,,Colorado
+2019,Summit,32422,,,,,,Colorado
+2020,Summit,33366,,,,,,Colorado
+2021,Summit,34305,,,,,,Colorado
+2022,Summit,35241,,,,,,Colorado
+2023,Summit,36178,,,,,,Colorado
+2024,Summit,37093,,,,,,Colorado
+2025,Summit,37987,,,,,,Colorado
+2026,Summit,38868,,,,,,Colorado
+2027,Summit,39738,,,,,,Colorado
+2028,Summit,40571,,,,,,Colorado
+2029,Summit,41394,,,,,,Colorado
+2030,Summit,42197,,,,,,Colorado
+2031,Summit,42988,,,,,,Colorado
+2032,Summit,43773,,,,,,Colorado
+2033,Summit,44534,,,,,,Colorado
+2034,Summit,45311,,,,,,Colorado
+2035,Summit,46066,,,,,,Colorado
+2036,Summit,46804,,,,,,Colorado
+2037,Summit,47552,,,,,,Colorado
+2038,Summit,48270,,,,,,Colorado
+2039,Summit,48996,,,,,,Colorado
+2040,Summit,49704,,,,,,Colorado
+2041,Summit,50407,,,,,,Colorado
+2042,Summit,51106,,,,,,Colorado
+2043,Summit,51801,,,,,,Colorado
+2044,Summit,52493,,,,,,Colorado
+2045,Summit,53184,,,,,,Colorado
+2046,Summit,53873,,,,,,Colorado
+2047,Summit,54559,,,,,,Colorado
+2048,Summit,55243,,,,,,Colorado
+2049,Summit,55925,,,,,,Colorado
+2050,Summit,56606,,,,,,Colorado
+1995,Washington,5236,,,,,-5,South Platte
+1996,Washington,5221,,,,,,South Platte
+1997,Washington,5210,,,,,,South Platte
+1998,Washington,5155,,,,,,South Platte
+1999,Washington,5024,,,,,,South Platte
+2000,Washington,4942,703,279.55,,,,South Platte
+2001,Washington,4899,703,279.55,,,,South Platte
+2002,Washington,5259,703,279.55,,,,South Platte
+2003,Washington,5140,703,279.55,,,,South Platte
+2004,Washington,5060,703,279.55,,,,South Platte
+2005,Washington,4995,703,279.55,,,,South Platte
+2006,Washington,4981,703,300.71,,,,South Platte
+2007,Washington,4927,703,300.71,,,,South Platte
+2008,Washington,4802,703,300.71,,,,South Platte
+2009,Washington,4777,703,300.71,,,,South Platte
+2010,Washington,4815,703,300.71,,,,South Platte
+2011,Washington,4784,703,300.71,,,,South Platte
+2012,Washington,4714,703,300.71,,,,South Platte
+2013,Washington,4757,703,300.71,,,,South Platte
+2014,Washington,4769,703,300.71,,,,South Platte
+2015,Washington,4719,703,300.71,21.2,7,,South Platte
+2016,Washington,4675,,,,,,South Platte
+2017,Washington,4678,,,,,,South Platte
+2018,Washington,4687,,,,,,South Platte
+2019,Washington,4702,,,,,,South Platte
+2020,Washington,4723,,,,,,South Platte
+2021,Washington,4749,,,,,,South Platte
+2022,Washington,4776,,,,,,South Platte
+2023,Washington,4803,,,,,,South Platte
+2024,Washington,4831,,,,,,South Platte
+2025,Washington,4859,,,,,,South Platte
+2026,Washington,4888,,,,,,South Platte
+2027,Washington,4917,,,,,,South Platte
+2028,Washington,4946,,,,,,South Platte
+2029,Washington,4976,,,,,,South Platte
+2030,Washington,5005,,,,,,South Platte
+2031,Washington,5034,,,,,,South Platte
+2032,Washington,5052,,,,,,South Platte
+2033,Washington,5059,,,,,,South Platte
+2034,Washington,5056,,,,,,South Platte
+2035,Washington,5053,,,,,,South Platte
+2036,Washington,5048,,,,,,South Platte
+2037,Washington,5044,,,,,,South Platte
+2038,Washington,5039,,,,,,South Platte
+2039,Washington,5033,,,,,,South Platte
+2040,Washington,5028,,,,,,South Platte
+2041,Washington,5023,,,,,,South Platte
+2042,Washington,5017,,,,,,South Platte
+2043,Washington,5012,,,,,,South Platte
+2044,Washington,5006,,,,,,South Platte
+2045,Washington,5001,,,,,,South Platte
+2046,Washington,4997,,,,,,South Platte
+2047,Washington,4992,,,,,,South Platte
+2048,Washington,4988,,,,,,South Platte
+2049,Washington,4984,,,,,,South Platte
+2050,Washington,4980,,,,,,South Platte
+1995,Weld,157173,,,,,370,South Platte
+1996,Weld,161809,,,,,,South Platte
+1997,Weld,166840,,,,,,South Platte
+1998,Weld,172394,,,,,,South Platte
+1999,Weld,177265,,,,,,South Platte
+2000,Weld,183074,41402,241.59,,,,South Platte
+2001,Weld,192482,41643,235.63,,,,South Platte
+2002,Weld,198975,41625,226.69,,,,South Platte
+2003,Weld,207157,40104,209.53,,,,South Platte
+2004,Weld,214069,39875,200.79,,,,South Platte
+2005,Weld,223432,40410,197.93,,,,South Platte
+2006,Weld,231283,40867,193.52,,,,South Platte
+2007,Weld,238279,40897,192.1,,,,South Platte
+2008,Weld,244116,43848,172.92,,,,South Platte
+2009,Weld,248959,43848,172.92,,,,South Platte
+2010,Weld,254230,43848,172.92,,,,South Platte
+2011,Weld,258675,43848,172.92,,,,South Platte
+2012,Weld,264136,43848,172.92,,,,South Platte
+2013,Weld,270247,39599,147.12,,,,South Platte
+2014,Weld,276079,45314,165.73,,,,South Platte
+2015,Weld,286576,47956,173.82,-67.8,-39,,South Platte
+2016,Weld,297032,,,,,,South Platte
+2017,Weld,307631,,,,,,South Platte
+2018,Weld,318372,,,,,,South Platte
+2019,Weld,329250,,,,,,South Platte
+2020,Weld,340265,,,,,,South Platte
+2021,Weld,351915,,,,,,South Platte
+2022,Weld,364205,,,,,,South Platte
+2023,Weld,376631,,,,,,South Platte
+2024,Weld,389189,,,,,,South Platte
+2025,Weld,401866,,,,,,South Platte
+2026,Weld,414654,,,,,,South Platte
+2027,Weld,427543,,,,,,South Platte
+2028,Weld,440522,,,,,,South Platte
+2029,Weld,453582,,,,,,South Platte
+2030,Weld,466717,,,,,,South Platte
+2031,Weld,479918,,,,,,South Platte
+2032,Weld,493434,,,,,,South Platte
+2033,Weld,507266,,,,,,South Platte
+2034,Weld,521416,,,,,,South Platte
+2035,Weld,535889,,,,,,South Platte
+2036,Weld,550176,,,,,,South Platte
+2037,Weld,564280,,,,,,South Platte
+2038,Weld,578195,,,,,,South Platte
+2039,Weld,591920,,,,,,South Platte
+2040,Weld,605605,,,,,,South Platte
+2041,Weld,619254,,,,,,South Platte
+2042,Weld,632665,,,,,,South Platte
+2043,Weld,645630,,,,,,South Platte
+2044,Weld,658658,,,,,,South Platte
+2045,Weld,671753,,,,,,South Platte
+2046,Weld,684922,,,,,,South Platte
+2047,Weld,698168,,,,,,South Platte
+2048,Weld,711493,,,,,,South Platte
+2049,Weld,724902,,,,,,South Platte
+2050,Weld,738396,,,,,,South Platte
+1995,Yuma,9455,,,,,-100,South Platte
+1996,Yuma,9521,,,,,,South Platte
+1997,Yuma,9657,,,,,,South Platte
+1998,Yuma,9799,,,,,,South Platte
+1999,Yuma,9823,,,,,,South Platte
+2000,Yuma,9815,1691,275.88,,,,South Platte
+2001,Yuma,9831,1691,275.88,,,,South Platte
+2002,Yuma,9947,1691,275.88,,,,South Platte
+2003,Yuma,10093,1691,275.88,,,,South Platte
+2004,Yuma,9885,1691,275.88,,,,South Platte
+2005,Yuma,9892,1691,275.88,,,,South Platte
+2006,Yuma,9917,1691,280.7,,,,South Platte
+2007,Yuma,9881,1691,280.7,,,,South Platte
+2008,Yuma,9895,1691,280.7,,,,South Platte
+2009,Yuma,10036,1691,280.7,,,,South Platte
+2010,Yuma,10032,1691,280.7,,,,South Platte
+2011,Yuma,10125,1691,280.7,,,,South Platte
+2012,Yuma,10086,1691,280.7,,,,South Platte
+2013,Yuma,10101,1691,280.7,,,,South Platte
+2014,Yuma,10132,1691,280.7,,,,South Platte
+2015,Yuma,10219,1691,280.7,4.8,1.7,,South Platte
+2016,Yuma,10317,,,,,,South Platte
+2017,Yuma,10420,,,,,,South Platte
+2018,Yuma,10529,,,,,,South Platte
+2019,Yuma,10642,,,,,,South Platte
+2020,Yuma,10756,,,,,,South Platte
+2021,Yuma,10869,,,,,,South Platte
+2022,Yuma,10981,,,,,,South Platte
+2023,Yuma,11090,,,,,,South Platte
+2024,Yuma,11206,,,,,,South Platte
+2025,Yuma,11319,,,,,,South Platte
+2026,Yuma,11430,,,,,,South Platte
+2027,Yuma,11530,,,,,,South Platte
+2028,Yuma,11643,,,,,,South Platte
+2029,Yuma,11746,,,,,,South Platte
+2030,Yuma,11855,,,,,,South Platte
+2031,Yuma,11953,,,,,,South Platte
+2032,Yuma,12054,,,,,,South Platte
+2033,Yuma,12155,,,,,,South Platte
+2034,Yuma,12258,,,,,,South Platte
+2035,Yuma,12360,,,,,,South Platte
+2036,Yuma,12455,,,,,,South Platte
+2037,Yuma,12564,,,,,,South Platte
+2038,Yuma,12651,,,,,,South Platte
+2039,Yuma,12754,,,,,,South Platte
+2040,Yuma,12838,,,,,,South Platte
+2041,Yuma,12921,,,,,,South Platte
+2042,Yuma,13003,,,,,,South Platte
+2043,Yuma,13084,,,,,,South Platte
+2044,Yuma,13165,,,,,,South Platte
+2045,Yuma,13246,,,,,,South Platte
+2046,Yuma,13326,,,,,,South Platte
+2047,Yuma,13407,,,,,,South Platte
+2048,Yuma,13488,,,,,,South Platte
+2049,Yuma,13569,,,,,,South Platte

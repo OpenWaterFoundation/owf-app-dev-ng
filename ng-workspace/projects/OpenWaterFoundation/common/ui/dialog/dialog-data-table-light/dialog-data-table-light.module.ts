@@ -18,12 +18,12 @@ import { TableVirtualScrollModule } from 'ng-table-virtual-scroll';
 import { ScrollingModule }          from '@angular/cdk/scrolling';
 import { ShowdownModule }           from 'ngx-showdown';
 
-import { DialogDataTableComponent } from './dialog-data-table.component';
+import { DialogDataTableLightComponent } from './dialog-data-table-light.component';
 
 
 @NgModule({
   declarations: [
-    DialogDataTableComponent
+    DialogDataTableLightComponent
   ],
   imports: [
     CommonModule,
@@ -45,7 +45,7 @@ import { DialogDataTableComponent } from './dialog-data-table.component';
     TableVirtualScrollModule
   ],
   exports: [
-    DialogDataTableComponent
+    DialogDataTableLightComponent
   ]
 })
-export class DialogDataTableModule { }
+export class DialogDataTableLightModule { }

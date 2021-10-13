@@ -1,72 +1,196 @@
-/* @import './css/style.css'; 
-adds significant styling but text isn't properly styled when imported here. only when imported in global style.css */
+/* ID's */
 
-/* @import "../../../../node_modules/select2/dist/css/select2.min.css"; 
-when imported here it only styles the provider dropdown a little bit but not all the way */
-/* <-----------------------------------------------------------------------------------------> */
-@import './css/gapminder_bootstrap.css';
-@import '../../../../../../node_modules/clusterize.js/clusterize.css'; /* affects the data table within 'Data' tab */
-
-
-#selectAll{
-    font-size: 12px;
-    color: #333;
-    background-color: #fff;
-    border-color: #ccc;
-    margin-bottom: 20px;
+/* Div containing all side tools to the right of the Gapminder viz. */
+#all-side-tools {
+  /* display: inline-block; */
+  /* padding-left: 5%; */
+  width: 20%;
+  float: right;
 }
 
+/* All buttons in the side tools div. */
+#all-side-tools button {
+  width: 100%;
+}
+
+/* Div for a data element's annotations. */
+#annotations {
+  display: inline-block;
+  min-height: 225px;
+  max-height: 225px;
+  height: 100%;
+  width: 50%;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+#annotations-title {
+  border-bottom: 1px solid gray;
+  border-left: 1px solid gray;
+  height: 100%;
+  display: inline-block;
+  text-align: center;
+  width: 50%;
+}
+
+/* Toggles annotations on the Gapminder viz. */
+#annotationsButton {
+  font-size: 12px;color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+  margin-bottom: 15px;
+}
+
+/* Div containing all control buttons and speed slider for the viz. */
+#buttons-div {
+  margin-top: 15px;
+  margin-bottom: 5px;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+/* The main div that directly wraps the Gapminder svg. */
+#chart {
+  vertical-align: top !important;
+  width: 75%;
+  display: inline-block;
+}
+
+/* Div that directly wraps the date slider svg. */
+#dateSlider {
+  margin-left: 30px;
+}
+
+/* Div containing the #dateSlider div. */
+#date-slider-div {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  padding-top: 5px;
+}
+
+#information-titles {
+  width: 100%;
+  height: 30px;
+}
+
+/* Div containing the #legendBox svg. */
+#legend {
+  margin-bottom: 15px;
+  /* border: 1px solid gray; */
+}
+
+/* Div that contains the visualization and side tools. */
+#mainrow {
+  margin: 0px !important;
+}
+
+/* Gapminder viz control buttons. */
+#play, #pause, #replay, #back, #forward {
+  border-color: #ccc;
+  margin: 5px;
+}
+
+/* Button for selecting all dots on the visualization. */
+#selectAll {
+  font-size: 12px;
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+  margin-bottom: 15px;
+}
+
+/* The input tag for determining how fast to display the visualization. */
+#speedSlider {
+  margin-left: 10px; 
+}
+
+/* Div surrounding the listed data variables in the lower left of the visualization. */
+#tablediv {
+  display: inline-block;
+  width: 50%;
+  overflow-y: auto;
+  padding: 10px;
+  min-height: 225px;
+  max-height: 225px;
+}
+
+#tablediv-title {
+  border-bottom: 1px solid gray;
+  border-right: 1px solid gray;
+  height: 100%;
+  display: inline-block;
+  text-align: center;
+  width: 50%;
+}
+
+/* Div that contains the #tablediv and #annotations divs. */
+#tablerows {
+  height: 100%;
+  margin: 0px !important;
+}
+
+/* Div that contains the main & sub titles, and the current year. */
+#title-div {
+  margin-bottom: 10px;
+}
+
+/* Toggles visualization tracers on and off. */
 #tracerButton{
-    font-size: 12px;
-    color: #333;
-    background-color: #fff;
-    border-color: #ccc;
+  font-size: 12px;
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
-#annotationsButton{
-    font-size: 12px;color: #333;
-    background-color: #fff;
-    border-color: #ccc;
-
+/* Div that contains the string of the current Gapminder version being displayed. */
+#version {
+  text-align: center;
+  width: 100%;
 }
 
-/* #buttons {
-    color: #333;
-    background-color: #fff;
-    border-color: #ccc;
-} */
-#play, #pause, #replay, #back, #forward{
-    
-    border-color: #ccc;
-    margin: 3px;
-   
-
+#version p {
+  font-size:10px;
+  text-align:center;
+  padding-top:10px;
 }
+
+/* CLASSES */
+
+/* All bootstrap buttons in the Gapminder Dialog. */
 .btn {
-    display: inline-block;
-    padding: 6px 12px;
-    margin-bottom: 0;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.42857143;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    -ms-touch-action: manipulation;
-    touch-action: manipulation;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background-image: none;
-    border: 1px solid transparent;
-    border-radius: 4px;
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
 }
 
-#table {
-  font-size:12px !important;
-  padding-left: 45px;
+/* <p> tag for the speed slider. */
+.controls {
+  display: inline-block;
+  vertical-align: middle;
+  margin:0px;
+}
+
+/* Each dot drawn on the visualization. */
+.dot {
+  stroke: black;
 }
 
 /* Dialog Content CSS */
@@ -76,12 +200,21 @@ when imported here it only styles the provider dropdown a little bit but not all
   margin: 0px;
 }
 
+.handle {
+  fill: white;
+  stroke: black;
+  stroke-opacity: 0.5;
+  stroke-width: 1px;
+}
+
+/* Div that contains the header-title <p> tag. */
 .header-div {
   display: inline-block;
   height: 100%;
   width: 80%;
 }
 
+/* <p> tag that contains the title of the currently opened Dialog. */
 .header-title {
   font-size: large;
   padding-left: calc(20% + 40px);
@@ -90,23 +223,41 @@ when imported here it only styles the provider dropdown a little bit but not all
   width: 100%;
 }
 
+/* Div that contains all main content in the Gapminder Dialog. */
 .gapminder-content {
+  font-size: 12px;
   height: calc(100% - 91px);
+  width: 100%;
   padding: 0px 10px 0px 10px;
   overflow-x: auto;
   overflow-y: auto;
 }
 
+/* Div that contains all content at the bottom row of the Dialog. */
 .gapminder-components-group {
   float: right;
   height: 50px;
 }
 
+/* All buttons in the group. */
 .gapminder-components-group button {
   margin: 5px 25px 0px 0px;
   background-color: #c2c1c1;
 }
 
+/* Child div to the main .gapminder-content div class. */
+.tab-content {
+  margin: 0px !important;
+  width: 100%;
+}
+
+/* Child div to the main #title-div div ID. */
+.title {
+  color: rgb(85, 85, 85);
+  width: 100%;
+}
+
+/* Dialog upper right close button. */
 .upper-close-button {
   background-color: #c2c1c1;
   height: 100%;
