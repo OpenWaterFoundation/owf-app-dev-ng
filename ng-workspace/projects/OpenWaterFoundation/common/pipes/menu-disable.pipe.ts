@@ -125,6 +125,10 @@ export class MenuDisablePipe implements PipeTransform {
       else if (pipeType === 'imageCheck') {
         return value ? true : false;
       }
+      //
+      else if (pipeType === 'docCheck') {
+        return value ? false : true;
+      }
       // This would be for a 
       else if (value) {
         return false;

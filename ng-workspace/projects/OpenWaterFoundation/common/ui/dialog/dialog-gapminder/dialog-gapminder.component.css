@@ -56,6 +56,17 @@
   display: inline-block;
 }
 
+/* Button that display dropdown options. */
+#DatasetChoices {
+  display: inline-block;
+}
+
+/* Label for the multiple dataset option dropdown. */
+#DatasetChoicesLabel {
+  display: inline-block;
+  cursor: default;
+}
+
 /* Div that directly wraps the date slider svg. */
 #dateSlider {
   margin-left: 30px;
@@ -114,6 +125,8 @@
   max-height: 225px;
 }
 
+/* Div that contains the Data header so users understand where the visualization
+data is being shown in the Dialog. */
 #tablediv-title {
   border-bottom: 1px solid gray;
   border-right: 1px solid gray;
@@ -150,10 +163,11 @@
   width: 100%;
 }
 
+/* The p tag in the version div at the bottom of the Dialog. */
 #version p {
-  font-size:10px;
-  text-align:center;
-  padding-top:10px;
+  font-size: 10px;
+  text-align: center;
+  padding-top: 10px;
 }
 
 /* CLASSES */
@@ -200,6 +214,7 @@
   margin: 0px;
 }
 
+/* The circle svg for each annotation element being displayed on the date slider. */
 .handle {
   fill: white;
   stroke: black;
@@ -243,6 +258,11 @@
 .gapminder-components-group button {
   margin: 5px 25px 0px 0px;
   background-color: #c2c1c1;
+}
+
+/*  */
+.multiple-dataset-dropdown {
+  overflow: visible;
 }
 
 /* Child div to the main .gapminder-content div class. */

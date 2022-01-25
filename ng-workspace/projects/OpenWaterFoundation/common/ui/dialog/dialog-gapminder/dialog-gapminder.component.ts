@@ -32,42 +32,35 @@ import 'select2';
 })
 export class DialogGapminderComponent implements OnInit {
 
-  public additionalParametersDictionary: any;
   public annotations: any;
   public annotationText: any;
-  public annotations_data: any;
-  /** A bisector for interpolating data if sparsely-defined. */
-  public bisect = d3.bisector(function (d) { return d[0]; });
+  public annotationsData: any;
   /** The path to this Gapminder visualization's configuration file. */
   public configPath: string;
   public currYear: any;
   public data: any;
-  public dataLoaded = false;
   public dateArray: any;
   public dimensions: any;
   public displayAll: any;
   public dot: any;
   public firstClick: boolean;
   public formatDate: any;
-  public gapminderSelected = true;
+  /** The geoLayer from the current layer. */
   public geoLayer: IM.GeoLayer;
   public handle: any;
   public handleText: any;
-  public height: any;
   public inputFileFormat: any;
   public json: any;
-  public legendHeight: any;
   public line: any;
   public mainSVG: any;
-  public margin: any;
   public nameOptions: any[];
-  // Options used for the ng-select2 creation.
+  /** Options used for the ng-select2 creation.
+   * https://www.npmjs.com/package/ng-select2 */
   public options = {
     multiple: true,
     closeOnSelect: false,
     width: '100%'
   }
-  public parseDate: any;
   public pathData: any;
   public pathJSON: any;
   public precisionInt: any;
@@ -80,11 +73,10 @@ export class DialogGapminderComponent implements OnInit {
   public topYear: any;
   public tracer: any;
   public transition: any;
-  // Array containing the currently selected values in the select2 dropdown.
+  /** Array containing the currently selected values in the select2 dropdown. */
   public selectValue: string[];
   public variables: any;
   public visSpeed: any;
-  public width: any;
   public xScale: any;
   public yScale: any;
   /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
@@ -108,12 +100,11 @@ export class DialogGapminderComponent implements OnInit {
     this.windowID = dataObject.data.windowID;
   }
 
+  
   /**
    * Component entry point after the constructor.
    */
   ngOnInit(): void {
-
-    // Begin Gapminder viz set up and create the svg.
     this.gapminder();
   }
 
@@ -127,16 +118,17 @@ export class DialogGapminderComponent implements OnInit {
   }
 
   /**
-   * 
+   * Gapminder visualization set up and creation of the svg on the DOM, along with
+   * event handling functions.
    */
   public gapminder() {
     // The smaller scoped component reference to be used in any anonymous functions
-    // throughout the gapminder function.
+    // throughout this function.
     var _this = this;
     // Assigning object's properties to the local 'properties' variable.
     this.properties = new Properties(this.configPath).properties;
     // Object holding additional parameters if property provided in configuration, otherwise set to null.
-    this.additionalParametersDictionary = this.properties.AdditionalData ? getAdditionalParameters() : null;
+    var additionalParametersDictionary: any = this.properties.AdditionalData ? getAdditionalParameters() : null;
     // Object holding variable names from configuration.
     this.variables = this.properties.VariableNames;
     // Object that encapsulates all the data needed for Gapminder, also parses through
@@ -149,10 +141,12 @@ export class DialogGapminderComponent implements OnInit {
     // Object holding annotations data,
     // .GeneralAnnotations  - Displayed below visualization if annotations exist for the specified time frame.
     // .SpecificAnnotations - Displayed on visualization through popup on mouseover.
-    this.annotations_data = this.data.annotations;
-    // D3's built in time parser, indicates what the date string should look like.
-    // Used to format to format the string into date object, i.e. '%Y'.
-    this.parseDate = d3.timeParse(this.properties.InputDateFormat);
+    this.annotationsData = this.data.annotations;
+    /**
+     * D3's built in time parser, indicates what the date string should look like.
+     * Used to format to format the string into date object, i.e. '%Y'.
+     */
+    var parseDate = d3.timeParse(this.properties.InputDateFormat);
     // Used to format date object into a string..
     // Used as parameter for getAnnotations(inputFileFormat) function.
     this.inputFileFormat = d3.timeFormat(this.properties.InputDateFormat);
@@ -162,17 +156,19 @@ export class DialogGapminderComponent implements OnInit {
     this.topYear = this.dimensions.dateMin;
     // Svg container width - responsible for defining the visualization's canvas
     // ( or the area where the graph and associated bits and pieces are placed).
-    this.width = 800;
+    var width = 800;
     // Svg container height - responsible for defining the visualization's canvas
     // ( or the area where the graph and associated bits and pieces are placed).
-    this.height = 400;
+    var height = 400;
     // SVG container margin - responsible for defining the visualization's canvas 
     // ( or the area where the graph and associated bits and pieces are placed).
-    this.margin = { top: 10, left: 30, bottom: 80, right: 82 };
+    var margin = { top: 10, left: 30, bottom: 80, right: 82 };
     this.displayAll = true;
     this.tracer = (this.properties.TracerNames === "" || !this.properties.TracerNames) ? false : true;
     // Used in stopAnimation() function, stops the next transition.
     this.firstClick = true;
+    /** The height of the legend in pixels. */
+    var legendHeight: any;
     // Precision int for the respected time step,
     // TimeStep: 1Year. Returns '1'.
     this.precisionInt = parsePrecisionInt(this.properties.TimeStep);
@@ -218,14 +214,14 @@ export class DialogGapminderComponent implements OnInit {
       }
     });
 
-    d3.select("#selectAllButton")
-      .html("Select All " + this.variables.Label + "s")
+    // d3.select("#selectAllButton")
+    // .html("Select All " + this.variables.Label + "s")
 
     // If no annotation file or if no annotation shapes specified in annotation file, disable annotations on/off button.
-    if (this.annotations_data === null) {
+    if (this.annotationsData === null) {
       (<HTMLInputElement>document.getElementById("annotationsButton")).disabled = true;
     } else {
-      if (!this.annotations_data.SpecificAnnotations) {
+      if (!this.annotationsData.SpecificAnnotations) {
         (<HTMLInputElement>document.getElementById("annotationsButton")).disabled = true;
       }
     }
@@ -282,14 +278,14 @@ export class DialogGapminderComponent implements OnInit {
       // Makes the visualization responsive.
       .attr("viewBox", '0, 0, 665, 400')
       // This is the height of only the actual chart, making room for elements above and below the chart.
-      .attr("height", this.height); 
+      .attr("height", height); 
 
     // Set width to the width of the chart.
-    this.width = $(".box").width(); 
+    width = $(".box").width(); 
 
     // Create a div/svg container for legend.
     var legend = d3.select("#legend")
-      .style("height", ((this.height / 2) - 30) + "px");
+      .style("height", ((height / 2) - 30) + "px");
 
     // Create a div for list.
     var sideTools = d3.select("#sideTools")
@@ -298,9 +294,9 @@ export class DialogGapminderComponent implements OnInit {
     // Create a timescale for year slider
     this.timeScale = d3.scaleTime()
     .domain([this.dimensions.dateMin, this.dimensions.dateMax])
-    .range([0, (this.width - 75)]);
+    .range([0, (width - 75)]);
 
-    this.dateArray = dateArray_function();
+    this.dateArray = buildDateArray();
     this.visSpeed = 20000 / (this.timeScale.range()[1] - this.timeScale.range()[0]);
     // If the last data in the array isn't the last possible date, add the last date to the end of the array
     if (this.dateArray[this.dateArray.length - 1].getTime() !== this.dimensions.dateMax.getTime()) {
@@ -325,15 +321,15 @@ export class DialogGapminderComponent implements OnInit {
       .attr('class', "slider")
       .attr("transform", "translate(15,15)");
 
-    var slider_tooltip = d3.select("body").append("div")
+    var sliderTooltip = d3.select("body").append("div")
       .attr("class", "tooltip")
       .style("opacity", 0);
 
     var handleFormat = this.formatHandleText();
 
     // Add annotations circles before the date slider.
-    if (this.annotations_data !== null) {
-      var annotationDates = Object.keys(this.annotations_data.GeneralAnnotations);
+    if (this.annotationsData !== null) {
+      var annotationDates = Object.keys(this.annotationsData.GeneralAnnotations);
 
       var annotationsDots = slider.append("g")
       .attr("class", "annotationDots")
@@ -342,7 +338,7 @@ export class DialogGapminderComponent implements OnInit {
       .enter().insert("circle", ".track-overlay")
       .attr("class", "handle")
       .attr("transform", "translate(0, 5)")
-      .attr("cx", (d: any) => this.timeScale(this.parseDate(d)))
+      .attr("cx", (d: any) => this.timeScale(parseDate(d)))
       .attr("r", 4)
       .attr("fill", "white")
       .attr("stroke", "black")
@@ -352,9 +348,9 @@ export class DialogGapminderComponent implements OnInit {
         _this.annotations.html(
           "<p class='datatable' style='font-weight:bold;'> Date: " + d + "</p>" +
           "<p class='datatable' style='font-weight:bold; display:inline;'>" +
-          _this.annotations_data.GeneralAnnotations[d].Title + ": " +
+          _this.annotationsData.GeneralAnnotations[d].Title + ": " +
           "<p class='datatable'style='display:inline;'>" +
-          _this.annotations_data.GeneralAnnotations[d].Description + "</p>"
+          _this.annotationsData.GeneralAnnotations[d].Description + "</p>"
         )
       })
     }
@@ -372,25 +368,25 @@ export class DialogGapminderComponent implements OnInit {
     .attr("class", "track-overlay")
     .style("cursor", "pointer")
     .on("mousemove", function (event: any) {
-      slider_tooltip.transition()
+      sliderTooltip.transition()
       .duration(200)
       .style("opacity", .9);
       // NOTE: For some reason, the mouse over event.x returns a number that is 237
       // higher than it should be, so it is subtracted for the tooltip to display correctly.
       var date = _this.timeScale.invert(Math.round(event.x - 237));
       if (date <= _this.dimensions.maxPopulatedDate) {
-        slider_tooltip.html(handleFormat(date))
+        sliderTooltip.html(handleFormat(date))
         .style("left", (event.pageX - 30) + "px")
         .style("top", (event.pageY - 35) + "px");
       } else {
-        slider_tooltip.html(handleFormat(date) + " (no data)")
+        sliderTooltip.html(handleFormat(date) + " (no data)")
         .style("left", (event.pageX - 30) + "px")
         .style("top", (event.pageY - 35) + "px");
       }
 
     })
     .on("mouseout", function () {
-      slider_tooltip.transition()
+      sliderTooltip.transition()
       .duration(200)
       .style("opacity", 0);
     })
@@ -403,7 +399,7 @@ export class DialogGapminderComponent implements OnInit {
     .attr("transform", "translate(0," + 28 + ")");
 
     g.selectAll("text")
-    .data(this.timeScale.ticks(getMaxXTicks(this.width, dateText.width)))
+    .data(this.timeScale.ticks(getMaxXTicks(width, dateText.width)))
     .enter().append("text")
     .attr("x", function (d) {
       return _this.timeScale(d);
@@ -439,10 +435,10 @@ export class DialogGapminderComponent implements OnInit {
       '<p><strong>' + this.variables.Sizing + '</strong>: </p>' +
       '<p><strong>' + this.variables.Grouping + '</strong>: </p>';
     // If there are additional parameters to show then add the content to the tablediv
-    if (this.additionalParametersDictionary) {
+    if (additionalParametersDictionary) {
       tableContents += "<br> Additional Parameters:<br>------------------";
-      for (var i = 0; i < this.additionalParametersDictionary.length; i++) {
-        tableContents += "<p><strong>" + this.additionalParametersDictionary[i] + "</strong>: </p>";
+      for (var i = 0; i < additionalParametersDictionary.length; i++) {
+        tableContents += "<p><strong>" + additionalParametersDictionary[i] + "</strong>: </p>";
       }
     }
     // Create a row and div for the datatable.
@@ -453,7 +449,7 @@ export class DialogGapminderComponent implements OnInit {
       .style("height", "100%");
 
     // If Config file specifies annotations append a div for annotations in same row as datatable.
-    if (this.annotations_data && !$.isEmptyObject(this.annotations_data.GeneralAnnotations)) {
+    if (this.annotationsData && !$.isEmptyObject(this.annotationsData.GeneralAnnotations)) {
       this.annotations = d3.select("#annotations");
     }
 
@@ -508,13 +504,13 @@ export class DialogGapminderComponent implements OnInit {
       this.xScale = d3.scaleLog()
       // CheckLogMin to make sure no negative numbers.
       .domain([this.checkMin(min), max])
-      .range([yTextBox.width + this.margin.left + 15, (this.width - 25)]);
+      .range([yTextBox.width + margin.left + 15, (width - 25)]);
 
       // Configure the xAxis with the xScale.
       xAxis = d3.axisBottom(this.xScale)
        // Get logTicks for log & format numbers for log.
         .ticks(6, d3.format(",d"))
-        .tickSizeInner(-(this.height))
+        .tickSizeInner(-(height))
         .tickSizeOuter(0)
         .tickPadding(10);
     } else {
@@ -524,14 +520,14 @@ export class DialogGapminderComponent implements OnInit {
       // Configure the linear x scale domain and range.
       this.xScale = d3.scaleLinear()
         .domain([min, max])
-        .range([yTextBox.width + this.margin.left + 15, (this.width - 25)]);
+        .range([yTextBox.width + margin.left + 15, (width - 25)]);
       // Configure the xAxis using the xScale.
       xAxis = d3.axisBottom(this.xScale)
       // Get maxXTicks for linear.
-      .ticks(getMaxXTicks(this.width, xTextBox.width) - 1)
+      .ticks(getMaxXTicks(width, xTextBox.width) - 1)
       // Format numbers for linear.
       .tickFormat(d3.format(","))
-      .tickSizeInner(-(this.height))
+      .tickSizeInner(-(height))
       .tickSizeOuter(0)
       .tickPadding(10);
     }
@@ -543,11 +539,11 @@ export class DialogGapminderComponent implements OnInit {
       // Configure log y scale domain and range.
       this.yScale = d3.scaleLog()
         .domain([this.checkMin(min), max])
-        .range([this.height - 40, 0]);
+        .range([height - 40, 0]);
       // Configure yAxis using y scale
       yAxis = d3.axisLeft(this.yScale)
         .ticks(6, d3.format(",d")) // Get logTicks for log & format numbers for log.
-        .tickSizeInner(-(this.width - this.margin.right) + 5)
+        .tickSizeInner(-(width - margin.right) + 5)
         .tickSizeOuter(0)
         .tickPadding(10);
     } else {
@@ -556,12 +552,12 @@ export class DialogGapminderComponent implements OnInit {
       // Configure linear y scale domain and range.
       this.yScale = d3.scaleLinear()
         .domain([min, max])
-        .range([this.height - 40, 0]);
+        .range([height - 40, 0]);
       // Configure yAxis using y scale.
       yAxis = d3.axisLeft(this.yScale)
-        // .ticks(getMaxYTicks(this.height, yTextBox.height)) // Get maxYticks for linear.
+        // .ticks(getMaxYTicks(height, yTextBox.height)) // Get maxYticks for linear.
         .tickFormat(d3.format(",")) // Format numbers for linear.
-        .tickSizeInner(-(this.width - this.margin.right) + 5)
+        .tickSizeInner(-(width - margin.right) + 5)
         .tickSizeOuter(0)
         .tickPadding(10);
     }
@@ -569,13 +565,13 @@ export class DialogGapminderComponent implements OnInit {
     // Add the x-axis to svg, using xAxis.
     var xaxis = this.mainSVG.append("g")
     .attr("class", "x axis")
-    .attr("transform", "translate(0," + (this.height - 40) + ")")
+    .attr("transform", "translate(0," + (height - 40) + ")")
     .call(xAxis);
     // Add the y-axis to svg, using yAxis.
     var yaxis = this.mainSVG.append("g")
     .attr("class", "y axis")
     .call(yAxis)
-    .attr("transform", "translate(" + (yTextBox.width + this.margin.left + 15) + ",0)");
+    .attr("transform", "translate(" + (yTextBox.width + margin.left + 15) + ",0)");
     // Style all inner ticks.
     d3.selectAll('g.tick')
     .select('line')
@@ -590,8 +586,8 @@ export class DialogGapminderComponent implements OnInit {
     var xlabel = this.mainSVG.append("text")
       .attr("class", "xLabel")
       .attr("text-anchor", "middle")
-      .attr("x", (this.width / 2))
-      .attr("y", this.height - 5)
+      .attr("x", (width / 2))
+      .attr("y", height - 5)
       .text(this.properties.BottomXAxisTitleString)
       .attr("font-size", "14px");
     // Add a y-axis label to svg to left of y-axis.
@@ -599,28 +595,28 @@ export class DialogGapminderComponent implements OnInit {
       .attr("class", "yLabel")
       .attr("text-anchor", "middle")
       .attr("y", 0)
-      .attr("x", -((this.height - 100) / 2))
+      .attr("x", -((height - 100) / 2))
       .attr("dy", ".75em")
       .attr("transform", "rotate(-90)")
       .text(this.properties.LeftYAxisTitleString)
       .attr("font-size", "14px");
 
     var legendData = getGroupingNames(this.json);
-    add_legend(legendData);
-    function add_legend(data: any) {
+    addLegend(legendData);
+    function addLegend(data: any) {
       var selectMultiple = false;
       // Initialize position 0 for adding elements to legend div.
       var pos = 0;
       // Get list of names for legend based off how dots are colored/grouped on the visualization.
       // Set height using 20px per name.
-      _this.legendHeight = (data.length + 1) * 20;
+      legendHeight = (data.length + 1) * 20;
 
       d3.select("#legend")
         .style("height", function () {
-          if (_this.legendHeight < ((_this.height / 2) - 30)) {
-            return (_this.legendHeight) + "px";
+          if (legendHeight < ((height / 2) - 30)) {
+            return (legendHeight) + "px";
           } else {
-            return (_this.height / 2) - 30 + "px";
+            return (height / 2) - 30 + "px";
           }
         });
       var legend = d3.select("#legend")
@@ -628,7 +624,7 @@ export class DialogGapminderComponent implements OnInit {
       legend = legend.append('svg')
         .attr("class", "legendBox")
         .attr("width", "100%")
-        .attr("height", _this.legendHeight)
+        .attr("height", legendHeight)
       // Add legend title.
       legend.append('text')
         .text(_this.variables.Grouping)
@@ -651,19 +647,19 @@ export class DialogGapminderComponent implements OnInit {
           if (event.ctrlKey) {
             if (_this.firstClick) {
               selectMultiple = false;
-              _this.legendButton(d, selectMultiple);
+              _this.legendClick(d, selectMultiple);
               _this.firstClick = false;
             } else {
               selectMultiple = true;
-              _this.legendButton(d, selectMultiple);
+              _this.legendClick(d, selectMultiple);
             }
           } else {
             selectMultiple = false;
-            _this.legendButton(d, selectMultiple);
+            _this.legendClick(d, selectMultiple);
             _this.firstClick = false;
           }
 
-        }); // Callback function: legendButton().
+        });
 
       // Reset position for legend div, accounting for text positioning vs. svg rect positioning
       pos = 7;
@@ -695,15 +691,15 @@ export class DialogGapminderComponent implements OnInit {
           if (event.ctrlKey) {
             if (_this.firstClick) {
               selectMultiple = false;
-              _this.legendButton(d, selectMultiple);
+              _this.legendClick(d, selectMultiple);
               _this.firstClick = false;
             } else {
               selectMultiple = true;
-              _this.legendButton(d, selectMultiple);
+              _this.legendClick(d, selectMultiple);
             }
           } else {
             selectMultiple = false;
-            _this.legendButton(d, selectMultiple);
+            _this.legendClick(d, selectMultiple);
             _this.firstClick = false;
           }
 
@@ -711,18 +707,6 @@ export class DialogGapminderComponent implements OnInit {
     }
 
     this.nameOptions = getIndividualDots(this.json);
-    // function add_marker_names(data: any) {
-    //   d3.select("#providerNames")
-    //   .selectAll(".marker_names")
-    //   .data(data)
-    //   .enter().append("option")
-    //   .attr("class", "marker_names")
-    //   .attr("value", (d: any) => d)
-    //   .text((d: any) => d)
-    //   .style('font-size', '12px');
-    // }
-
-    // add_marker_names(names);
 
     /** Variable creates life for data line (tracer). */
     this.line = d3.line()
@@ -730,7 +714,7 @@ export class DialogGapminderComponent implements OnInit {
     .y((d: any) => this.yScale(this.getYVar(d)))
 
     //-------------------------Add different elements to DOM if specified in annotation file----------------------
-    if (this.annotations_data !== null && !$.isEmptyObject(this.annotations_data.SpecificAnnotations)) {
+    if (this.annotationsData !== null && !$.isEmptyObject(this.annotationsData.SpecificAnnotations)) {
       var annotationShapes = this.mainSVG.append("g")
         .attr("id", "annotationShapes");
       // Add line Annotations if they are specified in the annotation file.
@@ -792,10 +776,8 @@ export class DialogGapminderComponent implements OnInit {
           })
           .attr('stroke', 'black')
           .on('mouseover', this.mouseoverAnnotation)
-          .on('mouseout', function (event: any, d: any) {
-            _this.tip.transition()
-              .style('display', 'none');
-          });
+          .on('mouseout', (event: any, d: any) =>
+            this.tip.transition().style('display', 'none'));
       }
       // Add a symbol if specified in the annotation file.
       // Add circles from annotation file.
@@ -819,10 +801,8 @@ export class DialogGapminderComponent implements OnInit {
             .attr('stroke', 'black')
             .attr('fill-opacity', 0)
             .on('mouseover', this.mouseoverAnnotation)
-            .on('mouseout', function (event: any, d: any) {
-              _this.tip.transition()
-                .style('display', 'none');
-            });
+            .on('mouseout', (event: any, d: any) =>
+              this.tip.transition().style('display', 'none'));
         }
         // Add Triangles from annotation file.
         var triangleAnnotations = retrieveByShape("Triangle");
@@ -843,10 +823,8 @@ export class DialogGapminderComponent implements OnInit {
             .attr('stroke', 'black')
             .attr('fill-opacity', 0)
             .on('mouseover', this.mouseoverAnnotation)
-            .on('mouseout', function (event: any, d: any) {
-              _this.tip.transition()
-                .style('display', 'none');
-            });
+            .on('mouseout', (event: any, d: any) =>
+              this.tip.transition().style('display', 'none'));
         }
         // Add Crosses from annotation file.
         var crossAnnotations = retrieveByShape("Cross");
@@ -867,10 +845,8 @@ export class DialogGapminderComponent implements OnInit {
             .attr('stroke', 'black')
             .attr('fill-opacity', 0)
             .on('mouseover', this.mouseoverAnnotation)
-            .on('mouseout', function (event: any, d: any) {
-              _this.tip.transition()
-                .style('display', 'none');
-            });
+            .on('mouseout', (event: any, d: any) =>
+              this.tip.transition().style('display', 'none'));
         }
         // Add Text from annotation file.
         var textAnnotations = retrieveAnnotations("Text");
@@ -895,10 +871,8 @@ export class DialogGapminderComponent implements OnInit {
               return d.Properties.FontSize;
             })
             .on('mouseover', this.mouseoverAnnotation)
-            .on('mouseout', function (event: any, d: any) {
-              _this.tip.transition()
-                .style('display', 'none');
-            })
+            .on('mouseout', (event: any, d: any) =>
+              this.tip.transition().style('display', 'none'))
             .attr("cursor", "default");
         }
       }
@@ -919,52 +893,52 @@ export class DialogGapminderComponent implements OnInit {
     var nested = this.nest(this.interpolatePath(this.dimensions.dateMin), this.pathData);
 
     var path: any;
-    function add_path(data: any) {
+    function addTracerPath(data: any) {
 
       path = _this.mainSVG.append("g")
-        .attr("id", "dataline")
-        .selectAll(".path")
-        .data(data)
-        .enter().append("path")
-        .attr("class", function (d: any) {
-          // d.key changed to d[0]
-          return "tracer T" + convert_to_id(d[0].toUpperCase());
-        })
-        // Updated: path elements by default are filled black, specify CSS fill
-        // 'none' to avoid this on tracer.
-        .attr("fill", "none")	
-        .attr("id", function (d: any) {
-          // d.values changes to d[1]
-          return "T" + convert_to_id(d[1][0].color);
-        })
-        .style("stroke", function (d: any) {
-          // d.values changes to d[1]
-          return colorScale(d[1][0].color);
-        })
-        .style("stroke-width", "1.5px")
-        .style("stroke-opacity", function (d: any) {
-          if (_this.tracer) {
-            return .75;
-          } else {
-            return 0;
-          }
-        })
-        .attr("d", function (d: any) {
-          // d[1] = values
-          return _this.line(d[1]);
-        })
-        .style("pointer-events", "none");
+      .attr("id", "dataline")
+      .selectAll(".path")
+      .data(data)
+      .enter().append("path")
+      .attr("class", function (d: any) {
+        // d.key changed to d[0]
+        return "tracer T" + toID(d[0].toUpperCase());
+      })
+      // Updated: path elements by default are filled black, specify CSS fill
+      // 'none' to avoid this on tracer.
+      .attr("fill", "none")	
+      .attr("id", function (d: any) {
+        // d.values changes to d[1]
+        return "T" + toID(d[1][0].color);
+      })
+      .style("stroke", function (d: any) {
+        // d.values changes to d[1]
+        return colorScale(d[1][0].color);
+      })
+      .style("stroke-width", "1.5px")
+      .style("stroke-opacity", function (d: any) {
+        if (_this.tracer) {
+          return .75;
+        } else {
+          return 0;
+        }
+      })
+      .attr("d", function (d: any) {
+        // d[1] = values
+        return _this.line(d[1]);
+      })
+      .style("pointer-events", "none");
     }
 
     // NOTE: Draws tracer lines, but is acting a little wonky.
-    // add_path(nested);
+    addTracerPath(nested);
 
     // Turn tracers off if specified 'Off' in Config file.
     if (!this.tracer) {
       document.getElementById("tracerButton").innerHTML = "Turn Tracer On";
     }
 
-    function add_dots() {
+    function addDots() {
       var dot_g = _this.mainSVG.append("g")
         .attr("id", "dots")
       _this.dot = dot_g.selectAll(".dot")
@@ -974,7 +948,7 @@ export class DialogGapminderComponent implements OnInit {
           return "dot D" + _this.checkForSymbol(d.color);
         })
         .attr("id", function (d: any, i: any) {
-          return "D" + convert_to_id(d.name);
+          return "D" + toID(d.name);
         })
         .on("mouseover", function(event: any, d: any) {
 
@@ -982,7 +956,7 @@ export class DialogGapminderComponent implements OnInit {
             if (_this.displayAll) {
               d3.selectAll(".dot").style("fill-opacity", .25).attr("stroke-opacity", .25);
             } else {
-              // d3.selectAll(".dot" + dot_class_selector(d.color)).style("fill-opacity", .75).attr("stroke-opacity", .5);
+              // d3.selectAll(".dot" + dotClassSelector(d.color)).style("fill-opacity", .75).attr("stroke-opacity", .5);
             }
 
             d3.select(this)
@@ -998,10 +972,10 @@ export class DialogGapminderComponent implements OnInit {
               if (_this.displayAll) {
                 d3.selectAll("path.tracer").style("stroke-opacity", .4);
               } else {
-                d3.selectAll("path" + _this.path_id_selector(d.color)).style("stroke-opacity", .4);
+                d3.selectAll("path" + _this.pathIDSelector(d.color)).style("stroke-opacity", .4);
               }
               // Display only the tracer that is being hovered over
-              d3.select("path" + path_class_selector(d.name).toString().toUpperCase())
+              d3.select("path" + pathClassSelector(d.name).toString().toUpperCase())
                 .style("stroke-opacity", 1);
             }
           }
@@ -1017,7 +991,7 @@ export class DialogGapminderComponent implements OnInit {
             "<p><strong>" + _this.variables.Grouping + "</strong>: " + color(d) + "</p>";
             
           if (_this.properties.AdditionalData) {
-            var additionalParameters = _this.additionalParametersDictionary[_this.key(d)];
+            var additionalParameters = additionalParametersDictionary[_this.key(d)];
             var showColumns = _this.properties.AdditionalData.ShowColumns;
             // If there are additional parameters to show then add the content to the tablediv
             if (additionalParameters) {
@@ -1041,7 +1015,7 @@ export class DialogGapminderComponent implements OnInit {
             event.preventDefault();
             div.style("opacity", 1);
             div.html("<p style='margin:0px;'><a style='color:black; font-weight:bold;' href='./highchart.html?csv=" +
-              expand_parameter_value(_this.properties.FilePropertyName, { "Year": _this.properties.DefaultDatasetChoice }) +
+              expandPropertyValue(_this.properties.FilePropertyName, { "Year": _this.properties.DefaultDatasetChoice }) +
               "&name=" + d.name + "&nameVar=" + _this.variables.Label + "&xVar=" + _this.variables.XAxis + "&yVar=" +
               _this.variables.YAxis + "&size=" + _this.variables.Sizing + "&datevariable=" + _this.variables.Label +
               "', target='_blank'> Timeseries</a></p>")
@@ -1063,7 +1037,7 @@ export class DialogGapminderComponent implements OnInit {
 
     var data = this.interpolateData(this.dimensions.dateMin);
     // Add the dots to the visualization.
-    add_dots();
+    addDots();
 
     // Set animation speed after all elements have been added, or set a default
     // if the AnimationSpeed property is not given.
@@ -1114,20 +1088,25 @@ export class DialogGapminderComponent implements OnInit {
     }
 
     /**
-     * Dot mouseout event handler. Removes bold dot outline.
-     * @param event 
+     * Dot mouseout event handler. Removes bold dot outline from mouseover'd dot
+     * and resets the opacity and stroke opacity of all other dots.
+     * @param event The event object.
      * @param d The data point object.
      */
     function mouseout(event: any, d: any) {
 
       if (d3.select(this).attr("display") === "true") {
-        if (this.displayAll) {
-          d3.selectAll(".dot").style("fill-opacity", 1).attr("stroke-opacity", function () {
+        if (_this.displayAll) {
+          d3.selectAll(".dot")
+          .style("fill-opacity", 1)
+          .attr("stroke-opacity", function () {
             if (d3.select(this).attr("checked") !== "true") { return 1; }
             else { return .5; }
           });
         } else {
-          d3.selectAll(".dot" + _this.dot_class_selector(d.color)).style("fill-opacity", 1).attr("stroke-opacity", function () {
+          d3.selectAll(".dot" + _this.dotClassSelector(d.color))
+          .style("fill-opacity", 1)
+          .attr("stroke-opacity", function () {
             if (d3.select(this).attr("checked") !== "true") { return 1; }
             else { return .5; }
           });
@@ -1138,16 +1117,18 @@ export class DialogGapminderComponent implements OnInit {
             if (d3.select(this).attr("checked") !== "true") { return 1; }
             else { return 4; }
           });
-
-        if (this.tracer) {
-          if (this.displayAll) {
-            d3.selectAll("path.tracer").style("stroke-opacity", .75);
+          
+        if (_this.tracer) {
+          if (_this.displayAll) {
+            d3.selectAll("path.tracer")
+            .style("stroke-opacity", .75);
           } else {
-            d3.selectAll("path" + _this.path_id_selector(d.color)).style("stroke-opacity", .75);
+            d3.selectAll("path" + _this.pathIDSelector(d.color))
+            .style("stroke-opacity", .75);
           }
         }
       }
-      d3.selectAll(".dot").sort(this.order);
+      d3.selectAll(".dot").sort(_this.order.bind(_this));
     }
 
     //-----------------------------------Other Callback Functions for various elements----------------------------------
@@ -1158,7 +1139,7 @@ export class DialogGapminderComponent implements OnInit {
      *@param {number} year - date selected from year slider
      */
     function draggedYear(date: any) {
-      slider_tooltip.style("opacity", 0);
+      sliderTooltip.style("opacity", 0);
       date.setHours(0, 0, 0);
       _this.stopAnimation();
 
@@ -1188,7 +1169,7 @@ export class DialogGapminderComponent implements OnInit {
      */
     $('select').on('select2:select', function (evt: any) {
       var provider = evt.params.data.text;
-      d3.select(_this.dot_id_selector(provider))
+      d3.select(_this.dotIDSelector(provider))
         .style('stroke', 'yellow')
         .attr('stroke-width', function () {
           if (d3.select(this).attr("display") === "true") {
@@ -1208,7 +1189,7 @@ export class DialogGapminderComponent implements OnInit {
      */
     $('select').on('select2:unselect', function (evt: any) {
       var provider = evt.params.data.text;
-      d3.select(_this.dot_id_selector(provider))
+      d3.select(_this.dotIDSelector(provider))
         .style('stroke', null)
         .attr('stroke-width', 1)
         .attr('stroke-opacity', function () {
@@ -1221,11 +1202,11 @@ export class DialogGapminderComponent implements OnInit {
         .attr("checked", "false");
     })
 
-    //-----------------------------Helper Functions used throughout this javascript file-------------------------------
+    //-----------------------------Helper Functions-------------------------------
     /**
-     *Returns an array of dates according to precision units specified in Config file
+     * Returns an array of dates according to precision units specified in Config file.
      */
-    function dateArray_function() {
+    function buildDateArray() {
 
       var Date1 = new Date(_this.dimensions.dateMin);
       var Date2 = new Date(_this.dimensions.dateMax);
@@ -1408,7 +1389,7 @@ export class DialogGapminderComponent implements OnInit {
       var returnThis: any;
 
       // group this data with this key 
-      var group = d3.group(_this.annotations_data.SpecificAnnotations, (d: any) => d.ShapeType)
+      var group = d3.group(_this.annotationsData.SpecificAnnotations, (d: any) => d.ShapeType)
 
       group.forEach(function (values: any, key: any, map: any) {
         if (key === shape) {
@@ -1499,155 +1480,9 @@ export class DialogGapminderComponent implements OnInit {
       });
     };
 
-    d3.select(window).on('resize', function(){
-      if(true){ // gapminderSelected
-        resize();
-      }
-    });
-
     // window.onunload = function () {
     //   devTools.close();
     // };
-
-    /**
-     *Resizes the chart elements when window is resized
-     */
-    function resize() {
-      let height = $("#Gapminder").parent().height() - 270;
-      let width = $(".box").width();
-
-      d3.select("svg.box").attr("height", height);
-
-      this.xScale.range([yTextBox.width + this.margin.left + 15, (width - 25)]);
-      this.yScale.range([height - 40, 0]);
-
-      if (this.properties.XAxisScale.toUpperCase() === "LOG") {
-        xAxis.scale(this.xScale)
-          .ticks(6, d3.format(",d"))
-          .tickSizeInner(-height)
-      } else {
-        xAxis.scale(this.xScale)
-          .ticks(getMaxXTicks(width, xTextBox.width) - 1)
-          .tickFormat(d3.format(","))
-          .tickSizeInner(-height)
-      }
-
-      if (this.properties.YAxisScale.toUpperCase() === "LOG") {
-        yAxis.scale(this.yScale)
-          .ticks(6, d3.format(",d"))
-          .tickSizeInner(-(width - this.margin.right) + 30);
-      } else {
-        yAxis.scale(this.yScale)
-          .ticks(getMaxYTicks(height, yTextBox.height))
-          .tickSizeInner(-(width - this.margin.right) + 30);
-      }
-
-      xaxis.call(xAxis).attr("transform", "translate(0," + (height - 40) + ")");
-      yaxis.call(yAxis).attr("transform", "translate(" + (yTextBox.width + this.margin.left + 15) + ",0)");
-
-      xlabel.attr("x", (width / 2)).attr("y", height - 5);
-
-      ylabel.attr("y", 0).attr("x", -((height - 100) / 2));
-
-      // Update dots.
-      this.dot.call(_this.position.bind(this));
-
-      // Update line paths (tracers) for dots.
-      if (this.tracer) {
-        this.line.x(function (d: any) { return this.xScale(this.getXVar(d)); }).y(function (d: any) { return this.yScale(this.getYVar(d)); })
-        path.attr("d", function (d: any) {
-          return _this.line(d[1]); // data value accessed using d[1]
-        });
-      }
-
-      if ($("#annotationLine").length) {
-        annotationLine
-          .attr('x1', function (d: any) {
-            return _this.xScale(d.Properties.x1);
-          })
-          .attr('y1', function (d: any) {
-            return _this.yScale(d.Properties.y1);
-          })
-          .attr('x2', function (d: any) {
-            return _this.xScale(d.Properties.x2);
-          })
-          .attr('y2', function (d: any) {
-            return _this.yScale(d.Properties.y2);
-          })
-      }
-
-      if ($("#annotationRect").length) {
-        annotationRect
-          .attr('x', function (d: any) {
-            return _this.xScale(d.Properties.x1);
-          })
-          .attr('y', function (d: any) {
-            return _this.yScale(d.Properties.y1);
-          })
-          .attr('width', function (d: any) {
-            var x1 = _this.xScale(d.Properties.x1);
-            var x2 = _this.xScale(d.Properties.x2);
-            return x2 - x1;
-          })
-          .attr('height', function (d: any) {
-            var y1 = _this.yScale(d.Properties.y1);
-            var y2 = _this.yScale(d.Properties.y2);
-            return y2 - y1;
-          })
-      }
-
-      if ($("#annotationCircle").length) {
-        annotationCircle
-          .attr("transform", function (d: any) {
-            return "translate(" + _this.xScale(d.Properties.x) + "," + _this.yScale(d.Properties.y) + ")";
-          })
-      }
-      if ($("#annotationTriangle").length) {
-        annotationTriangle
-          .attr("transform", function (d: any) {
-            return "translate(" + _this.xScale(d.Properties.x) + "," + _this.yScale(d.Properties.y) + ")";
-          })
-      }
-      if ($("#annotationCross").length) {
-        annotationCross
-          .attr("transform", function (d: any) {
-            return "translate(" + _this.xScale(d.Properties.x) + "," + _this.yScale(d.Properties.y) + ")rotate(45)";
-          })
-      }
-      if ($("#annotationText").length) {
-        this.annotationText.attr("x", function (d: any) {
-          return _this.xScale(d.Properties.x);
-        })
-          .attr("y", function (d: any) {
-            return _this.yScale(d.Properties.y) + 5;
-          })
-      }
-
-      d3.select("#legend").style("height", function () {
-        if (_this.legendHeight < ((height / 2) - 30)) {
-          return _this.legendHeight + "px";
-        } else {
-          return (height / 2) - 30 + "px";
-        }
-      });
-      d3.select("#sideTools").style("height", (height / 2) + "px");
-
-      this.timeScale.range([0, (width - 75)]);
-
-      d3.select(".track").attr("x1", this.timeScale.range()[0]).attr("x2", this.timeScale.range()[1]);
-      d3.select(".track-inset").attr("x1", this.timeScale.range()[0]).attr("x2", this.timeScale.range()[1]);
-      d3.select(".track-overlay").attr("x1", this.timeScale.range()[0]).attr("x2", this.timeScale.range()[1]);
-      this.handle.attr("transform", "translate(" + (this.timeScale(this.getClosest(this.currYear)) + ", 0)"));
-      this.handleText.attr("transform", "translate(" + (this.timeScale(this.getClosest(this.currYear)) + ",-8)"));
-      var slidertext = g.selectAll("text").data(this.timeScale.ticks(getMaxXTicks(width, dateText.width)));
-      slidertext.exit().remove();
-      slidertext.enter().append("text");
-      slidertext.attr("x", function (d) {
-        return _this.timeScale(d);
-      })
-        .attr("text-anchor", "middle")
-        .text((d) => this.formatDate(d));
-    }
 
     //-------------------------------------TEST FUNCTION----------------------------------//
     function selectYear(date: any) {
@@ -1682,14 +1517,14 @@ export class DialogGapminderComponent implements OnInit {
       // Update timeSlider.
       // Create a timescale for year slider.
       this.timeScale.domain([this.dimensions.dateMin, this.dimensions.dateMax]);
-      this.dateArray = dateArray_function();
+      this.dateArray = buildDateArray();
       // If the last data in the array isn't the last possible date add the last date to the end of the array.
       if (this.dateArray[this.dateArray.length - 1].getTime() !== this.dimensions.dateMax.getTime()) {
         this.dateArray.push(this.dimensions.dateMax);
       }
       dateLabel.text(this.formatDate(this.timeScale.ticks()[0]));
 
-      var slidertext = g.selectAll("text").data(this.timeScale.ticks(getMaxXTicks(this.width, dateText.width)));
+      var slidertext = g.selectAll("text").data(this.timeScale.ticks(getMaxXTicks(width, dateText.width)));
       slidertext.exit().remove();
       slidertext.enter().append("text");
       slidertext
@@ -1704,12 +1539,11 @@ export class DialogGapminderComponent implements OnInit {
       // UPDATE LEGEND:
       $("#legend").empty();
       legendData = getGroupingNames(this.json);
-      add_legend(legendData);
+      addLegend(legendData);
 
       // UPDATE SELECTION BAR:
       $("#providerNames").empty();
       _this.nameOptions = getIndividualDots(this.json);
-      // add_marker_names(names);
 
       // UPDATE PATH:
       this.pathData = [];
@@ -1719,7 +1553,7 @@ export class DialogGapminderComponent implements OnInit {
         this.pathJSON = this.json.data;
       }
       nested = this.nest(this.interpolatePath(this.dimensions.dateMin), this.pathData);
-      add_path(nested); // path is missing???
+      addTracerPath(nested); // path is missing???
 
       this.pauseButton();
       this.displayYear(this.dimensions.dateMin);
@@ -1731,43 +1565,27 @@ export class DialogGapminderComponent implements OnInit {
 
       d3.selectAll(".dot").remove();
       var data = this.interpolateData(this.dimensions.dateMin);
-      add_dots();
+      addDots();
     }
 
     //---------------Various accessors that specify the four dimensions of data to visualize.-------------------
     /**
-     *Accessor function for color of dot
+     * Getter function for data point color.
      */
     function color(d: any) { return d.color; }
 
     /**
-     *Accessor function for date
+     * Getter function for data point date.
      */
     function date(d: any) { return d.year; }
 
     //----------------------------Helper Functions that manipulate strings for d3.select() purposes-------------------------
 
     /**
-     *Converts the string into a selector name
-     *ex: 'Denver Water' -> '.Denver.Water'
+     * Converts the string into a selector name.
+     * ex: 'Denver Water' -> '.Denver.Water'
      */
-    function class_selector(inputString: any) {
-      var string = inputString.split(" ");
-      var returnThis = ".";
-      for (var i = 0; i < string.length - 1; i++) {
-        if (_this.checkForSymbol(string[i]) !== "") {
-          returnThis = returnThis + string[i].replace(/[^A-Za-z0-9]/g, '')// + ".";
-        }
-      }
-      returnThis = returnThis + string[string.length - 1].replace(/[^A-Za-z0-9]/g, '');
-      return returnThis.toString();
-    }
-
-    /**
-     *Converts the string into a selector name
-     *ex: 'Denver Water' -> '.Denver.Water'
-     */
-    function convert_to_id(inputString: any) {
+    function toID(inputString: any) {
       var string = inputString.split(" ");
       var returnThis = "";
       for (var i = 0; i < string.length - 1; i++) {
@@ -1780,10 +1598,10 @@ export class DialogGapminderComponent implements OnInit {
     }
 
     /**
-     *Converts the string into a selector name
-     *ex: 'Denver Water' -> '.Denver.Water'
+     * Converts the string into a selector name.
+     * ex: 'Denver Water' -> '.Denver.Water'
      */
-    function path_class_selector(inputString: any) {
+    function pathClassSelector(inputString: any) {
       var string = inputString.split(" ");
       var returnThis = ".T";
       for (var i = 0; i < string.length - 1; i++) {
@@ -1795,24 +1613,24 @@ export class DialogGapminderComponent implements OnInit {
       return returnThis.toString();
     }
 
-    function expand_parameter_value(parameter_value: any, properties: any) {
-      var search_pos = 0,
-        delim_start = "${",
-        delim_end = "}";
+    function expandPropertyValue(propValue: any, properties: any) {
+      var searchPosition = 0,
+        delimStart = "${",
+        delimEnd = "}";
       var b = "";
-      while (search_pos < parameter_value.length) {
-        var found_pos_start = parameter_value.indexOf(delim_start),
-          found_pos_end = parameter_value.indexOf(delim_end),
-          prop_name = parameter_value.substr((found_pos_start + 2), ((found_pos_end - found_pos_start) - 2)),
-          prop_val = properties[prop_name];
+      while (searchPosition < propValue.length) {
+        var positionStart = propValue.indexOf(delimStart),
+          positionEnd = propValue.indexOf(delimEnd),
+          propName = propValue.substr((positionStart + 2), ((positionEnd - positionStart) - 2)),
+          propValue = properties[propName];
 
-        if (found_pos_start === -1) {
+        if (positionStart === -1) {
           return b;
         }
 
-        b = parameter_value.substr(0, found_pos_start) + prop_val + parameter_value.substr(found_pos_end + 1, parameter_value.length);
-        search_pos = found_pos_start + prop_val.length;
-        parameter_value = b;
+        b = propValue.substr(0, positionStart) + propValue + propValue.substr(positionEnd + 1, propValue.length);
+        searchPosition = positionStart + propValue.length;
+        propValue = b;
       }
       return b;
     }
@@ -1820,15 +1638,17 @@ export class DialogGapminderComponent implements OnInit {
   }
 
   /**
-   * Callback Function: Called when clicking Turn Annotations On/ Turn Annotations Off.
+   * Called when clicking Turn Annotations On/ Turn Annotations Off.
    * Either displays the annotation shapes on the canvas or hides them.
    */
   public annotationsButton() {
     var elem = document.getElementById("annotationsButton");
     if (elem.innerHTML === "Turn Annotations On") {
       this.properties.AnnotationShapes.toUpperCase() === "ON";
-      if ($("annotationText").length) { this.annotationText.attr("fill-opacity", 1).on("mouseover",
-      this.mouseoverAnnotation.bind(this)); }
+      if ($("annotationText").length) {
+        this.annotationText.attr("fill-opacity", 1).on("mouseover",
+        this.mouseoverAnnotation.bind(this));
+      }
       d3.selectAll(".annotationShape").attr("stroke-opacity", 1).on("mouseover",
       this.mouseoverAnnotation.bind(this));
       elem.innerHTML = "Turn Annotations Off";
@@ -1970,7 +1790,7 @@ export class DialogGapminderComponent implements OnInit {
     date.setHours(0, 0, 0); // This WILL prove to be an issue if dealing with hourly time.
     if (date <= this.dimensions.maxPopulatedDate) {
       // Display annotations.
-      if (this.annotations_data) {
+      if (this.annotationsData) {
         if (this.getAnnotations(this.inputFileFormat(date))) {
           var d = this.getAnnotations(this.inputFileFormat(date));
           this.annotations.html(
@@ -2007,7 +1827,7 @@ export class DialogGapminderComponent implements OnInit {
    * Converts the string into a selector name.
    * ex: 'Denver Water' -> '.Denver.Water'
    */
-  public dot_class_selector(inputString: any) {
+  public dotClassSelector(inputString: any) {
     var string = inputString.split(" ");
     var returnThis = ".D";
     for (var i = 0; i < string.length - 1; i++) {
@@ -2023,7 +1843,7 @@ export class DialogGapminderComponent implements OnInit {
    *Converts the string into an id selector name
     *ex: 'Denver Water' -> '.Denver.Water'
     */
-  public dot_id_selector(inputString: any) {
+  public dotIDSelector(inputString: any) {
     var string = inputString.split(" ");
     var returnThis = "#D";
     for (var i = 0; i < string.length - 1; i++) {
@@ -2098,8 +1918,8 @@ export class DialogGapminderComponent implements OnInit {
    * @returns The annotations for the supplied year, if found.
    */
   public getAnnotations(year: any) {
-    if (this.annotations_data.GeneralAnnotations[year] !== "undefined") {
-      return this.annotations_data.GeneralAnnotations[year];
+    if (this.annotationsData.GeneralAnnotations[year] !== "undefined") {
+      return this.annotationsData.GeneralAnnotations[year];
     } else {
       return null;
     }
@@ -2229,7 +2049,10 @@ export class DialogGapminderComponent implements OnInit {
    * @returns 
    */
   public interpolateValues(values: any, year: any) {
-    var i = this.bisect.left(values, year, 0, values.length - 1),
+    /** A bisector for interpolating data if sparsely-defined. */
+    var bisect = d3.bisector((d) => d[0]);
+
+    var i = bisect.left(values, year, 0, values.length - 1),
       a = values[i];
 
     if (i > 0) {
@@ -2249,31 +2072,41 @@ export class DialogGapminderComponent implements OnInit {
   public key(d: any) { return d.name; }
 
   /**
-   * Callback Function: Called when clicking on a selection (basin) on the legend.
+   * Called when clicking on a selection on the legend.
    * Displays only dots related to that specific label.
    * @param d The data point object.
    * @param selectMultiple 
    */
-  public legendButton(d: any, selectMultiple: any) {
+  public legendClick(d: any, selectMultiple: any) {
     var _this = this;
     this.displayAll = false;
     this.selectedGroup = d;
     if (!selectMultiple) {
-      d3.selectAll("path.tracer").style("stroke-opacity", 0);
-      d3.selectAll(".dot").style("fill-opacity", ".2").attr("stroke-width", "0").attr("display", "false");
-      d3.selectAll("text").style("font-weight", "normal")
+      d3.selectAll("path.tracer")
+      .style("stroke-opacity", 0);
+
+      d3.selectAll(".dot")
+      .style("fill-opacity", ".2")
+      .attr("stroke-width", "0")
+      .attr("display", "false");
+
+      d3.selectAll("text")
+      .style("font-weight", "normal")
     }
-    d3.selectAll("text" + _this.dot_class_selector(d)).style("font-weight", "bold");
+    d3.selectAll("text" + _this.dotClassSelector(d)).style("font-weight", "bold");
     setTimeout(function () {
-      d3.selectAll(_this.dot_class_selector(d)).style("fill-opacity", "1").attr("stroke-width", function () {
+      d3.selectAll(_this.dotClassSelector(d))
+      .style("fill-opacity", "1")
+      .attr("stroke-width", function () {
         if (d3.select(this).attr("checked") !== "true") {
           return 1;
         } else {
           return 4;
         }
       }).attr("display", "true");
-      if (this.tracer) {
-        d3.selectAll("path" + _this.path_id_selector(d)).style("stroke-opacity", .75);
+
+      if (_this.tracer) {
+        d3.selectAll("path" + _this.pathIDSelector(d)).style("stroke-opacity", .75);
       }
     }, 100);
 
@@ -2282,7 +2115,7 @@ export class DialogGapminderComponent implements OnInit {
   /**
    * Determines whether the radius of a dot is larger than the minimum of 3 pixels.
    * @param value Number to check.
-   * @returns A radius whose value is at least 3 pixels large.
+   * @returns A radius whose value is at least 3 pixels in width.
    */
   public minRadius(value: any) {
     return value < 3.0 ? 3.0 : value;
@@ -2295,6 +2128,9 @@ export class DialogGapminderComponent implements OnInit {
    * @param d The data point object.
    */
   public mouseoverAnnotation(event: any, d: any) {
+    // The way a popup like this is created does not take dialogs, or any kind of
+    // different z-indexed element into account. Because of this, the mouseover
+    // popup shows up behind the dialog.
     this.tip.transition().duration(0);
     this.tip.style('top', (event.pageY - 20) + 'px')
     .style('left', (event.pageX + 13) + 'px')
@@ -2337,7 +2173,7 @@ export class DialogGapminderComponent implements OnInit {
     .attr("checked", "false");
 
     for (let value of newSelectValue) {
-      d3.select(this.dot_id_selector(value))
+      d3.select(this.dotIDSelector(value))
       .style('stroke', 'yellow')
       .attr('stroke-width', function () {
         if (d3.select(this).attr("display") === "true") {
@@ -2407,7 +2243,6 @@ export class DialogGapminderComponent implements OnInit {
   */
   public openDocDialog(): void {
     var docPath = this.properties.DocFilePath;
-    if (!docPath) return;
 
     var windowID = this.geoLayer.geoLayerId + '-dialog-doc';
     if (this.windowManager.windowExists(windowID)) {
@@ -2468,7 +2303,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param inputString String to be converted.
    * @returns ID selector name.
    */
-  public path_id_selector(inputString: any) {
+  public pathIDSelector(inputString: any) {
     var string = inputString.split(" ");
     var returnThis = "#T";
     for (var i = 0; i < string.length - 1; i++) {
@@ -2651,13 +2486,12 @@ export class DialogGapminderComponent implements OnInit {
   public selectAllButton() {
 
     this.displayAll = true;
-    d3.selectAll(".dot").style("fill-opacity", "1").attr("stroke-width", function () {
-      if (d3.select(this).attr("checked") !== "true") {
-        return 1;
-      } else {
-        return 4;
-      }
-    }).attr("display", "true");
+
+    d3.selectAll(".dot")
+    .style("fill-opacity", "1")
+    .attr("stroke-width", 1)
+    .attr("stroke-opacity", 1)
+    .attr("display", "true");
 
     this.dot.sort(this.order.bind(this));
     d3.selectAll("text").style("font-weight", "normal")
@@ -2727,7 +2561,7 @@ export class DialogGapminderComponent implements OnInit {
        if (this.displayAll) {
          d3.selectAll("path.tracer").style("stroke-opacity", .75);
        } else {
-         d3.selectAll("path" + this.path_id_selector(this.selectedGroup)).style("stroke-opacity", .75);
+         d3.selectAll("path" + this.pathIDSelector(this.selectedGroup)).style("stroke-opacity", .75);
        }
        this.tracer = true;
        elem.innerHTML = "Turn Tracer Off";

@@ -19,7 +19,7 @@
 			"Date": "Year",
 			"Sizing": "Population",
 			"Grouping": "Basin",
-			"Label": "County"
+			"Label": "Provider"
 		},
 		"TracerNames": "*",
 		"AnnotationShapes": "Off",

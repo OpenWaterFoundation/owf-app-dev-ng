@@ -1,4 +1,3 @@
-import * as Papa from 'papaparse';
 
 export class Parameters {
 

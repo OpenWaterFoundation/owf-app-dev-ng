@@ -10,6 +10,38 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.6.2 #
+
+### Code refactoring ###
+
+* Many quality of life additions were made to a few files, with the gapminder utility
+files being changed the most. They are easier to read now.
+
+### Features / Enhancements ###
+
+* Updated the whole project from Angular 11 to Angular 13. Serving and building
+the library/application is now faster, including the other quality of life updates
+that come with the update.
+
+* Preemptively added code for displaying multiple datasets in Gapminder. This will
+be used in future releases; As of now, the code isn't used and the HTML element is
+hidden.
+
+# 0.6.1 #
+
+### Code Refactoring ###
+
+* Comments were completed for all named ID's and classes in the Gapminder Component
+CSS file.
+
+* Comments were added to the Gapminder Component ts file, and variables names were
+changed to align more with recommended Typescript practices.
+
+### Features / Enhancements ###
+
+* Tracers and any event dealing with tracers on the Gapminder visualization was
+added.
+
 # 0.6.0 #
 
 ### Code Refactoring ###

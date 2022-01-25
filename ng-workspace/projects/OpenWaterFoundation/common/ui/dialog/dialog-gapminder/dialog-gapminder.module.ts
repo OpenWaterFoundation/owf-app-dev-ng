@@ -7,6 +7,8 @@ import { FormsModule }              from '@angular/forms';
 import { MatButtonModule }          from '@angular/material/button';
 import { MatDialogModule }          from '@angular/material/dialog';
 
+import { PipesModule }              from '@OpenWaterFoundation/common/pipes';
+
 import { NgSelect2Module }          from 'ng-select2';
 import { DialogGapminderComponent } from './dialog-gapminder.component';
 
@@ -21,7 +23,8 @@ import { DialogGapminderComponent } from './dialog-gapminder.component';
     FormsModule,
     MatButtonModule,
     MatDialogModule,
-    NgSelect2Module
+    NgSelect2Module,
+    PipesModule
   ],
   exports: [
     DialogGapminderComponent

@@ -53,7 +53,7 @@ including the following OWF applications.
 | **Application** | **Description** |
 | -- | -- |
 | [OWF InfoMapper](https://github.com/OpenWaterFoundation/owf-app-infomapper-ng) | Web mapping and visualization application. |
-| InfoMapper Map | Single map that can be embedded in a web page - **to be developed**. |
+| InfoMapper Map | Single map that can be embedded in a web page. |
 | [SNODAS web application](https://github.com/OpenWaterFoundation/owf-app-snodas-ng) | Provides access to SNODAS snow data - OWF has developed an Angular version based on previous JavaScript/HTML prototype and needs to migrate to new integrated components.  **Conversion to use new libraries is planned.** |
 
 See the following resources for background information.

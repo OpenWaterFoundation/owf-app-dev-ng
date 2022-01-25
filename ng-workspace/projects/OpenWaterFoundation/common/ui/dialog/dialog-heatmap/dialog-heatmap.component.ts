@@ -8,8 +8,6 @@ import { forkJoin }         from 'rxjs';
 
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
 
-import ResizeObserver       from 'resize-observer-polyfill';
-
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
 import { StateMod_TS }      from '@OpenWaterFoundation/common/dwr/statemod';
@@ -19,6 +17,14 @@ import { DateValueTS,
           TS,
           YearTS }          from '@OpenWaterFoundation/common/ts';
 import { DateTime }         from '@OpenWaterFoundation/common/util/time';
+
+// This is the work-around for a conflicting issue with typing when trying to import
+// this package through normal means. This older way does not have its own @types
+// file, so it won't conflict with TypeScript 4.3.5's now implemented typings.
+// More information can be found at
+// https://stackoverflow.com/questions/33704714/cant-require-default-export-value-in-babel-6-x?answertab=active#tab-top
+const ResizeObserverPolyfill = require('resize-observer-polyfill').default;
+// import ResizeObserver       from 'resize-observer-polyfill';
 
 declare const Plotly: any;
 
@@ -138,7 +144,8 @@ export class DialogHeatmapComponent implements OnInit {
       scrollZoom: true
     }
 
-    const resizeObserver = new ResizeObserver((entries: any) => {
+    // const resizeObserver = new ResizeObserver((entries: any) => {
+    const resizeObserver = new ResizeObserverPolyfill((entries: any) => {
       for (let entry of entries) {
         // Check if the dialog has been closed and the graph div is not currently
         // being displayed on the DOM. Return if it has, and don't resize. Resize

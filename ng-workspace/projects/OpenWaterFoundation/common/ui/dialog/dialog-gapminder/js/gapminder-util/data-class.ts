@@ -5,9 +5,9 @@
 // ----------------------------------------------------------------
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
-import * as $ from "jquery";
-import * as d3 from 'd3';
-import * as Papa from 'papaparse';
+import * as $               from "jquery";
+import * as d3              from 'd3';
+import * as Papa            from 'papaparse';
 
 
 export class Data {
@@ -41,30 +41,30 @@ export class Data {
 		this.convert_to_json();
 	}
 
-	get_annotations(){
+	get_annotations() {
 		var _this = this;
 		//ajax call to get annotation data from annotationsURL specified in Config file
 		$.ajax({
 			url: _this.owfCommonService.buildPath(IM.Path.gP, [_this.configProps.AnnotationsFileName]),
 			async: false,
 			dataType: 'json',
-			error: function(error){
+			error: function(error) {
 				throw new Error('Error reading the Data file.');
 			},
-			success: function(data){
+			success: function(data) {
 				_this.annotations = data.Annotations;
 			}
 		})
 	}
 
-	convert_to_json(){
+	convert_to_json() {
 		var _this = this;
 		var _Papa = Papa;
 		this.parseDate = d3.timeParse(_this.configProps.InputDateFormat);
-		var URL;	
-		if(_this.configProps.MultipleDatasets){
+		var URL: any;	
+		if(_this.configProps.MultipleDatasets) {
 			URL = expand_parameter_value(_this.configProps.DataFileName, {"Year": _this.configProps.DefaultDatasetChoice});
-		}else{
+		} else {
 			URL = _this.configProps.DataFileName;
 		}
 
@@ -72,21 +72,29 @@ export class Data {
 			url: URL,
 			async: false,
 			dataType: 'text',
-			error: function(error){
+			error: function(error) {
 				throw new Error('Error reading data file.');
 			},
-			success: function(data){
+			success: function(data) {
 				_this.csv = data;
-				var csv = _Papa.parse(data,{header:true, comments:true, dynamicTyping:true}).data,
-					jsonObj = {"data":[]},
+				var csv = _Papa.parse(
+					data,
+					{
+						header:true,
+						comments:true,
+						dynamicTyping:true
+					}).data,
+					jsonObj = {
+						"data":[]
+					},
 					tempJson = makeJsonObj(csv[0]);
 
 
-				for(var i = 0; i < csv.length - 1; i++){
-					if(csv[i][_this.variables.Label] == tempJson[_this.variables.Label]){
+				for(var i = 0; i < csv.length - 1; i++) {
+					if(csv[i][_this.variables.Label] === tempJson[_this.variables.Label]) {
 						initializeDimensions(csv[i]);
 						updateJsonObj(tempJson, csv[i]);
-					}else{
+					} else {
 						jsonObj.data.push(tempJson);
 						tempJson = makeJsonObj(csv[i]);
 						initializeDimensions(csv[i]);
@@ -160,18 +168,18 @@ export class Data {
 		 *
 		 *@param {number} data - a number to be checked
 		 */
-		function checkData(data: any){
-			if(data === 0){
+		function checkData(data: any) {
+			if(data === 0) {
 				return 0.001;
-			}else{
+			} else {
 				return 0;
 			}
 		}
 
-		function initializeIfEmpty(val: any){
-			if(val === ""){
+		function initializeIfEmpty(val: any) {
+			if(val === "") {
 				return 0;
-			}else{
+			} else {
 				return val;
 			}
 		}
@@ -181,15 +189,15 @@ export class Data {
 		 * @param {object} json 
 		 * @param {object} data 
 		 */
-		function updateJsonObj(json: any, data: any){
+		function updateJsonObj(json: any, data: any) {
 			data = createNewObject(data[_this.variables.Date], data[_this.variables.XAxis], data[_this.variables.YAxis], data[_this.variables.Sizing]);
 			json[_this.variables.XAxis].push(initializeIfEmpty(data.xVar));
 			json[_this.variables.YAxis].push(initializeIfEmpty(data.yVar));
 			json[_this.variables.Sizing].push(initializeIfEmpty(data.size));
 		}
 
-		function checkMin(number: any){
-			if(number < 0){
+		function checkMin(number: any) {
+			if(number < 0) {
 				d3.select(".title")
 					.append("text")
 					.style("color", "red")
@@ -197,7 +205,7 @@ export class Data {
 					.text('Error: log axis with negative values');
 				throw 'Error: log axis with negative values';
 			}
-			if(number < 1){
+			if(number < 1) {
 				number = 1;
 			}
 			return number;
@@ -209,16 +217,16 @@ export class Data {
 		 *
 		 *@param {object} data - object containing data
 		 */
-		function initializeDimensions(data: any){
-			if(_this.configProps.XAxisScale.toUpperCase() === "LOG"){
+		function initializeDimensions(data: any) {
+			if(_this.configProps.XAxisScale.toUpperCase() === "LOG") {
 				_this.dimensions.xMin = Math.min(_this.dimensions.xMin, checkMin(parseFloat(initializeIfEmpty(data[_this.variables.XAxis]))));
-			}else{
+			} else {
 				_this.dimensions.xMin = Math.min(_this.dimensions.xMin, parseFloat(initializeIfEmpty(data[_this.variables.XAxis])));
 			}
 
-			if(_this.configProps.YAxisScale.toUpperCase() === "LOG"){
+			if(_this.configProps.YAxisScale.toUpperCase() === "LOG") {
 				_this.dimensions.yMin = Math.min(_this.dimensions.yMin, checkMin(parseFloat(initializeIfEmpty(data[_this.variables.YAxis]))));
-			}else{
+			} else {
 				_this.dimensions.yMin = Math.min(_this.dimensions.yMin, parseFloat(initializeIfEmpty(data[_this.variables.YAxis])));
 			}	
 			_this.dimensions.xMax = Math.max(_this.dimensions.xMax, parseFloat(initializeIfEmpty(data[_this.variables.XAxis])));
@@ -230,11 +238,11 @@ export class Data {
 			_this.dimensions.dateMax = new Date(Math.max(_this.dimensions.dateMax.getTime(),
 			new Date(_this.parseDate(data[_this.variables.Date])).getTime()));
 
-			if(populated(data) == true) _this.dimensions.maxPopulatedDate = new Date(Math.max(_this.dimensions.maxPopulatedDate.getTime(), new Date(_this.parseDate(data[_this.variables.Date])).getTime()));
+			if(populated(data) === true) _this.dimensions.maxPopulatedDate = new Date(Math.max(_this.dimensions.maxPopulatedDate.getTime(), new Date(_this.parseDate(data[_this.variables.Date])).getTime()));
 		}
 
-		function populated(data: any){
-			if(data[_this.variables.XAxis] === "" && data[_this.variables.YAxis] === "" && data[_this.variables.Sizing] === ""){
+		function populated(data: any) {
+			if(data[_this.variables.XAxis] === "" && data[_this.variables.YAxis] === "" && data[_this.variables.Sizing] === "") {
 				return false;
 			}
 			return true;

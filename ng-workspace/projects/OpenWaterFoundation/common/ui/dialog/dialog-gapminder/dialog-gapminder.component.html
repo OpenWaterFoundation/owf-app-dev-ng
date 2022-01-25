@@ -36,13 +36,12 @@
               <div id="legend"></div>
 
               <div id="sideTools">
-                <button id="selectAll" class="btn btn-default button" (click)="selectAllButton()">Select All Dots</button>
+                <button id="selectAll"
+                        class="btn btn-default button"
+                        (click)="selectAllButton()">
+                  Select All Dots
+                </button>
                 <!-- Dropdown list for selecting specific annotations, utilizes select2.js -->
-                <!-- <select id="providerNames" multiple="multiple">
-                  Select2 requires first <option></option> to be empty
-                  Providers are configured in gapminder.js
-                  <option></option>
-                </select> -->
                 <ng-select2 id="select2-container"
                             [data]="nameOptions"
                             [placeholder]="'Select ' + variables.Label"
@@ -50,23 +49,28 @@
                             [(ngModel)]="selectValue"
                             (ngModelChange)="onSelectValueChange($event)">
                 </ng-select2>
-                <!-- A button to turn on/off the tracers, function in gapminder.js -->
+                <!-- A button to turn on/off the tracers. -->
                 <button class="btn btn-default button" (click)="tracerButton()" id="tracerButton">Turn Tracer
                   Off</button>
-                <!-- A button to turn on/off the annotations on the visualization, function in gapminder.js -->
+                <!-- A button to turn on/off the annotations on the visualization. -->
                 <button class="btn btn-default button"
                         (click)="annotationsButton()"
+                        [hidden]="true"
                         id="annotationsButton">
                         Turn Annotations Off
                 </button>
-                <!-- NOTE: Not sure what this is used for. -->
-                <!-- <div class="dropdown" style="overflow: visible;">
-                  <p style="display:inline-block; cursor:default;" id="DatasetChoicesLabel"></p>
-                  &nbsp; <button style="display:inline-block;" class="btn btn-default button dropdown-toggle"
-                    type="button" data-toggle="dropdown" id="DatasetChoices"><span class="caret"></span></button>
-                  <ul class="dropdown-menu button" id="datesList">
-                  </ul>
-                </div> -->
+                <!-- Displays a dropdown if multiple datasets are given, with each being an option. -->
+                <div class="multiple-dataset-dropdown">
+                  <p id="DatasetChoicesLabel"></p>
+                  
+                  <button class="btn btn-default button dropdown-toggle"
+                          type="button"
+                          data-toggle="dropdown"
+                          id="DatasetChoices">
+                          <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu button" id="datesList"></ul>
+                </div>
               </div>
             </div>
             
@@ -75,9 +79,9 @@
             <div id="dateSlider">
             </div>
           </div>
-          <!--Row 3: Buttons for animation controls-->
+          <!-- Row 3: Buttons for animation controls. -->
           <div id="buttons-div">
-            <!--Buttons for controlling animation features functions in gapminder.js, styling from bootstrap-->
+            <!-- Buttons for controlling animation features, styling from bootstrap -->
             <div id="buttons">
               <button type="button" id="play" class="btn btn-default btn-md" (click)="playButton()" title="Play">
                 <span class="glyphicon glyphicon-play"></span>
@@ -137,6 +141,7 @@
   <!-- A button on the lower left for viewing the data table of the current time series graph -->
   <div class="gapminder-components-group">
     <button mat-raised-button
+            [disabled]="properties.DocFilePath | menuDisable: 'docCheck'"
             (click)="openDocDialog()">
       Documentation
     </button>

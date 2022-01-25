@@ -47,7 +47,8 @@ while getopts ":hR" opt; do
       exit 0
       ;;
     # Replace the created bundle files in dist/ from the cache-busting hash to the
-    # supplied version.
+    # supplied version. The version number is found in the app.component.ts file
+    # in angulardev.
     R)
       version=$(cat "${mainFolder}/projects/angulardev/src/app/app.component.ts" | grep "Version:" | cut -b 15-)
       renameDistFiles=true
@@ -72,10 +73,11 @@ done
 if [ ${renameDistFiles} = "true" ]; then
   # Build the AppDev application files.
   echo "  Creating the AppDev application default production build files."
+  echo "  Running the build as 'ng build --prod"
   (cd "${mainFolder}" && ng build --prod)
 
   echo "  Renaming application build files to replace hash value with ${version}."
-  cd "${angularDevDistFolder}"
+  cd "${angularDevDistFolder}" || exit
   # Replace the hash value with version in the main bundle files. The destination
   # file needs to be a string to insert the version variable.
   mv main-es5.* "main-es5.${version}.js"
