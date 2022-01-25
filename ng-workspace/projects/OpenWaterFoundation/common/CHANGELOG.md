@@ -3,7 +3,7 @@
 Optional elements to be added to each package version are as follows:
 
 * Bug Fixes
-* Code Refactoring
+* Refactoring
 * Features / Enhancements
 * Performance Improvements
 * Breaking Changes
@@ -12,10 +12,13 @@ These elements will only be added if they are applicable for the new version.
 
 # 0.6.2 #
 
-### Code refactoring ###
+### Refactoring ###
 
 * Many quality of life additions were made to a few files, with the gapminder utility
 files being changed the most. They are easier to read now.
+
+* Added .angular dynamic folder to the workspace .gitignore file, as per Angular
+suggestions. See https://github.com/angular/angular-cli/issues/22170.
 
 ### Features / Enhancements ###
 
@@ -29,7 +32,7 @@ hidden.
 
 # 0.6.1 #
 
-### Code Refactoring ###
+### Refactoring ###
 
 * Comments were completed for all named ID's and classes in the Gapminder Component
 CSS file.
@@ -44,7 +47,7 @@ added.
 
 # 0.6.0 #
 
-### Code Refactoring ###
+### Refactoring ###
 
 * Since the Javascript Gapminder code was brought over and needed to be updated,
 many lines of code was changed, refactored, updated, and generally improved
@@ -104,7 +107,7 @@ at 3:30pm, 15 hours and a half hours after the previous midnight.
 
 # 0.3.0 #
 
-### Code Refactoring ###
+### Refactoring ###
 
 * Added the DayTS class to accompany the YearTS and MonthTS classes that had already
 been implemented. It is not complete, but when files containing DayTS is used for
@@ -147,7 +150,7 @@ entry point. This also fixed an issue where more than one pipe could not be used
 in the same folder.
 
 
-### Code Refactoring ###
+### Refactoring ###
 
 * Made some repeated enums, interfaces, etc. DRY in some services and other utility
 code classes. Also updated paths and code in existing common library files that
@@ -248,7 +251,7 @@ analysis package, which seems to have fixed the issue.
 * Added ability to highlight polygons when filtered in the Data Table.
 * Added ability to zoom to polygons using a Turf.js created boundary box.
 
-### Code Refactoring ###
+### Refactoring ###
 
 * Gutted how a selection layer was created in the InfoMapper app, and instead will create it in
 the common library. This way, only features that are found are added to the selected layer, and
@@ -327,7 +330,7 @@ polygon. Is only enabled when on a polygon layer and after an address has been s
 
 # 0.0.1-alpha.6 #
 
-### Code Refactoring ###
+### Refactoring ###
 
 * Streamlined how the zoomDisable pipe is handling arguments to determine whether a button
 should be enabled/disabled or visible/hidden. It's also easier to read and determine what
