@@ -23,7 +23,10 @@ import { DateTime }         from '@OpenWaterFoundation/common/util/time';
 // file, so it won't conflict with TypeScript 4.3.5's now implemented typings.
 // More information can be found at
 // https://stackoverflow.com/questions/33704714/cant-require-default-export-value-in-babel-6-x?answertab=active#tab-top
-const ResizeObserverPolyfill = require('resize-observer-polyfill').default;
+// This did not work, as require is a NodeJS function, and the Angular controller
+// will be executed in the browser, which doesn't have that built-in function.
+// Keeping Heatmap Dialogs statically sized for now.
+// const ResizeObserverPolyfill = require('resize-observer-polyfill').default;
 // import ResizeObserver       from 'resize-observer-polyfill';
 
 declare const Plotly: any;
@@ -144,22 +147,22 @@ export class DialogHeatmapComponent implements OnInit {
       scrollZoom: true
     }
 
-    // const resizeObserver = new ResizeObserver((entries: any) => {
-    const resizeObserver = new ResizeObserverPolyfill((entries: any) => {
-      for (let entry of entries) {
-        // Check if the dialog has been closed and the graph div is not currently
-        // being displayed on the DOM. Return if it has, and don't resize. Resize
-        // will throw an error if it tries to resize something that doesn't exist.
-        if (entry.contentRect.height === 0) {
-          return;
-        }
-        Plotly.Plots.resize(entry.target);
-      }
-    });
+    // // const resizeObserver = new ResizeObserver((entries: any) => {
+    // const resizeObserver = new ResizeObserverPolyfill((entries: any) => {
+    //   for (let entry of entries) {
+    //     // Check if the dialog has been closed and the graph div is not currently
+    //     // being displayed on the DOM. Return if it has, and don't resize. Resize
+    //     // will throw an error if it tries to resize something that doesn't exist.
+    //     if (entry.contentRect.height === 0) {
+    //       return;
+    //     }
+    //     Plotly.Plots.resize(entry.target);
+    //   }
+    // });
     
-    Plotly.newPlot('heatmap-div', data, layout, config).then(function(gd: any) {
-      resizeObserver.observe(gd);
-    });
+    Plotly.newPlot('heatmap-div', data, layout, config);//.then(function(gd: any) {
+    //   resizeObserver.observe(gd);
+    // });
   }
 
   /**

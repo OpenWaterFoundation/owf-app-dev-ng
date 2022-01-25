@@ -10,7 +10,54 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.6.4 #
+
+## 2022-01-25 ##
+
+### Bug Fixes ###
+
+* Fixed a small bug that displayed an Image Dialogs entire file name, e.g.
+`3293-UpstreamTotal-SNODAS-SWE-Volume.png?t=1643147800633`. Removed everything
+after a period.
+
+### Refactoring ###
+
+* Decided to always attempt a local tar file for testing purposes between the
+library and another Angular, so as not to create so many npm updates in the future.
+
+# 0.6.3 #
+
+## 2022-01-25 ##
+
+### Bug Fixes ###
+
+* Fixed two breaking changes from the `ng-packagr` upgrade to version 13:
+  * UMD bundles are no longer generated, so the `umdModuleIds` property in the
+  `ng-package.json` file for the common library can be removed.It's no longer needed
+  by `ng-packagr`; More information can be found in their
+  [CHANGELOG](https://github.com/ng-packagr/ng-packagr/blob/master/CHANGELOG.md#-breaking-changes).
+  * An error occurs (and supposedly has been around since Angular 9) if any component
+  is exported in `NgModule` and not included in the entry point's `public_api.ts` file.
+  Had to export the 3 pipes in the PipesModule along with the PipesModule itself.
+* Fixed a breaking change from the Angular 11 to Angular 13 upgrade:
+  * `extractCSS` property in the workspace `angular.json` file. It's been deprecated
+  since Angular 11, and can be safely removed.
+* Fixed the `create-common-package.sh` script. `--prod` option for
+`ng build` is now deprecated. Updated to use `--configuration production`.
+
+### Refactoring ###
+
+* Changed Heatmap Dialogs back to being statically sized. Will look into different
+approaches of dynamically sizing later, that won't create any conflicts with
+TypeScript, or possibly wait for a fix from the resize-observer-polyfill package.
+* The dynamic workspace folder `.angular/` has been added, and needed to be added
+to the workspace `.gitignore` file so as not to be sent to the remote repo.
+Since it's over 200MB, git won't even let you send it, as it's over the
+100MB push limit.
+
 # 0.6.2 #
+
+## 2022-01-25 ##
 
 ### Refactoring ###
 

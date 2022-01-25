@@ -693,6 +693,32 @@ InfoMapper implementation.
 The above can be run if Amazon Web Services credentials are provided.
 A batch file is used to overcome known issues running in Git Bash.
 
+## Updating Angular ##
+
+Ever since the Infomapper and SNODAS started relying on the @OpenWaterFoundation/common
+library, updating the version of Angular has had a few steps added on to it. Updating
+from Angular 11 to 13 had it's share of growing pains and issues. The following
+will help pave the way to a quicker update in the future:
+
+* **Do not** update the Angular app (Infomapper, SNODAS) version first. The common library
+dependencies need to be updated first, so there are no conflicts when updating
+the app's dependencies.
+  * For example, updating the Infomapper from Angular 11 to 12 will be in conflict with
+  the common library. The library expect Angular 11, but 12 is now being used. Updating
+  the library to the desired version, testing it, and resolving any issues first, allows
+  the new library (package) version to be created and used by the app. The app can
+  then be updated and its own issues dealt with, without having to worry about the
+  library.
+* After the library has been updated, a new version will need to be created via npm
+and uploaded as a Github Package. Instructions can be found on the
+[Common package page](https://github.com/OpenWaterFoundation/owf-app-dev-ng/packages/655009).
+* **Do not** install the package into the Angular app yet (e.g. SNODAS, Infomapper), as
+it seems `ng update` still runs into a bug if private repos are being used. The error showed
+`404 Not Found - GET https://npm.pkg.github.com/OpenWaterFoundation/@angular%2fcli - Package [@angular/cli] was not found`.
+It was looking for @angular/cli in the OWF Github package instead of the main npm
+registry. Removing the previous common package resolves this issue.
+* Perform the update via the [Angular Updater](https://update.angular.io/).
+
 ## Contributing ##
 
 Contributions can be made via normal Git/GitHub protocols:

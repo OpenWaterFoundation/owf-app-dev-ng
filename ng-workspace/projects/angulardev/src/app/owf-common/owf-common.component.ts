@@ -346,10 +346,15 @@ export class OwfCommonComponent implements OnInit {
         panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
         height: "750px",
         width: "910px",
-        minHeight: "425px",
-        minWidth: "675px",
-        maxHeight: "70vh",
-        maxWidth: "80vw"
+        // minHeight: "425px",
+        // minWidth: "675px",
+        // maxHeight: "70vh",
+        // maxWidth: "80vw"
+        // Keeping static for now.
+        minHeight: "750px",
+        minWidth: "910px",
+        maxHeight: "750px",
+        maxWidth: "910px"
       });
 
     });

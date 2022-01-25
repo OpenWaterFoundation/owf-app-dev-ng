@@ -73,8 +73,8 @@ done
 if [ ${renameDistFiles} = "true" ]; then
   # Build the AppDev application files.
   echo "  Creating the AppDev application default production build files."
-  echo "  Running the build as 'ng build --prod"
-  (cd "${mainFolder}" && ng build --prod)
+  echo "  Running the build as 'ng build --configuration production"
+  (cd "${mainFolder}" && ng build --configuration production)
 
   echo "  Renaming application build files to replace hash value with ${version}."
   cd "${angularDevDistFolder}" || exit
@@ -97,7 +97,7 @@ else
   echo "  Creating Common library default production build files."
   echo ""
   # Change directory to the main folder and build the common library in a subshell.
-  (cd "${mainFolder}" && ng build @OpenWaterFoundation/common --prod)
+  (cd "${mainFolder}" && ng build @OpenWaterFoundation/common --configuration production)
 
   echo "  Creating the npm zipped tarball for the Common library."
   echo ""
