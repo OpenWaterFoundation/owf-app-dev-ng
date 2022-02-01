@@ -39,7 +39,7 @@ import * as IM                      from '@OpenWaterFoundation/common/services';
 import * as Papa                    from 'papaparse';
 import * as GeoRasterLayer          from 'georaster-layer-for-leaflet';
 import geoblaze                     from 'geoblaze';
-import * as parse_georaster         from 'georaster';
+import parseGeoRaster               from 'georaster';
 /** The globally used L object for Leaflet object creation and manipulation. */
 declare var L: any;
 
@@ -1317,7 +1317,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     fetch(this.owfCommonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
     .then((response: any) => response.arrayBuffer())
     .then((arrayBuffer: any) => {
-      parse_georaster(arrayBuffer).then((georaster: any) => {
+      parseGeoRaster(arrayBuffer).then((georaster: any) => {
         // The classificationFile attribute exists in the map configuration file, so use that file path for Papaparse.
         if (symbol && symbol.properties.classificationFile) {
           this.categorizedLayerColors[geoLayer.geoLayerId] = [];
@@ -2075,7 +2075,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         fetch(this.owfCommonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
         .then((response: any) => response.arrayBuffer())
         .then((arrayBuffer: any) => {
-          parse_georaster(arrayBuffer).then((georaster: any) => {
+          parseGeoRaster(arrayBuffer).then((georaster: any) => {
             // The classificationFile attribute exists in the map configuration file, so use that file path for Papaparse.
             if (symbol && symbol.properties.classificationFile) {
               this.categorizedLayerColors[geoLayer.geoLayerId] = [];

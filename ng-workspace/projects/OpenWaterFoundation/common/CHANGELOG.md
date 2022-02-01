@@ -10,6 +10,36 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.6.7 #
+
+### Bug Fixes ###
+
+* Fixed an update to how georaster imports a function.
+* Reverted `georaster-layer-for-leaflet` from `3.5.0` back to `0.6.8` to resolve
+a bizarre error in how Leaflet and other Leaflet third-party packages were compiled.
+
+# 0.6.6 #
+
+### Bug Fixes ###
+
+* Fixed a jQuery bug, where using `$()` as a function call was not working
+anymore due to a version update. Was used in the Gapminder Dialog as setup,
+and the Map Layer Item class to show/hide the layer's description & shapes
+in the map sidebar. Changed from `$()` to `jQuery()`.
+* One last brute force attempt at publishing the library in the npm registry
+so that the Infomapper can see the changes. Finished discovering how to easily
+test a local Angular library in a separate application using
+`ng build <lib> --watch`. This will be the last publish for testing; all other
+testing will be done locally.
+
+# 0.6.5 #
+
+### Bug Fixes ###
+
+* The common library has its own separate `package.json` file, with peer dependencies
+for some reason. It was requesting Angular version 11, so when installed in an
+Angular app, an npm ERR was being thrown. Hopefully this is what the issue is.
+
 # 0.6.4 #
 
 ## 2022-01-25 ##
@@ -63,7 +93,6 @@ Since it's over 200MB, git won't even let you send it, as it's over the
 
 * Many quality of life additions were made to a few files, with the gapminder utility
 files being changed the most. They are easier to read now.
-
 * Added .angular dynamic folder to the workspace .gitignore file, as per Angular
 suggestions. See https://github.com/angular/angular-cli/issues/22170.
 
@@ -72,7 +101,6 @@ suggestions. See https://github.com/angular/angular-cli/issues/22170.
 * Updated the whole project from Angular 11 to Angular 13. Serving and building
 the library/application is now faster, including the other quality of life updates
 that come with the update.
-
 * Preemptively added code for displaying multiple datasets in Gapminder. This will
 be used in future releases; As of now, the code isn't used and the HTML element is
 hidden.
@@ -83,7 +111,6 @@ hidden.
 
 * Comments were completed for all named ID's and classes in the Gapminder Component
 CSS file.
-
 * Comments were added to the Gapminder Component ts file, and variables names were
 changed to align more with recommended Typescript practices.
 
@@ -105,12 +132,10 @@ scoping and the deletion of any uses of the absolute global window object.
 * Added the first working instance of a Gapminder Dialog. Buttons that play, pause,
 replay, step backwards & forwards were added. Hovering and clicking over data 'dots'
 on the visualization, along with styling & events for each was also added.
-
 * The Gapminder Dialog can open a Doc Dialog or Data Table Light Dialog if a path
 to either exist in the Gapminder configuration file. The Data Table Light is a version
 of the Data Table that does not have any advanced zooming or address search capabilities,
 or any map integrated abilities.
-
 * A Gapminder section has been added to the Visualizations tab under the InfoMapper
 documentation for users.
 
@@ -126,7 +151,6 @@ documentation for users.
 * Started Cypress testing for the InfoMapper, which uses the common library. Necessary
 tags had the `data-cy=""` attribute so they can be uniquely identified by Cypress
 without having to worry about changes in the future.
-
 * Added basic D3 Dialog code. A dialog can be opened and display a either a Tidy
 Tree or Treemap using D3.
 
@@ -148,7 +172,6 @@ If a `refreshOffset` of `15hours 30minutes` is provided and the map is built at
 at 3:30pm, 15 hours and a half hours after the previous midnight.
 
 * Layer refreshing now works with all vector and raster layers.
-
 * Added the ability to create ImageOverlay layers on the map.
 
 
@@ -159,10 +182,8 @@ at 3:30pm, 15 hours and a half hours after the previous midnight.
 * Added the DayTS class to accompany the YearTS and MonthTS classes that had already
 been implemented. It is not complete, but when files containing DayTS is used for
 testing, most of the core code will have been imported.
-
 * Added some methods and data members to already existing classes in the common
 library, such as `TS.ts`, `TSGraph.ts`, `TSData.ts`, etc.
-
 * Started removing the Dialog CSS classes from each individual Dialog and adding
 them to the shared `main-dialog-style.css` file. When finished, it will only
 contain CSS classes that deal with static parts of the Dialog, such as the close
@@ -174,7 +195,6 @@ ambiguous what styling those classes in the template file are using.
 
 * Added the **Heatmap Dialog** into the Common package. Used for displaying TS
 data in a plotly heatmap graph.
-
 * Added the ability to make plotly graphs dynamically resizable on Dialog resizing.
 This has been introduced as a 'beta' feature, since there are some undesired traits.
 For example, resizing does not take the graphs aspect ratio in account; the Dialog
@@ -187,10 +207,8 @@ will hopefully be updated in the future.
 
 * Migrated the Map Component over from the InfoMapper, to be potentially used as
 either a separate/stand-alone map, or in an InfoMapper-like application.
-
 * Created the **leaflet** entry point where the map component and other necessary
 files are located and can be exported for application to consume.
-
 * Created the **pipes** entry point, where all pipes used throughout the common
 package reside, and can be used by importing the pipes module from any other
 entry point. This also fixed an issue where more than one pipe could not be used
@@ -210,7 +228,6 @@ rely on map component code.
 * Fixed a Window Manager windowID issue, where the variable in the InfoMapper was still called
 buttonID, an old leftover when the ID was only being created in a Leaflet popup button. This will
 stop a Text and Graph Dialog from opening just once.
-
 * Fixed a bug where a address would be added to the map regardless if it was in a feature or not.
 The new code will only create and add the Marker if the address is found in any of the layer's
 features.
@@ -219,10 +236,8 @@ features.
 
 * Updated the way a filtered feature is added to a newly-created GeoJSON object, removing
 unnecessary n^2 time complexity nested for loops.
-
 * Changed what's sent to the Dialog from the more granular geoLayerId and geoLayerView name to the
 entire geoLayer and geoLayerView, to cut down on separate imports for each, cleaning up the code.
-
 * Added a selected layer and highlight layer (highlight currently unused) to be added as separate
 geoJSON layers to a layerItem object in the MapLayerItem class. This way when each Leaflet layer
 is added, 
@@ -255,11 +270,9 @@ address does not need to be exact anymore for the button to be enabled.
 
 * Added a marker to be displayed on an address when filtered in the Data Table. The address is
 attached to the layer so that toggling the layer on/off will affect the marker as well.
-
 * Updated some more of the MapLayerItem code so that if a user clears the input in the Data Table
 filter, all selected layers will be removed from the map instead of hidden, as this will keep
 adding layers to the map.
-
 * Implemented a `previous search` class variable to hold the string the user searched for last. This
 way, a complete data or address search wouldn't be done over and over each time the enter key was
 pressed on the same input string.

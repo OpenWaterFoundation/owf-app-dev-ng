@@ -7,6 +7,7 @@ import { MatTooltipModule }         from '@angular/material/tooltip';
 import { MatCheckboxModule }        from '@angular/material/checkbox';
 import { MatButtonModule }          from '@angular/material/button';
 import { MatDialogModule }          from '@angular/material/dialog';
+import { MatExpansionModule }       from '@angular/material/expansion';
 import { MatInputModule }           from '@angular/material/input';
 import { MatProgressBarModule }     from '@angular/material/progress-bar';
 import { MatIconModule }            from '@angular/material/icon';
@@ -33,6 +34,7 @@ import { MapComponent }             from './map.component';
     MatCheckboxModule,
     MatButtonModule,
     MatDialogModule,
+    MatExpansionModule,
     MatIconModule,
     MatInputModule,
     MatMenuModule,

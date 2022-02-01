@@ -355,11 +355,12 @@ import { WindowManager } from "@OpenWaterFoundation/common/ui/window-manager";
 ## Sharing Libraries with InfoMapper ##
 
 Libraries developed in this repository can be shared with other applications.
-The section uses the InfoMapper application as an example to explain how this occurs.
+This section uses the InfoMapper application as an example to explain how this occurs
+in both development & production.
 
 The following is a summary of InfoMapper folder structure.
 
-> Note: InfoMapper will likely be converted to a multi-project workspace in the future
+> Note: InfoMapper will likely be converted to a multi-project workspace in the future,
 but the following currently uses a single application project folder structure.
 
 ```
@@ -387,14 +388,111 @@ C:\Users\user\                   User's home folder for Windows.
                 *                Other runtime configuration and data files.
 ```
 
+### Development ###
+
+It's possible to test a local Angular library with a separate local Angular application
+without having to build the library and install it into the application dependencies
+after every change. This greatly speeds up development in both app and library,
+and is not too labor intensive to set up. Here are the steps:
+
+* From the application top level folder (`infomapper/` for Infomapper), run:
+  ```
+  npm uninstall @OpenWaterFoundation/common
+  ```
+  This uninstalls the current production-build npm-registry installed version from the
+  project.
+* From the AppDev library top level folder, (`ng-workspace/`) enter the command:
+  ```
+  ng build @OpenWaterFoundation/common
+  ```
+  This will create the `dist/OpenWaterFoundation/common/` folders, with the production
+  ready library files in the `common/` folder. There might be a built version in there
+  from previous development sessions, but this confirms it's the most up-to-date.
+* From the application top level folder, enter the command:
+  ```
+  npm install file:../../../../AngularDev/git-repos/owf-app-dev-ng/ng-workspace/dist/OpenWaterFoundation/common/
+  ```
+  > NOTE: `npm pack` has not been run from the library, and no `.tgz` file exists
+  in the `dist/OpenWaterFoundation/common/` folder. The `npm install` command just
+  looks for a `package.json` in the given folder.
+
+  The Infomapper now has the local built AppDev library files.
+
+* In the AppDev top level folder, run:
+  ```
+  ng build @OpenWaterFoundation/common --watch
+  ```
+  This runs the build command on the library, then again whenever a file is changed.
+  It is finished when the message
+  `Compilation complete. Watching for file changes...` is displayed.
+* Now that the previous command is in the library is waiting for updates, serve the
+application in the top level folder like normal:
+
+  ```
+  ng serve --open
+  ```
+  The application (Infomapper for this example) has the built files from the
+  library dist installed in its `package.json` file, and the library is actively
+  watching for updates to the library. This means when a file is saved in the library,
+  `ng build` is run, the dist files updated, and subsequently updated and recompiled
+  in the application.
+
+There are other options for testing local Angular libraries and applications, including
+using the [npm pack](https://docs.npmjs.com/cli/v8/commands/npm-pack) tar file,
+and [npm link](https://docs.npmjs.com/cli/v8/commands/npm-link) which uses a
+global symlink to connect the two. 
+
+### Production ###
+
+For detailed instructions on building and publishing the AppDev library, visit the
+library
+[README file](ng-workspace/projects/OpenWaterFoundation/common/README.md).
+
+> **IMPORTANT:** If previously testing the library using the above development
+instructions, the application's `package.json` file contains the path to the
+local library files. This needs to be changed to the most recent published
+(or desired) version before pushing up any changes in the application.
+
 ## Using MapComponent as an Embeddable Element ##
 
-The MapComponent can be embedded into a website.
+The MapComponent can be embedded into a website. The necessary lines in
+`app.module.ts` **must** be changed so that when the `create-common-package.sh`
+script is run, it will create the MapComponent as the entry component, and will
+not bootstrap the AppComponent. This is done so only the MapComponent is "seen"
+as the project.
 
-* The necessary lines in `app.module.ts` **must** be changed so that
-when the `create-common-package.sh` script is run, it will create the
-MapComponent as the entry component, and will not bootstrap the AppComponent.
-This is done so only the MapComponent is "seen" as the project.
+```typescript
+  // Comment out when running ng serve for testing or ng build --configuration production.
+  // Uncomment out when running ./create-common-package.sh -R for building the
+  // application so that only the MapComponent is seen.
+
+  // entryComponents: [
+  //   MapComponent
+  // ],
+
+  // Comment out when running ./create-common-package.sh -R for building the application
+  // so that only the Map Component can be seen. It will try to display the <app-root></app-root>
+  // element if it isn't. Uncomment out when ng serve or ng build --configuration production
+  // is being used for testing or building the project so that the application is used.
+  
+  bootstrap: [
+    AppComponent
+  ]
+})
+export class AppModule {
+  constructor(private injector: Injector) {
+    // Creates a custom HTML element with the name `common-map`. Displays the Map
+    // Component in another application or website. Comment out when running ng serve
+    // or ng build --configuration production. Uncomment out when running
+    // ./create-common-package.sh -R for building the application so that only the
+    // MapComponent is created, and the site can use <common-map> as a tag in the HTML file.
+
+    // const webComponent = createCustomElement(MapComponent, {injector});
+    // customElements.define('common-map', webComponent);
+  }
+
+}
+```
 
 ## Angular Tasks ##
 
@@ -529,18 +627,21 @@ To add a new class in a new folder:
       Angular CLI, any library created after the first will contain a `projects.ts` file
       in place of the `public-api.ts` file. OWF is researching why the file name is changed,
       and how it still seems to serve the same purpose.
-    * `package.json` - Finish letting `ng-packagr` know this is a secondary entry point by
-    adding the following:
+    * `ng-package.json` (`package.json` is deprecated) - Finish letting `ng-packagr` know
+    this is a secondary entry point by adding the following:
       ```json
       {
-        "ngPackage": {
-          "lib": {
-            "entryFile": "public-api.ts",
-            "cssUrl": "inline"
-          }
+        "$schema": "path/to/../node_modules/ng-packagr/ng-package.schema.json",
+        "lib": {
+          "entryFile": "public-api.ts",
+          "cssUrl": "inline"
         }
       }
       ```
+      Schema details and an example of a basic `ng-package.json` file can be found
+      [here](https://github.com/ng-packagr/ng-packagr/blob/master/src/ng-package.schema.json)
+      and [here](https://github.com/ng-packagr/ng-packagr/blob/master/docs/configuration-locations.md)
+      respectively.
 3. Create the class in the entry point folder:
     ```typescript
     export class MyClass {
@@ -695,20 +796,33 @@ A batch file is used to overcome known issues running in Git Bash.
 
 ## Updating Angular ##
 
+> NOTE: Going to the Angular Updater and using the `npx` commands do just fine for
+@angular scoped packages, but most of the issues ran into while updating were from
+third-party packages. It's important to make sure they are constantly being upgraded
+as well. If it seems like a package has been abandoned, another supported package
+might need to be considered.
+
 Ever since the Infomapper and SNODAS started relying on the @OpenWaterFoundation/common
 library, updating the version of Angular has had a few steps added on to it. Updating
-from Angular 11 to 13 had it's share of growing pains and issues. The following
-will help pave the way to a quicker update in the future:
+from Angular 11 to 13 had it's share of growing pains and issues. One reason for this
+is because the Angular 12 to Angular 13 update removed support for the now
+deprecated View Engine compiler in favor of the Ivy compiler.
+
+Packages need to make sure they are at least built with the `tsconfig.lib.prod.ts`
+file's `"compilationMode" : "partial"` property set. As mentioned above, an abandoned
+or neglected package might not have this Ivy change, and could slow down updates.
+Most have done a pretty good job though. The following steps will help pave
+the way to a quicker Angular updates in the future:
 
 * **Do not** update the Angular app (Infomapper, SNODAS) version first. The common library
-dependencies need to be updated first, so there are no conflicts when updating
-the app's dependencies.
+versions and dependencies need to be updated first, so there are no conflicts when updating
+the app's packages. Perform the update for the library via the
+[Angular Updater](https://update.angular.io/).
   * For example, updating the Infomapper from Angular 11 to 12 will be in conflict with
-  the common library. The library expect Angular 11, but 12 is now being used. Updating
+  the common library. The library expects Angular 11, but 12 is now being used. Updating
   the library to the desired version, testing it, and resolving any issues first, allows
-  the new library (package) version to be created and used by the app. The app can
-  then be updated and its own issues dealt with, without having to worry about the
-  library.
+  the new library (package) version to be created. The app can then be updated and its
+  own issues dealt with, without having to worry about the library.
 * After the library has been updated, a new version will need to be created via npm
 and uploaded as a Github Package. Instructions can be found on the
 [Common package page](https://github.com/OpenWaterFoundation/owf-app-dev-ng/packages/655009).
@@ -717,7 +831,14 @@ it seems `ng update` still runs into a bug if private repos are being used. The 
 `404 Not Found - GET https://npm.pkg.github.com/OpenWaterFoundation/@angular%2fcli - Package [@angular/cli] was not found`.
 It was looking for @angular/cli in the OWF Github package instead of the main npm
 registry. Removing the previous common package resolves this issue.
-* Perform the update via the [Angular Updater](https://update.angular.io/).
+* Perform the update for the app via the [Angular Updater](https://update.angular.io/).
+
+### Troubleshooting ###
+
+**jQuery** - Leaves weird, extremely vague error message such as **TypeError: (dl | Al | ol)
+is not a function**.
+[This Stack Overflow](https://stackoverflow.com/questions/3931529/is-not-a-function-jquery-error)
+question has the way to deal with the issue.
 
 ## Contributing ##
 

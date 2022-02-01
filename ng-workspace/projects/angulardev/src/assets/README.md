@@ -681,6 +681,62 @@ InfoMapper implementation.
 The above can be run if Amazon Web Services credentials are provided.
 A batch file is used to overcome known issues running in Git Bash.
 
+## Broken Map Configs ##
+
+GeoLayer:
+
+```json
+,
+{
+  "geoLayerId": "fire-perimeter-layer",
+  "name": "Fire Perimeter Map",
+  "description": "Shows fire perimeters throughout the United States.",
+  "crs": "EPSG:4326",
+  "geometryType": "WKT:Polygon",
+  "layerType": "Vector",
+  "nationalWildFires": "https://opendata.arcgis.com/datasets/5da472c6d27b4b67970acc7b5044c862_0.geojson",
+  "sourcePath": "https://services3.arcgis.com/T4QMspbfLg3qTGWY/ArcGIS/rest/services/Public_Wildfire_Perimeters_View/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=-109.05%2C36.99%2C-102.05%2C41&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=",
+  "sourceFormat": "GeoJSON",
+  "properties": {
+    "isBackground": "false"
+  },
+  "history:": [
+    "Read GeoLayer from GeoJSON file:  'E:\\GeoMapProjects\\assets\\data-maps-default\\map-layers\\swrf-district03.geojson'"
+  ]
+}
+```
+
+GeoLayerView:
+
+```json
+,
+{
+  "geoLayerViewId": "fire-perimeter-view",
+  "name": "Fire Perimeters",
+  "description": "An Esri feature layer that has been retrieved from the internet and shows fire perimeters throughout the United States.",
+  "geoLayerId": "fire-perimeter-layer",
+  "isWFS": "true",
+  "properties": {
+    "refreshInterval": "",
+    "selectedInitial": "false"
+  },
+  "geoLayerSymbol": {
+    "name": "Fire Perimeter Symbol",
+    "description": "The symbol metadata for the fire perimeters file.",
+    "classificationType": "SingleSymbol",
+    "classificationAttribute": "",
+    "properties": {
+      "color": "red",
+      "fillColor": "red",
+      "fillOpacity": "0.5",
+      "opacity": "1.0",
+      "weight": "3"
+    }
+  },
+  "eventHandlers": []
+}
+```
+
 ## Contributing ##
 
 Contributions can be made via normal Git/GitHub protocols:

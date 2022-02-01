@@ -73,10 +73,10 @@ export class MapLayerItem {
     this.displayed = true;
 
     (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = true;
-    let description = $("#description-" + this.layerItemGeoLayerId);
+    let description = jQuery("#description-" + this.layerItemGeoLayerId);
     description.css('visibility', 'visible');
     description.css('height', '100%');
-    let symbols = $("#symbols-" + this.layerItemGeoLayerId);
+    let symbols = jQuery("#symbols-" + this.layerItemGeoLayerId);
     symbols.css('visibility', 'visible');
     symbols.css('height', '100%');
   }
@@ -191,10 +191,10 @@ export class MapLayerItem {
     this.displayed = true;
 
     (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = true;
-    let description = $("#description-" + this.layerItemGeoLayerId);
+    let description = jQuery("#description-" + this.layerItemGeoLayerId);
     description.css('visibility', 'visible');
     description.css('height', '100%');
-    let symbols = $("#symbols-" + this.layerItemGeoLayerId);
+    let symbols = jQuery("#symbols-" + this.layerItemGeoLayerId);
     symbols.css('visibility', 'visible');
     symbols.css('height', '100%');
   }
@@ -268,10 +268,10 @@ export class MapLayerItem {
     this.displayed = false;
 
     (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = false;
-    let description = $("#description-" + this.layerItemGeoLayerId);
+    let description = jQuery("#description-" + this.layerItemGeoLayerId);
     description.css('visibility', 'hidden');
     description.css('height', 0);
-    let symbols = $("#symbols-" + this.layerItemGeoLayerId);
+    let symbols = jQuery("#symbols-" + this.layerItemGeoLayerId);
     symbols.css('visibility', 'hidden');
     symbols.css('height', 0);
   }

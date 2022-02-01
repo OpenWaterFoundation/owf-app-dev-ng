@@ -179,8 +179,8 @@ export class DialogGapminderComponent implements OnInit {
     this.dimensions.maxPopulatedDate.setHours(23, 59, 59);
 
     if (this.properties.MultipleDatasets) {
-      $("#DatasetChoicesLabel").html(this.properties.DatasetChoicesLabel + ": ");
-      $("#DatasetChoices").html(this.properties.DefaultDatasetChoice + " <span class='caret'></span>");
+      jQuery("#DatasetChoicesLabel").html(this.properties.DatasetChoicesLabel + ": ");
+      jQuery("#DatasetChoices").html(this.properties.DefaultDatasetChoice + " <span class='caret'></span>");
       // Add date options.
       d3.select("#datesList")
         .attr("class", "dropdown-menu")
@@ -194,8 +194,8 @@ export class DialogGapminderComponent implements OnInit {
         })
         .text((d: any) => d)
     } else {
-      $("#DatasetChoicesLabel").remove();
-      $("#DatasetChoices").remove();
+      jQuery("#DatasetChoicesLabel").remove();
+      jQuery("#DatasetChoices").remove();
     }
 
 
@@ -205,7 +205,7 @@ export class DialogGapminderComponent implements OnInit {
     var div = d3.select("#Gapminder").append("div")
       .attr("class", "tooltip")
       .style("opacity", 0);
-    $(window).on("click", function (e) {
+    jQuery(window).on("click", function (e) {
       if (e.button === 0) {
         div.remove();
         div = d3.select("#Gapminder").append("div")
@@ -281,7 +281,7 @@ export class DialogGapminderComponent implements OnInit {
       .attr("height", height); 
 
     // Set width to the width of the chart.
-    width = $(".box").width(); 
+    width = jQuery(".box").width(); 
 
     // Create a div/svg container for legend.
     var legend = d3.select("#legend")
@@ -879,7 +879,7 @@ export class DialogGapminderComponent implements OnInit {
     }
     // Turn annotations off if specified 'Off' in Config file.
     if (this.properties.AnnotationShapes.toUpperCase() === "OFF") {
-      if ($("#annotationText").length) {
+      if (jQuery("#annotationText").length) {
         this.annotationText.attr("fill-opacity", 0).on("mouseover", null);
       }
       d3.selectAll(".annotationShape").attr("stroke-opacity", 0).on("mouseover", null);
@@ -1167,7 +1167,7 @@ export class DialogGapminderComponent implements OnInit {
      *Highlights the selected provider with a yellow outline
      *Utilizes [select2]{@link https://select2.github.io/} library
      */
-    $('select').on('select2:select', function (evt: any) {
+    jQuery('select').on('select2:select', function (evt: any) {
       var provider = evt.params.data.text;
       d3.select(_this.dotIDSelector(provider))
         .style('stroke', 'yellow')
@@ -1187,7 +1187,7 @@ export class DialogGapminderComponent implements OnInit {
      *Removes the highlighted outline from the de-selected dot
      *Utilizes [select2]{@link https://select2.github.io/} library
      */
-    $('select').on('select2:unselect', function (evt: any) {
+    jQuery('select').on('select2:unselect', function (evt: any) {
       var provider = evt.params.data.text;
       d3.select(_this.dotIDSelector(provider))
         .style('stroke', null)
@@ -1497,15 +1497,15 @@ export class DialogGapminderComponent implements OnInit {
     function updateGapminder(date: any) {
       this.properties.DefaultDatasetChoice = date;
 
-      $("#headers").empty();
-      $("#contentArea").empty();
+      jQuery("#headers").empty();
+      jQuery("#contentArea").empty();
       d3.select("#contentArea")
         .append("tr")
         .attr("class", "clusterize-no-data")
         .append("td")
         .text("Loading data...");
 
-      $("#DatasetChoices").html(date + " <span class='caret'></span>");
+      jQuery("#DatasetChoices").html(date + " <span class='caret'></span>");
 
       data = new Data(this.properties, _this.owfCommonService);
       this.json = data.json;
@@ -1537,12 +1537,12 @@ export class DialogGapminderComponent implements OnInit {
 
       this.handleText.attr("transform", "translate(" + (this.timeScale(this.getClosest(this.currYear)) + ",-8)"));
       // UPDATE LEGEND:
-      $("#legend").empty();
+      jQuery("#legend").empty();
       legendData = getGroupingNames(this.json);
       addLegend(legendData);
 
       // UPDATE SELECTION BAR:
-      $("#providerNames").empty();
+      jQuery("#providerNames").empty();
       _this.nameOptions = getIndividualDots(this.json);
 
       // UPDATE PATH:
@@ -1645,7 +1645,7 @@ export class DialogGapminderComponent implements OnInit {
     var elem = document.getElementById("annotationsButton");
     if (elem.innerHTML === "Turn Annotations On") {
       this.properties.AnnotationShapes.toUpperCase() === "ON";
-      if ($("annotationText").length) {
+      if (jQuery("annotationText").length) {
         this.annotationText.attr("fill-opacity", 1).on("mouseover",
         this.mouseoverAnnotation.bind(this));
       }
@@ -1654,7 +1654,7 @@ export class DialogGapminderComponent implements OnInit {
       elem.innerHTML = "Turn Annotations Off";
     } else {
       this.properties.AnnotationShapes.toUpperCase() === "OFF";
-      if ($("annotationText").length) { this.annotationText.attr("fill-opacity", 0).on("mouseover", null); }
+      if (jQuery("annotationText").length) { this.annotationText.attr("fill-opacity", 0).on("mouseover", null); }
       d3.selectAll(".annotationShape").attr("stroke-opacity", 0).on("mouseover", null);
       elem.innerHTML = "Turn Annotations On";
     }

@@ -11,6 +11,7 @@ applications such as OWF InfoMapper.
 * [Running Unit Tests](#running-unit-tests)
 * [Code Scaffolding](#code-scaffolding)
 * [Further Help](#further-help)
+* [Troubleshooting](#troubleshooting)
 
 See the following resources for background information for the library.
 
@@ -165,3 +166,33 @@ To get more help on the Angular CLI use `ng help` or go check out the
 [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 For more information on how this library is used, go to the [AngularDev README]()
+
+## Troubleshooting ##
+
+This section aims to help alleviate any issues caused by updates, authenticating, and
+other necessary actions to use, create, and/or publish the OWF Common Library.
+
+### npm Login ###
+
+Npm `8.x` requires that an authorized user be added to the system that's using a
+private package. This differs than version `6.x`, where the `npm login ...` command
+could be used immediately. Before that can be used, the `npm adduser` command
+must be run first.
+
+> NOTE: The `npm login` command is just an alias for `npm adduser`, so this command
+*can* be used instead of `npm adduser`, but without the `--registry` and `--scope`
+options. This will also add the user to the system.
+
+The following steps describes first time setup for npm version `8.x`:
+
+* Confirm a user has not been added by running `npm whoami`. This should print something
+like the following:
+
+  ```
+  npm ERR! code ENEEDAUTH
+  npm ERR! need auth This command requires you to be logged in.
+  npm ERR! need auth You need to authorize this machine using `npm adduser`
+  ```
+* Run `npm adduser`, which will prompt with a username, password, and email address.
+Log in confirmation is displayed in text if successful.
+* Run `npm whoami` which should now print the username of the logged in account.

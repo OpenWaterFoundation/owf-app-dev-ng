@@ -1,6 +1,6 @@
 import * as moment         from 'moment';
 
-import * as GeoRasterLayer from 'georaster-layer-for-leaflet';
+import GeoRasterLayer      from 'georaster-layer-for-leaflet';
 import * as IM             from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
           MapLayerItem }   from '@OpenWaterFoundation/common/ui/layer-manager';
@@ -451,7 +451,7 @@ export class MapUtil {
   public static createSingleBandRaster(georaster: any, result: any, symbol: IM.GeoLayerSymbol): any {
     var geoRasterLayer = new GeoRasterLayer({
       debugLevel: 2,
-      georaster: georaster,
+      georaster,
       // Sets the color and opacity of each cell in the raster layer.
       pixelValuesToColorFn: (values: any) => {
         if (values[0] === 0) {
@@ -542,101 +542,101 @@ export class MapUtil {
       }
     }
 
-    var geoRasterLayer = new GeoRasterLayer({
-      debugLevel: 2,
-      georaster: georaster,
-      // Create a custom drawing scheme for the raster layer. This might overwrite pixelValuesToColorFn().
-      customDrawFunction: ({ context, values, x, y, width, height }) => {
+    // var geoRasterLayer = new GeoRasterLayer({
+    //   debugLevel: 2,
+    //   georaster,
+    //   // Create a custom drawing scheme for the raster layer. This might overwrite pixelValuesToColorFn().
+    //   customDrawFunction: ({ context, values, x, y, width, height }) => {
 
-        for (let line of result.data) {
-          // If the Raster layer is a CATEGORIZED layer, then set each color accordingly.
-          if (symbol.classificationType.toUpperCase() === 'CATEGORIZED') {
-            // Use the geoLayerSymbol attribute 'classificationAttribute' to determine what band is being used for
-            // the coloring of the raster layer. Convert both it and the values index to a number.
-            if (values[parseInt(classificationAttribute) - 1] === parseInt(line.value)) {
-              let conversion = MapUtil.hexToRGB(line.fillColor);
+    //     for (let line of result.data) {
+    //       // If the Raster layer is a CATEGORIZED layer, then set each color accordingly.
+    //       if (symbol.classificationType.toUpperCase() === 'CATEGORIZED') {
+    //         // Use the geoLayerSymbol attribute 'classificationAttribute' to determine what band is being used for
+    //         // the coloring of the raster layer. Convert both it and the values index to a number.
+    //         if (values[parseInt(classificationAttribute) - 1] === parseInt(line.value)) {
+    //           let conversion = MapUtil.hexToRGB(line.fillColor);
 
-              context.fillStyle = `rgba(${conversion.r}, ${conversion.g}, ${conversion.b}, ${line.fillOpacity})`;
-              context.fillRect(x, y, width, height);
-            }
-            // If the out of range attribute asterisk (*) is used, use its fillColor.
-            else if (line.value === '*') {
-              if (line.fillColor && !line.fillOpacity) {
-                let conversion = MapUtil.hexToRGB(line.fillColor);
+    //           context.fillStyle = `rgba(${conversion.r}, ${conversion.g}, ${conversion.b}, ${line.fillOpacity})`;
+    //           context.fillRect(x, y, width, height);
+    //         }
+    //         // If the out of range attribute asterisk (*) is used, use its fillColor.
+    //         else if (line.value === '*') {
+    //           if (line.fillColor && !line.fillOpacity) {
+    //             let conversion = MapUtil.hexToRGB(line.fillColor);
 
-                context.fillStyle = `rgba(${conversion.r}, ${conversion.g}, ${conversion.b}, 0.7)`;
-                context.fillRect(x, y, width, height);
-              } else if (!line.fillColor && line.fillOpacity) {
-                context.fillStyle = `rgba(0, 0, 0, ${line.fillOpacity})`;
-                context.fillRect(x, y, width, height);
-              } else {
-                context.fillStyle = `rgba(0, 0, 0, 0.6)`;
-                context.fillRect(x, y, width, height);
-              }
-            }
-            // If the no data value is present, make the cell invisible.
-            else {
-              context.fillStyle = `rgba(0, 0, 0, 0)`;
-              context.fillRect(x, y, width, height);
-            }
-          }
-          // If the Raster layer is a GRADUATED layer, then determine what color each value should be under.
-          else if (symbol.classificationType.toUpperCase() === 'GRADUATED') {
-            // If the cell value is no data and either the valueMin or valueMax of the current line from the classification
-            // file is no data, set the cell value to the line's values.
-            if (MapUtil.isCellValueMissing(values[parseInt(symbol.classificationAttribute) - 1]) === 'no data' &&
-              (line.valueMin.toUpperCase() === 'NODATA' || line.valueMax.toUpperCase() === 'NODATA')) {
+    //             context.fillStyle = `rgba(${conversion.r}, ${conversion.g}, ${conversion.b}, 0.7)`;
+    //             context.fillRect(x, y, width, height);
+    //           } else if (!line.fillColor && line.fillOpacity) {
+    //             context.fillStyle = `rgba(0, 0, 0, ${line.fillOpacity})`;
+    //             context.fillRect(x, y, width, height);
+    //           } else {
+    //             context.fillStyle = `rgba(0, 0, 0, 0.6)`;
+    //             context.fillRect(x, y, width, height);
+    //           }
+    //         }
+    //         // If the no data value is present, make the cell invisible.
+    //         else {
+    //           context.fillStyle = `rgba(0, 0, 0, 0)`;
+    //           context.fillRect(x, y, width, height);
+    //         }
+    //       }
+    //       // If the Raster layer is a GRADUATED layer, then determine what color each value should be under.
+    //       else if (symbol.classificationType.toUpperCase() === 'GRADUATED') {
+    //         // If the cell value is no data and either the valueMin or valueMax of the current line from the classification
+    //         // file is no data, set the cell value to the line's values.
+    //         if (MapUtil.isCellValueMissing(values[parseInt(symbol.classificationAttribute) - 1]) === 'no data' &&
+    //           (line.valueMin.toUpperCase() === 'NODATA' || line.valueMax.toUpperCase() === 'NODATA')) {
 
-              let conversion = MapUtil.hexToRGB(line.fillColor);
+    //           let conversion = MapUtil.hexToRGB(line.fillColor);
 
-              return `rgba(${conversion.r}, ${conversion.g}, ${conversion.b}, ${line.fillOpacity})`;
-            }
-            // This is the default if there is no 'Nodata' value in the classification value, which is full cell transparency.
-            else if (MapUtil.isCellValueMissing(values[parseInt(symbol.classificationAttribute) - 1]) === 'no data') {
-              continue;
-            } else {
-              var valueObj = MapUtil.determineValueOperator(line.valueMin, line.valueMax);
-              // The valueMin and valueMax are numbers, so check if the value from the raster cell
-              // is between the two, with inclusiveness and exclusiveness being determined by the number type. Use the readonly
-              // variable operators with the min and max operators to determine what should be used, with the value from the cell
-              // and the valueMin/valueMax as the parameters for the function.
-              if (MapUtil.operators[valueObj.minOp](values[parseInt(symbol.classificationAttribute) - 1], valueObj.valueMin) &&
-                MapUtil.operators[valueObj.maxOp](values[parseInt(symbol.classificationAttribute) - 1], valueObj.valueMax)) {
+    //           return `rgba(${conversion.r}, ${conversion.g}, ${conversion.b}, ${line.fillOpacity})`;
+    //         }
+    //         // This is the default if there is no 'Nodata' value in the classification value, which is full cell transparency.
+    //         else if (MapUtil.isCellValueMissing(values[parseInt(symbol.classificationAttribute) - 1]) === 'no data') {
+    //           continue;
+    //         } else {
+    //           var valueObj = MapUtil.determineValueOperator(line.valueMin, line.valueMax);
+    //           // The valueMin and valueMax are numbers, so check if the value from the raster cell
+    //           // is between the two, with inclusiveness and exclusiveness being determined by the number type. Use the readonly
+    //           // variable operators with the min and max operators to determine what should be used, with the value from the cell
+    //           // and the valueMin/valueMax as the parameters for the function.
+    //           if (MapUtil.operators[valueObj.minOp](values[parseInt(symbol.classificationAttribute) - 1], valueObj.valueMin) &&
+    //             MapUtil.operators[valueObj.maxOp](values[parseInt(symbol.classificationAttribute) - 1], valueObj.valueMax)) {
 
-                let conversion = MapUtil.hexToRGB(line.fillColor);
+    //             let conversion = MapUtil.hexToRGB(line.fillColor);
 
-                context.fillStyle = `rgba(${conversion.r}, ${conversion.g}, ${conversion.b}, ${line.fillOpacity})`;
-                context.fillRect(x, y, width, height);
-              }
-            }
-            // If the out of range attribute asterisk (*) is used, use its fillColor.
-            if (line.valueMin === '*' || line.valueMax === '*') {
-              if (line.fillColor && !line.fillOpacity) {
-                let conversion = MapUtil.hexToRGB(line.fillColor);
+    //             context.fillStyle = `rgba(${conversion.r}, ${conversion.g}, ${conversion.b}, ${line.fillOpacity})`;
+    //             context.fillRect(x, y, width, height);
+    //           }
+    //         }
+    //         // If the out of range attribute asterisk (*) is used, use its fillColor.
+    //         if (line.valueMin === '*' || line.valueMax === '*') {
+    //           if (line.fillColor && !line.fillOpacity) {
+    //             let conversion = MapUtil.hexToRGB(line.fillColor);
 
-                context.fillStyle = `rgba(${conversion.r}, ${conversion.g}, ${conversion.b}, 0.7)`;
-                context.fillRect(x, y, width, height);
-              } else if (!line.fillColor && line.fillOpacity) {
-                context.fillStyle = `rgba(0, 0, 0, ${line.fillOpacity})`;
-                context.fillRect(x, y, width, height);
-              } else {
-                context.fillStyle = `rgba(0, 0, 0, 0.6)`;
-                context.fillRect(x, y, width, height);
-              }
-            }
-            // If the values are not in between
-            else {
-              context.fillStyle = `rgba(0, 0, 0, 0)`;
-              context.fillRect(x, y, width, height);
-            }
-          }
+    //             context.fillStyle = `rgba(${conversion.r}, ${conversion.g}, ${conversion.b}, 0.7)`;
+    //             context.fillRect(x, y, width, height);
+    //           } else if (!line.fillColor && line.fillOpacity) {
+    //             context.fillStyle = `rgba(0, 0, 0, ${line.fillOpacity})`;
+    //             context.fillRect(x, y, width, height);
+    //           } else {
+    //             context.fillStyle = `rgba(0, 0, 0, 0.6)`;
+    //             context.fillRect(x, y, width, height);
+    //           }
+    //         }
+    //         // If the values are not in between
+    //         else {
+    //           context.fillStyle = `rgba(0, 0, 0, 0)`;
+    //           context.fillRect(x, y, width, height);
+    //         }
+    //       }
 
-        }
-      },
-      // If the geoLayerSymbol has a rasterResolution property, then convert from string to number and use it.
-      resolution: symbol.properties.rasterResolution ? parseInt(symbol.properties.rasterResolution) : 64
-    });
-    return geoRasterLayer;
+    //     }
+    //   },
+    //   // If the geoLayerSymbol has a rasterResolution property, then convert from string to number and use it.
+    //   resolution: symbol.properties.rasterResolution ? parseInt(symbol.properties.rasterResolution) : 64
+    // });
+    // return geoRasterLayer;
   }
 
   /**
