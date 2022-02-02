@@ -50,23 +50,23 @@ need to be updated only when updating Angular using `npx`.
 | **@angular/router** |  | Yes | `13.1.3` |
 | **@turf/bbox** | Takes a set of features, calculates the bbox of all input features, and returns a bounding box. Used by the Data Table Dialog for positioning the map view when zooming to a feature. |  | `6.3.0` |
 | **@turf/boolean-point-in-polygon** | Takes a Point and a Polygon or MultiPolygon and determines if the point resides inside the polygon. The polygon can be convex or concave. The function accounts for holes. Used by the Data Table Dialog for determining whether a given address is in a polygon. |  | `6.3.0` |
-| **@types/d3** | Type definitions for the D3 standard bundle. |  | `7.0.0` |
-| **@types/file-saver** |  |  | `2.0.2` |
-| **@types/jasmine** |  | Yes | `3.5.14` |
-| **@types/jasminewd2** |  | Yes | `2.0.8` |
-| **@types/jquery** |  |  | `3.5.13` |
-| **@types/leaflet** |  |  | `1.7.0` |
-| **@types/lodash** |  |  | `4.14.170` |
-| **@types/node** |  | Yes | `12.20.12` |
-| **@types/papaparse** |  |  | `5.2.5` |
-| **@types/select2** |  |  | `4.0.54` |
-| **@types/showdown** |  |  | `1.9.3` |
+| **@types/d3** | Type definitions for the D3 standard bundle. (`d3`) |  | `7.0.0` |
+| **@types/file-saver** | Type definitions for FileSaver.js. (`file-saver`) |  | `2.0.2` |
+| **@types/jasmine** | Type definitions for `jasmine`. | Yes | `3.5.14` |
+| **@types/jasminewd2** | Type definitions for `jasminewd2` | Yes | `2.0.8` |
+| **@types/jquery** | Type definitions for `jquery`. |  | `3.5.13` |
+| **@types/leaflet** | Type definitions for `leaflet`. |  | `1.7.0` |
+| **@types/lodash** | Type definitions for `lodash`. |  | `4.14.170` |
+| **@types/node** | Type definitions for `node`. | Yes | `12.20.12` |
+| **@types/papaparse** | Type definitions for `papaparse`. |  | `5.2.5` |
+| **@types/select2** | Type definitions for `select2`. |  | `4.0.54` |
+| **@types/showdown** | Type definitions for `showdown`. |  | `1.9.3` |
 | **bootstrap** |  |  | `4.6.0` |
-| **chart.js**<br>**POSSIBLE DELETION** |  |  | `2.9.4` |
-| **chartjs-plugin-zoom**<br>**POSSIBLE DELETION** |  |  | `0.7.7` |
+| **chart.js**<br>**POSSIBLE DELETION** | Charting library. Might be able to be removed at some point, but code exists for now to display in a Data Table Dialog. |  | `2.9.4` |
+| **chartjs-plugin-zoom**<br>**POSSIBLE DELETION** | Allows a user to zoom when using the Chart.js package. |  | `0.7.7` |
 | **clusterize.js** |  |  | `0.18.1` |
 | **codelyzer** |  |  | `6.0.2` |
-| **cypress** |  |  | `8.3.0` |
+| **cypress** | Front-end testing tool. Used for performing end-to-end tests |  | `9.4.1` |
 | **d3** | JavaScript library for visualizing data using web standards. Used by the Gapminder Component to display the Trendalyzer (previously known as Gapminder) visualization software. |  | `7.0.3` |
 | **document-register-element** |  |  | `1.14.10` |
 | **file-saver** | Saves a CSV file on a local computer. Used by the Data Table, Data Table Light, Text, and TSTable Dialogs to display a `Download` button. |  | `2.0.5` |
@@ -77,26 +77,26 @@ need to be updated only when updating Angular using `npx`.
 | **georaster** | Used by `georaster-layer-for-leaflet` for creating raster layers. |  | `1.5.6` |
 | **jasmine-core** |  | Yes | `3.5.0` |
 | **jasmine-spec-reporter** |  | Yes | `5.0.2` |
-| **jquery** |  |  | `3.6.0` |
+| **jquery** | A feature-rich JavaScript library. Used by the Gapminder Component, DataClass, MapLayerItem, MapLayerManager & Properties classes. |  | `3.6.0` |
 | **karma-chrome-launcher** |  | Yes | `3.1.0` |
 | **karma-coverage-istanbul-reporter** |  | Yes | `3.0.3` |
 | **karma-jasmine-html-reporter** |  | Yes | `1.5.4` |
 | **karma-jasmine** |  | Yes | `4.0.1` |
 | **karma** |  | Yes | `6.3.11` |
-| **leaflet-mouse-position** |  |  | `1.2.0` |
-| **leaflet-sidebar-v2** |  |  | `3.2.3` |
-| **leaflet-svg-shape-marker** |  |  | `1.3.0` |
-| **leaflet.zoomhome** |  |  | `1.0.0` |
-| **leaflet** |  |  | `1.7.1` |
-| **lodash** |  |  | `4.17.21` |
+| **leaflet-mouse-position** | A mouse position Leaflet control that displays geographic coordinates of the mouse pointer as it is moved about the map. Used in the Map Component via the `package.json` scripts array. |  | `1.2.0` |
+| **leaflet-sidebar-v2** | A responsive sidebar for Leaflet. Used in the Map Component. |  | `3.2.3` |
+| **leaflet-svg-shape-marker** | Supplies additional SVG marker types for Leaflet, such as triangle, diamond, and square. Used by the Map & Data Table Components, and Map Util class. |  | `1.3.0` |
+| **leaflet.zoomhome** | Provides a zoom control with a "Home" button to reset the view on Leaflet. Used by the Map Component. |  | `1.0.0` |
+| **leaflet** | JavaScript library for mobile-friendly interactive maps. used by the Map & Data Table Components, and the Map Util class. |  | `1.7.1` |
+| **lodash**<br>**POSSIBLE DELETION** | The Lodash library exported as Node.js modules. Attempting to deep clone an object. |  | `4.17.21` |
 | **material-design-icons** |  |  | `3.0.1` |
-| **moment** |  |  | `2.29.1` |
-| **ng-packagr** |  |  | `13.1.3` |
-| **ng-select2** |  |  | `1.4.1` |
-| **ng-table-virtual-scroll** |  |  | `1.3.5` |
-| **ngx-gallery-9**<br>**DELETION RECOMMENDED** |  |  | `1.0.6` |
-| **ngx-showdown** |  |  | `6.0.0` |
-| **papaparse** |  |  | `5.3.0` |
+| **moment** | A JavaScript date library for parsing, validating, manipulating, and formatting dates. Used by the TSGraph Dialog, and the Map Util & DateTimeUtil classes. |  | `2.29.1` |
+| **ng-packagr** | Library to compile and package Angular libraries in Angular Package Format. (APF) |  | `13.1.3` |
+| **ng-select2** | An Angular 13 wrapped component of jquery select2 that supports two-way data-binding. Used by the Gapminder Component. |  | `1.4.1` |
+| **ng-table-virtual-scroll** | An Angular Directive, which allows the use of virtual scrolling in mat-table. Used by the Data Table, Data Table Light, and TSTable Dialog Components. |  | `1.3.5` |
+| **ngx-gallery-9**<br>**DELETION RECOMMENDED** | Angular image gallery plugin Based on NgxGallery, compatible with Angular 9+. Used by the Gallery Dialog. Might be abandoned. |  | `1.0.6` |
+| **ngx-showdown** | An Angular integration for Showdown. (`showdown`) |  | `6.0.0` |
+| **papaparse** | In-browser CSV (or delimited text) parser for JavaScript. Used by the Map, Gallery Dialog, Gapminder Dialog, & TSGraph Dialog Components, and the Map Util & Data Class classes. |  | `5.3.0` |
 | **plotly.js** |  |  | `2.3.0` |
 | **popper.js** |  |  | `1.16.1` |
 | **protractor** |  | Yes | `7.0.0` |
