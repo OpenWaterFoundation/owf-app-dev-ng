@@ -800,7 +800,9 @@ A batch file is used to overcome known issues running in Git Bash.
 @angular scoped packages, but most of the issues ran into while updating were from
 third-party packages. It's important to make sure they are constantly being upgraded
 as well. If it seems like a package has been abandoned, another supported package
-might need to be considered.
+might need to be considered. The full table of all installed packages for the
+`ng-workspace` can be found
+[here](https://github.com/OpenWaterFoundation/owf-app-dev-ng/tree/main/ng-workspace#currently-installed-npm-packages).
 
 Ever since the Infomapper and SNODAS started relying on the @OpenWaterFoundation/common
 library, updating the version of Angular has had a few steps added on to it. Updating
@@ -825,7 +827,8 @@ the app's packages. Perform the update for the library via the
   own issues dealt with, without having to worry about the library.
 * After the library has been updated, a new version will need to be created via npm
 and uploaded as a Github Package. Instructions can be found on the
-[Common package page](https://github.com/OpenWaterFoundation/owf-app-dev-ng/packages/655009).
+[Common package](https://github.com/OpenWaterFoundation/owf-app-dev-ng/packages/655009)
+page.
 * **Do not** install the package into the Angular app yet (e.g. SNODAS, Infomapper), as
 it seems `ng update` still runs into a bug if private repos are being used. The error showed
 `404 Not Found - GET https://npm.pkg.github.com/OpenWaterFoundation/@angular%2fcli - Package [@angular/cli] was not found`.

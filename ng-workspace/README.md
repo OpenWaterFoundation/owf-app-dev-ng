@@ -16,8 +16,9 @@ project, the higher the chances for upgrade issues, security vulnerabilities, co
 abandonment, etc. This way the packages can be viewed and scrutinized at any time, and
 more thought and care can go into installing them for project use.
 
-> NOTE: The following table should be directly compared with the Infomapper `npm` packages
-table. This is an easier way to visually see what packages each one is using, since the
+> NOTE: The following table should be directly compared with the
+[Infomapper `npm` packages table](https://github.com/OpenWaterFoundation/owf-app-infomapper-ng/blob/master/infomapper/README.md#currently-installed-npm-packages).
+This is an easier way to visually see what packages each one is using, since the
 Infomapper depends on the common library. Both tables will probably be close to identical
 until a method is discovered that allows the Infomapper to not have every installed
 AppDev package.
@@ -33,21 +34,21 @@ need to be updated only when updating Angular using `npx`.
 
 | **Package Name**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | **Description** | **Angular Installed** | **Version** |
 | ---- | ---- | ---- | ---- |
-| **@angular-devkit/build-angular** |  | Yes | `13.1.4` |
-| **@angular/animations** |  | Yes | `13.1.3` |
-| **@angular/cdk** |  | Yes | `13.1.3` |
-| **@angular/cli** |  | Yes | `13.1.4` |
-| **@angular/common** |  | Yes | `13.1.3` |
-| **@angular/compiler-cli** |  | Yes | `13.1.3` |
-| **@angular/compiler** |  | Yes | `13.1.3` |
-| **@angular/core** |  | Yes | `13.1.3` |
-| **@angular/elements** |  | Yes | `13.1.3` |
-| **@angular/forms** |  | Yes | `13.1.3` |
-| **@angular/language-service** |  | Yes | `13.1.3` |
-| **@angular/material** |  | Yes | `13.1.3` |
-| **@angular/platform-browser-dynamic** |  | Yes | `13.1.3` |
-| **@angular/platform-browser** |  | Yes | `13.1.3` |
-| **@angular/router** |  | Yes | `13.1.3` |
+| **@angular-devkit/build-angular** | This package contains Architect builders used to build and test Angular applications and libraries. | Yes | `13.1.4` |
+| **@angular/animations** | Provides the illusion of motion: HTML elements that change styling over time. | Yes | `13.1.3` |
+| **@angular/cdk** | The Angular Component Devkit. Is used with `@angular/material`. | Yes | `13.1.3` |
+| **@angular/cli** | The Command Line Interface tool for Angular. | Yes | `13.1.4` |
+| **@angular/common** | Angular common package. | Yes | `13.1.3` |
+| **@angular/compiler-cli** | Compiler for the Angular CLI. | Yes | `13.1.3` |
+| **@angular/compiler** | The Angular compiler library. | Yes | `13.1.3` |
+| **@angular/core** | The Angular core framework. | Yes | `13.1.3` |
+| **@angular/elements** | A library for using Angular Components as Custom Elements. | Yes | `13.1.3` |
+| **@angular/forms** | Directives & services for creating forms. | Yes | `13.1.3` |
+| **@angular/language-service** | Language services. | Yes | `13.1.3` |
+| **@angular/material** | Material Design components for Angular. | Yes | `13.1.3` |
+| **@angular/platform-browser-dynamic** | Library for using Angular in a web browser with JIT compilation. | Yes | `13.1.3` |
+| **@angular/platform-browser** | Library for using Angular in a web browser. | Yes | `13.1.3` |
+| **@angular/router** | The Angular routing library. | Yes | `13.1.3` |
 | **@turf/bbox** | Takes a set of features, calculates the bbox of all input features, and returns a bounding box. Used by the Data Table Dialog for positioning the map view when zooming to a feature. |  | `6.3.0` |
 | **@turf/boolean-point-in-polygon** | Takes a Point and a Polygon or MultiPolygon and determines if the point resides inside the polygon. The polygon can be convex or concave. The function accounts for holes. Used by the Data Table Dialog for determining whether a given address is in a polygon. |  | `6.3.0` |
 | **@types/d3** | Type definitions for the D3 standard bundle. (`d3`) |  | `7.0.0` |
@@ -61,35 +62,35 @@ need to be updated only when updating Angular using `npx`.
 | **@types/papaparse** | Type definitions for `papaparse`. |  | `5.2.5` |
 | **@types/select2** | Type definitions for `select2`. |  | `4.0.54` |
 | **@types/showdown** | Type definitions for `showdown`. |  | `1.9.3` |
-| **bootstrap** |  |  | `4.6.0` |
+| **bootstrap**<br>**POSSIBLE DELETION** | Front-end framework. |  | `4.6.0` |
 | **chart.js**<br>**POSSIBLE DELETION** | Charting library. Might be able to be removed at some point, but code exists for now to display in a Data Table Dialog. |  | `2.9.4` |
 | **chartjs-plugin-zoom**<br>**POSSIBLE DELETION** | Allows a user to zoom when using the Chart.js package. |  | `0.7.7` |
-| **clusterize.js** |  |  | `0.18.1` |
-| **codelyzer** |  |  | `6.0.2` |
+| **clusterize.js**<br>**POSSIBLE DELETION** | Tiny vanilla JS plugin to display large data sets easily. |  | `0.18.1` |
+| **codelyzer**<br>**POSSIBLE DELETION** | A set of tslint rules for static code analysis of Angular TypeScript projects. |  | `6.0.2` |
 | **cypress** | Front-end testing tool. Used for performing end-to-end tests |  | `9.4.1` |
 | **d3** | JavaScript library for visualizing data using web standards. Used by the Gapminder Component to display the Trendalyzer (previously known as Gapminder) visualization software. |  | `7.0.3` |
-| **document-register-element** |  |  | `1.14.10` |
+| **document-register-element**<br>**POSSIBLE DELETION** | This has been deprecated. |  | `1.14.10` |
 | **file-saver** | Saves a CSV file on a local computer. Used by the Data Table, Data Table Light, Text, and TSTable Dialogs to display a `Download` button. |  | `2.0.5` |
-| **flatted** |  |  | `3.1.1` |
-| **font-awesome** |  |  | `4.7.0` |
-| **geoblaze** |  |  | `0.3.2` |
+| **flatted** | A standard approach to recursion and more data-types than what JSON allows, and it's part of the Structured Clone polyfill. |  | `3.1.1` |
+| **font-awesome** | Font Awesome is a full suite of 675 pictographic icons for easy scalable vector graphics on websites. Used by ?? |  | `4.7.0` |
+| **geoblaze** | GeoBlaze is a geospatial raster processing engine written purely in javascript. Powered by geotiffjs, it provides tools to analyze GeoTIFFs. Used by the Map Component and Map Util class. |  | `0.3.2` |
 | **georaster-layer-for-leaflet** | Display GeoTIFFs and other types of rasters. Used by the Map Component and Map Util class for displaying single- and multi-band rasters. |  | `0.6.8` |
 | **georaster** | Used by `georaster-layer-for-leaflet` for creating raster layers. |  | `1.5.6` |
-| **jasmine-core** |  | Yes | `3.5.0` |
-| **jasmine-spec-reporter** |  | Yes | `5.0.2` |
+| **jasmine-core** | Jasmine is a Behavior Driven Development testing framework for JavaScript. | Yes | `3.5.0` |
+| **jasmine-spec-reporter** | Real time console spec reporter for jasmine testing framework. | Yes | `5.0.2` |
 | **jquery** | A feature-rich JavaScript library. Used by the Gapminder Component, DataClass, MapLayerItem, MapLayerManager & Properties classes. |  | `3.6.0` |
-| **karma-chrome-launcher** |  | Yes | `3.1.0` |
-| **karma-coverage-istanbul-reporter** |  | Yes | `3.0.3` |
-| **karma-jasmine-html-reporter** |  | Yes | `1.5.4` |
-| **karma-jasmine** |  | Yes | `4.0.1` |
-| **karma** |  | Yes | `6.3.11` |
+| **karma-chrome-launcher** | Launcher for Google Chrome, Google Chrome Canary and Google Chromium. | Yes | `3.1.0` |
+| **karma-coverage-istanbul-reporter** | A karma reporter that uses the latest istanbul 1.x APIs (with full sourcemap support) to report coverage. | Yes | `3.0.3` |
+| **karma-jasmine-html-reporter** | Reporter that dynamically shows tests results at debug.html page. | Yes | `1.5.4` |
+| **karma-jasmine** | Adapter for the Jasmine testing framework. | Yes | `4.0.1` |
+| **karma** | A simple tool that allows you to execute JavaScript code in multiple real browsers. | Yes | `6.3.11` |
 | **leaflet-mouse-position** | A mouse position Leaflet control that displays geographic coordinates of the mouse pointer as it is moved about the map. Used in the Map Component via the `package.json` scripts array. |  | `1.2.0` |
 | **leaflet-sidebar-v2** | A responsive sidebar for Leaflet. Used in the Map Component. |  | `3.2.3` |
 | **leaflet-svg-shape-marker** | Supplies additional SVG marker types for Leaflet, such as triangle, diamond, and square. Used by the Map & Data Table Components, and Map Util class. |  | `1.3.0` |
 | **leaflet.zoomhome** | Provides a zoom control with a "Home" button to reset the view on Leaflet. Used by the Map Component. |  | `1.0.0` |
 | **leaflet** | JavaScript library for mobile-friendly interactive maps. used by the Map & Data Table Components, and the Map Util class. |  | `1.7.1` |
 | **lodash**<br>**POSSIBLE DELETION** | The Lodash library exported as Node.js modules. Attempting to deep clone an object. |  | `4.17.21` |
-| **material-design-icons**<br>**POSSIBLE DELETION** |  |  | `3.0.1` |
+| **material-design-icons**<br>**POSSIBLE DELETION** | Material design icons are the official icon set from Google that are designed under the material design guidelines. Possibly deprecated or abandoned. |  | `3.0.1` |
 | **moment** | A JavaScript date library for parsing, validating, manipulating, and formatting dates. Used by the TSGraph Dialog, and the Map Util & DateTimeUtil classes. |  | `2.29.1` |
 | **ng-packagr** | Library to compile and package Angular libraries in Angular Package Format. (APF) |  | `13.1.3` |
 | **ng-select2** | An Angular 13 wrapped component of jquery `select2` that supports two-way data-binding. Used by the Gapminder Component. |  | `1.4.1` |
