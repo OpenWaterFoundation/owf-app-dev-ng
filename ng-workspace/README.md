@@ -89,25 +89,25 @@ need to be updated only when updating Angular using `npx`.
 | **leaflet.zoomhome** | Provides a zoom control with a "Home" button to reset the view on Leaflet. Used by the Map Component. |  | `1.0.0` |
 | **leaflet** | JavaScript library for mobile-friendly interactive maps. used by the Map & Data Table Components, and the Map Util class. |  | `1.7.1` |
 | **lodash**<br>**POSSIBLE DELETION** | The Lodash library exported as Node.js modules. Attempting to deep clone an object. |  | `4.17.21` |
-| **material-design-icons** |  |  | `3.0.1` |
+| **material-design-icons**<br>**POSSIBLE DELETION** |  |  | `3.0.1` |
 | **moment** | A JavaScript date library for parsing, validating, manipulating, and formatting dates. Used by the TSGraph Dialog, and the Map Util & DateTimeUtil classes. |  | `2.29.1` |
 | **ng-packagr** | Library to compile and package Angular libraries in Angular Package Format. (APF) |  | `13.1.3` |
-| **ng-select2** | An Angular 13 wrapped component of jquery select2 that supports two-way data-binding. Used by the Gapminder Component. |  | `1.4.1` |
+| **ng-select2** | An Angular 13 wrapped component of jquery `select2` that supports two-way data-binding. Used by the Gapminder Component. |  | `1.4.1` |
 | **ng-table-virtual-scroll** | An Angular Directive, which allows the use of virtual scrolling in mat-table. Used by the Data Table, Data Table Light, and TSTable Dialog Components. |  | `1.3.5` |
 | **ngx-gallery-9**<br>**DELETION RECOMMENDED** | Angular image gallery plugin Based on NgxGallery, compatible with Angular 9+. Used by the Gallery Dialog. Might be abandoned. |  | `1.0.6` |
 | **ngx-showdown** | An Angular integration for Showdown. (`showdown`) |  | `6.0.0` |
 | **papaparse** | In-browser CSV (or delimited text) parser for JavaScript. Used by the Map, Gallery Dialog, Gapminder Dialog, & TSGraph Dialog Components, and the Map Util & Data Class classes. |  | `5.3.0` |
-| **plotly.js** |  |  | `2.3.0` |
-| **popper.js** |  |  | `1.16.1` |
-| **protractor** |  | Yes | `7.0.0` |
-| **rxjs** |  | Yes | `7.5.2` |
-| **select2** |  |  | `4.0.13` |
-| **showdown** |  |  | `1.9.1` |
-| **ts-node** |  | Yes | `8.3.0` |
-| **tslib** |  | Yes | `2.3.1` |
-| **tslint** |  |  | `6.1.3` |
-| **typescript** |  | Yes | `4.5.5` |
-| **zone.js** |  | Yes | `0.11.4` |
+| **plotly.js** | A JavaScript visualization library for charts, stats, 3D graphs, SVG and tile maps, etc. Used by the Heatmap & TSGraph Dialog Components. |  | `2.3.0` |
+| **popper.js**<br>**DELETION RECOMMENDED** | Shows elements on the screen that "pop out". Deprecated, and replaced by `@popperjs/core`. |  | `1.16.1` |
+| **protractor** | Protractor is an end-to-end test framework for Angular applications. | Yes | `7.0.0` |
+| **rxjs** | A library for reactive programming using Observables to compose asynchronous or callback-based code. | Yes | `7.5.2` |
+| **select2** | A jQuery-based replacement for select boxes. Used by `ng-select2` for the Gapminder Dialog Component. |  | `4.0.13` |
+| **showdown** | A JavaScript Markdown to HTML converter for the browser or Node. Used in multiple Dialog Components and the Home & Content Page Components. |  | `1.9.1` |
+| **ts-node** | TypeScript execution and REPL for node.js, with source map and native ESM support. | Yes | `8.3.0` |
+| **tslib** | This is a runtime library for TypeScript that contains all of the TypeScript helper functions. | Yes | `2.3.1` |
+| **tslint**<br>**POSSIBLE DELETION** | TSLint is an extensible static analysis tool that checks TypeScript code for readability, maintainability, and functionality errors. Deprecated in favor of `ESLINT`. |  | `6.1.3` |
+| **typescript** | TypeScript is a language for application-scale JavaScript.  | Yes | `4.5.5` |
+| **zone.js** | Implements Zones for JavaScript, inspired by Dart. | Yes | `0.11.4` |
 
 ## Development server
 
