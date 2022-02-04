@@ -90,7 +90,7 @@ need to be updated only when updating Angular using `npx`.
 | **leaflet.zoomhome** | Provides a zoom control with a "Home" button to reset the view on Leaflet. Used by the Map Component. |  | `1.0.0` |
 | **leaflet** | JavaScript library for mobile-friendly interactive maps. used by the Map & Data Table Components, and the Map Util class. |  | `1.7.1` |
 | **lodash**<br>**POSSIBLE DELETION** | The Lodash library exported as Node.js modules. Attempting to deep clone an object. |  | `4.17.21` |
-| **material-design-icons**<br>**POSSIBLE DELETION** | Material design icons are the official icon set from Google that are designed under the material design guidelines. Possibly deprecated or abandoned. |  | `3.0.1` |
+| **material-design-icons** | Material design icons are the official icon set from Google that are designed under the material design guidelines. Used by the Data Table & Map Components. (`<mat-icon>`) **This might be redundant with the use of font awesome.** |  | `3.0.1` |
 | **moment** | A JavaScript date library for parsing, validating, manipulating, and formatting dates. Used by the TSGraph Dialog, and the Map Util & DateTimeUtil classes. |  | `2.29.1` |
 | **ng-packagr** | Library to compile and package Angular libraries in Angular Package Format. (APF) |  | `13.1.3` |
 | **ng-select2** | An Angular 13 wrapped component of jquery `select2` that supports two-way data-binding. Used by the Gapminder Component. |  | `1.4.1` |
@@ -99,7 +99,6 @@ need to be updated only when updating Angular using `npx`.
 | **ngx-showdown** | An Angular integration for Showdown. (`showdown`) |  | `6.0.0` |
 | **papaparse** | In-browser CSV (or delimited text) parser for JavaScript. Used by the Map, Gallery Dialog, Gapminder Dialog, & TSGraph Dialog Components, and the Map Util & Data Class classes. |  | `5.3.0` |
 | **plotly.js** | A JavaScript visualization library for charts, stats, 3D graphs, SVG and tile maps, etc. Used by the Heatmap & TSGraph Dialog Components. |  | `2.3.0` |
-| **popper.js**<br>**DELETION RECOMMENDED** | Shows elements on the screen that "pop out". Deprecated, and replaced by `@popperjs/core`. |  | `1.16.1` |
 | **protractor** | Protractor is an end-to-end test framework for Angular applications. | Yes | `7.0.0` |
 | **rxjs** | A library for reactive programming using Observables to compose asynchronous or callback-based code. | Yes | `7.5.2` |
 | **select2** | A jQuery-based replacement for select boxes. Used by `ng-select2` for the Gapminder Dialog Component. |  | `4.0.13` |
