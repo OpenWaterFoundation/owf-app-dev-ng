@@ -451,7 +451,7 @@ library
 > **IMPORTANT:** If previously testing the library using the above development
 instructions, the application's `package.json` file contains the path to the
 local library files. This needs to be changed to the most recent published
-(or desired) version before pushing up any changes in the application.
+(or desired) version before pushing up any changes to GitHub.
 
 ## Using MapComponent as an Embeddable Element ##
 

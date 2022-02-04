@@ -548,7 +548,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             // Prints out how many features each geoLayerView contains. Helpful for debugging.
             if (this.allFeatures[geoLayer.geoLayerId]) {
               console.log(geoLayerView.name, 'contains', this.allFeatures[geoLayer.geoLayerId].features.length,
-                (this.allFeatures[geoLayer.geoLayerId].features.length === 1 ? 'feature' : 'features'));
+                (this.allFeatures[geoLayer.geoLayerId].features.length === 1 ? 'feature.' : 'features.'));
             }
 
             var eventObject: any = {};
