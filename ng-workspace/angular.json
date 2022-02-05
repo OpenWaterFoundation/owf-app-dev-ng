@@ -17,9 +17,7 @@
               "jquery",
               "select2",
               "papaparse",
-              "chart.js",
               "showdown",
-              "chartjs-plugin-zoom",
               "file-saver",
               "georaster-layer-for-leaflet"
             ],

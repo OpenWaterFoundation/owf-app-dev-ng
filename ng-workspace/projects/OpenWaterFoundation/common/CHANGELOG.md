@@ -10,12 +10,26 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.7.0 #
+
+### Refactoring ###
+
+* Removed the following unused, deprecated, or abandoned packages:
+  * **chart.js**
+  * **chartjs-plugin-zoom**
+  * **flatted**
+  * **lodash**
+  * **popper.js**
+  * **robust-point-in-polygon**
+* Removed **Chart.js** and **chartjs-plugin-zoom** code from the TSGraph Dialog
+Component; All graphs will be plotted and displayed by **Plotly.js** only.
+
 # 0.6.7 #
 
 ### Bug Fixes ###
 
 * Fixed an update to how georaster imports a function.
-* Reverted `georaster-layer-for-leaflet` from `3.5.0` back to `0.6.8` to resolve
+* Reverted **georaster-layer-for-leaflet** from `3.5.0` back to `0.6.8` to resolve
 a bizarre error in how Leaflet and other Leaflet third-party packages were compiled.
 
 # 0.6.6 #
