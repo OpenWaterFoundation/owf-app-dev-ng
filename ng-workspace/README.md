@@ -61,10 +61,8 @@ need to be updated only when updating Angular using `npx`.
 | **@types/papaparse** | Type definitions for `papaparse`. |  | `5.2.5` |
 | **@types/select2** | Type definitions for `select2`. |  | `4.0.54` |
 | **@types/showdown** | Type definitions for `showdown`. |  | `1.9.3` |
-| **bootstrap**<br>**POSSIBLE DELETION** | Front-end framework. |  | `4.6.0` |
-| **chart.js**<br>**POSSIBLE DELETION** | Charting library. Might be able to be removed at some point, but code exists for now to display in a Data Table Dialog. |  | `2.9.4` |
-| **chartjs-plugin-zoom**<br>**POSSIBLE DELETION** | Allows a user to zoom when using the Chart.js package. |  | `0.7.7` |
-| **clusterize.js**<br>**POSSIBLE DELETION** | Tiny vanilla JS plugin to display large data sets easily. |  | `0.18.1` |
+| **bootstrap**<br>**POSSIBLE DELETION** | Front-end framework. Might be used for a font-family somewhere. |  | `4.6.0` |
+| **clusterize.js**<br>**POSSIBLE DELETION** | Tiny vanilla JS plugin to display large data sets easily. Possibly used by the Gapminder Component. |  | `0.18.1` |
 | **cypress** | Front-end testing tool. Used for performing end-to-end tests |  | `9.4.1` |
 | **d3** | JavaScript library for visualizing data using web standards. Used by the Gapminder Component to display the Trendalyzer (previously known as Gapminder) visualization software. |  | `7.0.3` |
 | **file-saver** | Saves a CSV file on a local computer. Used by the Data Table, Data Table Light, Text, and TSTable Dialogs to display a `Download` button. |  | `2.0.5` |
@@ -91,7 +89,7 @@ need to be updated only when updating Angular using `npx`.
 | **ng-select2** | An Angular 13 wrapped component of jquery `select2` that supports two-way data-binding. Used by the Gapminder Component. |  | `1.4.1` |
 | **ng-table-virtual-scroll** | An Angular Directive, which allows the use of virtual scrolling in mat-table. Used by the Data Table, Data Table Light, and TSTable Dialog Components. |  | `1.3.5` |
 | **ngx-gallery-9**<br>**DELETION RECOMMENDED** | Angular image gallery plugin Based on NgxGallery, compatible with Angular 9+. Used by the Gallery Dialog. Might be abandoned. |  | `1.0.6` |
-| **ngx-showdown** | An Angular integration for Showdown. (`showdown`) |  | `6.0.0` |
+| **ngx-showdown** | An Angular integration for Showdown (`showdown`). Might be abandoned. |  | `6.0.0` |
 | **papaparse** | In-browser CSV (or delimited text) parser for JavaScript. Used by the Map, Gallery Dialog, Gapminder Dialog, & TSGraph Dialog Components, and the Map Util & Data Class classes. |  | `5.3.0` |
 | **plotly.js** | A JavaScript visualization library for charts, stats, 3D graphs, SVG and tile maps, etc. Used by the Heatmap & TSGraph Dialog Components. |  | `2.3.0` |
 | **protractor** | Protractor is an end-to-end test framework for Angular applications. | Yes | `7.0.0` |

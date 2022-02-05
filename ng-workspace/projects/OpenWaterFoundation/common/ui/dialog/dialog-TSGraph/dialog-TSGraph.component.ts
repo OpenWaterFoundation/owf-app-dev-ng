@@ -26,8 +26,6 @@ import { WindowManager,
 import * as Papa                  from 'papaparse';
 import * as moment_               from 'moment';
 const moment = moment_;
-import { Chart }                  from 'chart.js';
-import                                 'chartjs-plugin-zoom';
 
 // I believe that if this type of 'import' is used, the package needs to be added
 // to the angular.json scripts array.
@@ -246,150 +244,6 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * This function actually creates the graph canvas element to show in the dialog. One or more PopulateGraph instances
-   * is given, and we take each one of the PopulateGraph attributes and use them to populate the Chart object that is
-   * being created. 
-   * @param config An array of PopulateGraph instances (objects?)
-   */
-  createChartJSGraph(config: PopulateGraph[]): void {
-
-    // Create the graph labels array for the x axis
-    var mainGraphLabels = this.createChartMainGraphLabels(config);
-    
-    // Typescript does not support dynamic invocation, so instead of creating ctx
-    // on one line, we can cast the html element to a canvas element. Then we can
-    // create the ctx variable by using getContext() on the canvas variable.
-    var canvas = <HTMLCanvasElement> document.getElementById('myChart');
-    var ctx = canvas.getContext('2d');
-
-    // TODO: jpkeahey 2020.06.03 - Maybe use a *ngFor loop in the DialogTSGraphComponent
-    // template file to create as many charts as needed. As well as a for loop
-    // here obviously for going through subProducts?
-    var myChart = new Chart(ctx, {
-      type: validate(config[0].chartType, 'GraphType'),
-      data: {
-        labels: validate(mainGraphLabels, 'xAxisDataLabels'),                       // X-axis labels
-        datasets: [
-          {
-            label: config[0].legendLabel,
-            data: config[0].datasetData,                                     // Y-axis data
-            backgroundColor: 'rgba(33, 145, 81, 0)',              // The graph fill color, with a = 'alpha' = 0 being 0 opacity
-            borderColor: validate(config[0].datasetBackgroundColor, 'borderColor'), // Color of the border or line of the graph
-            borderWidth: 1,
-            spanGaps: false,
-            lineTension: 0
-          }
-        ]
-      },
-      options: {
-        animation: {
-          duration: 0
-        },
-        responsive: true,
-        legend: {
-          position: 'bottom'
-        },
-        scales: {
-          xAxes: [
-            {
-              display: true,
-              distribution: 'linear',
-              ticks: {
-                maxTicksLimit: 10,                                                  // No more than 10 ticks
-                maxRotation: 0                                                      // Don't rotate labels
-              }
-            }
-          ],
-          yAxes: [
-            {
-              scaleLabel: {
-                display: true,
-                labelString: config[0].yAxesLabelString
-              }
-            }
-          ]
-        },
-        elements: {                                                                 // Show each element on the
-          point: {                                                                  // graph with a small circle
-            radius: 1
-          }
-        },
-        tooltips: {
-          callbacks: {
-            title: function (tooltipItem, data) {                                   // Returns the date ['x'] from the
-              return data.datasets[tooltipItem[0].datasetIndex].data[tooltipItem[0].index]['x']; // dataset at the clicked
-            }                                                                       // tooltips index
-          }                                                                         //,
-                                                                                    //intersect: false,
-                                                                                    //mode: 'nearest'
-        },
-        plugins: {                                                                  // Extra plugin for zooming
-          zoom: {                                                                   // and panning.
-            pan: {
-              enabled: true,
-              mode: 'x'
-            },
-            zoom: {
-              enabled: true,
-              drag: false,
-              mode: 'x'
-            }
-          }
-        }
-      }
-    });
-
-    // If the passed in config array object has more than one PopulateGraph instance, there is more than one time series to show
-    // in the graph. 
-    if (config.length > 1) {
-      for (let i = 1; i < config.length; i++) {
-        // Push a dataset object straight into the datasets property in the current graph.
-        myChart.data.datasets.push({
-          label: config[i].legendLabel,
-          data: config[i].datasetData,
-          type: validate(config[i].chartType, 'GraphType'),
-          backgroundColor: 'rgba(33, 145, 81, 0)',
-          borderColor: validate(config[i].datasetBackgroundColor, 'borderColor'),
-          borderWidth: 1,
-          spanGaps: false,
-          lineTension: 0
-        });
-        // Don't forget to update the graph!
-        myChart.update();
-      }
-      
-    }
-
-    /**
-     * This helper function decides if the given property in the chart config object above is defined. If it isn't, an error
-     * message is created with a detailed description of which graph template attribute was incorrect. It will also let the
-     * user know a default will be used instead.
-     * @param property The property that is to be used to populate the graph
-     * @param templateAttribute A string representing a broad description of the property being validated
-     */
-    function validate(property: any, templateAttribute: string): any {
-
-      if (!property) {
-        switch(templateAttribute) {
-          case 'GraphType':
-            console.error('[' + templateAttribute + '] not defined or incorrectly set. Using the default line graph');
-            return 'line';
-          case 'xAxisDataLabels':
-            throw new Error('Fatal Error: [' + templateAttribute +
-                              '] not set. Needed for chart creation. Check graph template file and graph data file.');
-          case 'borderColor':
-            console.error('[' + templateAttribute + '] not defined or incorrectly set. Using the default color black');
-            return 'black';
-        }
-      }
-      // TODO: jpkeahey 2020.06.12 - If the property exists, just return it for now. Can check if it's legit later
-      else {
-        return property;
-      }
-    }
-  }
-
-  /**
    * Determine the full length of days to create on the chart to be shown
    * @param config The array of PopulateGraph instances created from the createTSChartJSGraph function. Contains configuration
    * metadata and data about each time series graph that needs to be created
@@ -492,7 +346,9 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     }
 
     if (chartJSGraph) {
-      this.createChartJSGraph(configArray);
+      console.warn('Plotly is the only supported graphing package, \
+      using Plotly to display graph.');
+      this.createPlotlyGraph(configArray, true);
     } else {      
       this.createPlotlyGraph(configArray, true);
     }
@@ -595,7 +451,9 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     }
 
     if (chartJSGraph) {
-      this.createChartJSGraph(configArray);
+      console.warn('Plotly is the only supported graphing package, \
+      using Plotly to display graph.');
+      this.createPlotlyGraph(configArray, true);
     } else {
       this.createPlotlyGraph(configArray, false);
     }

@@ -30,8 +30,6 @@
     "@types/select2": "^4.0.54",
     "@types/showdown": "^1.9.3",
     "bootstrap": "^4.6.0",
-    "chart.js": "^2.9.4",
-    "chartjs-plugin-zoom": "^0.7.7",
     "clusterize.js": "^0.18.1",
     "d3": "^7.0.3",
     "file-saver": "^2.0.5",

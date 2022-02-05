@@ -197,7 +197,7 @@ export class DialogGapminderComponent implements OnInit {
       jQuery("#DatasetChoicesLabel").remove();
       jQuery("#DatasetChoices").remove();
     }
-
+    console.log(this.properties.DataTableType);
 
     if (this.properties.DataTableType.toUpperCase() === "CLUSTERIZE") d3.select("#dataTable2").remove();
     if (this.properties.DataTableType.toUpperCase() === "JQUERY") d3.select("#dataTable1").remove();

@@ -36,12 +36,6 @@
       <div [attr.id]="windowID + TSID_Location"></div>
     </div>
   </div>
-  <!-- Create and display a Chart.js graph if the showGraph Dialog class variable is true -->
-  <div *ngIf="chartPackage" class="chartPackage">
-    <div *ngIf="chartPackage.toUpperCase() === 'CHARTJS'" class="showGraph">
-      <canvas id="myChart" width="850" height="450"></canvas>
-    </div>
-  </div>
   <!-- Create and display a Plotly graph if the showGraph Dialog class variable is true -->
   <div *ngIf="chartPackage" class="chartPackage">
     <div *ngIf="chartPackage.toUpperCase() === 'PLOTLY'" class="showGraph">
