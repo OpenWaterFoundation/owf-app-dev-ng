@@ -2,7 +2,7 @@ import { Injectable }       from '@angular/core';
 import { HttpClient }       from '@angular/common/http';
 
 import { Observable,
-          of }              from 'rxjs';
+          firstValueFrom }              from 'rxjs';
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 
 @Injectable({
@@ -45,8 +45,8 @@ export class AppService {
    * 
    */
   public async loadConfigFiles() {
-    // App Configuration
-    const appData = await this.http.get('assets/app/app-config.json').toPromise();
+    // App Configuration. firstValueFrom has replaced: await (...).toPromise().
+    const appData = await firstValueFrom(this.http.get('assets/app/app-config.json'));
     this.owfCommonService.setAppConfig(appData);
 
     // Map Configuration
