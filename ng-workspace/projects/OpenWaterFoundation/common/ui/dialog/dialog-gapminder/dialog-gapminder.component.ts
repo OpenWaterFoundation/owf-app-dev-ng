@@ -1613,6 +1613,13 @@ export class DialogGapminderComponent implements OnInit {
       return returnThis.toString();
     }
 
+    /**
+     * TODO jpkeahey 2022-02-10: Think about changing substr to substring, for
+     * deprecation warning.
+     * @param propValue 
+     * @param properties 
+     * @returns 
+     */
     function expandPropertyValue(propValue: any, properties: any) {
       var searchPosition = 0,
         delimStart = "${",

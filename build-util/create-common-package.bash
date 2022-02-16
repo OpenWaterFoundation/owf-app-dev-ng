@@ -29,7 +29,7 @@ renameDistFiles=false
 # folder.
 scriptFolder=$(cd "$(dirname "$0")" && pwd)
 # The name of this bash script.
-scriptName=$(basename $0)
+scriptName=$(basename "$0")
 # repoFolder is owf-app-dev-ng/.
 repoFolder=$(dirname "${scriptFolder}")
 # mainFolder is ng-workspace/.
@@ -50,7 +50,7 @@ while getopts ":hR" opt; do
     # supplied version. The version number is found in the app.component.ts file
     # in angulardev.
     R)
-      version=$(cat "${mainFolder}/projects/angulardev/src/app/app.component.ts" | grep "Version:" | cut -b 15-)
+      version=$(grep "Version:" "${mainFolder}/projects/angulardev/src/app/app.component.ts" | cut -b 15-)
       renameDistFiles=true
       ;;
     # An option was provided that did not match any in getopts.

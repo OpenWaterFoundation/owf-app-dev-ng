@@ -4,7 +4,8 @@ import { Component,
 import { MatDialogRef,
           MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { forkJoin }         from 'rxjs';
+import { forkJoin,
+          Observable }      from 'rxjs';
 
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
 
@@ -194,7 +195,7 @@ export class DialogHeatmapComponent implements OnInit {
     // Defines a TSObject so it can be instantiated as the desired object later.
     var TSObject: any;
     // Create an array to hold the Observables of each file read.
-    var dataArray: any[] = [];
+    var dataArray: Observable<any>[] = [];
     // The file path string to the TS File.
     var filePath: string;
     // The TSID used by the readTimeSeries function in the converted Java code that utilizes it as a TS identifier.

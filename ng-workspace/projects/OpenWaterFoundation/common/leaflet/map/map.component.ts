@@ -672,7 +672,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                       weight: result.data[0].weight
                     };
 
-                    var geoLayerView = this.owfCommonService.getGeoLayerViewFromId(geoLayer.geoLayerId);
+                    var geoLayerView = this.owfCommonService.getGeoLayerView(geoLayer.geoLayerId);
                     var results = result.data;
 
                     let data = new L.geoJson(this.allFeatures[geoLayer.geoLayerId], {
@@ -824,7 +824,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
                           let leafletMarker = L.marker(latlng, { icon: markerIcon });
                           // Determine if there are eventHandlers on this layer by checking its geoLayerView object.
-                          var geoLayerView = this.owfCommonService.getGeoLayerViewFromId(geoLayer.geoLayerId);
+                          var geoLayerView = this.owfCommonService.getGeoLayerView(geoLayer.geoLayerId);
 
                           MapUtil.createLayerTooltips(leafletMarker, eventObject, geoLayerView.properties.imageGalleryEventActionId,
                             geoLayerView.geoLayerSymbol.properties.labelText, this.count);
@@ -879,7 +879,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
                       let leafletMarker = L.marker(latlng, { icon: markerIcon });
                       // Determine if there are eventHandlers on this layer by checking its geoLayerView object.
-                      var geoLayerView = this.owfCommonService.getGeoLayerViewFromId(geoLayer.geoLayerId);
+                      var geoLayerView = this.owfCommonService.getGeoLayerView(geoLayer.geoLayerId);
 
                       MapUtil.createLayerTooltips(leafletMarker, eventObject, geoLayerView.properties.imageGalleryEventActionId,
                         geoLayerView.geoLayerSymbol.properties.labelText, this.count);
@@ -1458,7 +1458,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // sidebar.addPanel({
     //     id:   'testPane',
     //     tab:  '<i class="fa fa-gear"></i>',
-    //     title: 'JS API',
+    //     title: 'Settings',
     //     pane: '<div class="leaflet-sidebar-pane" id="home"></div>'
     // });    
     this.addInfoToSidebar();
@@ -2041,6 +2041,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private refreshLayer(refreshOffset: number, refreshInterval: number, geoLayer: IM.GeoLayer,
                         refreshType: IM.RefreshType, geoLayerView?: IM.GeoLayerView, symbol?: IM.GeoLayerSymbol,
                         bgLayer?: any): void {
+    
     // Wait the refreshInterval, then keep waiting by the refreshInterval from then on.
     const delay = timer(refreshOffset, refreshInterval);
     // Adds each refresh subscription after the first as child subscriptions
@@ -2049,9 +2050,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.refreshSub$.add(delay.subscribe(() => {
       // Update the MatTooltip date display string on the sidebar geoLayerView name.
       this.lastRefresh[geoLayer.geoLayerId] = new Date(Date.now()).toTimeString().split(" ")[0];
-      // Vector layer refresh.
+      // Refresh a vector layer.
       if (refreshType === IM.RefreshType.vector) {
-        
         this.owfCommonService.getJSONData(
           this.owfCommonService.buildPath(IM.Path.gLGJP, [geoLayer.sourcePath])
         ).subscribe((geoJsonData: any) => {
@@ -2066,7 +2066,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           this.elapsedSeconds = 0;
         });
       }
-      // Raster layer refresh.
+      // Refresh a raster layer.
       else if (refreshType === IM.RefreshType.raster) {
         // First remove the raster layer.
         this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
@@ -2139,7 +2139,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           });
         });
       }
-      // Tile layer refresh.
+      // Refresh a tile layer.
       else if (refreshType === IM.RefreshType.tile) {
         bgLayer.redraw();
       }

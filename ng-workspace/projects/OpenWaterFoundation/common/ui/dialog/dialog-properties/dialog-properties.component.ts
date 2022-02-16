@@ -87,9 +87,10 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
 
     var markdownString = '## Layer Properties ##\n\n' +
     'Layers have the following properties:\n' +
-    '1. Properties (attributes) associated with shapes. These properties are the data that are useful for ' +
-    'analysis, such as area, population, and links to other data. Use the layer ***Data Table*** popup menu to view the data table. ' +
-    'The following table lists the property names for the layer.\n' +
+    'Raster layers contain equal-sized grid cells with dimensional units that match the coordinate ' +
+    'reference system. Raster layers contain one or more bands, each of which have a data type and ' +
+    'contain values for the raster cells.  Mouse over a cell or click on a cell to see the cell\'s ' +
+    'data value.  Cell values can can also have no data value.' +
     '2. Layer metadata, which is information about the layer (see the ***Layer Metadata*** and ***Layer ' +
     'Configuration Properties*** sections below).\n\n';
     
@@ -107,6 +108,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
       '<pre class="raster-properties">';
 
       let geoRaster = this.layerItem.getItemLeafletLayer();
+      console.log('geoRaster->', geoRaster);
 
       markdownString +=
       '<b>Height:</b> ' + geoRaster.height + '\n' +
@@ -130,8 +132,8 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
         markdownString +=
         '<b>Band ' + (i + 1) + '</b>\n' +
         '  <b>Data Type:</b> ' + this.getInstanceOf(geoRaster.rasters[i][0]) + '\n' +
-        '  <b>Has No Data Value:</b> ' + (geoRaster.noDataValue === null ? 'False\n' : 'True\n') + 
-        '  <b>No Data Value:</b> ' + geoRaster.noDataValue + '\n';
+        '  <b>Has No Data Value:</b> ' + (geoRaster.noDataValue === null ? 'False' : 'True') + '\n' +
+        '  <b>No Data Value:</b> ' + (geoRaster.noDataValue === null ? 'N/A' : geoRaster.noDataValue) + '\n';
       }
 
       markdownString += '</pre>\n\n';

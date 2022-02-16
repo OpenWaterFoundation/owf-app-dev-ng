@@ -106,6 +106,12 @@ export class Data {
 			}
 		})
 
+		/**
+		 * substr to substring
+		 * @param parameter_value 
+		 * @param properties 
+		 * @returns 
+		 */
 		function expand_parameter_value(parameter_value: any, properties: any) {
       var search_pos = 0,
         delim_start = "${",

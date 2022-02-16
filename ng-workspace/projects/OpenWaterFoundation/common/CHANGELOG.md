@@ -1,4 +1,4 @@
-# Open Water Foundation Common Library Changelog
+# Open Water Foundation Common Library Changelog #
 
 Optional elements to be added to each package version are as follows:
 
@@ -9,6 +9,15 @@ Optional elements to be added to each package version are as follows:
 * Breaking Changes
 
 These elements will only be added if they are applicable for the new version.
+
+# 0.7.1 #
+
+### Refactoring ###
+
+* Changed `getGeoLayerViewFromId` method in **MapUtil** to `getGeoLayerView`.
+* Added in the routing for the Map Error Component, for future error handling.
+* Updated numerous lines throughout the Common package to resolve deprecated
+code (Map Component, Gapminder Dialog Component, `create-common-package.bash`).
 
 # 0.7.0 #
 

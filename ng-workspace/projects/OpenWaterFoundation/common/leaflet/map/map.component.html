@@ -80,6 +80,46 @@
                 <div class="card">
 
                   <div *ngIf="geoLayerViewGroup.properties.docPath">
+
+                    <!-- Test code for implementing an Angular Material expansion panel. -->
+                    <!-- <mat-accordion>
+                      <mat-expansion-panel [expanded]="true" hideToggle>
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            Line Maps
+                          </mat-panel-title>
+                          <mat-panel-description>
+                            <div class="geoLayerViewGroup-doc-button">
+                        
+                              <button mat-icon-button
+                                      [matMenuTriggerFor]="geoLayerViewGroupMenu"
+                                      matTooltip="Click to view layer group menu options"
+                                      [matTooltipShowDelay]="750"
+                                      matTooltipPosition="above"
+                                      data-cy="geoLayerViewGroupKebab">
+                                <mat-icon class="white-dots">more_vert</mat-icon>
+                              </button>
+                              <mat-menu #geoLayerViewGroupMenu="matMenu">
+                                <button mat-menu-item
+                                        class="menu-button"
+                                        (click)="openDocDialog(geoLayerViewGroup.properties.docPath, geoLayerViewGroup.geoLayerViewGroupId, geoLayerViewGroup.name)"
+                                        [disabled]="geoLayerViewGroup.properties.docPath | menuDisable"
+                                        matTooltip="Click to view layer group documentation"
+                                        [matTooltipShowDelay]="750"
+                                        matTooltipPosition="after"
+                                        data-cy="geoLayerViewGroupInformation">
+                                  <i class="fa fa-info-circle fa-2x info-circle"></i>
+                                Information
+                                </button>
+                              </mat-menu>
+      
+                            </div>
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <p>This is the primary content of the panel.</p>
+                      </mat-expansion-panel>
+                    </mat-accordion> -->
+
                     <div class="btn-group geoLayerViewGroupMain">
 
                       <button class="btn geoLayerViewGroupNameDoc"
@@ -267,6 +307,11 @@
                               <span class="slider round"></span>
                             </label>
                           </div>
+
+                          <!-- This div can become an ngIf for a layer refresh. -->
+                          <!-- <div>
+                            Layer last refreshed at xx:xx:xx
+                          </div> -->
   
                           <div class="layer-description" id="description-{{geoLayerView.geoLayerId}}">
                             {{geoLayerView.description}}

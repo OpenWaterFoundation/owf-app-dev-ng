@@ -4,6 +4,7 @@ import { RouterModule,
           
 import { MapComponent }       from '@OpenWaterFoundation/common/leaflet';
 import { HomeComponent }      from './home/home.component';
+// import { MapErrorComponent }   from './map-components/map-error/map-error.component';
 import { NotFoundComponent }  from './not-found/not-found.component';
 import { OwfCommonComponent } from './owf-common/owf-common.component';
 
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'owf-common', component: OwfCommonComponent },
   { path: 'home', component: HomeComponent },
   { path: 'map/:id', component: MapComponent },
+  // { path: 'map-error', component: MapErrorComponent },
   { path: '404', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent }
 ]

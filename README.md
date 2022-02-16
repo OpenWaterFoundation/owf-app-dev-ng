@@ -161,23 +161,98 @@ This section explains how to initialize the development environment for AngularD
 
 Development and deployment of this Angular based web application requires the following tools:
 
-1. Node.js (version 10.x or higher) and npm (version 5.5.1 or higher):
+1. **Node.js** (version 10.x or higher):
    * Check which version of Node.js is installed by running `node -v`.
-   To download Node.js, go to [nodejs.org](nodejs.org). 
-   * Check which version of npm is installed by running `npm -v`.
-   To update npm run `npm install npm@latest -g`.
-2. Angular CLI (Command Line Interface):
+   To download Node.js, go to [nodejs.org](https://nodejs.org). Note that npm is installed
+   with Node, but a separate npm package is recommended since npm updates far more often
+   than Node does. The next step deals with this.
+   * To update Node, visit [nodejs.org](nodesjs.org) and run the LTS installer.
+2. **npm** (version 5.5.1 or higher)
+   * Check which version of npm is installed by running `npm -v`. To install npm globally,
+   run `npm install -g npm@latest`.
+   * To update npm, run the same command above that installs it.
+3. **Angular CLI** (Command Line Interface):
    * Check which version of Angular CLI is installed by running `ng --version`.
-   If Angular CLI needs installed run `npm install -g @angular/cli`.
+   If Angular CLI needs to be installed, run `npm install -g @angular/cli`.
+   * To update Angular, follow the instructions at the
+   [Angular Updater](https://update.angular.io/). Note that Angular does not recommend
+   updating multiple major versions at once, but step by step.
 
-### Running the project: ###
+### Helpful Notes ###
 
-Once all prerequisites have been installed, clone this repository onto the
-local machine using the recommended folder structure and `cd` into the `projects` directory.
-Use the command `npm install` to download all necessary packages and dependencies
-used by the application.
-Run the site by running the command `ng serve`.
-Optionally add the flag `--open` to automatically open the application in a new web browser tab.
+* Due to differences in environments, it is recommended that a single development
+environment is used.  Do not mix the use of Git Bash and Cygwin on the same files on the
+same computer because they treat files differently with respect to line endings and
+executable permissions, which impacts Git.
+* Unless noted otherwise, all commands should be run in the repo
+`owf-app-infomapper-ng/infomapper/` folder.
+
+### Installing the Infomapper Software ###
+
+Currently, the Infomapper is installed by cloning the source repository into the
+`git-repos` folder. Change to `git-repos` and execute:
+
+```
+git clone https://github.com/OpenWaterFoundation/owf-app-infomapper-ng.git
+```
+
+Run the following to install necessary software dependencies.
+This will install the
+[OWF common Angular library](https://github.com/OpenWaterFoundation/owf-app-dev-ng)
+and required third-party packages.
+
+```
+cd owf-app-infomapper-ng/infomapper
+npm install
+```
+
+The above command may require several minutes.
+
+The output will look something like this:
+
+```
+> core-js@3.8.3 postinstall C:\Users\sam\cdss-dev\StateMod-Web\git-repos\owf-app-infomapper-ng\infomapper\node_modules\@angular-devkit\build-angular\node_modules\core-js
+> node -e "try{require('./postinstall')}catch(e){}"
+
+Thank you for using core-js ( https://github.com/zloirock/core-js ) for polyfilling JavaScript standard library!
+
+The project needs your help! Please consider supporting of core-js on Open Collective or Patreon:
+> https://opencollective.com/core-js
+> https://www.patreon.com/zloirock
+
+Also, the author of core-js ( https://github.com/zloirock ) is looking for a good job -)
+
+
+> @angular/cli@11.2.3 postinstall C:\Users\sam\cdss-dev\StateMod-Web\git-repos\owf-app-infomapper-ng\infomapper\node_modules\@angular\cli
+> node ./bin/postinstall/script.js
+
+```
+
+### Running the Angular application ###
+
+The Angular application can be run locally in the typical way,
+assuming that implementation files have been copied to the `src/assets` folder.
+
+```
+cd infomapper
+ng serve                    (will not open a web browser tab)
+ng serve --open             (will open a web browser tab)
+```
+
+The above may be slow the first time as code is compiled.
+After initial startup, changes to files will automatically result in a reload.
+View the website using the following URL:
+
+```
+http://localhost:4200
+```
+
+The default configuration will result in a website that appears as follows:
+
+![infomapper-default.png](doc/images/infomapper-default-home.png)
+
+The default configuration and basic test data are distributed with InfoMapper in the
+`src/assets/app-default` folder.
 
 ## Angular Library Concepts ##
 
@@ -762,6 +837,37 @@ Creating an Angular library using the CLI will automatically update necessary fi
 
 **To be implemented.**
 
+## Using InfoMapper with an Implementation Repository ##
+
+InfoMapper can be used to implement an integrated website containing maps and other information.
+Currently, this is accomplished by creating a product folder, for example `InfoMapper-MyRiver`,
+and working with repositories for the software and implementation files.
+Using a repository for implementation files allows important work to be saved and tracked.
+In the future, a self-extracting executable to install InfoMapper may be provided.
+An example folder structure for a project at the Open Water Foundation is shown below.
+Note that the "product" folder in this case is "InfoMapper-MyRiver",
+whereas the "product" for Infomapper software development is "InfoMapper".
+
+```
+C:\Users\user\                    User's home folder for Windows.
+/C/Users/user/                    User's home folder for Git bash, corresonding to Windows user files.
+/cygdrive/C/Users/user/           User's home folder for Cygdrive, corresonding to Windows user files.
+  owf-dev/                        OWF (or any organization) development files.
+    InfoMapper-MyRiver/           InfoMapper files for "MyRiver" website.
+      git-repos/                  Folder for Git repositories.
+=============== above this line is a recommendation ======================================
+        owf-app-infomapper-ng/    Infomapper software repository.
+        owf-infomapper-myriver/   Infomapper implementation files.
+```
+
+See the links above for example implementations of Infomapper repository file structures.
+Implementation generally involves copying files from the implementation folder into the
+`src/assets` InfoMapper folder, at which point the Angular application is able to use
+implementation files. Once the Angular application is started (see
+[Running the Angular Application](#running-the-angular-application) section).
+
+To use Infomapper with an implementation, first check that the software is up to date
+by following instructions in [Getting Started](#getting-started).
 
 ## Deploying the Site to AWS ##
 

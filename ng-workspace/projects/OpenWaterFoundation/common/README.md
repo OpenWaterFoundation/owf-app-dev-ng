@@ -57,9 +57,9 @@ the command
     replacing OWNER with the owner of the repository - OpenWaterFoundation in this case. Three
     prompts will display:
 
-      1. **Username** - GitHub username. This must be all lower case or it will ask again.
-      2. **Password** - The GitHub Package access Token (GitHub password would also work).
-      3. **Email** - GitHub email address.
+      * **Username** - GitHub username. This must be all lower case or it will ask again.
+      * **Password** - GitHub account personal access token with `repo` and `read:packages` access permissions.
+      * **Email** - GitHub email address.
   
     A successful login will show something similar to
     ```

@@ -318,7 +318,7 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns the name of the geoLayerView name
+   * @returns The background layer geoLayerView that matches the provided @var id.
    * @param id The geoLayerId that needs to be matched
    */
   public getBkgdGeoLayerViewFromId(id: string) {
@@ -637,22 +637,20 @@ export class OwfCommonService {
 
   /**
    * Return the geoLayerView that matches the given geoLayerId.
-   * @param id The given geoLayerId to match with
+   * @param id The given geoLayerId to match with.
    */
-   public getGeoLayerViewFromId(id: string) {
+   public getGeoLayerView(id: string) {
 
-    var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
-    var layerView: any = null;
-
-    for (let geoLayerViewGroup of geoLayerViewGroups) {
-      for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-        if (geoLayerView.geoLayerId === id) {
-          layerView = geoLayerView;
-          break;
+    for (let geoMap of this.mapConfig.geoMaps) {
+      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
+        for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
+          if (geoLayerView.geoLayerId === id) {
+            return geoLayerView;
+          }
         }
       }
-    }
-    return layerView;
+   }
+    return null;
   }
 
   /**
@@ -794,7 +792,7 @@ export class OwfCommonService {
    */
   public getRefreshInterval(geoLayerId: string): number {
     // Obtain the refreshInterval string and convert to upper case.
-    var rawInterval: string = this.getGeoLayerViewFromId(geoLayerId).properties.refreshInterval.toUpperCase();
+    var rawInterval: string = this.getGeoLayerView(geoLayerId).properties.refreshInterval.toUpperCase();
     var splitInterval = rawInterval.split(' ');
     var refreshInterval = 0;
 
@@ -833,7 +831,7 @@ export class OwfCommonService {
    * @returns The offset in milliseconds, and 0 if none is given.
    */
   public getRefreshOffset(geoLayerId: string, refreshInterval: number): number {
-    var rawOffset = this.getGeoLayerViewFromId(geoLayerId).properties.refreshOffset;
+    var rawOffset = this.getGeoLayerView(geoLayerId).properties.refreshOffset;
     var refreshOffset = 0;
 
     // If no offset is given, use the refresh interval and start from midnight.
@@ -1329,7 +1327,7 @@ export class OwfCommonService {
    * @returns The number of milliseconds given to the rxjs timer to wait until the first
    * refresh is run.
    */
-   private setRefreshOffset(refreshInterval: number, refreshOffset?: number): number {
+  private setRefreshOffset(refreshInterval: number, refreshOffset?: number): number {
     var d = new Date();
     d.setHours(0, 0, 0, 0);
     // The default offset, the most recent midnight.
@@ -1344,7 +1342,7 @@ export class OwfCommonService {
 
       return fullOffset - now;
     }
-    // Use the refreshInterval to determine the the offset.
+    // Use the refreshInterval to determine the offset.
     else {
       // Add the interval from midnight until it passes the time 'now'.
       while (initial < now) {

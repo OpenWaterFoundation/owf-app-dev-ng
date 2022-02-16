@@ -1,13 +1,14 @@
 import { Component,
           Inject, 
           OnDestroy, 
-          OnInit}                from '@angular/core';
+          OnInit}                 from '@angular/core';
 import { MatDialog,
           MatDialogConfig,
           MatDialogRef,
           MAT_DIALOG_DATA }       from '@angular/material/dialog';
 
-import { forkJoin }               from 'rxjs';
+import { forkJoin,
+          Observable }            from 'rxjs';
 
 import { DialogTSTableComponent } from '../dialog-tstable/dialog-tstable.component';
 
@@ -812,7 +813,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     // Defines a TSObject so it can be instantiated as the desired object later.
     var TSObject: any;
     // Create an array to hold the Observables of each file read.
-    var dataArray: any[] = [];
+    var dataArray: Observable<any>[] = [];
     // The file path string to the TS File.
     var filePath: string;
     // The TSID used by the readTimeSeries function in the converted Java code that utilizes it as a TS identifier.

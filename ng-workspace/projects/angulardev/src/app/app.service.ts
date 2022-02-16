@@ -2,7 +2,7 @@ import { Injectable }       from '@angular/core';
 import { HttpClient }       from '@angular/common/http';
 
 import { Observable,
-          firstValueFrom }              from 'rxjs';
+          firstValueFrom }  from 'rxjs';
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 
 @Injectable({
