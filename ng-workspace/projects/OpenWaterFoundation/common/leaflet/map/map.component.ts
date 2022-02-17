@@ -92,7 +92,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public eventActions: {} = {};
   /** For the Leaflet map's config file subscription object so it can be closed on this component's destruction. */
   private forkJoinSub$ = <any>Subscription;
-  /** An array of Style-like objects for displaying a graduated symbol in the Leaflet legend. */
+  /** An object of Style-like objects containing:
+   * key  : geoLayerId
+   * value: object with style properties
+   * For displaying a graduated symbol in the Leaflet legend. */
   public graduatedLayerColors = {};
   /** Global value to access container ref in order to add and remove sidebar info components dynamically. */
   public infoViewContainerRef: ViewContainerRef;
@@ -301,8 +304,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private assignGraduatedFileColor(results: any[], geoLayerId: string): void {
 
     if (!results[0].valueMin && !results[0].valueMax) {
-      console.warn('The classification file for layer with geoLayerId \'' + geoLayerId + '\' does not contain valueMin and ' +
-        'valueMax as a header, which is required for Graduated classification. The layer\'s legend and/or map layer may not display correctly');
+      console.warn('The classification file for layer with geoLayerId \'' + geoLayerId +
+      '\' does not contain valueMin and valueMax as a header, which is required for ' +
+      'Graduated classification. The layer\'s legend and/or map layer may not display correctly');
     }
 
     var lineArr: any[] = [];
@@ -318,8 +322,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-  * The entry point and main foundation for building the Leaflet map using the data from the configuration file. Contains the
-  * building and positioning of the map, raster and/or vector layers on the map and all necessary Leaflet functions for the
+  * The entry point and main foundation for building the Leaflet map using the data
+  * from the configuration file. Contains the building and positioning of the map,
+  * raster and/or vector layers on the map and all necessary Leaflet functions for the
   * creation and styling of shapes, polygons and images on the map (among other options).
   */
   private buildMap(): void {

@@ -103,5 +103,4 @@ else
   echo ""
   # Change directory to the common dist folder in another subshell.
   (cd "${commonDistFolder}" && npm pack)
-
 fi
