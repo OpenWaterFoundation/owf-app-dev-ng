@@ -77,9 +77,11 @@ export class MapUtil {
         // Iterate over each line in the classification file.
         for (let line of sp.results) {
           var valueObj = MapUtil.determineValueOperator(line.valueMin, line.valueMax);
-          // operators is the readonly object that maps each operator string to a function, e.g. MapUtil.operators['>'] will do a > b.
+          // MapUtil.operators is the readonly object that maps each operator string to a function,
+          // e.g. MapUtil.operators['>'] will do a > b.
           if (MapUtil.operators[valueObj.minOp](sp.feature.properties[sp.symbol.classificationAttribute], valueObj.valueMin) &&
-            MapUtil.operators[valueObj.maxOp](sp.feature.properties[sp.symbol.classificationAttribute], valueObj.valueMax)) {
+              //               |---operator---||--------------------------a----------------------------|  |--------b-------|
+              MapUtil.operators[valueObj.maxOp](sp.feature.properties[sp.symbol.classificationAttribute], valueObj.valueMax)) {
 
             // Don't need to convert hex to RGB because Leaflet will take care it.
             return {

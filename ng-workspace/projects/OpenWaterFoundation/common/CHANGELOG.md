@@ -17,7 +17,7 @@ These elements will only be added if they are applicable for the new version.
 * Changed `getGeoLayerViewFromId` method in **MapUtil** to `getGeoLayerView`.
 * Added in the routing for the Map Error Component, for future error handling.
 * Updated numerous lines throughout the Common package to resolve deprecated
-code (Map Component, Gapminder Dialog Component, `create-common-package.bash`).
+code (Map Component, Gapminder Dialog Component, `create-common-package.sh`).
 
 # 0.7.0 #
 

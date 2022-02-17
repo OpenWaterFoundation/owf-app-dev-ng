@@ -23,7 +23,7 @@ export class AppComponent {
 
   /**
    * Constructor for the Angular Dev App Component. The version number below is
-   * used by the `create-common-package.bash` file to determine the app version.
+   * used by the `create-common-package.sh` file to determine the app version.
    * Version: 3.0.0
    * @param owfService 
    * @param document 
