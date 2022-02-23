@@ -1,5 +1,5 @@
 // The interfaces below are typed for use throughout the common library, as well as the ability to be utilized by
-// outside consuming applications. It helps define different objects mainly related to the InfoMapper at the moment.
+// outside consuming applications. It helps define different objects mainly related to the InfoMapper for now.
 
 /** Interface for Typing the main AppConfig JSON object created by the user. */
 export interface AppConfig {
@@ -246,7 +246,7 @@ export enum PropFunction {
 }
 
 /**
- * NOTE: Might not be used at the moment.
+ * NOTE: Might not be used right now.
  * e, _this, geoLayer, symbol, geoLayerViewGroup, i
  */
 export interface LeafletEvent {

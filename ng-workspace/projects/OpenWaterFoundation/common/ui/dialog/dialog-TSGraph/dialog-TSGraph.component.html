@@ -33,7 +33,8 @@
   <!-- Show plotly.js by default if a chartPackage was not given -->
   <div *ngIf="!chartPackage" class="chartPackage">
     <div class="showGraph">
-      <div [attr.id]="windowID + TSID_Location"></div>
+      <div [attr.id]="windowID + TSID_Location"
+            attr.data-cy="{{windowID}}-plotly-tsgraph-dialog"></div>
     </div>
   </div>
   <!-- Create and display a Plotly graph if the showGraph Dialog class variable is true -->
@@ -59,7 +60,9 @@
       Data Table
     </button>
 
-    <button mat-raised-button (click)="onClose()">
+    <button mat-raised-button
+            (click)="onClose()"
+            attr.data-cy="{{windowID}}-tsgraph-dialog-lower-close">
       Close
     </button>
   </div>

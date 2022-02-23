@@ -14,12 +14,17 @@
   </div>
 
   <div class="heatmap-contents">
-    <div id="heatmap-div" class="heatmap-div"></div>
+    <div id="heatmap-div"
+          class="heatmap-div"
+          attr.data-cy="{{windowID}}-content-heatmap-dialog"></div>
   </div>
 
   <!-- A button on the lower left for viewing the data table of the current time series graph -->
   <div class="heatmap-components-group">
-    <button mat-raised-button (click)="onClose()" class="lower-dialog-close-button">
+    <button mat-raised-button
+            (click)="onClose()"
+            class="lower-dialog-close-button"
+            attr.data-cy="{{windowID}}-heatmap-dialog-lower-close">
       Close
     </button>
   </div>

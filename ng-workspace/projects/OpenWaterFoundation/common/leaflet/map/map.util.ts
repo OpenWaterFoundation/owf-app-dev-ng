@@ -1,11 +1,10 @@
-import * as moment         from 'moment';
-
 import GeoRasterLayer      from 'georaster-layer-for-leaflet';
 import * as IM             from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
           MapLayerItem }   from '@OpenWaterFoundation/common/ui/layer-manager';
 
 import geoblaze            from 'geoblaze';
+import { format }          from 'date-fns';
 
 declare var L: any;
 
@@ -226,7 +225,7 @@ export class MapUtil {
           divContents += '<b>' + property + ':</b> ' + feature + '<br>';
         }
       } else { // Display a non-string in the popup
-        // This will convert the feature to an ISO 8601 moment
+        // This will convert the feature to ISO 8601 string using date-fns.
         if (typeof feature === 'number') {
           if (/date|time/i.test(property) && feature > 1000000000) {
             converted = true;
@@ -289,12 +288,15 @@ export class MapUtil {
       divContents = MapUtil.buildDefaultDivContentString(filteredProperties);
       // Create the action button (class="btn btn-light btn-sm" creates a nicer looking bootstrap button than regular html can)
       // For some reason, an Angular Material button cannot be created this way.
+      // The unique Cypress attribute is also added here.
       divContents += '<br><button class="btn btn-light btn-sm" id="' + popupTemplateId + '-' + action.label +
+        '" data-cy="' + popupTemplateId + '-' + action.label +
         '" style="background-color: #c2c1c1">' + action.label + '</button>';
     }
     // The features have already been created, so just add a button with a new id to keep it unique.
     else if (firstAction === false) {
       divContents += '&nbsp&nbsp<button class="btn btn-light btn-sm" id="' + popupTemplateId + '-' + action.label +
+        '" data-cy="' + popupTemplateId + '-' + action.label +
         '" style="background-color: #c2c1c1">' + action.label + '</button>';
     }
     // If the firstAction boolean is set to null, then no actions are present in the popup template, and so the default
@@ -306,12 +308,12 @@ export class MapUtil {
   }
 
   /**
-   * Converts a Linux epoch number to a date and formats it in a semi-human readable form
-   * @param epochTime The amount of seconds or milliseconds since January 1st, 1970 to be converted
+   * Converts a Linux epoch number to a date and formats it in a semi-human readable form.
+   * @param epochTime The amount of seconds or milliseconds since January 1st, 1970 to be converted.
    */
   public static convertEpochToFormattedDate(epochTime: number): any {
-    // Convert the epoch time to an ISO 8601 string with an offset and return it
-    return moment(epochTime).format('YYYY-MM-DD HH:mm:ss Z');
+    // Convert the epoch time to an ISO 8601 string with an offset and return it.
+    return format(epochTime, 'yyyy-MM-dd HH:mm:ss');
   }
 
   /**
@@ -901,12 +903,12 @@ export class MapUtil {
    * @param featureProperties The original feature Properties object taken from the feature.
    * @param layerAttributes The object containing rules, regex, and general instructions for filtering out properties.
    */
-  public static filterProperties(featureProperties: any, layerAttributes: any): any {
+  public static filterProperties(featureProperties: any, layerAttributes: IM.EventConfig['layerAttributes']): any {
 
     var included: string[] = layerAttributes.include;
     var excluded: string[] = layerAttributes.exclude;
     var filteredProperties: any = {};
-    // This is 'default', but the included has an asterisk wildcard to include every property
+    // This is 'default', but the included has an asterisk wildcard to include every property.
     if ((included.includes('*') && excluded.length === 0) || (included.length === 0 && excluded.length === 0)) {
       return featureProperties;
     }
