@@ -104,7 +104,7 @@ export class MenuDisablePipe implements PipeTransform {
     }
     // Menu disable or hide check.
     else {
-      // If vizCheck is a parameter, look for (the moment) if the hasVisualization
+      // If vizCheck is a parameter, look (for now) if the hasVisualization
       // attribute for each event in the array is true.
       if (pipeType === 'vizCheck') {
         var visualization = false;

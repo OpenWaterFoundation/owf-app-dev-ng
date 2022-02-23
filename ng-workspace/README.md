@@ -84,7 +84,6 @@ need to be updated only when updating Angular using `npx`.
 | **leaflet.zoomhome** | Provides a zoom control with a "Home" button to reset the view on Leaflet. Used by the Map Component. |  | `1.0.0` |
 | **leaflet** | JavaScript library for mobile-friendly interactive maps. used by the Map & Data Table Components, and the Map Util class. |  | `1.7.1` |
 | **material-design-icons** | Material design icons are the official icon set from Google that are designed under the material design guidelines. Used by the Data Table & Map Components. (`<mat-icon>`) **This might be redundant with the use of font awesome.** |  | `3.0.1` |
-| **moment** | A JavaScript date library for parsing, validating, manipulating, and formatting dates. Used by the TSGraph Dialog, and the Map Util & DateTimeUtil classes. |  | `2.29.1` |
 | **ng-packagr** | Library to compile and package Angular libraries in Angular Package Format. (APF) |  | `13.1.3` |
 | **ng-select2** | An Angular 13 wrapped component of jquery `select2` that supports two-way data-binding. Used by the Gapminder Component. |  | `1.4.1` |
 | **ng-table-virtual-scroll** | An Angular Directive, which allows the use of virtual scrolling in mat-table. Used by the Data Table, Data Table Light, and TSTable Dialog Components. |  | `1.3.5` |

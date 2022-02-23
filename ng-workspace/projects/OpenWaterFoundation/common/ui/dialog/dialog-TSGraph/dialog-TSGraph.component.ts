@@ -25,8 +25,10 @@ import { WindowManager,
           WindowType }            from '@OpenWaterFoundation/common/ui/window-manager';
 
 import * as Papa                  from 'papaparse';
-import * as moment_               from 'moment';
-const moment = moment_;
+import { add,
+          format,
+          isEqual,
+          parseISO }              from 'date-fns';
 
 // I believe that if this type of 'import' is used, the package needs to be added
 // to the angular.json scripts array.
@@ -40,49 +42,50 @@ declare var Plotly: any;
 export class DialogTSGraphComponent implements OnInit, OnDestroy {
   /** The array of objects to pass to the tstable component for data table creation. */
   public attributeTable: any[] = [];
-  /** This variable lets the template file know if neither a CSV, DateValue, or StateMod file is given. */
+  /** This variable lets the template file know if neither a CSV, DateValue, or
+   * StateMod file is given. */
   public badFile = false;
-  /** A string representing the chartPackage property given (or not) from a popup configuration file. */
+  /** A string representing the chartPackage property given (or not) from a popup
+   * configuration file. */
   public chartPackage: string;
-  /** A string containing the name to be passed to the TSTableComponent's first column name: DATE or DATE / TIME. */
+  /** A string containing the name to be passed to the TSTableComponent's first
+   * column name: DATE or DATE / TIME. */
   public dateTimeColumnName: string;
-  /** The graph template object retrieved from the popup configuration file property resourcePath. */
+  /** The graph template object retrieved from the popup configuration file property
+   * resourcePath. */
   public graphTemplateObject: any;
   /** The name of the download file for the dialog-tstable component. */
   private downloadFileName: string;
   /** The object containing all of the layer's feature properties. */
   public featureProperties: any;
-  /** The absolute or relative path to the data file used to populate the graph being created. */
+  /** The absolute or relative path to the data file used to populate the graph
+   * being created. */
   public graphFilePath: string;
   /** Set to false so the Material progress bar never shows up.*/
   public isLoading = false;
-  /** Boolean for helping dialog-tstable component determine what kind of file needs downloading. */
+  /** Boolean for helping dialog-tstable component determine what kind of file needs
+   * downloading. */
   public isTSFile: boolean;
-  /** A string representing the documentation retrieved from the txt, md, or html file to be displayed for a layer. */
+  /** A string representing the documentation retrieved from the txt, md, or html
+   * file to be displayed for a layer. */
   public mainTitleString: string;
-  /**
-   * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
-   * To be set in the app service for relative paths.
-   */
+  /** Used as a path resolver and contains the path to the map configuration that
+   * is using this TSGraphComponent. To be set in the app service for relative paths. */
   public mapConfigPath: string;
-  /**
-   * The array of TS objects that was originally read in using the StateMod or DateValue Java converted code. Used as a
-   * reference in the dialog-tstable component for downloading to the user's local machine.
-   */
+  /** The array of TS objects that was originally read in using the StateMod or DateValue
+   * Java converted code. Used as a reference in the dialog-tstable component for
+   * downloading to the user's local machine. */
   public TSArrayOGResultRef: TS[];
-  /**
-   * The string representing the TSID before the first tilde (~) in the graph template object. Used to help create
-   * a unique graph ID.
-   */
+  /** The string representing the TSID before the first tilde (~) in the graph template
+   * object. Used to help create a unique graph ID. */
   public TSID_Location: string;
-  /**
-   * An array containing the value header names after the initial DATE / TIME header. To be passed to dialog-tstable for
-   * downloading files.
-   */
+  /** An array containing the value header names after the initial DATE / TIME
+   * header. To be passed to dialog-tstable for downloading files. */
   public valueColumns: string[] = [];
   /** A string representing the button ID of the button clicked to open this dialog. */
   public windowID: string;
-  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
+  /** The windowManager instance, which creates, maintains, and removes multiple
+   * open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
 
@@ -641,31 +644,35 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
                   data_table_dates: data_table_dates };
 
       case 'months':
-        currentDate = moment(startDate);
-        var stopDate = moment(endDate);
-        // Iterate over each date from start to end and push them to the dates array that will be returned
-        while (currentDate <= stopDate) {
-          // Push an ISO 8601 formatted version of the date into the x axis array that will be used for the data table
-          data_table_dates.push(currentDate.format('YYYY-MM'));
-          graph_dates.push(moment(currentDate).format('MMM YYYY'));
-          currentDate = moment(currentDate).add(1, 'months');
+        // Only have to parse the string once here using ISO formatting.
+        currentDate = new Date(parseISO(startDate));
+        var stopDate = new Date(parseISO(endDate));
+        // Iterate over each date from start to end and push them to the dates array
+        // that will be returned.
+        while (!isEqual(currentDate, stopDate)) {
+          // Push an ISO 8601 formatted version of the date into the x axis array
+          // that will be used for the data table.
+          data_table_dates.push(format(currentDate, 'yyyy-MM'));
+          graph_dates.push(format(currentDate, 'MMM yyyy'));
+          currentDate = add(currentDate, { months: 1 });
         }
 
-        return { graph_dates: graph_dates,
-                  data_table_dates: data_table_dates };
+        return { graph_dates: graph_dates, data_table_dates: data_table_dates };
 
       case 'years':
-        currentDate = moment(startDate.toString());
-        var stopDate = moment(endDate.toString());
-        // Iterate over each date from start to end and push them to the dates array that will be returned
-        while (currentDate <= stopDate) {
-          // Push an ISO 8601 formatted version of the date into the x axis array that will be used for the data table
-          data_table_dates.push(currentDate.format('YYYY'));
-          graph_dates.push(moment(currentDate).format('YYYY'));
-          currentDate = moment(currentDate).add(1, 'y');
+        // Only have to parse the string once here using ISO formatting.
+        currentDate = new Date(parseISO(startDate));
+        var stopDate = new Date(parseISO(endDate));
+        // Iterate over each date from start to end and push them to the dates
+        // array that will be returned.
+        while (!isEqual(currentDate, stopDate)) {
+          // Push an ISO 8601 formatted version of the date into the x axis array
+          // that will be used for the data table.
+          data_table_dates.push(format(currentDate, 'yyyy'));
+          graph_dates.push(format(currentDate, 'yyyy'));
+          currentDate = add(currentDate, { years: 1 });
         }
-        return { graph_dates: graph_dates,
-                  data_table_dates: data_table_dates };      
+        return { graph_dates: graph_dates, data_table_dates: data_table_dates };      
     } 
   }
 

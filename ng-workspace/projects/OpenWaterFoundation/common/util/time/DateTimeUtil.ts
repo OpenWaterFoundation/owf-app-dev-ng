@@ -2,8 +2,7 @@ import { TimeInterval } from './TimeInterval';
 import { StringUtil }   from '@OpenWaterFoundation/common/util/string';
 import { YearType }     from './YearType';
 
-import * as moment_      from 'moment';
-const moment = moment_;
+import { format }       from 'date-fns';
 
 
 export class DateTime {
@@ -433,11 +432,11 @@ export class DateTime {
         // String format = "yyyy M d H m s S";
         // String time_date = TimeUtil.getTimeString ( d, format );
         // var format: string = "%Y %m %d %H %M %S";
-        var format: string = 'YYYY MMMM DD hh mm ss';
+        var format: string = 'yyyy MMMM dd HH mm ss';
                 
-        var time_date: string = TimeUtil.formatTimeString ( d, format );
+        var time_date: string = TimeUtil.formatTimeString(d, format);
         
-        var v: string[] = StringUtil.breakStringList ( time_date, " ", StringUtil.DELIM_SKIP_BLANKS );
+        var v: string[] = StringUtil.breakStringList (time_date, " ", StringUtil.DELIM_SKIP_BLANKS);
         this.setYear ( parseInt(v[0]) );
         this.setMonth ( parseInt(v[1]) );
         this.setDay ( parseInt(v[2]) );
@@ -3134,24 +3133,29 @@ export class TimeUtil {
     return;
   }
 
-  public static formatTimeString(d0: DateTime, format: string): string {
+  /**
+   * Formats a date into the format string using the provided formatString.
+   * @param d0 The DateTime object to format.
+   * @param formatString The format string to be used by date-fns.
+   * @returns The formatted date as a string.
+   */
+  public static formatTimeString(d0: DateTime, formatString: string): string {
     
     if (d0 === null) {
       d0 = new DateTime(null);
     }
 
-    const zeroPad = (num: number, places: number) => String(num).padStart(places, '0');
+    let date = new Date(
+      d0.getYear(),
+      // The Date object uses the month index.
+      d0.getMonth() - 1,
+      d0.getDay(),
+      d0.getHour(),
+      d0.getMinute(),
+      d0.getSecond()
+    );
 
-    let formattedString = '';
-
-    formattedString += d0.getYear(), 2;
-    formattedString += zeroPad(d0.getMonth(), 2);
-    formattedString += zeroPad(d0.getDay(), 2);
-    formattedString += 'T';
-    formattedString += zeroPad(d0.getHour(), 2);
-    formattedString += zeroPad(d0.getMinute(), 2);
-    formattedString += zeroPad(d0.getSecond(), 2);
-    return moment(formattedString).format(format);
+    return format(date, formatString);
   }
 
   /**
@@ -3212,7 +3216,7 @@ export class TimeUtil {
         //MessageFormat mf = new MessageFormat ( message );
         //Date now = new Date();
         //Object [] o = { now };
-        var t_year: number = parseInt ( this.formatTimeString(null, "%Y"));
+        var t_year: number = parseInt ( this.formatTimeString(null, "Y"));
         year = year0 + year_offset;
         if ( (year > t_year) && !allow_future ) {
           // Don't allow future years so subract 100.

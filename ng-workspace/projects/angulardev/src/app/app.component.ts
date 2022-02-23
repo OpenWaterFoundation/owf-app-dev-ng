@@ -29,7 +29,7 @@ export class AppComponent {
    * @param document 
    */
   constructor(private owfService: OwfCommonService,
-              @Inject(DOCUMENT) private document: HTMLDocument) { }
+              @Inject(DOCUMENT) private document: Document) { }
 
 
   /**

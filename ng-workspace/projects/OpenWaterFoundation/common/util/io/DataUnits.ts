@@ -1,7 +1,7 @@
 // DataUnits - class to provide capabilities for reading and storing data units and conversion between units
-import { OwfCommonService }    from '@OpenWaterFoundation/common/services';
+// import { OwfCommonService }    from '@OpenWaterFoundation/common/services';
 
-import { map }                 from 'rxjs/operators';
+// import { map }                 from 'rxjs/operators';
 
 import { DataFormat }          from './DataFormat';
 import { DataUnitsConversion } from './DataUnitsConversion';
@@ -734,14 +734,14 @@ export class DataUnits {
   more information.  This version calls the other version with define_dimensions as true.
   @param dfile Units file to read (can be a URL).
   */
-  public static readNWSUnitsFile ( dfilePath: string, owfCommonService: OwfCommonService ): void {
-    // Read in the file path or URL to the file asynchronously
-    owfCommonService.getPlainText(dfilePath, 'dataUnitsPath').pipe(map((dfile: any) => {
-      let dfileArray = dfile.split('\n');
-      // Convert the returned string above into an array of strings as an argument
-      this.readNWSUnitsFileBool ( dfileArray, true );
-    }));
-  }
+  // public static readNWSUnitsFile ( dfilePath: string, owfCommonService: OwfCommonService ): void {
+  //   // Read in the file path or URL to the file asynchronously
+  //   owfCommonService.getPlainText(dfilePath, 'dataUnitsPath').pipe(map((dfile: any) => {
+  //     let dfileArray = dfile.split('\n');
+  //     // Convert the returned string above into an array of strings as an argument
+  //     this.readNWSUnitsFileBool ( dfileArray, true );
+  //   }));
+  // }
 
   /**
   Read a file that is in NWS DATAUNIT format.
