@@ -1,5 +1,5 @@
 /*
- * Public API Surface of owf-common
+ * Public API Surface of common.
  */
 
 export * from '@OpenWaterFoundation/common/dwr/statemod';

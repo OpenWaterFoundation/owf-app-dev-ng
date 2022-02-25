@@ -1,4 +1,4 @@
-import * as $ from 'jquery';
+
 
 /**
  * A class that holds Leaflet and geoMapProject layer information and data. 

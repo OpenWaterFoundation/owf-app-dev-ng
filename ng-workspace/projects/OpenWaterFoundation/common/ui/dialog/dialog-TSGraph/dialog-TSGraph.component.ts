@@ -659,10 +659,10 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
         return { graph_dates: graph_dates, data_table_dates: data_table_dates };
 
-      case 'years':
+      case 'years':        
         // Only have to parse the string once here using ISO formatting.
-        currentDate = new Date(parseISO(startDate));
-        var stopDate = new Date(parseISO(endDate));
+        currentDate = new Date(startDate.toString());
+        var stopDate = new Date(endDate.toString());
         // Iterate over each date from start to end and push them to the dates
         // array that will be returned.
         while (!isEqual(currentDate, stopDate)) {
@@ -1044,8 +1044,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
   /**
    * Helper function that left pads a number by a given amount of places, e.g. num = 1, places = 2, returns 01
-   * @param num The number that needs padding
-   * @param places The amount the padding will go out to the left
+   * @param num The number that needs padding.
+   * @param places The amount the padding will go out to the left.
    */
   private zeroPad(num: number, places: number) {    
     return String(num).padStart(places, '0');

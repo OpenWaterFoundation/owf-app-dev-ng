@@ -308,10 +308,11 @@ export class MapUtil {
   }
 
   /**
-   * Converts a Linux epoch number to a date and formats it in a semi-human readable form.
+   * Converts a Linux epoch number to a date-time human readable string. To be displayed
+   * on a feature popup div in the upper left corner of the map.
    * @param epochTime The amount of seconds or milliseconds since January 1st, 1970 to be converted.
    */
-  public static convertEpochToFormattedDate(epochTime: number): any {
+  public static convertEpochToFormattedDate(epochTime: number): string {
     // Convert the epoch time to an ISO 8601 string with an offset and return it.
     return format(epochTime, 'yyyy-MM-dd HH:mm:ss');
   }
