@@ -489,7 +489,8 @@ export class OwfCommonService {
         return this.appConfig.standaloneMap.mapProject;
       }
     }
-
+    // TODO: jpkeahey 2022-02-25 - Here is that pesky error if this function is
+    // called before the appConfig variable is set.
     for (let i = 0; i < this.appConfig.mainMenu.length; i++) {
       if (this.appConfig.mainMenu[i].menus) {
         for (let menu = 0; menu < this.appConfig.mainMenu[i].menus.length; menu++) {

@@ -1,7 +1,7 @@
 // This file is required by karma.conf.js and loads recursively all the .spec and framework files
 
-import 'projects/OpenWaterFoundation/common/src/node_modules/zone.js/dist/zone';
-import 'projects/OpenWaterFoundation/common/src/node_modules/zone.js/dist/zone-testing';
+import 'zone.js/dist/zone';
+import 'zone.js/dist/zone-testing';
 import { getTestBed } from '@angular/core/testing';
 import {
   BrowserDynamicTestingModule,
@@ -20,7 +20,8 @@ getTestBed().initTestEnvironment(
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting()
 );
-// Then we find all the tests.
-const context = require.context('./', true, /\.spec\.ts$/);
+// Then we find all the tests. Added to the path so that it looks one folder back.
+// This way all test files in the Common library are found and used for testing.
+const context = require.context('./../', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

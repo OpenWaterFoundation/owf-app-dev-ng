@@ -258,11 +258,16 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Iterates over the layer properties array and formats them so they can be appropriately displayed in a markdown string
+   * Iterates over the layer properties array and formats each property string so
+   * they can be appropriately displayed in a markdown string.
    */
   private formatLayerProperties(): void {
-    
+    // Index iteration must be used since we're changing the original array elements.
     for (let i = 0; i < this.layerProperties.length; ++i) {
+      //  An underscore is used as a styling mechanism for markdown. If one is encountered,
+      // two backslashes will add one backslash, since backslashes needs to be escaped.
+      // Then the single backslash is itself being used to escape the underscore, so if
+      // part of a property string is encased by them, it won't italicize the word.
       this.layerProperties[i] = this.layerProperties[i].replace(/_/g, '\\_');
     }
   }

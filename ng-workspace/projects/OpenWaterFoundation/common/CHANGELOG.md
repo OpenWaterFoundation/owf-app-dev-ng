@@ -10,6 +10,20 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.7.2 #
+
+### Bug Fixes ###
+
+* Completely replaced momentjs function calls with the more updated and maintained
+date-fns library. All calls to the moment function was returning an error, broke
+multiple Dialogs, and a few other features throughout the map.
+
+
+### Features / Enhancements ###
+
+* Started completing Jasmine/Karma based `.spec.ts` files for unit & integration testing
+for every Component, Class, and Service.
+
 # 0.7.1 #
 
 ### Refactoring ###
