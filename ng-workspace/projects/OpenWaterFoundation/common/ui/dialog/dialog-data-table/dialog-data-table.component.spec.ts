@@ -4,7 +4,7 @@ import { ComponentFixture,
 
 import { DialogDataTableComponent } from './dialog-data-table.component';
 
-describe('DialogDataTableComponent', () => {
+xdescribe('DialogDataTableComponent', () => {
   let component: DialogDataTableComponent;
   let fixture: ComponentFixture<DialogDataTableComponent>;
 

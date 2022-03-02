@@ -6,7 +6,7 @@ import { MatDialogModule,
 
 import { DialogTextComponent } from './dialog-text.component';
 
-describe('DialogTextComponent', () => {
+xdescribe('DialogTextComponent', () => {
   let component: DialogTextComponent;
   let fixture: ComponentFixture<DialogTextComponent>;
 

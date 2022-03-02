@@ -1,5 +1,3 @@
-import { MapLayerItem } from "@OpenWaterFoundation/common/ui/layer-manager/map-layer-item";
-
 
 export class MockOwfCommonService {
   isURL(property: any) {}
@@ -13,36 +11,8 @@ export class DialogRefMock {
 }
 
 export const VECTOR_LAYER_ITEM: any = {
-  // addressMarker: null,
-  // addedToMainMap: false,
-  // displayed: false,
-  // isRaster: true,
-  // isVector: false,
-  // layerItemGeoLayerId: 'unique-geoLayerId',
-  // layerItemViewGroupId: 'unique-geoLayerViewGroupId',
-  // leafletLayer: null,
-  // selectBehavior: 'Any',
-  // selectInitial: true,
-  // selectedLayer: null,
-  // addAddressMarker() {},
-  // addItemLeafletLayerToMainMap() {},
-  // addLeafletLayer() {},
-  // addSelectedLayerToMainMap() {},
-  // getItemGeoLayerViewGroupId(): string {return},
-  // getItemLeafletLayer() {},
-  // getItemSelectBehavior(): string {return},
-  // getSelectedLayer() {},
-  // hasAnySelectedLayers(): boolean {return},
-  // hasSelectedLayer(): boolean {return},
-  // init() {},
-  // initItemLeafletLayerToMainMap() {},
-  // isAddedToMainMap(): boolean {return},
-  // isDisplayedOnMainMap(): boolean {return},
-  // isRasterLayer(): boolean {return},
   isVectorLayer(): boolean { return true },
-  // isSelectInitial(): boolean {return},
-  // removeAllSelectedLayers() {},
-  // removeItemLeafletLayerFromMainMap() {}
+  isRasterLayer(): boolean { return false }
 };
 
 export const RASTER_LAYER_ITEM: any = {

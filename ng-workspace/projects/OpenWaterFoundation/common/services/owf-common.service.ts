@@ -107,13 +107,16 @@ export class OwfCommonService {
   }
 
   /**
-   * Builds the correct path needed for an HTTP GET request for either a local file or URL, and does so whether
-   * given an absolute or relative path in a configuration or template file.
-   * @param pathType A Path enum representing what kind of path that needs to be built
-   * @param arg An optional array for arguments needed to build the path, e.g. a filename or geoLayerId
+   * Builds the correct path needed for an HTTP GET request for either a local file
+   * or URL, and does so whether given an absolute or relative path in a configuration
+   * or template file.
+   * @param pathType A Path enum representing what kind of path that needs to be built.
+   * @param arg An optional array for arguments needed to build the path, e.g. a
+   * filename or geoLayerId.
    */
   public buildPath(pathType: string, arg?: any[]): string {
-    // If a URL is given as the path that needs to be built, just return it so the http GET request can be performed
+    // If a URL is given as the path that needs to be built, just return it so the
+    // http GET request can be performed
     if (arg) {
       if (arg[0].startsWith('https') || arg[0].startsWith('http') || arg[0].startsWith('www')) {
         return arg[0];
@@ -165,9 +168,10 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns The condensed path, changing `a/path/to/../../file.ext` to `a/file.ext` for a more human readable format.
-   * @param path The path represented as a string, for a URL or local path
-   * @param formatType The string describing how long the formatted string can be
+   * @returns The condensed path, changing `a/path/to/../../file.ext` to `a/file.ext`
+   * for a more human readable format.
+   * @param path The path represented as a string, for a URL or local path.
+   * @param formatType The string describing how long the formatted string can be.
    */
   public condensePath(path: string, formatType?: string): string {
     if (path.startsWith('https') || path.startsWith('http') || path.startsWith('www')) {

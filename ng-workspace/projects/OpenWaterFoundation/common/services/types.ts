@@ -282,3 +282,28 @@ export enum D3Chart {
   // line,
   // scatter
 }
+
+/** A general object to help in using a graphing package API. */
+export interface PopulateGraph {
+  chartMode?: string;
+  chartType: string;
+  datasetBackgroundColor?: string;
+  datasetData?: number[];
+  dataLabels?: string[];
+  dateType?: string;
+  endDate?: string;
+  graphFileType: string;
+  legendLabel: string;
+  legendPosition: any;
+  plotlyDatasetData?: number[];
+  plotly_xAxisLabels?: any[];
+  startDate?: string;
+  yAxesLabelString: string;
+}
+
+/** Graph properties of a TSTool created time series graph object. */
+export enum GraphProp {
+  bc = 'backgroundColor',
+  cm = 'chartMode',
+  ct = 'chartType'
+}

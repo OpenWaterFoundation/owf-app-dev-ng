@@ -48,7 +48,8 @@ export class DialogHeatmapComponent implements OnInit {
   public graphTemplateObject: any;
   /** A string representing the button ID of the button clicked to open this dialog. */
   public windowID: string;
-  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
+  /** The windowManager instance, which creates, maintains, and removes multiple
+   * open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
   constructor(public dialogRef: MatDialogRef<DialogHeatmapComponent>,

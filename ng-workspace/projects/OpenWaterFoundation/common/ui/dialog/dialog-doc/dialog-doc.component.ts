@@ -23,7 +23,8 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   public docMarkdown: boolean;
   /** Shows if the current documentation type is an HTML file. */
   public docHTML: boolean;
-  /** The string containing the documentation that needs to be displayed in this DialogDocComponent. */
+  /** The string containing the documentation that needs to be displayed in this
+   * DialogDocComponent. */
   public doc: string;
   /** The string representing the path to the documentation file to be displayed. */
   public docPath: string;
@@ -33,12 +34,11 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   public geoId: string;
   /** The name property from the geoMap, geoLayerViewGroup, or geoLayerView. */
   public geoName: string;
-  /**
-   * Used as a path resolver and contains the path to the map configuration that
-   * is using this TSGraphComponent. To be set in the app service for relative paths.
-   */
+  /** Used as a path resolver and contains the path to the map configuration that
+   * is using this TSGraphComponent. To be set in the app service for relative paths. */
    public mapConfigPath: string;
-  /** The Showdown config option object. Overrides an app `app.module.ts` config option object. */
+  /** The Showdown config option object. Overrides an app `app.module.ts` config 
+   * option object. */
   public showdownOptions = {
     emoji: true,
     flavor: 'github',
@@ -52,9 +52,11 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   }
   /** The formatted string to be converted into markdown by Showdown. */
   public showdownHTML: string;
-  /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
+  /** A unique string representing the windowID of this Dialog Component in the
+   * WindowManager. */
   public windowID: string;
-  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
+  /** The windowManager instance, which creates, maintains, and removes multiple
+   * open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
   
 
@@ -78,7 +80,8 @@ export class DialogDocComponent implements OnInit, OnDestroy {
 
 
   /**
-   * This function is called on initialization of the map component, right after the constructor.
+   * This function is called on initialization of the map component, right after
+   * the constructor.
    */
   ngOnInit(): void {
     if (this.mapConfigPath && this.fullMarkdownPath) {
@@ -87,9 +90,10 @@ export class DialogDocComponent implements OnInit, OnDestroy {
     }
 
     if (this.docMarkdown) {
-      // Check to see if the markdown file has any input that is an image link syntax. If it does, we want users to
-      // be able to set the path to the image relative to the markdown folder being displayed, so they don't have to
-      // be burdened with putting a possibly extra long path.
+      // Check to see if the markdown file has any input that is an image link syntax.
+      // If it does, we want users to be able to set the path to the image relative
+      // to the markdown folder being displayed, so they don't have to be burdened
+      // with putting a possibly extra long path.
       var sanitizedDoc = this.owfCommonService.sanitizeDoc(this.doc, IM.Path.mP);
 
       setTimeout(() => {
@@ -112,8 +116,9 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
-   * a new map, make sure to close the dialog and remove it from the window manager.
+   * Called once, before the instance is destroyed. If the page is changed or a
+   * link is clicked on in the dialog that opens a new map, make sure to close the
+   * dialog and remove it from the window manager.
    */
   public ngOnDestroy(): void {
     this.dialogRef.close();

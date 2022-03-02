@@ -19,15 +19,15 @@ import * as FileSaver       from 'file-saver';
   styleUrls: ['./dialog-text.component.css', '../main-dialog-style.css']
 })
 export class DialogTextComponent implements OnInit, OnDestroy {
-  /** A string representing the file extension that the text came from. Used for the Download button tooltip. */
+  /** A string representing the file extension that the text came from. Used for
+   * the Download button tooltip. */
   public fileExtension: string;
   /** A string representing the name that the text came from. */
   public fileName: string;
-  /**
-   * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
-   * To be set in the app service for relative paths.
-   */
-   public mapConfigPath: string;
+  /** Used as a path resolver and contains the path to the map configuration that
+   * is using this TSGraphComponent. To be set in the app service for relative
+   * paths. */
+  public mapConfigPath: string;
   /** The text to be displayed in the dialog. */
   public text: any;
   /** A string representing the button ID of the button clicked to open this dialog. */
@@ -38,9 +38,12 @@ export class DialogTextComponent implements OnInit, OnDestroy {
 
   /**
    * 
-   * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
-   * @param dialogService The reference to the map service, for sending data between components and higher scoped map variables.
-   * @param dataObject The object containing data passed from the Component that created this Dialog.
+   * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation
+   * and sending of data.
+   * @param dialogService The reference to the dialog service, for sending data between
+   * components and higher scoped map variables.
+   * @param dataObject The object containing data passed from the Component that
+   * created this Dialog.
    */
   constructor(public dialogRef: MatDialogRef<DialogTextComponent>,
               private owfCommonService: OwfCommonService,
