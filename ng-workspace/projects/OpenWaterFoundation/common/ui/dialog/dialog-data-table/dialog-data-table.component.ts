@@ -18,6 +18,7 @@ import * as FileSaver                   from 'file-saver';
 
 import { OwfCommonService }             from '@OpenWaterFoundation/common/services';
 import * as IM                          from '@OpenWaterFoundation/common/services';
+import { DialogService }                from '../dialog.service';
 import { WindowManager }                from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapLayerManager,
           MapLayerItem }                from '@OpenWaterFoundation/common/ui/layer-manager';
@@ -36,26 +37,30 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public addressLat: number;
   /** The filtered address longitude. */
   public addressLng: number;
-  /** The Leaflet Marker object for displaying when an address is filtered on the map. */
+  /** The Leaflet Marker object for displaying when an address is filtered on the
+   * map. */
   public addressMarker: any;
   /** Whether an address marker is currently being displayed on the map. */
   public addressMarkerDisplayed: boolean;
-  /** Holds all features in the layer for determining if an address resides in a polygon. */
+  /** Holds all features in the layer for determining if an address resides in a
+   * polygon. */
   public allLayerFeatures: any;
   /** The original object containing all features in the layer. */
   public attributeTableOriginal: any;
-  /**
-   * The copied object for displaying data a Material Table's cells. Is an instance of TableVirtualScrollDataSource, needed for
-   * using the third party virtual scrolling with an Angular Material Table. It extends the Angular Material DataSource class.
-   */
+  /** The copied object for displaying data a Material Table's cells. Is an instance
+   * of TableVirtualScrollDataSource, needed for using the third party virtual scrolling
+   * with an Angular Material Table. It extends the Angular Material DataSource class. */
   public attributeTable: TableVirtualScrollDataSource<any>;
-
+  /**
+   * 
+   */
   public currentLayer: any;
   /** Used to determine which matInputFilterText option to display. */
   public defaultRadioDisabled = true;
   /** Array containing the names of all header columns in the Material Table. */
   public displayedColumns: string[];
-  /** EventEmitter that alerts the Map component (parent) that an update has happened, and sends the basin name. */
+  /** EventEmitter that alerts the Map component (parent) that an update has happened,
+   * and sends the basin name. */
   @Output() featureHighlighted = new EventEmitter<boolean>();
   /** The layer's geoLayer. */
   public geoLayer: any;
@@ -63,12 +68,11 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public geoLayerView: any;
   /** The name of the geoMap the layer resides in. */
   public geoMapName: string;
-  /** Object containing the a geoLayerId as the ID, and an object of properties set by a user-defined classification file. */
+  /** Object containing the a geoLayerId as the ID, and an object of properties
+   * set by a user-defined classification file. */
   public layerClassificationInfo: any;
-  /**
-   * Object containing the URL as the key and value, so each link is unique.
-   * Used by the template file to use as the link's href.
-   */
+  /** Object containing the URL as the key and value, so each link is unique. Used
+   * by the template file to use as the link's href. */
   public links: {} = {};
   /** The reference to the Map Component's this.mainMap; the Leaflet map. */
   public mainMap: any;
@@ -76,16 +80,19 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * 
    */
   public mapConfigPath: string;
-  /**
-   * The instance of the MapLayerManager, a helper class that manages MapLayerItem objects with Leaflet layers
-   * and other layer data for displaying, ordering, and highlighting.
-   */
+  /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
+   * objects with Leaflet layers and other layer data for displaying, ordering,
+   * and highlighting. */
   public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
-  /** Used by the template file to display how many features are highlighted on the map. */
+  /** Used by the template file to display how many features are highlighted on
+   * the map. */
   public matchedRows: number;
-  /** Dynamic string to show in the filter input area to a user. Default is set on initialization. */
+  /** Dynamic string to show in the filter input area to a user. Default is set
+   * on initialization. */
   public matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
-
+  /**
+   * 
+   */
   public originalStyle: any;
   /** Holds the string that was previously entered by the user. */
   private prevSearch = '';
@@ -95,38 +102,38 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * * `address`
    */
   public searchType = 'columns';
-  /**
-   * This layer's selectedLayer that extends the Leaflet L.geoJSON class. Highlights and displays under selected features,
-   * and resets/hides them.
-   */
+  /** This layer's selectedLayer that extends the Leaflet L.geoJSON class. Highlights
+   * and displays under selected features, and resets/hides them. */
   public selectedLayer: any;
-  /**
-   * Object containing the geoLayerId as the key, and the selectedLayer object. If the geoLayerId exists in this object, it means
-   * the layer's features can be highlighted.
-   */
+  /** Object containing the geoLayerId as the key, and the selectedLayer object.
+   * If the geoLayerId exists in this object, it means the layer's features can
+   * be highlighted. */
   public selectedLayers: any;
   /** Number to be assigned uniquely to a selected feature layer id. */
   private selectedLeafletID = Number.MAX_SAFE_INTEGER;
   // TODO: jpkeahey 2020.10.27 - Commented out. Will be used for row selection
-  /**
-   * Used by the template file to display how many rows (features in the layer) are selected on the data table.
-   */
+  /** Used by the template file to display how many rows (features in the layer)
+   * are selected on the data table. */
   // public selectedRows = 0;
-  /** Object needed to show and deal with the checkboxes on the data table when selecting each row in the Material Table. */
+  /** Object needed to show and deal with the checkboxes on the data table when
+   * selecting each row in the Material Table. */
   public selection: SelectionModel<any>;
-  /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
+  /** A unique string representing the windowID of this Dialog Component in the
+   * WindowManager. */
   public windowID: string;
-  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
+  /** The windowManager instance, which creates, maintains, and removes multiple
+   * open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
 
 
   /**
-   * @constructor for the Dialog Data Table.
+   * @constructor Constructs the Dialog Data Table.
    * @param owfCommonService The reference to the OwfCommonService injected object.
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
    * @param dataObject The object containing data passed from the Component that created this Dialog.
    */
-  constructor(public owfCommonService: OwfCommonService,
+  constructor(private dialogService: DialogService,
+              public owfCommonService: OwfCommonService,
               public dialog: MatDialog,
               public dialogRef: MatDialogRef<DialogDataTableComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
@@ -154,7 +161,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Function that applies the necessary trimming to a filter query from the user
+   * Applies the necessary trimming to a filter query from the user.
    * @param event The event passed when a DOM event is detected (user inputs into filter field)
    */
   public applyFilter(event: KeyboardEvent) {
@@ -165,10 +172,10 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     // if ((event.target as HTMLInputElement).value === this.prevSearch) {
     //   return;
     // }
-    
 
-    // If the keyup event is an empty string, then the user has either selected text and deleted it, or backspaced until the
-    // search field is empty. In that case, do the table search and if the selected layer exists, reset the highlighting.
+    // If the keyup event is an empty string, then the user has either selected
+    // text and deleted it, or backspaced until the search field is empty. In that
+    // case, do the table search and if the selected layer exists, reset the highlighting.
     if ((event.target as HTMLInputElement).value === '') {
       const filterValue = (event.target as HTMLInputElement).value;
       this.prevSearch = filterValue;
@@ -180,10 +187,12 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         this.addressMarkerDisplayed = false;
       }
     }
-    // If the keyup event is not empty, attempt to populate the selectedLayer object. If the Enter key was not pressed by the user,
-    // then don't do anything else. If the Enter key was pressed, check if the selected layer exists, and highlight the correct
-    // features if it does. This should hopefully help with large datasets, as it only checks when enter is pressed, and not for
-    // every letter that the keyup is detected.
+    // If the keyup event is not empty, attempt to populate the selectedLayer object.
+    // If the Enter key was not pressed by the user, then don't do anything else.
+    // If the Enter key was pressed, check if the selected layer exists, and highlight
+    // the correct features if it does. This should hopefully help with large datasets,
+    // as it only checks when enter is pressed, and not for every letter that the
+    // keyup is detected.
     else {
       if (event.code && (event.code.toUpperCase() === 'ENTER' || event.code.toUpperCase() === 'NUMPADENTER')) {
         // Check if any selected layers need to be removed first.
@@ -205,7 +214,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
           this.filterByAddress(filterValue);
         }
 
-        
       }
     }
     return;
@@ -223,8 +231,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * 
-   * @param filterValue 
+   * Query the Geocodio API with the provided user address and add a Selected layer
+   * to the Leaflet map if found in a polygon.
+   * @param filterValue The search value entered in by a user.
    */
   private filterByAddress(filterAddress: string): void {
     // Replace all spaces and commas with URI-encoded characters using regex.
@@ -236,18 +245,21 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         this.addressLat = -1;
         this.addressLng = -1;
       } else {
-        // Set the returned lat and long values so they can be used in the filter function. From GeoCodIO's documentation,
-        // use the first result in the array, as it will be the most accurate.
+        // Set the returned lat and long values so they can be used in the filter
+        // function. From GeoCodIO's documentation, use the first result in the
+        // array, as it will be the most accurate.
         this.addressLat = resultJSON.results[0].location.lat;
         this.addressLng = resultJSON.results[0].location.lng;
       }
       console.log('GeoCodIO result', resultJSON.results[0]);
-      // Call the filter function for addresses. The user given input itself won't be used, but this is how the function
-      // is called. Set the data rows to show by using the filtered data.
+      // Call the filter function for addresses. The user given input itself won't
+      // be used, but this is how the function is called. Set the data rows to show
+      // by using the filtered data.
       this.attributeTable.filter = filterAddress.trim().toUpperCase();
       this.matchedRows = this.attributeTable.filteredData.length;
       
-      // This uses type casting so that a 'correct' GeoJsonObject is created for the L.geoJSON function.
+      // This uses type casting so that a 'correct' GeoJsonObject is created for
+      // the L.geoJSON function.
       // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37370#issuecomment-577504151
       var geoJsonObj = {
         type: "FeatureCollection" as const,
@@ -263,8 +275,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
       //   }
       // });
 
-      // Iterate over the array of filtered features from the data table, and IF the address is found in one, add it to the
-      // map and push it into the geoJson object to be used for selecting and styling the feature it's in.
+      // Iterate over the array of filtered features from the data table, and if
+      // the address is found in one, add it to the map and push it into the geoJson
+      // object to be used for selecting and styling the feature it's in.
       this.attributeTable.filteredData.forEach((feature: any) => {
         if (booleanPointInPolygon([this.addressLng, this.addressLat], feature.geometry) === true) {
           // Create and add the Marker and tooltip to the map.
@@ -297,11 +310,12 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Creates the polygon or point selected layer to be added to the Leaflet map right on top of the layerItem's original layer.
-   * @param geoJsonObj The geoJson object created to be given to the L.geoJSON class to create a selected geoJson layer.
+   * Creates the polygon or point selected layer to be added to the Leaflet map
+   * right on top of the layerItem's original layer.
+   * @param geoJsonObj The geoJson object created to be given to the L.geoJSON
+   * class to create a selected geoJson layer.
    */
    private createSelectedLeafletClass(geoJsonObj: any): void {
-
 
     if (geoJsonObj.features[0].geometry.type.toUpperCase().includes('POLYGON')) {
       var symbolWeight = (
@@ -324,8 +338,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      // Attempt to retrieve both the layer's symbol type and size if a point layer. This can be from the map configuration file
-      // under geoLayerSymbol, or in a classification file, which is in the layerClassificationInfo object.
+      // Attempt to retrieve both the layer's symbol type and size if a point layer.
+      // This can be from the map configuration file under geoLayerSymbol, or in a
+      // classification file, which is in the layerClassificationInfo object.
       var symbolSizeType = (
         this.geoLayerView.geoLayerSymbol.properties.symbolSize ?
         this.geoLayerView.geoLayerSymbol.properties.symbolSize :
@@ -347,7 +362,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
             color: 'red',
             fillColor: '#ffff01',
             fillOpacity: '1',
-            // Grab the radius from the feature, which was changed on initialization of the selected layer.
+            // Grab the radius from the feature, which was changed on initialization
+            // of the selected layer.
             radius: parseInt(symbolSizeType) + 3,
             shape: symbolShapeType,
             opacity: '1',
@@ -364,8 +380,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Looks through each feature and its properties to determine which should be highlighted on the Leaflet
-   * map.
+   * Looks through each feature and its properties to determine which should be
+   * highlighted on the Leaflet map.
    */
   private highlightFeatures(): void {
 
@@ -427,7 +443,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     
   }
 
-  /** Whether the number of selected elements matches the total number of rows.
+  /**
+   * Whether the number of selected elements matches the total number of rows.
    * NOTE: Not currently in use
   */
   public isAllSelected(): boolean {
@@ -446,7 +463,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     
   }
 
-  /** Selects all rows, or all filtered rows, if they are not all selected; otherwise clear selection.
+  /**
+   * Selects all rows, or all filtered rows, if they are not all selected; otherwise clear selection.
    * NOTE: Not currently in use
   */
   public masterToggle(): void {
@@ -472,16 +490,18 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * By default, go through all the fields in the Attribute Table object and if they are 'double' numbers,
-   * set their precision to 4 decimal places for every one. Also truncates any URL's, since they tend to be longer
-   * and don't play well with the fixed length of the table columns.
+   * By default, go through all the fields in the Attribute Table object and if
+   * they are 'double' numbers, set their precision to 4 decimal places for every
+   * one. Also truncates any URL's, since they tend to be longer and don't play
+   * well with the fixed length of the table columns.
    */
   private formatAttributeTable(): void {
 
     for (let feature of this.attributeTable.data) {
       for (let property in feature.properties) {
-        // TODO: jpkeahey 2020.09.09 - This conditional will need to be updated, since there is a special ID number that will
-        // return true from this and will be incorrect. Also, this changes the data; think about making a copy somehow
+        // TODO: jpkeahey 2020.09.09 - This conditional will need to be updated,
+        // since there is a special ID number that will return true from this and
+        // will be incorrect. Also, this changes the data; think about making a copy somehow.
         if (typeof feature.properties[property] === 'number' && !Number.isInteger(feature.properties[property])) {
           feature.properties[property] = feature.properties[property].toFixed(4);
         } else if (typeof feature.properties[property] === 'string') {
@@ -505,8 +525,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
-   * a new map, make sure to close the dialog and remove it from the window manager.
+   * Called once, before the instance is destroyed. If the page is changed or a
+   * link is clicked on in the dialog that opens a new map, make sure to close the
+   * dialog and remove it from the window manager.
    */
   public ngOnDestroy(): void {
     this.dialogRef.close();
@@ -514,7 +535,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * When the Download button is clicked in the data table dialog, save the table as a CSV file.
+   * When the Download button is clicked in the data table dialog, save the table
+   * as a CSV file.
    */
   public saveDataTable(): void {
 
@@ -575,31 +597,10 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     var data = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
     FileSaver.saveAs(data, this.owfCommonService.formatSaveFileName(this.geoLayer.geoLayerId, IM.SaveFileType.dataTable));
   }
-
-  /**
-   * 
-   * @param lat 
-   * @param long 
-   * @param bounds 
-   */
-  private setZoomBounds(lat: number, long: number, bounds: IM.Bounds): void {
-
-    if (lat > bounds.NEMaxLat) {
-      bounds.NEMaxLat = lat;
-    }
-    if (lat < bounds.SWMinLat) {
-      bounds.SWMinLat = lat;
-    }
-    if (long > bounds.NEMaxLong) {
-      bounds.NEMaxLong = long;
-    }
-    if (long < bounds.SWMinLong) {
-      bounds.SWMinLong = long;
-    }
-  }
   
   /**
-   * 
+   * Toggles the Data Table input search field text when the option for multiple
+   * radio buttons are shown and clicked.
    */
   public toggleSearchInfo() {
 
@@ -637,9 +638,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * A function that returns whether the filtered input from a user matches that in the Material Table. Can be updated so
-   * that only specific columns are used.
-   * Note: Right now, the default is all columns
+   * A function that returns whether the filtered input from a user matches that
+   * in the Material Table. Can be updated so that only specific columns are used.
+   * Note: Right now, the default is all columns.
    */
   private updateFilterAlgorithm(): void {    
 
@@ -681,7 +682,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * 
+   * Uses the Leaflet-provided flyTo() method to use an animation that zooms in
+   * to the current address latitude and longitude.
    */
   public zoomToAddress(): void {
     this.mainMap.flyTo([this.addressLat, this.addressLng], 16,
@@ -691,15 +693,17 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * When the kebab Zoom button is clicked on, get the correct coordinate bounds and zoom the map to them.
+   * When the kebab Zoom button is clicked on, get the correct coordinate bounds
+   * and zoom to them on the Leaflet map.
    */
   public zoomToFeatures(): void {
-    // Create the Bounds object for 
+    // Create the Bounds object that will be overridden and used for the feature
+    // bounds to zoom in on.
     var bounds: IM.Bounds = {
-      NEMaxLat : Number.NEGATIVE_INFINITY,
-      NEMaxLong : Number.NEGATIVE_INFINITY,
-      SWMinLat : Number.POSITIVE_INFINITY,
-      SWMinLong : Number.POSITIVE_INFINITY
+      NEMaxLat: Number.NEGATIVE_INFINITY,
+      NEMaxLong: Number.NEGATIVE_INFINITY,
+      SWMinLat: Number.POSITIVE_INFINITY,
+      SWMinLong: Number.POSITIVE_INFINITY
     }
     // If the selected (or highlighted) layer exists, zoom to it on the map.
     if (this.selectedLayer) {
@@ -708,8 +712,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
           this.attributeTable.filteredData[0].geometry.type.toUpperCase().includes('POLYGON')) {
             // Fly to the box surrounding all features of the layer.
             if (this.attributeTable.filteredData.length === this.attributeTableOriginal.length) {
-              // If the selectedLayer variable is created (if the Leaflet layer supports it e.g. Points, Markers, Images) then fly
-              // to the layer bounds on the map.
+              // If the selectedLayer variable is created (if the Leaflet layer
+              // supports it e.g. Points, Markers, Images) then fly to the layer
+              // bounds on the map.
               this.mainMap.flyToBounds(this.selectedLayer.getBounds(), {
                 animate: true,
                 duration: 1.5,
@@ -717,15 +722,19 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
                 padding: [475, 0]
               });
               
-            } else if (this.attributeTable.filteredData.length > 1) {
+            }
+            // More than one feature was found, so determine the overarching bounds
+            // object to be used to zoom so that all features are displayed.
+            else if (this.attributeTable.filteredData.length > 1) {
               // Iterate over each found feature and determine what the bounds should be.
               this.attributeTable.filteredData.forEach((feature: any) => {
                 var feature_bbox = bbox(feature);
-                this.setZoomBounds(feature_bbox[3], feature_bbox[2], bounds);
-                this.setZoomBounds(feature_bbox[1], feature_bbox[0], bounds);
+                this.dialogService.setZoomBounds(feature_bbox[3], feature_bbox[2], bounds);
+                this.dialogService.setZoomBounds(feature_bbox[1], feature_bbox[0], bounds);
               });
 
-              // The Lat and Long Bounds members have been set, and can be used as the bounds for the selected features.
+              // The Lat and Long Bounds members have been set, and can be used
+              // as the bounds for the selected features.
               var zoomBounds = [[bounds.NEMaxLat, bounds.NEMaxLong],
                                 [bounds.SWMinLat, bounds.SWMinLong]];
               // Use the Leaflet map reference to fly to the bounds
@@ -749,8 +758,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
           }
       // Fly to the box surrounding all features of the layer.
       if (this.attributeTable.filteredData.length === this.attributeTableOriginal.length) {
-        // If the selectedLayer variable is created (if the Leaflet layer supports it e.g. Points, Markers, Images) then fly
-        // to the layer bounds on the map
+        // If the selectedLayer variable is created (if the Leaflet layer supports
+        // it e.g. Points, Markers, Images) then fly to the layer bounds on the map.
         this.mainMap.flyToBounds(this.selectedLayer.getBounds(), {
           animate: true,
           duration: 1.5,
@@ -759,19 +768,21 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         });
         
       }
-      // If there are more than one returned row from the filter, get the bounding box and fly to it.
+      // If there are more than one returned row from the filter, get the bounding
+      // box and fly to it.
       else if (this.attributeTable.filteredData.length > 1) {
 
         this.attributeTable.filteredData.forEach((feature: any) => {
           // Check to see if the bbox property exists in the feature
           if (feature.bbox) {
-            this.setZoomBounds(feature.bbox[1], feature.bbox[0], bounds);
+            this.dialogService.setZoomBounds(feature.bbox[1], feature.bbox[0], bounds);
           } else if (feature.geometry.coordinates) {
-            this.setZoomBounds(feature.geometry.coordinates[1], feature.geometry.coordinates[0], bounds);
+            this.dialogService.setZoomBounds(feature.geometry.coordinates[1], feature.geometry.coordinates[0], bounds);
           }
         });
 
-        // The Lat and Long Bounds members have been set, and can be used as the bounds for the selected features
+        // The Lat and Long Bounds members have been set, and can be used as the
+        // bounds for the selected features
         var zoomBounds = [[bounds.NEMaxLat, bounds.NEMaxLong],
                           [bounds.SWMinLat, bounds.SWMinLong]];
         // Use the Leaflet map reference to fly to the bounds
@@ -781,8 +792,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
           padding: [475, 0]
         });
       }
-      // If there's only one row returned from the filtering, add some padding on all sides of the feature and don't fly to the
-      // maximum possible zoom.
+      // If there's only one row returned from the filtering, add some padding on
+      // all sides of the feature and don't fly to the maximum possible zoom.
       else if (this.attributeTable.filteredData.length === 1) {
         var latLng: number[] = [];
         if (this.attributeTable.filteredData[0].bbox) {

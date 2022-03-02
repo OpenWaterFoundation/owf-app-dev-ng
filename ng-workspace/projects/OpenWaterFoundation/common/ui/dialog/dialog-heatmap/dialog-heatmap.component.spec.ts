@@ -6,7 +6,7 @@ import { MatDialogModule,
 
 import { DialogHeatmapComponent } from './dialog-heatmap.component';
 
-describe('DialogHeatmapComponent', () => {
+xdescribe('DialogHeatmapComponent', () => {
   let component: DialogHeatmapComponent;
   let fixture: ComponentFixture<DialogHeatmapComponent>;
 

@@ -9,7 +9,7 @@ import { MatDialogModule,
 
 import { DialogTSGraphComponent } from './dialog-TSGraph.component';
 
-describe('DialogTSGraphComponent', () => {
+xdescribe('DialogTSGraphComponent', () => {
   let tsGraphComponent: DialogTSGraphComponent;
   let fixture: ComponentFixture<DialogTSGraphComponent>;
 

@@ -12,7 +12,6 @@ import { forkJoin,
 
 import { DialogTSTableComponent } from '../dialog-tstable/dialog-tstable.component';
 
-import { DateTime }               from '@OpenWaterFoundation/common/util/time';
 import { StateMod_TS }            from '@OpenWaterFoundation/common/dwr/statemod';
 import { MonthTS,
           TS,
@@ -21,14 +20,11 @@ import { MonthTS,
 import { DataUnits }              from '@OpenWaterFoundation/common/util/io';
 import { OwfCommonService }       from '@OpenWaterFoundation/common/services';
 import * as IM                    from '@OpenWaterFoundation/common/services';
+import { DialogService }          from '../dialog.service';
 import { WindowManager,
           WindowType }            from '@OpenWaterFoundation/common/ui/window-manager';
 
 import * as Papa                  from 'papaparse';
-import { add,
-          format,
-          isEqual,
-          parseISO }              from 'date-fns';
 
 // I believe that if this type of 'import' is used, the package needs to be added
 // to the angular.json scripts array.
@@ -90,13 +86,14 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
 
   /**
-   * @constructor for the DialogTSGraph Component
-   * @param owfCommonService A reference to the top level service OwfCommonService
+   * @constructor for the DialogTSGraph Component.
+   * @param owfCommonService A reference to the top level service OwfCommonService.
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
-   * @param dialogService A reference to the map service, for sending data
-   * @param data The incoming templateGraph object containing data about from the graph template file
+   * @param dialogService A reference to the map service, for sending data.
+   * @param data The incoming templateGraph object containing data about from the graph template file.
    */
-  constructor(public owfCommonService: OwfCommonService,
+  constructor(private dialogService: DialogService,
+              public owfCommonService: OwfCommonService,
               public dialog: MatDialog,
               public dialogRef: MatDialogRef<DialogTSGraphComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
@@ -113,10 +110,13 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Creates the attributeTable array of objects to be passed to the dialog-tstable component for displaying a data table
-   * @param x_axisLabels The array of x-axis labels from the graph being created to show in the data table
-   * @param axisObject The axisObject contains either the chartJS or plotly created data array
-   * @param units The units being used on the graph to be shown as a column
+   * Creates the attributeTable array of objects to be passed to the dialog-tstable
+   * component for displaying a data table.
+   * @param x_axisLabels The array of x-axis labels from the graph being created
+   * to show in the data table.
+   * @param axisObject The axisObject contains either the chartJS or plotly created
+   * data array.
+   * @param units The units being used on the graph to be shown as a column.
    */
   private addToAttributeTable(x_axisLabels: string[], axisObject: any, TSAlias: string, units: string, TSIndex: number, datePrecision?: number): void {
     // Retrieve the output precision from the DataUnits array if it exists, and if not default to 2
@@ -248,37 +248,6 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Determine the full length of days to create on the chart to be shown
-   * @param config The array of PopulateGraph instances created from the createTSChartJSGraph function. Contains configuration
-   * metadata and data about each time series graph that needs to be created
-   */
-  private createChartMainGraphLabels(config: PopulateGraph[]): string[] {
-
-    var labelStartDate = '3000-01';
-    var labelEndDate = '1000-01';
-    var mainGraphLabels: string[] = [];
-
-    // If the files read were StateMod files, go through them all and determine the absolute first and last dates
-    if (config[0].graphFileType === 'TS') {
-      
-      for (let instance of config) {
-        if (new Date(instance.startDate) < new Date(labelStartDate)) {
-          labelStartDate = instance.startDate;
-        }
-        if (new Date(instance.endDate) > new Date(labelEndDate)) {
-          labelEndDate = instance.endDate;
-        }
-      }
-      // Create the array and populate with dates in between the two dates given
-      // TODO: jpkeahey 2020.07.02 - This only uses months right now, and nothing else
-      mainGraphLabels = this.getDates(labelStartDate, labelEndDate, 'months');
-    } else if (config[0].graphFileType === 'csv') {
-      mainGraphLabels = config[0].dataLabels;
-    }
-    return mainGraphLabels;
-  }
-
-  /**
    * Takes the results given from Papa Parse and creates a PopulateGraph instance by assigning its members. It then adds the
    * PopulateGraph instance to an array for each CSV file found in the graph config file
    * @param results The results array returned asynchronously from Papa Parse. Contains at least one result object
@@ -287,8 +256,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
     var chartConfig: Object = this.graphTemplateObject;
     var chartConfigData = chartConfig['product']['subProducts'][0]['data'];
-    var chartConfigProperties = chartConfig['product']['subProducts'][0]['properties'];
-    var configArray: PopulateGraph[] = [];
+    var chartConfigProp = chartConfig['product']['subProducts'][0]['properties'];
+    var configArray: IM.PopulateGraph[] = [];
     var templateYAxisTitle: string;
     var chartJSGraph: boolean;
     var legendPosition: any;
@@ -297,36 +266,36 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
       // Set up the parts of the graph that won't need to be set more than once, such as the LeftYAxisTitleString
       if (rIndex === 0) {
-        templateYAxisTitle = chartConfigProperties.LeftYAxisTitleString;
-        legendPosition = this.setPlotlyLegendPosition(chartConfigProperties.LeftYAxisLegendPosition);
+        templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
+        legendPosition = this.dialogService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition);
       }
       // These two are the string representing the keys in the current result.
-      // They will be used to populate the x- and y-axis arrays
+      // They will be used to populate the x- and y-axis arrays.
       let x_axis = Object.keys(results[rIndex].data[0])[0];
       let y_axis = Object.keys(results[rIndex].data[0])[1];
 
-      // Populate the arrays needed for the x- and y-axes
+      // Populate the arrays needed for the x- and y-axes.
       var x_axisLabels: string[] = [];
       var y_axisData: number[] = [];
       for (let resultObj of results[rIndex].data) {
         x_axisLabels.push(resultObj[x_axis]);
         y_axisData.push(parseFloat(resultObj[y_axis]));
       }
-      // Populate various other chart properties. They will be checked for validity in createGraph()
+      // Populate various other chart properties. They will be checked for validity in createGraph().
       var graphType: string = chartConfigData[rIndex]['properties'].GraphType.toLowerCase();
       var backgroundColor: string = chartConfigData[rIndex]['properties'].Color;
       var TSAlias: string = chartConfigData[rIndex]['properties'].TSAlias;
-      var units: string = chartConfigProperties.LeftYAxisUnits;
+      var units: string = chartConfigProp.LeftYAxisUnits;
 
-      var datePrecision: number = this.determineDatePrecision(chartConfigData[rIndex]['properties'].TSID);
-      var legendLabel = this.formatLegendLabel(chartConfigData[rIndex]);
+      var datePrecision: number = this.dialogService.determineDatePrecision(chartConfigData[rIndex]['properties'].TSID);
+      var legendLabel = this.dialogService.formatLegendLabel(chartConfigData[rIndex]['properties'].TSID);
 
       this.addToAttributeTable(x_axisLabels, {csv_y_axisData: y_axisData}, (TSAlias !== '') ? TSAlias : legendLabel, units, rIndex, datePrecision);
 
       // Create the PopulateGraph instance that will be passed to create either the Chart.js or Plotly.js graph
-      var config: PopulateGraph = {
-        chartMode: this.verifyGraphProp(graphType, GraphProp.cm),
-        chartType: this.verifyGraphProp(graphType, GraphProp.ct),
+      var config: IM.PopulateGraph = {
+        chartMode: this.dialogService.verifyPlotlyProp(graphType, IM.GraphProp.cm),
+        chartType: this.dialogService.verifyPlotlyProp(graphType, IM.GraphProp.ct),
         dataLabels: x_axisLabels,
         datasetData: y_axisData,
         datasetBackgroundColor: backgroundColor,
@@ -337,7 +306,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
       }
       // Push the config instance into the configArray to be sent to createXXXGraph()
       configArray.push(config);
-    }    
+    }
 
     // Determine whether a chartJS graph or Plotly graph needs to be made
     // NOTE: Plotly is the default charting package
@@ -366,8 +335,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
     var chartConfig: Object = this.graphTemplateObject;
     var chartConfigData: any[] = chartConfig['product']['subProducts'][0]['data'];
-    var chartConfigProperties = chartConfig['product']['subProducts'][0]['properties'];
-    var configArray: PopulateGraph[] = [];
+    var chartConfigProp = chartConfig['product']['subProducts'][0]['properties'];
+    var configArray: IM.PopulateGraph[] = [];
     var chartJSGraph: boolean;
     var templateYAxisTitle: string = '';
     var legendPosition: any;
@@ -377,8 +346,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     for (let i = 0; i < timeSeries.length; i++) {
       // Set up the parts of the graph that won't need to be set more than once, such as the LeftYAxisTitleString
       if (i === 0) {
-        templateYAxisTitle = chartConfigProperties.LeftYAxisTitleString;
-        legendPosition = this.setPlotlyLegendPosition(chartConfigProperties.LeftYAxisLegendPosition, chartConfigData.length);
+        templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
+        legendPosition = this.dialogService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition, chartConfigData.length);
       }
 
       var graph_x_axisLabels: string[];
@@ -388,33 +357,36 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
       
       if (timeSeries[i] instanceof MonthTS) {
         type = 'months';
-        x_axisLabels = this.getDates(timeSeries[i].getDate1().getYear() + "-" + this.zeroPad(timeSeries[i].getDate1().getMonth(), 2),
-                                      timeSeries[i].getDate2().getYear() + "-" + this.zeroPad(timeSeries[i].getDate2().getMonth(), 2),
-                                      type);
+        x_axisLabels = this.dialogService.getDates(
+          timeSeries[i].getDate1().getYear() + "-" + this.dialogService.zeroPad(timeSeries[i].getDate1().getMonth(), 2),
+          timeSeries[i].getDate2().getYear() + "-" + this.dialogService.zeroPad(timeSeries[i].getDate2().getMonth(), 2),
+          type);
       } else if (timeSeries[i] instanceof YearTS) {
         type = 'years';
-        x_axisLabels = this.getDates(timeSeries[i].getDate1().getYear(),
-                                      timeSeries[i].getDate2().getYear(),
-                                      type);
+        x_axisLabels = this.dialogService.getDates(
+          timeSeries[i].getDate1().getYear(),
+          timeSeries[i].getDate2().getYear(),
+          type);
       }
 
-      // If graph_dates exists, it's not a placeholder, and can populate the graph_x_axisLabels
-      if (x_axisLabels.graph_dates) 
-        graph_x_axisLabels = x_axisLabels.graph_dates;
-      // Populate the data_table_x_axisLabels
-      data_table_x_axisLabels = x_axisLabels.data_table_dates
+      // If graphDates exists, it's not a placeholder, and can populate the graph_x_axisLabels.
+      if (x_axisLabels.graphDates) {
+        graph_x_axisLabels = x_axisLabels.graphDates;
+      }
+      // Populate the data_table_x_axisLabels.
+      data_table_x_axisLabels = x_axisLabels.dataTableDates
 
-      var start = timeSeries[i].getDate1().getYear() + "-" + this.zeroPad(timeSeries[i].getDate1().getMonth(), 2);      
-      var end = timeSeries[i].getDate2().getYear() + "-" + this.zeroPad(timeSeries[i].getDate2().getMonth(), 2);
+      var start = timeSeries[i].getDate1().getYear() + "-" + this.dialogService.zeroPad(timeSeries[i].getDate1().getMonth(), 2);      
+      var end = timeSeries[i].getDate2().getYear() + "-" + this.dialogService.zeroPad(timeSeries[i].getDate2().getMonth(), 2);
 
-      var axisObject = this.setAxisObject(timeSeries[i], graph_x_axisLabels, type);
-      // Populate the rest of the properties from the graph config file. This uses the more granular graphType for each time series
+      var axisObject = this.dialogService.setAxisObject(timeSeries[i], graph_x_axisLabels, type);
+      // Populate the rest of the properties from the graph config file. This uses
+      // the more granular graphType for each time series.
       var chartType: string = chartConfigData[i]['properties'].GraphType.toLowerCase();
       var backgroundColor: string = chartConfigData[i]['properties'].Color;
       var TSAlias: string = chartConfigData[i]['properties'].TSAlias;
       var units: string = timeSeries[i].getDataUnits();
       var datePrecision = timeSeries[i].getDataIntervalBase();
-      // var legendLabel = this.formatLegendLabel(chartConfigData[i]);
       
       var legendLabel: string;
       if (chartConfigData[i].properties.LegendFormat === "Auto") {
@@ -427,14 +399,14 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
                                 units, i, datePrecision);
 
       // Create the PopulateGraph object to pass to the createGraph function.
-      var chartConfigObject: PopulateGraph = {
-        chartMode: this.verifyGraphProp(chartType, GraphProp.cm),
-        chartType: this.verifyGraphProp(chartType, GraphProp.ct),
+      var chartConfigObject: IM.PopulateGraph = {
+        chartMode: this.dialogService.verifyPlotlyProp(chartType, IM.GraphProp.cm),
+        chartType: this.dialogService.verifyPlotlyProp(chartType, IM.GraphProp.ct),
         dateType: type,
         datasetData: axisObject.chartJS_yAxisData,
         plotlyDatasetData: axisObject.plotly_yAxisData,
         plotly_xAxisLabels: graph_x_axisLabels,
-        datasetBackgroundColor: this.verifyGraphProp(backgroundColor, GraphProp.bc),
+        datasetBackgroundColor: this.dialogService.verifyPlotlyProp(backgroundColor, IM.GraphProp.bc),
         graphFileType: 'TS',
         legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
         legendPosition: legendPosition,
@@ -465,25 +437,30 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * The final function that, when it reaches its end, will plot the plotly graph with the given data
-   * @param config The configuration array that contains all time series data planned to show on the plotly graph
+   * Sets up and plots the plotly graph with the given data. Can display multiple
+   * graph objects on one graph.
+   * @param config An array of PopulateGraph typed objects that contain all time
+   * series data planned to be shown on the plotly graph.
+   * @param CSV Boolean representing if a CSV data file was provided.
    */
-  private createPlotlyGraph(config: PopulateGraph[], CSV: boolean): void {
-    // The final data array of objects that is given to Plotly.react() to create the graph
+  private createPlotlyGraph(totalGraphConfig: IM.PopulateGraph[], CSV: boolean): void {
+    // The final data array of objects that is given to Plotly.react() to create the graph.
     var finalData: { x: number[], y: number[], type: string }[] = [];
-    // The data object being pushed onto the finalData array
+    // The data object being pushed onto the finalData array.
     var data: any;
-    // The array containing the colors of each graph being displayed, in the order in which they appear
+    // The array containing the colors of each graph being displayed, in the order
+    // in which they appear.
     var colorwayArray: string[] = [];
     
-    // Go through the config array and add the necessary configuration data into the data object that will be added to the
-    // finalData array. The finalData array is what's given as the second argument to Plotly.plot();
-    for (let i = 0; i < config.length; i++) {
+    // Iterate over the config array and add the necessary configuration data into
+    // the data object that will be added to the finalData array. The finalData array
+    // is what's given as the second argument to Plotly.react();
+    for (let graphConfig of totalGraphConfig) {
       data = {};
+
+      data.name = graphConfig.legendLabel;
       
-      data.name = config[i].legendLabel;
-      
-      data.mode = config[i].chartMode;
+      data.mode = graphConfig.chartMode;
       // data.connectgaps = true;
       
       if (data.mode === 'lines+markers') {
@@ -500,11 +477,11 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
         // Connects between ALL gaps
         // data.connectgaps = true;
       }
-      data.type =  config[i].chartType;
-      data.x = CSV ? config[i].dataLabels : config[i].plotly_xAxisLabels;
-      data.y = CSV ? config[i].datasetData : config[i].plotlyDatasetData;
+      data.type = graphConfig.chartType;
+      data.x = CSV ? graphConfig.dataLabels : graphConfig.plotly_xAxisLabels;
+      data.y = CSV ? graphConfig.datasetData : graphConfig.plotlyDatasetData;
 
-      colorwayArray.push(config[i].datasetBackgroundColor);
+      colorwayArray.push(graphConfig.datasetBackgroundColor);
       finalData.push(data);
     }
     // Builds the layout object that will be given as the third argument to the Plotly.plot() function. Creates the graph layout
@@ -518,8 +495,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
         bordercolor: '#c2c1c1',
         borderwidth: 1,
         // Positioning the legend on the x-y axes
-        x: config[0].legendPosition.x,
-        y: config[0].legendPosition.y
+        x: totalGraphConfig[0].legendPosition.x,
+        y: totalGraphConfig[0].legendPosition.y
       },
       showlegend: true,
       // width: 900,
@@ -533,7 +510,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
         // This formatting is taken from d3 formatting:
         // https://github.com/d3/d3-format/blob/main/README.md#locale_format
         tickformat: 'r',
-        title: config[0].yAxesLabelString,
+        title: totalGraphConfig[0].yAxesLabelString,
         // Keeps the y-axis at a fixed range, so when the user zooms, an x-axis zoom takes place
         fixedrange: true
       }
@@ -549,136 +526,31 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     Plotly.react(this.windowID + this.TSID_Location, finalData, layout, plotlyConfig);
   }
 
-
   /**
-   * This basic function returns a datePrecision number to be used when creating attribute table cell value precision.
-   * @param TSID The entire TSID value from the graph config json file
-   */
-  public determineDatePrecision(TSID: string): number {
-    if (TSID.toUpperCase().includes('YEAR') || TSID.toUpperCase().includes('MONTH') ||
-        TSID.toUpperCase().includes('WEEK') || TSID.toUpperCase().includes('DAY')) {
-          return 100;
-    } else return 10;
-  }
-
-  /**
-   * Go through each dataUnit in the @var dataUnits array that was created when it was read in from the app configuration file
-   * in the nav-bar component and set in the app-service. If the units is equal to either the abbreviation or long name, then
-   * @return the output precision from the dataUnit, and use that in toFixed() when displaying in the table
-   * @param units String representing the units being displayed in the TSGraph
+   * Go through each dataUnit in the @var dataUnits array that was created when
+   * it was read in from the app configuration file in the nav-bar component and
+   * set in the app-service.
+   * @return The output precision from the dataUnit.
+   * @param units String representing the units being displayed in the TSGraph.
    */
   private determineOutputPrecision(units: string): number {
     var dataUnits: DataUnits[] = this.owfCommonService.getDataUnitArray();
 
     if (dataUnits && dataUnits.length > 0) {
       for (let dataUnit of dataUnits) {
-        if (dataUnit.getAbbreviation().toUpperCase() === units.toUpperCase() || dataUnit.getLongName().toUpperCase() === units.toUpperCase()) {
+        if (dataUnit.getAbbreviation().toUpperCase() === units.toUpperCase() ||
+            dataUnit.getLongName().toUpperCase() === units.toUpperCase()) {
           return dataUnit.getOutputPrecision();
         }
       }
     }
-    // Return a default of 2
+    // Return a default precision of 2.
     return 2;
   }
 
   /**
-   * 
-   * @param chartConfigProperties 
-   */
-  private formatLegendLabel(chartConfigProperties: any): string {
-    var legendLabel: string;
-    // Determine what the legend label will be for both this time series graph and the data table, depending on what
-    // the full TSID is
-    if (chartConfigProperties['properties'].TSID.split('~').length === 2) {
-      legendLabel = chartConfigProperties['properties'].TSID.split("~")[1];
-    } else if (chartConfigProperties['properties'].TSID.split('~').length === 3) {
-      legendLabel = chartConfigProperties['properties'].TSID.split("~")[2];
-    }
-    // Format the file name by removing an file paths and extensions
-    legendLabel = legendLabel.substring(legendLabel.lastIndexOf('/') + 1, legendLabel.lastIndexOf('.'));
-    // If the file name is too long (e.g. too many dots (.)), wrapping in the column header cell will look bad, and not doing
-    // anything will disappear behind the next column. This converts every third period in the file name to a , with a space
-    // behind it. This will help shorten column name sizing without sacrificing readability
-    // if ((legendLabel.match(/\./g) || [] ).length >= 3) {
-    //   var count = 0;
-    //   legendLabel = legendLabel.replace(/\./g, function(match: any) {
-    //     count++;
-    //     return (count % 3 === 0) ? ', ' : match;
-    //   })
-    // }
-
-    return legendLabel;
-  }
-
-  /**
-   * Returns an array of dates between the start and end dates, either per day or month. Skeleton code obtained from
-   * https://gist.github.com/miguelmota/7905510
-   * @param startDate Date to be the first index in the returned array of dates
-   * @param endDate Date to be the last index in the returned array of dates
-   * @param interval String describing the interval of how far apart each date should be
-   */
-  private getDates(startDate: any, endDate: any, interval: string): any {
-
-    var graph_dates: any[] = [];
-    var data_table_dates: any[] = [];
-    var currentDate: any;
-
-    switch (interval) {
-      case 'days':
-        currentDate = startDate;
-
-        let addDays = function(days: any) {
-          let date = new Date(this.valueOf());
-          date.setDate(date.getDate() + days);
-          return date;
-        };
-        // Iterate over each date from start to end and push them to the dates array that will be returned
-        while (currentDate <= endDate) {
-          // Push an ISO 8601 formatted version of the date into the x axis array that will be used for the data table
-          data_table_dates.push(currentDate.format('YYYY-MM-DD'));
-          graph_dates.push(currentDate);
-          currentDate = addDays.call(currentDate, 1);
-        }
-
-        return { graph_dates: graph_dates,
-                  data_table_dates: data_table_dates };
-
-      case 'months':
-        // Only have to parse the string once here using ISO formatting.
-        currentDate = new Date(parseISO(startDate));
-        var stopDate = new Date(parseISO(endDate));
-        // Iterate over each date from start to end and push them to the dates array
-        // that will be returned.
-        while (!isEqual(currentDate, stopDate)) {
-          // Push an ISO 8601 formatted version of the date into the x axis array
-          // that will be used for the data table.
-          data_table_dates.push(format(currentDate, 'yyyy-MM'));
-          graph_dates.push(format(currentDate, 'MMM yyyy'));
-          currentDate = add(currentDate, { months: 1 });
-        }
-
-        return { graph_dates: graph_dates, data_table_dates: data_table_dates };
-
-      case 'years':        
-        // Only have to parse the string once here using ISO formatting.
-        currentDate = new Date(startDate.toString());
-        var stopDate = new Date(endDate.toString());
-        // Iterate over each date from start to end and push them to the dates
-        // array that will be returned.
-        while (!isEqual(currentDate, stopDate)) {
-          // Push an ISO 8601 formatted version of the date into the x axis array
-          // that will be used for the data table.
-          data_table_dates.push(format(currentDate, 'yyyy'));
-          graph_dates.push(format(currentDate, 'yyyy'));
-          currentDate = add(currentDate, { years: 1 });
-        }
-        return { graph_dates: graph_dates, data_table_dates: data_table_dates };      
-    } 
-  }
-
-  /**
-  * Initial function call when the Dialog component is created. Determines whether a CSV or StateMod file is to be read
-  * for graph creation.
+  * Initial function call when the Dialog component is created. Determines whether
+  * a CSV or StateMod file is to be read for graph creation.
   */
   // TODO: jpkeahey 2020.07.02 - Might need to change how this is implemented, since Steve said both CSV and StateMod (or other)
   // files could be in the same popup template file. They might not be mutually exclusive in the future.
@@ -687,7 +559,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     this.owfCommonService.setChartTemplateObject(this.graphTemplateObject);
     this.owfCommonService.setGraphFilePath(this.graphFilePath);
     this.owfCommonService.setTSIDLocation(this.TSID_Location);
-    // Set the mainTitleString to be used by the map template file to display as the TSID location (for now)
+    // Set the mainTitleString to be used by the map template file to display as
+    // the TSID location (for now).
     this.mainTitleString = this.graphTemplateObject['product']['properties'].MainTitleString;
 
     if (this.graphFilePath.includes('.csv')) {
@@ -717,8 +590,9 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
-   * a new map, make sure to close the dialog and remove it from the window manager.
+   * Called once, before the instance is destroyed. If the page is changed or a link
+   * is clicked on in the dialog that opens a new map, make sure to close the dialog
+   * and remove it from the window manager.
    */
   public ngOnDestroy(): void {
     this.dialogRef.close();
@@ -726,8 +600,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Creates and opens the DialogTSTableComponent dialog container showing the time series table for the selected feature on
-   * the Leaflet map.
+   * Creates and opens the DialogTSTableComponent dialog container showing the time
+   * series table for the selected feature on the Leaflet map.
    */
   public openTSTableDialog(): void {
     // Used for testing large data tables
@@ -740,7 +614,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Create and use a MatDialogConfig object to pass to the DialogTSGraphComponent for the graph that will be shown
+    // Create and use a MatDialogConfig object to pass to the DialogTSGraphComponent
+    // for the graph that will be shown.
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       attributeTable: this.attributeTable,
@@ -859,222 +734,4 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     
   }
 
-  /**
-   * @returns an array of the data values to display on the y Axis of the time series graph being created
-   * @param timeSeries The current time series to use to extract the y axis data for the graph
-   * @param x_axisLabels The x Axis labels created for the graph
-   * @param type The interval type of the time series ('years', 'months', etc...)
-   */
-  private setAxisObject(timeSeries: any, x_axisLabels: string[], type: string): any {
-
-    var chartJS_yAxisData: number[] = [];
-    var plotly_yAxisData: number[] = [];
-
-    let startDate: DateTime = timeSeries.getDate1();
-    let endDate: DateTime = timeSeries.getDate2();
-    // The DateTime iterator for the the while loop.
-    let iter: DateTime = startDate;
-    // The index of the x_axisLabel array to push into the chartJS_yAxisData as the x property.
-    var labelIndex = 0;      
-    
-    do {
-      // Grab the value from the current Time Series that's being looked at.
-      let value = timeSeries.getDataValue(iter);
-      // This object will hold both the x and y values so the ChartJS object explicitly knows what value goes with what label
-      // This is very useful for displaying multiple Time Series on one graph with different dates used for both.
-      var dataObject: any = {};
-
-      // Set the x value as the current date      
-      dataObject.x = x_axisLabels[labelIndex];
-      // If it's missing, replace value with NaN and push onto the array. If not just push the value onto the array.
-      if (timeSeries.isDataMissing(value)) {
-        dataObject.y = NaN;
-        plotly_yAxisData.push(NaN);
-      } else {
-        dataObject.y = value;
-        plotly_yAxisData.push(value);
-      }
-      chartJS_yAxisData.push(dataObject);
-      // Update the interval and labelIndex now that the dataObject has been pushed onto the chartJS_yAxisData array.
-      iter.addInterval(timeSeries.getDataIntervalBase(), timeSeries.getDataIntervalMult());
-      labelIndex++;
-      // If the month and year are equal, the end has been reached. This will only happen once.
-      if (type === 'months') {
-        if (iter.getMonth() === endDate.getMonth() && iter.getYear() === endDate.getYear()) {
-          dataObject = {};
-          var lastValue = timeSeries.getDataValue(iter);
-  
-          dataObject.x = x_axisLabels[labelIndex];
-          if (timeSeries.isDataMissing(lastValue)) {
-            dataObject.y = NaN;
-            plotly_yAxisData.push(NaN);
-          } else {
-            dataObject.y = lastValue;
-            plotly_yAxisData.push(lastValue);
-          }
-          chartJS_yAxisData.push(dataObject);
-        }
-      }
-      else if (type === 'years') {
-        if (iter.getYear() === endDate.getYear()) {
-          dataObject = {};
-          var lastValue = timeSeries.getDataValue(iter);
-  
-          dataObject.x = x_axisLabels[labelIndex];
-          if (timeSeries.isDataMissing(lastValue)) {
-            dataObject.y = NaN;
-            plotly_yAxisData.push(NaN);
-          } else {
-            dataObject.y = lastValue;
-            plotly_yAxisData.push(lastValue);
-          }
-          chartJS_yAxisData.push(dataObject);
-        }
-      }
-
-    } while (iter.getMonth() !== endDate.getMonth() || iter.getYear() !== endDate.getYear())
-
-    return {chartJS_yAxisData: chartJS_yAxisData,
-            plotly_yAxisData: plotly_yAxisData }
-  }
-
-  /**
-   * @returns an object with the X and Y offsets for positioning the legend in a Plotly graph.
-   * @param legendPosition A string representing the LeftYAxisLegendPosition property from the TSTool graph template file.
-   * @param graphCount An optional number of the amount of 'traces' or graphs on showing on the graph itself.
-   */
-  private setPlotlyLegendPosition(legendPosition: string, graphCount?: number): any {
-
-    var position: {
-      x: number, 
-      y: number
-    } = { x: 0, y: 0 };
-
-    switch(legendPosition) {
-      case 'Bottom':
-        position.x = 0.4, position.y = -0.15;
-        if (graphCount) {
-          offsetY();
-          return position;
-        } else {
-          return position;
-        }
-      case 'BottomLeft':
-        position.x = 0, position.y = -0.15;
-        if (graphCount) {
-          offsetY();
-          return position;
-        } else {
-          return position;
-        }
-      case 'BottomRight':
-        position.x = 0.75, position.y = -0.15;
-        if (graphCount) {
-          offsetY();
-          return position;
-        } else {
-          return position;
-        }
-      case 'Left':
-        position.x = -0.5, position.y = 0.5;
-        return position;
-      case 'Right':
-        position.x = 1, position.y = 0.5;
-        return position;
-      case 'InsideLowerLeft':
-        position.x = 0, position.y = 0;
-        return position;
-      case 'InsideLowerRight':
-        position.x = 0.75, position.y = 0;
-        return position;
-      case 'InsideUpperLeft':
-        position.x = 0.01, position.y = 1;
-        return position;
-      case 'InsideUpperRight':
-        position.x = 0.75, position.y = 1;
-        return position;
-    }
-
-    /**
-     * For each graph in the table, offset the Y axis of the legend by 0.05, so that whether there's 1 or 6 graphs, the legend
-     * won't cover the graph or X axis.
-     */
-    function offsetY(): void {
-      for (let i = 0; i < graphCount; i++) {
-        position.y -= 0.05;
-      }
-    }
-  }
-
-  /**
-   * Verifies that a potential property being given to a graph config object will not produce any errors by conditionally
-   * checking the property and possibly manipulating it before returning it to the PopulateGraph object
-   * @param property The variable obtained from the graph config file trying to be implemented as a Plotly property
-   * @param type The type of property being scrutinized
-   */
-  private verifyGraphProp(property: string, type: GraphProp): any {
-
-    switch(type) {
-      // CHART MODE
-      case GraphProp.cm:
-        if (property.toUpperCase() === 'LINE') { return 'lines'; }
-        else if (property.toUpperCase() === 'POINT') { return 'markers' }
-        else {
-          console.warn('Unknown property "' + property.toUpperCase() + '" - Not Line or Point. Using default Graph Type Line');
-          return 'lines';
-        }
-      // CHART TYPE
-      case GraphProp.ct:
-        if (property.toUpperCase() === 'LINE' || property.toUpperCase() === 'POINT')
-          return 'scatter';
-        else return 'scatter';
-      // BACKGROUND COLOR
-      case GraphProp.bc:
-        // Convert C / Java '0x' notation into hex hash '#' notation
-        if (property.startsWith('0x')) {
-          return property.replace('0x', '#');
-        } else if (property !== '') {
-          return property;
-        } else {
-          console.warn('No graph property Color detected. Using the default graph color black');
-          return 'black';
-        }
-    }
-  }
-
-  /**
-   * Helper function that left pads a number by a given amount of places, e.g. num = 1, places = 2, returns 01
-   * @param num The number that needs padding.
-   * @param places The amount the padding will go out to the left.
-   */
-  private zeroPad(num: number, places: number) {    
-    return String(num).padStart(places, '0');
-  }
-
-}
-
-/**
- * Passes an interface as an argument instead of many arguments when a graph object is created
- */
-interface PopulateGraph {
-  chartMode?: string;
-  chartType: string;
-  datasetBackgroundColor?: string;
-  datasetData?: number[];
-  dataLabels?: string[];
-  dateType?: string;
-  endDate?: string;
-  graphFileType: string;
-  legendLabel: string;
-  legendPosition: any;
-  plotlyDatasetData?: number[];
-  plotly_xAxisLabels?: any[];
-  startDate?: string;
-  yAxesLabelString: string;
-}
-
-enum GraphProp {
-  bc = 'backgroundColor',
-  cm = 'chartMode',
-  ct = 'chartType'
 }

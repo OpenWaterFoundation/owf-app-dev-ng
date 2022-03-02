@@ -1,8 +1,9 @@
 /* CLASSES */
 
-/* This is the default name of the highest level cdk <div> in the Dialog Content Component. Is is used for dragging the
-dialog around the page by the header, and style used to be there. Now that the class name is known, it was been
-migrated to this CSS file */
+/* This is the default name of the highest level cdk <div> in the Dialog Content
+Component. Is is used for dragging the dialog around the page by the header, and
+style used to be there. Now that the class name is known, it was been migrated to
+this CSS file */
 .cdk-drag {
   height: 100%;
 }
@@ -17,8 +18,9 @@ is static no matter what. */
   margin: 0px;
 }
 
-/* The main <div> in the dialog header that shares the top space with the dialog close button. 90-10 size div-to-button is used,
-and inline-block allows them to go side-by-side. */
+/* The main <div> in the dialog header that shares the top space with the dialog
+close button. 90-10 size div-to-button is used, and inline-block allows them to
+go side-by-side. */
 .drag-header-div {
   display: inline-block;
   height: 100%;
@@ -38,29 +40,30 @@ drag-header-div from above. */
   width: 100%;
 }
 
-/* The class for the lower-right close button in the dialog. The float: right overrides the display: inline-block and shoves
-the button all the way to the right. */
+/* The class for the lower-right close button in the dialog. The float: right overrides
+the display: inline-block and shoves the button all the way to the right. */
 .lower-dialog-close-button {
   float: right;
   margin: 0px 25px 0px 20px;
   background-color: #c2c1c1;
 }
 
-/* For each component that uses this style file, this will make it so all mat-raised-button's will not have an outline
-at any time, whether when the dialog is created or click on by the user. */
+/* For each component that uses this style file, this will make it so all mat-raised-button's
+will not have an outline at any time, whether when the dialog is created or click
+on by the user. */
 .mat-raised-button {
   outline: none;
   padding: 0px 8px 0px 8px;
 }
 
-/* When a mat-raised-button is clicked, there is a focus on it that slightly deepens the color of the button. This
-overrides that so that it always stays the same color. */
+/* When a mat-raised-button is clicked, there is a focus on it that slightly deepens
+the color of the button. This overrides that so that it always stays the same color. */
 .mat-raised-button ::ng-deep .mat-button-focus-overlay {
   display: none;
 }
 
-/* The class for the upper-right close button in a dialog. The inline-block display makes it so that it will share with
-the title header div, rendering them side-by-side. */
+/* The class for the upper-right close button in a dialog. The inline-block display
+makes it so that it will share with the title header div, rendering them side-by-side. */
 .upper-dialog-close-button {
   background-color: #c2c1c1;
   height: 100%;

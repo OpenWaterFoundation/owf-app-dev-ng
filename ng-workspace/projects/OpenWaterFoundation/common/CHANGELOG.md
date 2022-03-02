@@ -10,6 +10,26 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.7.3 #
+
+### Bug Fixes ###
+
+* Fixed a bug in TSGraph Dialog.
+
+### Refactoring ###
+
+* Moved some typed objects from Dialog Component files to the services/types.ts
+file, which was created to hold all types.
+* Refactored some code and comments in the all Dialog Components.
+* Simplified some of the dialog functions in the Dialog Service after migration.
+
+### Features / Enhancements ###
+
+* Moved some helper functions from various Dialog Components to a newly created
+Dialog Service. This service will hold these functions, help clear up the Dialog
+Components they're coming from, and will make the testing of these functions
+much easier.
+
 # 0.7.2 #
 
 ### Bug Fixes ###

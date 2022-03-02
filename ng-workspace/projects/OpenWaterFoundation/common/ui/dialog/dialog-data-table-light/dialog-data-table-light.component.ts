@@ -201,7 +201,6 @@ export class DialogDataTableLightComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.updateFilterAlgorithm();
     this.formatAttributeTable();
   }

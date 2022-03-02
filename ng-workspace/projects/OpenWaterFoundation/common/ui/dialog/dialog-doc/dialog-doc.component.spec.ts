@@ -4,7 +4,7 @@ import { ComponentFixture,
 
 import { DialogDocComponent } from './dialog-doc.component';
 
-describe('DialogDocComponent', () => {
+xdescribe('DialogDocComponent', () => {
   let component: DialogDocComponent;
   let fixture: ComponentFixture<DialogDocComponent>;
 

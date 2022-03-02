@@ -7,6 +7,7 @@ import { MatDialogRef,
           MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
+import { DialogService }    from '../dialog.service';
 
 import { MapLayerManager,
           MapLayerItem }    from '@OpenWaterFoundation/common/ui/layer-manager';
@@ -30,15 +31,12 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
   public layerItem: MapLayerItem;
   /** An array of all properties for this layer. */
   public layerProperties: string[];
-  /**
-   * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
-   * To be set in the app service for relative paths.
-   */
+  /** Used as a path resolver and contains the path to the map configuration that is
+   * using this TSGraphComponent. To be set in the app service for relative paths. */
   public mapConfigPath: string;
-  /**
-   * The instance of the MapLayerManager, a helper class that manages MapLayerItem objects with Leaflet layers
-   * and other layer data for displaying, ordering, and highlighting.
-   */
+  /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
+   * objects with Leaflet layers and other layer data for displaying, ordering,
+   * and highlighting. */
   public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
   /** The formatted string to be converted to HTML by Showdown. */
   public showdownHTML: string;
@@ -66,7 +64,8 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
    * @param owfCommonService The reference to the app service, for sending data between components and higher scoped map variables.
    * @param dataObject The object containing data passed from the Component that created this Dialog.
    */
-  constructor(public owfCommonService: OwfCommonService,
+  constructor(private dialogService: DialogService,
+              public owfCommonService: OwfCommonService,
               public dialogRef: MatDialogRef<DialogPropertiesComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
@@ -131,7 +130,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
       for (let i = 0; i < geoRaster.rasters.length; ++i) {
         markdownString +=
         '<b>Band ' + (i + 1) + '</b>\n' +
-        '  <b>Data Type:</b> ' + this.getInstanceOf(geoRaster.rasters[i][0]) + '\n' +
+        '  <b>Data Type:</b> ' + this.dialogService.getInstanceOf(geoRaster.rasters[i][0]) + '\n' +
         '  <b>Has No Data Value:</b> ' + (geoRaster.noDataValue === null ? 'False' : 'True') + '\n' +
         '  <b>No Data Value:</b> ' + (geoRaster.noDataValue === null ? 'N/A' : geoRaster.noDataValue) + '\n';
       }
@@ -202,26 +201,6 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @returns A string describing the type of array the Raster is using, to be displayed under band properties.
-   * @param arr The Raster array reference to determine what data types it is using.
-   */
-  private getInstanceOf(arr: any[]): string {
-    if (arr instanceof Float32Array) {
-      return 'Float32Array';
-    } else if (arr instanceof Float64Array) {
-      return 'Float64Array';
-    } else if (arr instanceof Int8Array) {
-      return 'Int8Array';
-    } else if (arr instanceof Int16Array) {
-      return 'Int16Array';
-    } else if (arr instanceof Int32Array) {
-      return 'Int32Array';
-    } else {
-      return 'Unknown';
-    }
-  }
-
-  /**
    * The initial function called in this component. Called once, after ngOnChanges().
    */
   ngOnInit(): void {
@@ -249,8 +228,9 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
-   * a new map, make sure to close the dialog and remove it from the window manager.
+   * Called once, before the instance is destroyed. If the page is changed or a
+   * link is clicked on in the dialog that opens a new map, make sure to close the
+   * dialog and remove it from the window manager.
    */
   public ngOnDestroy(): void {
     this.dialogRef.close();

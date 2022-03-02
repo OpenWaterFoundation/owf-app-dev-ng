@@ -8,7 +8,7 @@ import { MatDialogModule,
 
 import { DialogTSTableComponent } from './dialog-tstable.component';
 
-describe('DialogTSTableComponent', () => {
+xdescribe('DialogTSTableComponent', () => {
   let component: DialogTSTableComponent;
   let fixture: ComponentFixture<DialogTSTableComponent>;
 

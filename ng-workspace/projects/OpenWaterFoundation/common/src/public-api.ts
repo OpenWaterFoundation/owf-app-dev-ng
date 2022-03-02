@@ -1,6 +1,4 @@
-/*
- * Public API Surface of common.
- */
+/* Public API Surface of the Common library. */
 
 export * from '@OpenWaterFoundation/common/dwr/statemod';
 
