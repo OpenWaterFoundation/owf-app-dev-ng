@@ -68,7 +68,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public geoLayerView: any;
   /** The name of the geoMap the layer resides in. */
   public geoMapName: string;
-  /** Object containing the a geoLayerId as the ID, and an object of properties
+  /** Object containing the layer geoLayerId as the ID, and an object of properties
    * set by a user-defined classification file. */
   public layerClassificationInfo: any;
   /** Object containing the URL as the key and value, so each link is unique. Used
@@ -165,7 +165,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * @param event The event passed when a DOM event is detected (user inputs into filter field)
    */
   public applyFilter(event: KeyboardEvent) {
-    var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayer.geoLayerId);
+    var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
 
     // TODO jpkeahey 2021.05.17 - This will check to see if the filter value changed. It might be used in the future for 
     // query suppression.
@@ -293,7 +293,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
             permanent: true
           });
           // Obtain the MapLayerItem for this layer and the created selected layer to it.
-          var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayer.geoLayerId);
+          var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
           layerItem.addAddressMarker(addressMarker);
           this.addressMarkerDisplayed = true;
           // Add it to the geoJson object.
@@ -373,7 +373,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
       });
     }
     // Obtain the MapLayerItem for this layer and the created selected layer to it.
-    var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayer.geoLayerId);    
+    var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);    
     layerItem.addSelectedLayerToMainMap(this.selectedLayer, this.mainMap);
 
     this.mapLayerManager.setLayerOrder();
@@ -396,7 +396,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     // this.selectedLayer = L.geoJSON();
     
 
-    // var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayer.geoLayerId);
+    // var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
 
     // layerItem.getItemLeafletLayer().eachLayer((layer: any) => {
     //   if (layer.feature.properties.DISTRICT === 64) {

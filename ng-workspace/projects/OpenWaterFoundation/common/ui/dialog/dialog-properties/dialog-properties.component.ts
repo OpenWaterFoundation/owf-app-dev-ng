@@ -72,7 +72,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
     this.geoLayer = dataObject.data.geoLayer;
     this.geoLayerId = dataObject.data.geoLayerId;
     this.layerProperties = dataObject.data.layerProperties;
-    this.layerItem = this.mapLayerManager.getLayerItem(this.geoLayerId);
+    this.layerItem = this.mapLayerManager.getMapLayerItem(this.geoLayerId);
     this.mapConfigPath = dataObject.data.mapConfigPath;
     this.windowID = this.geoLayerId + '-dialog-properties';
   }

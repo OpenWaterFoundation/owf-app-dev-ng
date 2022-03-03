@@ -68,15 +68,17 @@ export class MapLayerManager {
   }
 
   /**
-   * @returns the MapLayerItem whose key matches the geoLayerId given, or null if not.
-   * @param geoLayerId The desired layer's geoLayerId.
+   * @returns The MapLayerItem whose key in the mapLayers object matches the provided
+   * geoLayerId, or null if not found.
+   * @param geoLayerId The desired MapLayerItem geoLayerId.
    */
-  public getLayerItem(geoLayerId: string): MapLayerItem {
+  public getMapLayerItem(geoLayerId: string): MapLayerItem {
     return this.mapLayers[geoLayerId] ? this.mapLayers[geoLayerId] : null;
   }
 
   /**
-   * @returns The object holding all MapLayerItems as its value, with the geoLayerId as the key.
+   * @returns The object holding all MapLayerItems as values, and each MayLayerItem's
+   * geoLayerId as the key.
    */
   public getMapLayers(): any {
     return this.mapLayers;
@@ -140,9 +142,9 @@ export class MapLayerManager {
 
   /**
    * Sets the @var mapConfigLayerOrder as the reversed array set in the map service
-   * with the order of geoLayerId's
+   * with the order of geoLayerId's.
    * @param mapConfigLayerOrder The string array of the order of layer geoLayerId's
-   * in reverse order
+   * in reverse order.
    */
   public setMapConfigLayerOrder(mapConfigLayerOrder: string[]): void {
     this.mapConfigLayerOrder = mapConfigLayerOrder;
@@ -183,7 +185,7 @@ export class MapLayerManager {
       if (ID === geoLayerId) {
         continue;
       }
-      let layerItem = this.getLayerItem(ID);
+      let layerItem = this.getMapLayerItem(ID);
       if (layerItem.isDisplayedOnMainMap() === true) {
         layerItem.removeItemLeafletLayerFromMainMap(mainMap);
       }
@@ -193,7 +195,7 @@ export class MapLayerManager {
 
       var selectedArray: boolean[] = [];
       for (let ID of this.layerViewGroups[geoLayerViewGroupId]) {
-        if (this.getLayerItem(ID).isSelectInitial()) {
+        if (this.getMapLayerItem(ID).isSelectInitial()) {
           selectedArray.push(true);
         } else {
           selectedArray.push(false);
@@ -204,7 +206,7 @@ export class MapLayerManager {
       if (selectedArray.every(Boolean)) {
         var firstLayerGeoLayerId = this.layerViewGroups[geoLayerViewGroupId][this.layerViewGroups[geoLayerViewGroupId].length - 1];
         if (geoLayerId !== firstLayerGeoLayerId) {
-          let layerItem = this.getLayerItem(firstLayerGeoLayerId);
+          let layerItem = this.getMapLayerItem(firstLayerGeoLayerId);
           layerItem.addItemLeafletLayerToMainMap(mainMap);
   
           this.toggleOffOtherLayersOnMainMap(firstLayerGeoLayerId, mainMap, geoLayerViewGroupId);
@@ -216,7 +218,7 @@ export class MapLayerManager {
           if (bool === true) {
             let indexOfBool = selectedArray.indexOf(bool);
             var layerGeoLayerId = this.layerViewGroups[geoLayerViewGroupId][indexOfBool];
-            let layerItem = this.getLayerItem(layerGeoLayerId);
+            let layerItem = this.getMapLayerItem(layerGeoLayerId);
             layerItem.addItemLeafletLayerToMainMap(mainMap);
   
           }
