@@ -55,7 +55,7 @@ export class MenuDisablePipe implements PipeTransform {
       // If the disableType second argument is dataTableCheck, check the layer information from the MapLayerManager to see if it
       // is currently being displayed on the map.
       else if (pipeType === 'dataTableCheck') {
-        let isDisplayed = this.mapLayerManager.getLayerItem(value).isDisplayedOnMainMap();
+        let isDisplayed = this.mapLayerManager.getMapLayerItem(value).isDisplayedOnMainMap();
         if (isDisplayed === true) {
           return false;
         } else {

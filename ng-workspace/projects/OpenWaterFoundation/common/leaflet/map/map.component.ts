@@ -22,7 +22,6 @@ import { DialogD3Component,
 
 import { forkJoin,
           timer,
-          interval,
           Observable,
           Subscription }            from 'rxjs';
 import { take }                     from 'rxjs/operators';
@@ -51,20 +50,11 @@ declare var L: any;
   encapsulation: ViewEncapsulation.None
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
-  /**
-  * ViewChild is used to inject a reference to components. This provides a reference to the html element
-  * <ng-template background-layer-hook></ng-template> found in map.component.html. The following are used for dynamically
-  * creating elements in the application. https://angular.io/guide/dynamic-component-loader 
-  */
-  // @ViewChild('testing', { read: ViewContainerRef }) backgroundLayerComp: any;
-  /** Provides a reference to <ng-template side-panel-info-host></ng-template> in map.component.html */
-  // @ViewChild(SidepanelInfoDirective, { static: true }) InfoComp: SidepanelInfoDirective;
+  
   /** All features of a geoLayerView. Usually a FeatureCollection. */
   public allFeatures: {} = {};
-  /**
-   * Template input property used by consuming applications or websites for passing the path
-   * to the app configuration file.
-   */
+  /** Template input property used by consuming applications or websites for passing
+   * the path to the app configuration file. */
   @Input('app-config') appConfig: any;
   /** Application version. */
   public appVersion: string;
@@ -77,10 +67,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public badPath = false;
   /** Object that holds the base maps that populates the leaflet sidebar. */
   public baseMaps: {} = {};
-  /**
-  * A categorized configuration object with the geoLayerId as key and a list of name followed by color for each feature in
-  * the Leaflet layer to be shown in the sidebar.
-  */
+  /** A categorized configuration object with the geoLayerId as key and a list of
+   * name followed by color for each feature in the Leaflet layer to be shown in
+   * the sidebar. */
   public categorizedLayerColors = {};
   /** Test variable for divIcon. */
   public count = 1;
@@ -99,15 +88,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public graduatedLayerColors = {};
   /** Global value to access container ref in order to add and remove sidebar info components dynamically. */
   public infoViewContainerRef: ViewContainerRef;
-  /** Time interval used for resetting the map after a specified time, if defined in the configuration file. */
-  public interval: any = null;
   /** Boolean test variable for use with Angular Material slide toggle. */
   public isChecked = false;
   /** Represents the Date string since the last time the layer was updated. */
   public lastRefresh = {};
-  /**
-   * 
-   */
+  /** Object containing a layer geoLayerId as the ID, and an object of properties
+   * set by a user-defined classification file. */
   public layerClassificationInfo = {};
   /** Class variable to access container ref in order to add and remove map layer component dynamically. */
   public layerViewContainerRef: ViewContainerRef;
@@ -122,18 +108,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * know there was an issue with the URL/path to the */
   public mapFilePresent: boolean;
   /** A variable to keep track of whether or not the leaflet map has already been
-  * initialized. This is useful for resetting the page and clearing the map using
-  * map.remove() which can only be called on a previously initialized map. */
+   * initialized. This is useful for resetting the page and clearing the map using
+   * map.remove() which can only be called on a previously initialized map. */
   public mapInitialized: boolean = false;
   /** The current map's ID from the app configuration file. */
   public mapID: string;
   /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
-  * objects with Leaflet layers and other layer data for displaying, ordering, and
-  * highlighting. */
+   * objects with Leaflet layers and other layer data for displaying, ordering, and
+   * highlighting. */
   public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
   /** The MapManger singleton instance, that will keep a certain number of Leaflet
-  * map instances, so a new map won't have to be created every time the same map
-  * button is clicked. */
+   * map instances, so a new map won't have to be created every time the same map
+   * button is clicked. NOT IN USE. */
   public mapManager: MapManager = MapManager.getInstance();
   /** InfoMapper project version. */
   public projectVersion: Observable<any>;
@@ -144,13 +130,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private routeSub$ = <any>Subscription;
   /** Boolean showing if the URL given for a layer is currently unavailable. */
   public serverUnavailable = false;
-  /**
-  * Boolean to indicate whether the sidebar has been initialized. Don't need to waste time/resources initializing sidebar twice,
-  * but rather edit the information in the already initialized sidebar.
-  */
+  /** Boolean to indicate whether the sidebar has been initialized. Don't need to
+   * waste time/resources initializing sidebar twice, but rather edit the information
+   * in the already initialized sidebar. */
   public sidebarInitialized: boolean = false;
-  /** An array to hold sidebar background layer components to easily remove later, when resetting the sidebar.
-  * NOTE: Might be able to remove. */
+  /** An array to hold sidebar background layer components to easily remove later,
+   * when resetting the sidebar. NOTE: Might be able to remove. */
   public sidebarBackgroundLayers: any[] = [];
   /** Boolean of whether or not refresh is displayed. */
   public showRefresh: boolean = true;
@@ -159,10 +144,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
 
   /**
-  * @constructor for the Map Component.
+  * @constructor Creates the Map Component instance.
   * @param owfCommonService A reference to the common library service.
   * @param componentFactoryResolver Adding components dynamically.
-  * @param dialog A reference to the MatDialog for creating and displaying a popup with a chart.
+  * @param dialog A reference to the MatDialog for creating and displaying a popup
+  * dialog with a chart.
   * @param route Used for getting the parameter 'id' passed in by the url and from the router.
   */
   constructor(public owfCommonService: OwfCommonService,
@@ -609,7 +595,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                     // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
                     // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
                     this.mapLayerManager.addLayerItem(data, geoLayer, geoLayerView, geoLayerViewGroup);
-                    let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+                    let layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId);
                     if (layerItem.isSelectInitial()) {
                       layerItem.initItemLeafletLayerToMainMap(this.mainMap);
                       if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
@@ -634,7 +620,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
                 // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
                 this.mapLayerManager.addLayerItem(data, geoLayer, geoLayerView, geoLayerViewGroup);
-                let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+                let layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId);
                 if (layerItem.isSelectInitial()) {
                   layerItem.initItemLeafletLayerToMainMap(this.mainMap);
                   if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
@@ -694,7 +680,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                     // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
                     // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
                     this.mapLayerManager.addLayerItem(data, geoLayer, geoLayerView, geoLayerViewGroup);
-                    let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+                    let layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId);
                     if (layerItem.isSelectInitial()) {
                       layerItem.initItemLeafletLayerToMainMap(this.mainMap);
                       if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
@@ -730,7 +716,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
                 // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
                 this.mapLayerManager.addLayerItem(data, geoLayer, geoLayerView, geoLayerViewGroup);
-                let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+                let layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId);
                 if (layerItem.isSelectInitial()) {
                   layerItem.initItemLeafletLayerToMainMap(this.mainMap);
                   if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
@@ -755,7 +741,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
               // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
               this.mapLayerManager.addLayerItem(imageLayer, geoLayer, geoLayerView, geoLayerViewGroup);
-              let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+              let layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId);
               if (layerItem.isSelectInitial()) {
                 layerItem.initItemLeafletLayerToMainMap(this.mainMap);
                 if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
@@ -851,7 +837,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                     // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
                     // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
                     this.mapLayerManager.addLayerItem(data, geoLayer, geoLayerView, geoLayerViewGroup);
-                    let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+                    let layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId);
                     if (layerItem.isSelectInitial()) {
                       layerItem.initItemLeafletLayerToMainMap(this.mainMap);
                       if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
@@ -906,7 +892,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
                 // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
                 this.mapLayerManager.addLayerItem(data, geoLayer, geoLayerView, geoLayerViewGroup);
-                let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+                let layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId);
                 if (layerItem.isSelectInitial()) {
                   layerItem.initItemLeafletLayerToMainMap(this.mainMap);
                   if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
@@ -1301,7 +1287,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param geoLayerId The geoLayerId to determine which layer style should be reset
   */
   public clearSelections(geoLayerId: string): void {
-    var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayerId);
+    var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayerId);
     layerItem.removeAllSelectedLayers(this.mainMap);
   }
 
@@ -1357,7 +1343,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               // Add the newly created Leaflet layer to the MapLayerManager, and if it has the selectedInitial field set
               // to true (or it's not given) add it to the Leaflet map. If false, don't show it yet.
               this.mapLayerManager.addLayerItem(geoRasterLayer, geoLayer, geoLayerView, geoLayerViewGroup, true);
-              let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+              let layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId);
               if (layerItem.isSelectInitial()) {
                 layerItem.initItemLeafletLayerToMainMap(this.mainMap);
                 if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
@@ -1368,7 +1354,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               // With the help of GeoBlaze, use Leaflet Map Events for clicking and/or hovering over a raster layer.
               const blaze = geoblaze.load(this.owfCommonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
               .then((georaster: any) => {
-                let layerItem = _this.mapLayerManager.getLayerItem(geoLayerView.geoLayerId);
+                let layerItem = _this.mapLayerManager.getMapLayerItem(geoLayerView.geoLayerId);
 
                 Object.keys(eventObject).forEach((key: any) => {
                   if (key === 'hover-eCP') {
@@ -1423,7 +1409,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           // it has the selectedInitial field set to true (or it's not given) add
           // it to the Leaflet map. If false, don't show it yet.
           this.mapLayerManager.addLayerItem(geoRasterLayer, geoLayer, geoLayerView, geoLayerViewGroup, true);
-          let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayer.geoLayerId);
+          let layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId);
           if (layerItem.isSelectInitial()) {
             layerItem.initItemLeafletLayerToMainMap(this.mainMap);
             if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
@@ -1533,18 +1519,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return this.owfCommonService.isServerUnavailable(geoLayerId);
   }
 
-  private startCounter(): void {
-    var test = interval(1000).subscribe(() => {
-      this.elapsedSeconds += 1;
-    });
-  }
-
   /**
   * This function is called on initialization of the map component, after the constructor.
   */
   public ngAfterViewInit() {
 
-    this.startCounter();
     // When the parameters in the URL are changed the map will refresh and load according to new configuration data.
     this.routeSub$ = this.route.params.subscribe(() => {
       this.resetMapVariables();
@@ -1846,8 +1825,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           geoLayerId: geoLayer.geoLayerId,
           geoLayerView: geoLayerView,
           mainMap: this.mainMap,
-          mapConfigPath: this.owfCommonService.getMapConfigPath(),
-          papaResult: result.data
+          papaResult: result.data,
+          mapLayerItem: this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId)
         }
         const dialogRef: MatDialogRef<DialogGalleryComponent, any> = this.dialog.open(DialogGalleryComponent, {
           data: dialogConfig,
@@ -1896,8 +1875,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           geoLayerId: geoLayerId,
           geoLayerView: geoLayerView,
           mainMap: this.mainMap,
-          mapConfigPath: this.owfCommonService.getMapConfigPath(),
-          papaResult: result.data
+          papaResult: result.data,
+          mapLayerItem: this.mapLayerManager.getMapLayerItem(geoLayerId)
         }
         const dialogRef: MatDialogRef<DialogGalleryComponent, any> = this.dialog.open(DialogGalleryComponent, {
           data: dialogConfig,
@@ -1927,7 +1906,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    let layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayerId);
+    let layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayerId);
     if (layerItem === null) return;
 
     // Create a MatDialogConfig object to pass to the DialogPropertiesComponent for the graph that will be shown
@@ -2063,8 +2042,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
           // Use the Map Layer Manager to remove all layers from the Leaflet layer, and then add the new
           // data back. This way, the layer will still be known to the manager.
-          this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().clearLayers();
-          this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().addData(geoJsonData);
+          this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().clearLayers();
+          this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().addData(geoJsonData);
           // Reset the layer order.
           this.mapLayerManager.setLayerOrder();
   
@@ -2074,7 +2053,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // Refresh a raster layer.
       else if (refreshType === IM.RefreshType.raster) {
         // First remove the raster layer.
-        this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
+        this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
         
         // Uses the fetch API with the given path to get the tiff file in assets to create the raster layer.
         fetch(this.owfCommonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
@@ -2111,7 +2090,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                   else {
                     var geoRasterLayer = MapUtil.createMultiBandRaster(georaster, geoLayerView, result, symbol);
                   }
-                  this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).addLeafletLayer(geoRasterLayer, this.mainMap);
+                  this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).addLeafletLayer(geoRasterLayer, this.mainMap);
                 }
               });
             }
@@ -2139,7 +2118,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               // Add the newly created Leaflet layer to the MapLayerManager, and if
               // it has the selectedInitial field set to true (or it's not given) add
               // it to the Leaflet map. If false, don't show it yet.
-              this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).addLeafletLayer(geoRasterLayer, this.mainMap);
+              this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).addLeafletLayer(geoRasterLayer, this.mainMap);
             }
           });
         });
@@ -2150,7 +2129,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }
       // Refresh an image layer.
       else if (refreshType === IM.RefreshType.image) {
-        this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
+        this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
 
         var imageLayer = L.imageOverlay(
           this.owfCommonService.buildPath(IM.Path.iP, [geoLayer.sourcePath]),
@@ -2161,7 +2140,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         );
 
         // Add the newly created Leaflet layer to the MapLayerManager.
-        this.mapLayerManager.getLayerItem(geoLayer.geoLayerId).addLeafletLayer(imageLayer, this.mainMap);
+        this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).addLeafletLayer(imageLayer, this.mainMap);
         this.mapLayerManager.setLayerOrder();
       }
       
@@ -2188,8 +2167,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Reset the count for numbering each feature in a layer that contains an Image Gallery, as the count is only set to 0 when
     // ngAfterViewInit is called. It won't be called if another menu in the InfoMapper is clicked on and changed to another map.
     this.count = 1;
-
-    clearInterval(this.interval);
   }
 
   /**
@@ -2339,7 +2316,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   public toggleLayer(geoLayerId: string, geoLayerViewGroupId: string): void {
     // Obtain the MapLayerItem for this layer.
-    var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(geoLayerId);
+    var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayerId);
     // If the layer hasn't been added to the map yet, layerItem will be null. Keep the checked attribute set to false so that
     // nothing is done when the toggle button is clicked.
     if (layerItem === null) {

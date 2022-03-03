@@ -41,22 +41,14 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
   public geoLayerView: any;
   /** The reference to the Leaflet map object. */
   public mainMap: any;
-  /** Used as a path resolver and contains the path to the map configuration that
-   * is using this TSGraphComponent. To be set in the app service for relative paths. */
-   public mapConfigPath: string;
   /** The array containing the result objects from Papaparse, with the headers of
    * the CSV file as keys, and the appropriate CSV column as the value. Each object
    * in the array counts as one line from the CSV file. */
   public papaResult: any;
-  /** A string representing the path to the map configuration file, so relative paths
-   * can be given to each image in the gallery config file. */
-  public pathResolver: string;
-  /** The object of a specific Leaflet LayerGroup that supports feature highlighting. */
-  public selectedLayerGroup: any;
-  /** The object of all Leaflet LayerGroups that support feature highlighting. Each
+  /** The layer MapLayerItem. Each
    * element in the object contains the geoLayerId as the key, and the LayerGroup
    * object as the value. */
-  public selectedLayers: any;
+  public mapLayerItem: any;
   /** A unique string representing the windowID of this Dialog Component in the
    * WindowManager. */
   public windowID: string;
@@ -85,10 +77,8 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
     this.geoLayerId = dataObject.data.geoLayerId;
     this.geoLayerView = dataObject.data.geoLayerView;
     this.papaResult = dataObject.data.papaResult;
-    this.pathResolver = dataObject.data.pathResolver;
     this.mainMap = dataObject.data.mainMap;
-    this.mapConfigPath = dataObject.data.mapConfigPath;
-    this.selectedLayers = dataObject.data.selectedLayers;
+    this.mapLayerItem = dataObject.data.mapLayerItem;
     this.windowID = this.geoLayerId + '-dialog-gallery';
   }
 
@@ -215,7 +205,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
     if (imagePath.startsWith('http') || imagePath.startsWith('https') || imagePath.startsWith('www')) {
       return imagePath;
     } else {
-      return this.pathResolver + imagePath;
+      return this.owfCommonService.getAppPath() + this.owfCommonService.getMapConfigPath() + imagePath;
     }
   }
 
@@ -223,7 +213,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    * Called once after the constructor.
    */
   ngOnInit(): void {
-    this.owfCommonService.setMapConfigPath(this.mapConfigPath);
+    // this.owfCommonService.setMapConfigPath(this.mapConfigPath);
     this.buildGallery();
   }
 
@@ -252,13 +242,11 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    * @param index The index of the image clicked on in the NgxGalleryImage array.
    */
   public zoomToFeatures(index: number): void {
-    // Attempt to create the selectedLayer object.
-    this.selectedLayerGroup = this.selectedLayers[this.geoLayerId];
-    var layers = this.selectedLayerGroup.getLayers();
+    // Attempt to create the layers array, with each feature object as an element.
+    var layers = this.mapLayerItem.leafletLayer.getLayers();
 
     // If the selected (or highlighted) layer exists, zoom to it on the map.
     if (layers) {
-
       var layer = layers[index];
 
       // NOTE: The Leaflet method fitBounds() is currently not being used, as the

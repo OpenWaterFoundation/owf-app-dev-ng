@@ -41,7 +41,8 @@ export class DialogDataTableLightComponent implements OnInit {
   public geoLayer: any;
   /** The name of the geoMap the layer resides in. */
   public geoMapName: string;
-  /** Object containing the a geoLayerId as the ID, and an object of properties set by a user-defined classification file. */
+  /** Object containing the layer geoLayerId as the ID, and an object of properties
+   * set by a user-defined classification file. */
   public layerClassificationInfo: any;
   /** Object containing the URL as the key and value, so each link is unique.
    * Used by the template file to use as the link's href. */
@@ -115,7 +116,7 @@ export class DialogDataTableLightComponent implements OnInit {
    * @param event The event passed when a DOM event is detected (user inputs into filter field)
    */
   public applyFilter(event: KeyboardEvent) {
-    var layerItem: MapLayerItem = this.mapLayerManager.getLayerItem(this.geoLayer.geoLayerId);
+    var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
 
     // TODO jpkeahey 2021.05.17 - This will check to see if the filter value changed. It might be used in the future for 
     // query suppression.
