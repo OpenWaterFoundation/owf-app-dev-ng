@@ -659,7 +659,7 @@ AngularDev.**
 The site can be built in a `dist` folder for local testing by using
 the command
 
-`ng build --prod --aot=true --baseHref=. --prod=true --extractCss=true --namedChunks=false --outputHashing=all --sourceMap=false`
+`ng build --aot=true --baseHref=. --configuration production --extractCss=true --namedChunks=false --outputHashing=all --sourceMap=false`
 
 The content of the `dist` folder can imitate a production build of the
 InfoMapper. To run the InfoMapper in its distributable form, navigate to

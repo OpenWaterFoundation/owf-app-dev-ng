@@ -113,7 +113,7 @@ const convert = new Showdown.Converter({
     },
     { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
-  // Comment out when running ng serve for testing or ng build --prod=true.
+  // Comment out when running ng serve for testing or ng build --configuration production.
   // Uncomment out when running ./create-common-package.sh -R for building the
   // application so that only the MapComponent is seen.
 
@@ -123,7 +123,7 @@ const convert = new Showdown.Converter({
 
   // Comment out when running ./create-common-package.sh -R for building the application
   // so that only the Map Component can be seen. It will try to display the <app-root></app-root>
-  // element if it isn't. Uncomment out when ng serve or ng build --prod=true is
+  // element if it isn't. Uncomment out when ng serve or ng build --configuration production is
   // being used for testing or building the project so that the application is used.
   
   bootstrap: [
@@ -134,7 +134,7 @@ export class AppModule {
   constructor(private injector: Injector) {
     // Creates a custom HTML element with the name `common-map`. Displays the Map
     // Component in another application or website. Comment out when running ng serve
-    // or ng build --prod=true. Uncomment out when running ./create-common-package.sh -R
+    // or ng build --configuration production. Uncomment out when running ./create-common-package.sh -R
     // for building the application so that only the MapComponent is created, and
     // the site can use <common-map> as a tag in the HTML file.
 

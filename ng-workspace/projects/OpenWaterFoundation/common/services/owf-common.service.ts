@@ -307,7 +307,7 @@ export class OwfCommonService {
    * Check the background geoLayerViewGroup to see if the expandedInitial property exists and is set to true or false.
    * Show or hide the background layers depending which one is present, and false by default (hiding the layers)
    */
-  public getBackgroundExpandedInitial(): boolean {
+  public getBackgroundExpanded(): boolean {
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
         if (geoLayerViewGroup.properties.isBackground === 'true') {
@@ -498,7 +498,7 @@ export class OwfCommonService {
     for (let i = 0; i < this.appConfig.mainMenu.length; i++) {
       if (this.appConfig.mainMenu[i].menus) {
         for (let menu = 0; menu < this.appConfig.mainMenu[i].menus.length; menu++) {
-          if (this.appConfig.mainMenu[i].menus[menu].id == id) {
+          if (this.appConfig.mainMenu[i].menus[menu].id === id) {
             var path: string = '';
             let splitPath = this.appConfig.mainMenu[i].menus[menu].mapProject.split('/');
             for (let i = 0; i < splitPath.length - 1; i++) {
@@ -516,7 +516,7 @@ export class OwfCommonService {
           }
         }
       } else {
-        if (this.appConfig.mainMenu[i].id == id) {
+        if (this.appConfig.mainMenu[i].id === id) {
           var path: string = '';
           let splitPath = this.appConfig.mainMenu[i].split('/');
           for (let i = 0; i < splitPath.length - 1; i++) {
@@ -551,7 +551,7 @@ export class OwfCommonService {
    */
   public getGeometryType(id: string): string {
     for (let geoLayer of this.mapConfig.geoMaps[0].geoLayers) {
-      if (geoLayer.geoLayerId == id) {
+      if (geoLayer.geoLayerId === id) {
         return geoLayer.geometryType;
       }
     }
@@ -888,7 +888,7 @@ export class OwfCommonService {
 
     for (let geoLayerViewGroup of geoLayerViewGroups) {
       for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-        if (geoLayerView.geoLayerId == id) {
+        if (geoLayerView.geoLayerId === id) {
           geoLayerViewRet = geoLayerView.geoLayerSymbol;
         }
       }

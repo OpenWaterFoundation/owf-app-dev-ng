@@ -1,23 +1,21 @@
 /* TAGS */
-/* body, html {
-  background: black;
-} */
 
-/* Styles the menu options in the vertical dots menu in the side bar */
+/* Styles the menu options in the vertical dots menu in the side bar. */
 button.mat-menu-item {
   outline: none;
-  /* Overrides the width of the button in the menu. otherwise the default max-width is quite short, and will cut off
-  even a short name of the button, such as 'Data Table' */
+  /* Overrides the width of the button in the menu. otherwise the default max-width
+  is quite short, and will cut off even a short name of the button, such as 'Data Table' */
   width: 200px !important;
 }
 
-/* Changes the amount of pixels surrounding the <hr> divider class that separates each geoLayerView in the side bar */
+/* Changes the amount of pixels surrounding the <hr> divider class that separates
+each geoLayerView in the side bar */
 hr.divider {
   margin-top: 8px;
   margin-bottom: 4px;
 }
 
-/* slider ui displays for changes*/
+/* slider ui displays for changes. */
 input:checked + .slider {
   background-color: #2196F3;
 }
@@ -44,9 +42,11 @@ table.layerOptions {
   border-style: none;
 }
 
-/* Styling for the border, size, and padding/.margins
-around the layer component list items*/
+/* Styling for the border, size, and padding/margins around the layer component
+list items. */
 td.name {
+  font-family: Helvetica Neue,Arial,Helvetica,sans-serif !important;
+  font-size: 12px;
   width: 100%;
   text-align: left;
   padding: 5px;
@@ -55,15 +55,9 @@ td.name {
 
 /* CLASSES */
 
-.backgroundViewGroup {
-  color: white;
-  text-align: left;
-  width: 100%;
-}
-
-.backgroundViewGroup:hover {
-  color: white;
-  text-decoration: none;
+/* Adds padding to each background layer legend content. */
+.background-layer-radio-and-text {
+  padding: 0px 5px;
 }
 
 .btn-link:focus{
@@ -71,7 +65,8 @@ td.name {
 	text-decoration:none;
 }
 
-/* Expands the <div> directly carrying each layer so that they take up a bit more space */
+/* Expands the <div> directly carrying each layer so that they take up a bit more
+space. */
 .card-body {
   width: 100%;
   padding-top: 5px;
@@ -114,7 +109,8 @@ td.name {
   padding-right: 7%;
 }
 
-/* Styles only the font awesome list in the menu popup when the vertical dots are clicked */
+/* Styles only the font awesome list in the menu popup when the vertical dots are
+clicked. */
 .fa-list {
   vertical-align: middle;
   padding-right: 5%;
@@ -125,7 +121,8 @@ td.name {
   padding-right: 4.5%;
 }
 
-/* Styles only the font awesome table in the menu popup when the vertical dots are clicked */
+/* Styles only the font awesome table in the menu popup when the vertical dots are
+clicked. */
 .fa-table {
   vertical-align: middle;
   padding-right: 5%;
@@ -145,13 +142,14 @@ td.name {
   text-align: center;
 }
 
-/* The style for the <div> that contains both the geoLayerViewGroup name and gear dropdown buttons */
+/* The style for the <div> that contains both the geoLayerViewGroup name and gear
+dropdown buttons. */
 .geoLayerViewGroupMain {
   background: #9DB66B;
   width: 100%;
 }
 
-/* The default color is black for text in this class. Change it to white */
+/* The default color is black for text in this class. Change it to white. */
 .geoLayerViewGroupName {
   color: white;
   text-align: left;
@@ -159,10 +157,10 @@ td.name {
   width: 80%;
 }
 
-.geoLayerViewGroupName:hover {
+/* .geoLayerViewGroupName:hover {
   color:white;
 	text-decoration:none;
-}
+} */
 
 .geoLayerViewGroupNameDoc {
   color: white;
@@ -171,14 +169,16 @@ td.name {
   width: 100%;
 }
 
-/* When the geoLayerViewGroup name button is hovered over, override the magical hover to black back to white so it doesn't change */
+/* When the geoLayerViewGroup name button is hovered over, override the magical
+hover to black back to white so it doesn't change. */
 .geoLayerViewGroupNameDoc:hover {
   color: white;
   text-decoration: none;
 }
 
-/* When the actual information button itself is hovered over, change the icon (and only the icon's) color to the same color
-green that has been represented throughout the rest of the InfoMapper */
+/* When the actual information button itself is hovered over, change the icon (and
+only the icon's) color to the same color green that has been represented throughout
+the rest of the InfoMapper. */
 /* .geoLayerView-info-circle:hover .fa-info-circle {
   color: #9DB66B;
 } */
@@ -265,8 +265,11 @@ green that has been represented throughout the rest of the InfoMapper */
 	margin-bottom: 0px;
 }
 
-/* The div settings surrounding the layer's name, description, kebab menu, and switch toggle button */
+/* The div settings surrounding the layer's name, description, kebab menu, and switch
+toggle button. */
 .layer-control {
+  font-family: Helvetica Neue,Arial,Helvetica,sans-serif;
+  font-size: 12px;
   height: 100%;
   padding-bottom: 14px;
 }
@@ -321,8 +324,8 @@ green that has been represented throughout the rest of the InfoMapper */
   width: 10%;
 }
 
-/* Styles the leaflet tooltip box that is static on the map. Used for an Image Gallery, or added by a user for other information
-to be displayed at all times on the map. */
+/* Styles the leaflet tooltip box that is static on the map. Used for an Image Gallery,
+or added by a user for other information to be displayed at all times on the map. */
 .leaflet-div-icon {
   background:rgb(129, 0, 0);
   border-radius: 5px;
@@ -364,6 +367,27 @@ to be displayed at all times on the map. */
 
 .leaflet-tooltip {
   padding: 0px 4px 0px 4px;
+}
+
+/*  */
+.legend-expansion-header {
+  background-color: #9DB66B !important;
+}
+
+.legend-expansion-header:hover {
+  background-color: #9DB66B !important;
+}
+
+.legend-expansion-header-title {
+  flex-grow: 1000 !important;
+  padding-top: 2px !important;
+  color: white !important;
+  font-size: medium !important;
+}
+
+/* Overrides the Angular Material padding for the Expansion Panel body. */
+.mat-expansion-panel-body {
+  padding: 0 !important;
 }
 
 .map-title {
@@ -426,14 +450,17 @@ to be displayed at all times on the map. */
 	width: 150px;
 }
 
-/* Wraps a URL in the Leaflet popup automatically when it becomes long enough to be wider than the popup width. Otherwise,
-it will only break the line at default line-break points, such as dashes '-'. */
+/* Wraps a URL in the Leaflet popup automatically when it becomes long enough to
+be wider than the popup width. Otherwise, it will only break the line at default
+line-break points, such as dashes '-'. */
 .popup-wrap {
   word-wrap: break-word;
 }
 
-.raster-display-div {
-  height: 30px;
+/* Makes sure the minimum distance between graduated features in the legend is at
+least 30px in height. */
+.grad-legend-features {
+  min-height: 30px;
 }
 
 .resizable {
@@ -472,7 +499,7 @@ it will only break the line at default line-break points, such as dashes '-'. */
   cursor: nwse-resize; /*resizer cursor*/
 }
 
-/* styling for the slider inside of the switch */
+/* Slider inside of the switch. */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -501,7 +528,7 @@ it will only break the line at default line-break points, such as dashes '-'. */
   transition: .4s;
 }
 
-/* Rounded sliders */
+/* Rounded sliders. */
 .slider.round {
   border-radius: 34px;
 }
@@ -530,35 +557,9 @@ it will only break the line at default line-break points, such as dashes '-'. */
   border-style: none;
 }
 
-.toggleAllButton {
-  display:inline-block;
-  padding:0.35em 1.2em;
-  margin:0 0.3em 0.3em 0;
-
-  border-radius: 2px;
-  border-style: solid;
-  border-color: #9DB66B;
-
-  text-decoration:none;
-  font-size: 14px;
-  font-weight:300;
-
-  background-color: #9DB66B;
-  color: white;
-
-  text-align:center;
-}
-
-.toggleAllButton:hover {
-  cursor: pointer;
-  background-color: white;
-  color: #9DB66B;
-  border-style: solid;
-  border-color: #9DB66B;
-  box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
-}
-
 /* ID's */
+
+
 #controlDescription {
   text-align: left;
   margin-bottom: 10px;
@@ -580,7 +581,7 @@ it will only break the line at default line-break points, such as dashes '-'. */
 	cursor: pointer;
 }
 
-/* Override the margin size and make the font size smaller than usual */
+/* Override the margin size and make the font size smaller than usual. */
 #information-tab {
   margin-top: 15px !important;
   font-size: small;

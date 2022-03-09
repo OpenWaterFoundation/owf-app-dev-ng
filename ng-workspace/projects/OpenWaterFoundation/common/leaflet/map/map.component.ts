@@ -55,7 +55,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public allFeatures: {} = {};
   /** Template input property used by consuming applications or websites for passing
    * the path to the app configuration file. */
-  @Input('app-config') appConfig: any;
+  @Input('app-config') appConfigStandalonePath: any;
   /** Application version. */
   public appVersion: string;
   /** Array of background map groups from the map config file. Used for displaying background maps
@@ -97,6 +97,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public layerClassificationInfo = {};
   /** Class variable to access container ref in order to add and remove map layer component dynamically. */
   public layerViewContainerRef: ViewContainerRef;
+  /** Object that contains each geoLayerViewGroupId as the key, and a boolean describing
+   * whether the group's legend expansion panel is open or closed.
+   */
+  public backgroundLegendExpansion = {};
   /** Global value to access container ref in order to add and remove symbol descriptions components dynamically. */
   public legendSymbolsViewContainerRef: ViewContainerRef;
   /** The reference for the Leaflet map. */
@@ -1257,12 +1261,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         }
       }
     });
-    // Retrieve the expandedInitial and set to collapse if false or not present. If true, show all background layers
-    if (this.owfCommonService.getBackgroundExpandedInitial() === false) {
-      setTimeout(() => {
-        document.getElementById('collapse-background').setAttribute('class', 'collapse');
-      });
-    }
+    
     // If the sidebar has not already been initialized once then do so.
     if (this.sidebarInitialized == false) { this.createSidebar(); }
   } // END OF MAP BUILDING.
@@ -1289,6 +1288,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public clearSelections(geoLayerId: string): void {
     var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayerId);
     layerItem.removeAllSelectedLayers(this.mainMap);
+  }
+
+  /**
+   * 
+   * @param $event 
+   */
+  public clickButtonOnly($event): void {
+    console.log('is MouseEvent? ', $event instanceof MouseEvent);
+    $event.stopPropagation();
   }
 
   /**
@@ -1531,12 +1539,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.mapID = this.route.snapshot.paramMap.get('id');
 
       // Standalone Map.
-      if (this.appConfig) {
-        this.owfCommonService.getJSONData(this.appConfig).subscribe((appConfig: any) => {
+      if (this.appConfigStandalonePath) {
+        this.owfCommonService.getJSONData(this.appConfigStandalonePath).subscribe((appConfig: any) => {
           this.owfCommonService.setAppConfig(appConfig);
           this.initMapSettings(true);
         });
-      } else if (!this.appConfig) {
+      } else {
         // TODO: jpkeahey 2020.05.13 - This shows how the map config path isn't
         // set on a hard refresh because of async issues. Fix has been found and
         // now just needs to be implemented. Follow the APP_INITIALIZER token found
@@ -1545,41 +1553,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         setTimeout(() => {
           this.initMapSettings();
         }, 500);
-      } else {
-        console.error('Error!');
       }
     });
   }
-
-  // public ngAfterViewInit() {
-  //   // When the parameters in the URL are changed the map will refresh and load according to new configuration data.
-  //   this.routeSub$ = this.activatedRoute.params.subscribe(() => {
-
-  //     this.resetMapVariables();
-
-  //     this.mapID = this.activatedRoute.snapshot.paramMap.get('id');
-  //     if (this.mapID === null) return;
-
-  //     // Standalone Map.
-  //     if (this.appConfig) {
-  //       this.owfCommonService.getJSONData(this.appConfig).subscribe((appConfig: any) => {
-  //         this.owfCommonService.setAppConfig(appConfig);
-  //         this.initMapSettings(true);
-  //       });
-  //     } else if (!this.appConfig) {
-  //       // TODO: jpkeahey 2020.05.13 - This shows how the map config path isn't
-  //       // set on a hard refresh because of async issues. Fix has been found and
-  //       // now just needs to be implemented. Follow the APP_INITIALIZER token found
-  //       // in the SNODAS app to read all static files before the app initializes,
-  //       // therefore all info will have already been received.
-  //       setTimeout(() => {
-  //         this.initMapSettings();
-  //       }, 500);
-  //     } else {
-  //       console.error('Error!');
-  //     }
-  //   });
-  // }
 
   /**
   * Called once, before this Map Component instance is destroyed.

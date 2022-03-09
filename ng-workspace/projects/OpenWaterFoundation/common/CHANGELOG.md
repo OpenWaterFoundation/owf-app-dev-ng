@@ -10,6 +10,13 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 0.7.4 OR 0.8.0 #
+
+### Bug Fixes ###
+
+* Fixed InfoMapper Issue #402: Long legend strings will now wrap in a way so that
+another feature strings won't cover each other.
+
 # 0.7.3 #
 
 ### Bug Fixes ###
