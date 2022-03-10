@@ -1,0 +1,221 @@
+/* CLASSES */
+
+/* Changes the amount of pixels surrounding the <hr> divider class that separates
+each geoLayerView in the side bar */
+hr.divider {
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+/*  */
+.fa-dot-circle-o {
+  vertical-align: middle;
+  padding-right: 7%;
+}
+
+/* Styles only the font awesome list in the menu popup when the vertical dots are
+clicked. */
+.fa-list {
+  vertical-align: middle;
+  padding-right: 5%;
+}
+
+/*  */
+.fa-picture-o {
+  vertical-align: middle;
+  padding-right: 4.5%;
+}
+
+/* Styles only the font awesome table in the menu popup when the vertical dots are
+clicked. */
+.fa-table {
+  vertical-align: middle;
+  padding-right: 5%;
+}
+
+/* The style for the <div> that contains both the geoLayerViewGroup name and gear
+dropdown buttons. */
+.geoLayerViewGroupMain {
+  background: #9DB66B;
+  width: 100%;
+}
+
+/* The default color is black for text in this class. Change it to white. */
+.geoLayerViewGroupName {
+  color: white;
+  text-align: left;
+  text-indent: 16px;
+  width: 80%;
+}
+
+/* TODO: Not sure if this is needed. */
+.geoMap-info-circle:hover .fa-info-circle {
+  color: rgb(243, 243, 243);
+}
+
+/* The div for displaying a user-defined graduated classification label. */
+.grad-label {
+  display: inline-block;
+  padding-left: 5px;
+}
+
+/* Makes sure the minimum distance between graduated features in the legend is at
+least 30px in height. */
+.grad-legend-features {
+  min-height: 30px;
+}
+
+/*  */
+.info-circle {
+  vertical-align: middle;
+  padding-right: 7%;
+}
+
+/* The div settings surrounding the layer's name, description, kebab menu, and switch
+toggle button. */
+.layer-control {
+  font-family: Helvetica Neue,Arial,Helvetica,sans-serif;
+  font-size: 12px;
+  height: 100%;
+  padding-bottom: 14px;
+}
+
+/*  */
+.layer-description {
+  margin-top: 8px;
+}
+
+.layer-icon {
+  margin-left:5px;
+}
+
+/* Surrounding div for the layer kebab menu. */
+.layer-kebab-menu {
+  display: inline-block;
+  width: 12%;
+}
+
+/*  */
+.layer-title {
+  font-size:12px;
+  font-weight: bold;
+  text-decoration: underline;
+  display: inline-block;
+  width: 65%;
+}
+
+/* Styling for the toggle button div. */
+.layer-toggle {
+  border-radius: 6px;
+  position: relative;
+  display: inline-block;
+  width: 13%;
+  height: 24px;
+  vertical-align: middle;
+}
+
+/* The layer toggle button itself. */
+.layer-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The div surrounding the visualization icon in layer control. */
+.layer-viz-icon {
+  display: inline-block;
+  text-align: center;
+  width: 10%;
+}
+
+/*  */
+.legend-expansion-header {
+  background-color: #9DB66B !important;
+}
+
+/*  */
+.legend-expansion-header:hover {
+  background-color: #9DB66B !important;
+}
+
+/*  */
+.legend-expansion-header-title {
+  flex-grow: 1000 !important;
+  padding-top: 2px !important;
+  color: white !important;
+  font-size: medium !important;
+}
+
+/* Overrides the Angular Material padding for the Expansion Panel body. */
+.mat-expansion-panel-body {
+  padding: 5px 10px !important;
+}
+
+/*  */
+.mat-icon-button:hover .green-dots {
+  color: #9DB66B;
+}
+
+/*  */
+.mat-icon-button:hover .white-dots {
+  color: whitesmoke;
+}
+
+/*  */
+.polygon {
+  display: inline-block;
+  width: 90%;
+}
+
+/*  */
+.polygon-display-div {
+  height: 30px;
+}
+
+/* Slider inside of the switch. */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+/*  */
+.slider:before {
+  position: absolute;
+  content: "O";
+  font-size: 12px;
+  text-align: center;
+  font-family: arial;
+
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+/* Rounded sliders. */
+.slider.round {
+  border-radius: 34px;
+}
+
+/*  */
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/*  */
+.status {
+  width: 10%;
+  color: red;
+  display: inline-block;
+  vertical-align: middle;
+}

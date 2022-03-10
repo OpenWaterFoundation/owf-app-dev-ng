@@ -55,24 +55,9 @@ td.name {
 
 /* CLASSES */
 
-/* Adds padding to each background layer legend content. */
-.background-layer-radio-and-text {
-  padding: 0px 5px;
-}
-
 .btn-link:focus{
 	color:white;
 	text-decoration:none;
-}
-
-/* Expands the <div> directly carrying each layer so that they take up a bit more
-space. */
-.card-body {
-  width: 100%;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
 }
 
 .card-header {
@@ -369,15 +354,18 @@ or added by a user for other information to be displayed at all times on the map
   padding: 0px 4px 0px 4px;
 }
 
+
 /*  */
 .legend-expansion-header {
   background-color: #9DB66B !important;
 }
 
+/*  */
 .legend-expansion-header:hover {
   background-color: #9DB66B !important;
 }
 
+/*  */
 .legend-expansion-header-title {
   flex-grow: 1000 !important;
   padding-top: 2px !important;
@@ -387,7 +375,7 @@ or added by a user for other information to be displayed at all times on the map
 
 /* Overrides the Angular Material padding for the Expansion Panel body. */
 .mat-expansion-panel-body {
-  padding: 0 !important;
+  padding: 5px 10px !important;
 }
 
 .map-title {

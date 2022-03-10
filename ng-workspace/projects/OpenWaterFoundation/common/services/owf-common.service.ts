@@ -84,6 +84,10 @@ export class OwfCommonService {
   public mapConfigLayerOrder: string[] = [];
   /** A string representing the path to the map configuration file. */
   public mapConfigPath: string = '';
+
+  private _mapConfig = new BehaviorSubject<any>({});
+  readonly mapConfig$ = this._mapConfig.asObservable();
+  private mapConfigTest = {};
   /** Object containing the original style for a given feature. */
   public originalFeatureStyle: any;
   /** Object containing a layer's geoLayerId as the key, and a boolean showing whether
@@ -322,6 +326,22 @@ export class OwfCommonService {
   }
 
   /**
+   * @returns An array of all background geoLayerViewGroup objects.
+   */
+  public getBackgroundGeoLayerViewGroups(): any[] {
+    let allBackgroundGeoLayerViewGroups = [];
+
+    for (let geoMap of this.mapConfig.geoMaps) {
+      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
+        if (geoLayerViewGroup.properties.isBackground === 'true') {
+          allBackgroundGeoLayerViewGroups.push(geoLayerViewGroup);
+        }
+      }
+    }
+    return allBackgroundGeoLayerViewGroups;
+  }
+
+  /**
    * @returns The background layer geoLayerView that matches the provided @var id.
    * @param id The geoLayerId that needs to be matched
    */
@@ -340,7 +360,7 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns an array of geoLayers containing each background layer as an object
+   * @returns An array of geoLayers containing each background layer as an object
    */
   public getBackgroundLayers(): any[] {
     let backgroundLayers: any[] = [];
@@ -1270,6 +1290,10 @@ export class OwfCommonService {
    */
   public setMapConfig(mapConfig: any): void {
     this.mapConfig = mapConfig;
+  }
+
+  public setMapConfigTest(mapConfig: any): void {
+    this._mapConfig.next(Object.assign(this.mapConfigTest, mapConfig))
   }
 
   /**

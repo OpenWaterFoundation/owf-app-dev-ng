@@ -1,0 +1,24 @@
+/* CLASSES */
+
+/*  */
+.legend-expansion-header {
+  background-color: #9DB66B !important;
+}
+
+/*  */
+.legend-expansion-header:hover {
+  background-color: #9DB66B !important;
+}
+
+/*  */
+.legend-expansion-header-title {
+  flex-grow: 1000 !important;
+  padding-top: 2px !important;
+  color: white !important;
+  font-size: medium !important;
+}
+
+/* Overrides the Angular Material padding for the Expansion Panel body. */
+.mat-expansion-panel-body {
+  padding: 5px 10px !important;
+}

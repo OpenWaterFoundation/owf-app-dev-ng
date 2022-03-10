@@ -179,28 +179,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-  * Dynamically add the layer information to the sidebar coming in from the map configuration file.
+  * Dynamically add the layer information to the sidebar coming in from the map
+  * configuration file.
   * @param configFile 
   */
   private addLayerToSidebar(configFile: any) {
-    // reset the sidebar components so elements are added on top of each other
+    // Reset the sidebar components so elements are added on top of each other.
     this.resetSidebarComponents();
 
     // Creates new layerToggle component in sideBar for each layer specified in
     // the config file, sets data based on map service.
     // var geoLayers = configFile.geoMaps[0].geoLayers;
-
     let mapGroups: any[] = [];
-    // let backgroundMapGroups: any[] = [];
     let viewGroups: any = configFile.geoMaps[0].geoLayerViewGroups;
-    // var groupNumber = 0;
 
     viewGroups.forEach((group: any) => {
-      if (group.properties.isBackground == undefined ||
-        group.properties.isBackground == "false") {
+      if (group.properties.isBackground === undefined ||
+        group.properties.isBackground === "false") {
         mapGroups.push(group);
       }
-      if (group.properties.isBackground == "true")
+      if (group.properties.isBackground === "true")
         this.backgroundMapGroups.push(group);
     });
 
@@ -1502,6 +1500,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       // Set the configuration file class variable for the map service.
       this.owfCommonService.setMapConfig(mapConfig);
+      this.owfCommonService.setMapConfigTest(mapConfig);
       // Once the mapConfig object is retrieved and set, set the order in which they should be displayed.
       this.owfCommonService.setMapConfigLayerOrder();
       // Add components to the sidebar.
