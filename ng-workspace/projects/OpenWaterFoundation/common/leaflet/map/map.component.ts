@@ -1289,11 +1289,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * 
-   * @param $event 
+   * Verifies that only the kebab icon button is clicked, otherwise the event will
+   * bubble up the DOM tree and expand the geoLayerViewGroup Mat Expansion Panel.
+   * @param $event The MouseEvent object passed from the template file when the
+   * geoLayerViewGroup kebab icon button is clicked.
    */
-  public clickButtonOnly($event): void {
-    console.log('is MouseEvent? ', $event instanceof MouseEvent);
+  public clickIconButtonOnly($event: MouseEvent): void {
     $event.stopPropagation();
   }
 
@@ -2322,4 +2323,5 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.mapLayerManager.setLayerOrder();
     }
   }
+  
 }

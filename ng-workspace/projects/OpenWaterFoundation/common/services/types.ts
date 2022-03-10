@@ -307,3 +307,18 @@ export enum GraphProp {
   cm = 'chartMode',
   ct = 'chartType'
 }
+
+/**
+ * Enum representing the supported Window Types (Dialog Types) for the WindowManager.
+ */
+// export enum WindowType {
+//   D3 = 'D3',
+//   DOC = 'Documentation',
+//   HEAT = 'Heatmap',
+//   GAL = 'Gallery',
+//   GAP = 'Gapminder',
+//   PROJ = 'Project',
+//   TABLE = 'Table',
+//   TEXT = 'Text',
+//   TSGRAPH = 'TSGraph'
+// }
