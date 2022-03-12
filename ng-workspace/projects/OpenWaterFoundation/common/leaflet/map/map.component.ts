@@ -214,6 +214,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * @returns All geoLayerViewGroups from the FIRST geoMap.
+   */
+  get allGeoLayerViewGroups(): any {
+    return this.owfCommonService.getGeoLayerViewGroups();
+  }
+
+  /**
   * A CSV classification file is given by the user, so use that to create the colorTable
   * to add to the categorizedLayerColors array for creating the legend colors.
   * @param results An array of objects containing information from each row in the
@@ -429,7 +436,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       div.innerHTML = divContents;
     }
 
-    var geoLayerViewGroups: IM.GeoLayerViewGroup[] = this.owfCommonService.getLayerGroups();
+    var geoLayerViewGroups: IM.GeoLayerViewGroup[] = this.owfCommonService.getGeoLayerViewGroups();
 
     // Iterate through each geoLayerView in every geoLayerViewGroup, and create
     // & add a Leaflet map layer for them.
@@ -1485,6 +1492,27 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * @returns The geoMap docPath property from the FIRST geoMap.
+   */
+  get geoMapDocPath(): string {
+    return this.owfCommonService.getGeoMapDocPath();
+  }
+
+  /**
+   * @returns The geoMapId property from the FIRST geoMap.
+   */
+  get geoMapId(): string {
+    return this.owfCommonService.getGeoMapID();
+  }
+
+  /**
+   * @returns The name property from the FIRST geoMap.
+   */
+  get geoMapName(): string {
+    return this.owfCommonService.getGeoMapName();
+  }
+
+  /**
    * Initialize a map for a full application if no parameter is given, or for a
    * standalone map if the true boolean is provided.
    */
@@ -1508,6 +1536,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // Create the map.
       this.buildMap();
     });
+  }
+
+  /**
+   * Returns the map configuration object from the OWF Common Service.
+   */
+  get mapConfig(): any {
+    return this.owfCommonService.getMapConfig();
   }
 
   /**
