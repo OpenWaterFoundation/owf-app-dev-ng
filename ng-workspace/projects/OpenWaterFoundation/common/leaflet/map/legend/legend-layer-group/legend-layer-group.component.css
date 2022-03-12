@@ -1,13 +1,34 @@
-/* CLASSES */
+/* TAGS */
 
-/* Changes the amount of pixels surrounding the <hr> divider class that separates
-each geoLayerView in the side bar */
-hr.divider {
-  margin-top: 8px;
-  margin-bottom: 4px;
+/* Slider ui displays for changes. */
+input:checked + .slider {
+  background-color: #2196F3;
 }
 
-/*  */
+/* Slider checked */
+input:checked + .slider:before {
+content: "|";
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+/* CLASSES */
+
+/* Ensure the smallest height is 30 pixels, so the div can increase as necessary
+if an extra long description string is provided. */
+.cat-legend-features {
+  min-height: 30px;
+}
+
+/* Unused. */
+.fa-building {
+  vertical-align: middle;
+  padding-right: 7%;
+}
+
+/* Puts the Clear Selection bullseye looking icon in the correct place in the
+dropdown menu. */
 .fa-dot-circle-o {
   vertical-align: middle;
   padding-right: 7%;
@@ -20,7 +41,7 @@ clicked. */
   padding-right: 5%;
 }
 
-/*  */
+/* Uses the Font Awesome icon that denotes an image. */
 .fa-picture-o {
   vertical-align: middle;
   padding-right: 4.5%;
@@ -33,22 +54,8 @@ clicked. */
   padding-right: 5%;
 }
 
-/* The style for the <div> that contains both the geoLayerViewGroup name and gear
-dropdown buttons. */
-.geoLayerViewGroupMain {
-  background: #9DB66B;
-  width: 100%;
-}
-
-/* The default color is black for text in this class. Change it to white. */
-.geoLayerViewGroupName {
-  color: white;
-  text-align: left;
-  text-indent: 16px;
-  width: 80%;
-}
-
-/* TODO: Not sure if this is needed. */
+/* On bootstrap button hover, transitions the nested info circle icon from black
+to near white. */
 .geoMap-info-circle:hover .fa-info-circle {
   color: rgb(243, 243, 243);
 }
@@ -65,7 +72,12 @@ least 30px in height. */
   min-height: 30px;
 }
 
-/*  */
+/* The legend graduated layer symbol svg. */
+.graduated-symbol {
+  display: inline-block;
+}
+
+/* Positions the geoLayerViewGroup and geoLayerView Font Awesome info circle icons. */
 .info-circle {
   vertical-align: middle;
   padding-right: 7%;
@@ -74,17 +86,23 @@ least 30px in height. */
 /* The div settings surrounding the layer's name, description, kebab menu, and switch
 toggle button. */
 .layer-control {
-  font-family: Helvetica Neue,Arial,Helvetica,sans-serif;
   font-size: 12px;
   height: 100%;
   padding-bottom: 14px;
 }
 
-/*  */
+/* Sets the legend layer group font family and size for consistency. */
+.layer-control-container {
+  font-family: Helvetica Neue,Arial,Helvetica,sans-serif;
+  font-size: 12px;
+}
+
+/* Positions the div that displays the geoLayerView's description in the legend. */
 .layer-description {
   margin-top: 8px;
 }
 
+/* Positions each geoLayerView's shape or image icon in the legend. */
 .layer-icon {
   margin-left:5px;
 }
@@ -95,7 +113,7 @@ toggle button. */
   width: 12%;
 }
 
-/*  */
+/* Styles and positions a geoLayerView name property as the title in the legend. */
 .layer-title {
   font-size:12px;
   font-weight: bold;
@@ -121,6 +139,12 @@ toggle button. */
   height: 0;
 }
 
+/* Styles the color of the disabled Angular Material button that shows users if
+the geoLayerView contains visualizations. */
+.layer-viz-button:disabled {
+  color: rgba(0, 0, 0, 0.8) !important;
+}
+
 /* The div surrounding the visualization icon in layer control. */
 .layer-viz-icon {
   display: inline-block;
@@ -128,22 +152,34 @@ toggle button. */
   width: 10%;
 }
 
-/*  */
-.legend-expansion-header {
+/* Ensures the geoLayerViewGroup expansion header is the correct color. */
+.expansion-header {
   background-color: #9DB66B !important;
 }
 
-/*  */
-.legend-expansion-header:hover {
+/* Without setting the color, a mouse hover will default to white. */
+.expansion-header:hover {
   background-color: #9DB66B !important;
 }
 
-/*  */
-.legend-expansion-header-title {
+/* Default styling for every regular geoLayerView expansion header title.  */
+.expansion-header-title {
   flex-grow: 1000 !important;
-  padding-top: 2px !important;
   color: white !important;
   font-size: medium !important;
+}
+
+/* Added to the expansion header title if the "docPath" property is provided in
+the map configuration JSON file. */
+.expansion-header-title-doc {
+  padding-top: 10px !important;
+}
+
+/* Changes the amount of pixels surrounding the <hr> divider class that separates
+each geoLayerView in the legend. */
+.geoLayerView-divider {
+  margin-top: 8px;
+  margin-bottom: 4px;
 }
 
 /* Overrides the Angular Material padding for the Expansion Panel body. */
@@ -151,25 +187,34 @@ toggle button. */
   padding: 5px 10px !important;
 }
 
-/*  */
+/* Each geoLayerView's kebab icon in the geoLayerViewGroup. Transitions from 'black'
+to green on mouse hover. */
 .mat-icon-button:hover .green-dots {
   color: #9DB66B;
 }
 
-/*  */
+/* Each geoLayerViewGroups kebab icon, if the "docPath" property is provided in
+the map configuration JSON file. Transitions from 'black' to whitesmoke.   */
 .mat-icon-button:hover .white-dots {
   color: whitesmoke;
 }
 
-/*  */
-.polygon {
-  display: inline-block;
-  width: 90%;
+/* Styles the menu options in the vertical dots menu in the side bar. */
+.mat-menu-item {
+  outline: none;
+  /* Overrides the width of the button in the menu. otherwise the default max-width
+  is quite short, and will cut off even a short name of the button, such as 'Data Table' */
+  width: 200px !important;
 }
 
-/*  */
-.polygon-display-div {
-  height: 30px;
+/* TESTING with the Angular Material Mat Slide Toggle. */
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+  background-color: #64b2f1;
+}
+
+/* TESTING with the Angular Material Mat Slide Toggle. */
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+  background-color: #016dc5;
 }
 
 /* Slider inside of the switch. */
@@ -185,7 +230,7 @@ toggle button. */
   transition: .4s;
 }
 
-/*  */
+/* Slider when toggled off. */
 .slider:before {
   position: absolute;
   content: "O";
@@ -207,13 +252,13 @@ toggle button. */
   border-radius: 34px;
 }
 
-/*  */
+/* Rounded slider when toggled off. */
 .slider.round:before {
   border-radius: 50%;
 }
 
 /*  */
-.status {
+.geoLayerView-status {
   width: 10%;
   color: red;
   display: inline-block;

@@ -1,8 +1,9 @@
 <mat-accordion>
   <mat-expansion-panel [expanded]="owfCommonService.getBackgroundExpanded()" hideToggle>
 
-    <mat-expansion-panel-header class="legend-expansion-header">
-      <mat-panel-title class="legend-expansion-header-title">
+    <mat-expansion-panel-header class="expansion-header"
+      attr.data-cy="{{geoLayerViewGroup.geoLayerViewGroupId}}-background-expansion-panel-header">
+      <mat-panel-title class="expansion-header-title">
         {{geoLayerViewGroup.name}}
       </mat-panel-title>
     </mat-expansion-panel-header>
@@ -12,27 +13,24 @@
       <!-- If the geoLayerView contains the separatorBefore property, insert this
         divider to separate the background map(s) above from the one(s) below -->
       <div *ngIf="backgroundGeoLayerView.properties.separatorBefore === 'true'"
-            class="dropdown-divider">
+            class="background-geoLayerView-divider">
       </div>
-      <!-- This div needs to exist as a container for the table tags so as to keep
-        them separate from each other. This also keeps them from having an all gray
-        background color if the above div is displayed. -->
-      <div>
-        <tr>
+      
+      <div class="background-layer-control-container">
+          
+        <div class="radio-container">
           <input type="radio"
                   id="{{backgroundGeoLayerView.name}}-radio"
                   name="background-layer"
                   value="{{backgroundGeoLayerView.name}}"
-                  (click)="selectBackgroundLayer(backgroundGeoLayerView.name)">
-          <td class="name">
-
-            <b>{{backgroundGeoLayerView.name}}</b>
-            <div class="description">
-              {{backgroundGeoLayerView.description}}
-            </div>
-
-          </td>
-        </tr>
+                  (click)="selectBackgroundLayer(backgroundGeoLayerView.name)"/>
+        </div>
+          
+        <div class="label-container">
+          <label><b>{{backgroundGeoLayerView.name}}</b></label>
+          <label>{{backgroundGeoLayerView.description}}</label>
+        </div>
+          
       </div>
 
     </div>

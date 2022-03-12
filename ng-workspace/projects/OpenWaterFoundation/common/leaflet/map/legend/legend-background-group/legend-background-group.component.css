@@ -1,24 +1,59 @@
 /* CLASSES */
 
-/*  */
-.legend-expansion-header {
+/* A flex container for the background radio button, layer title and description. */
+.background-layer-control-container {
+  display: flex;
+  font-family: Helvetica Neue,Arial,Helvetica,sans-serif;
+  font-size: 12px;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+/* Simple div that displays a divider between the different types of background
+geoLayerViews on the legend. */
+.background-geoLayerView-divider {
+  padding-top: 0%;
+  padding-bottom: 0%;
+  margin-bottom: 0%;
+  margin-top: 0%;
+}
+
+/* Ensures the Mat Expansion Header is OWF green. */
+.expansion-header {
   background-color: #9DB66B !important;
 }
 
-/*  */
-.legend-expansion-header:hover {
+/* Ensures when a a mouse hover over the header is done, it stays OWF green. Otherwise,
+it will default to white. */
+.expansion-header:hover {
   background-color: #9DB66B !important;
 }
 
-/*  */
-.legend-expansion-header-title {
+/* Styles how the background geoLayerViewGroup's name property is displayed. */
+.expansion-header-title {
   flex-grow: 1000 !important;
   padding-top: 2px !important;
   color: white !important;
   font-size: medium !important;
 }
 
+/* Div container for both background layer title and description. */
+.label-container {
+  width: 95%;
+}
+
+/* Each label tag needs to cover the entire width of the label-container parent
+so they each take up the entire line. */
+.label-container label {
+  width: 100%;
+}
+
 /* Overrides the Angular Material padding for the Expansion Panel body. */
 .mat-expansion-panel-body {
   padding: 5px 10px !important;
+}
+
+/* Div container for the radio button. */
+.radio-container {
+  width: 5%;
 }

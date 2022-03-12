@@ -214,7 +214,7 @@ export class MapUtil {
         if (feature.startsWith("http://") || feature.startsWith("https://")) {
           // If the value is a http or https link, convert it to one
           divContents += '<b>' + property + ':</b> ' +
-            "<a class='popup-wrap' href='" +
+            "<a class='leaflet-popup-wrap' href='" +
             encodeURI(feature) + "' target=_blank'" +
             "'>" +
             feature +
@@ -342,7 +342,8 @@ export class MapUtil {
     }
     // Now that the strings have been formatted to numbers, convert them to actual numbers
     var anchorArray: number[] = imageSizeArray.map(Number);
-    // Check if the imageAnchorPoint variable is undefined, by not being given, and assign it as an empty string if so
+    // Check if the imageAnchorPoint variable is undefined, by not being given, and
+    // assign it as an empty string if so
     if (imageAnchorPoint === undefined) imageAnchorPoint = '';
     // If the number array only has one entry, and that entry is NaN, that's strike1.
     if (strike1 && anchorArray.length === 1 && isNaN(anchorArray[0]) && imageAnchorPoint.toUpperCase() !== 'UPPERLEFT') {
@@ -386,24 +387,29 @@ export class MapUtil {
   }
 
   /**
-   * Create Tooltips on the Image Markers of a Leaflet layer dependant on conditional statements that look at (if applicable)
-   * event actions from a popup template file and the geoLayerView data from the map configuration file.
-   * @param leafletMarker The reference to the Leaflet Marker object that's being created in the layer.
-   * @param eventObject The object containing the type of event as the key (e.g. click-eCP) and the entire event object from the
-   * popup template file.
-   * @param imageGalleryEventActionId The geoLayerView property for determining whether to display the Image Gallery menu in
-   * the side bar Leaflet Kebab menu.
-   * @param labelText The geoLayerSymbol property for showing a user-defined label in the tooltip instead of default numbering.
+   * Create Tooltips on the Image Markers of a Leaflet layer dependant on conditional
+   * statements that look at (if applicable) event actions from a popup template file
+   * and the geoLayerView data from the map configuration file.
+   * @param leafletMarker The reference to the Leaflet Marker object that's being
+   * created in the layer.
+   * @param eventObject The object containing the type of event as the key (e.g. click-eCP)
+   * and the entire event object from the popup template file.
+   * @param imageGalleryEventActionId The geoLayerView property for determining
+   * whether to display the Image Gallery menu in the side bar Leaflet Kebab menu.
+   * @param labelText The geoLayerSymbol property for showing a user-defined label
+   * in the tooltip instead of default numbering.
    */
-  public static createLayerTooltips(leafletMarker: any, eventObject: any, imageGalleryEventActionId: string,
-    labelText: string, count: number): void {
+  public static createLayerTooltips(leafletMarker: any, eventObject: any,
+    imageGalleryEventActionId: string, labelText: string, count: number): void {
 
-    // Check the eventObject to see if it contains any keys in it. If it does, then event actions have been added and can be
-    // iterated over to determine if one of them contains an action to display an Image Gallery.
+    // Check the eventObject to see if it contains any keys in it. If it does, then
+    // event actions have been added and can be iterated over to determine if one
+    // of them contains an action to display an Image Gallery.
     if (Object.keys(eventObject).length > 0) {
       for (var action of eventObject['click-eCP'].actions) {
         if (action.action && action.action.toUpperCase() === 'DISPLAYIMAGEGALLERY') {
-          // By default, if the geoLayerSymbol property labelText is not given, then create the tooltip default labels
+          // By default, if the geoLayerSymbol property labelText is not given, then
+          // create the tooltip default labels.
           if (!action.featureLabelType || action.featureLabelType.toUpperCase() === 'FEATURENUMBER') {
             leafletMarker.bindTooltip(count.toString(), {
               className: 'feature-label',
@@ -415,7 +421,8 @@ export class MapUtil {
         }
       }
     }
-    // If a Kebab menu item needs to be added for the Image Gallery, then create the tooltips here.
+    // If a Kebab menu item needs to be added for the Image Gallery, then create
+    // the tooltips here.
     else if (imageGalleryEventActionId) {
       if (!labelText) {
         leafletMarker.bindTooltip(count.toString(), {
@@ -796,9 +803,9 @@ export class MapUtil {
     var divEnd: string;
     // If the amount of displayed Raster layers on the map is one, restart all the HTML after the point-info <p> tag.
     if (mapLayerManager.displayedRasterLayers() === 1) {
-      split1 = div.innerHTML.split('<hr class="normal-hr">');
-      divEnd = '<hr class="normal-hr"/>' + split1[split1.length - 1];
-      split1 = div.innerHTML.split('<hr class="small-hr">');
+      split1 = div.innerHTML.split('<hr class="upper-left-map-info-divider">');
+      divEnd = '<hr class="upper-left-map-info-divider"/>' + split1[split1.length - 1];
+      split1 = div.innerHTML.split('<hr class="upper-left-map-info-small-divider">');
       // Iterate over all layers on the map, and if a layer is both a raster and not displayed on the map, remove it from the
       // currentRasterLayers object that keeps track of raster layers for displaying their info in the div.
       var allMapLayers = mapLayerManager.getMapLayers();
@@ -808,11 +815,11 @@ export class MapUtil {
         }
       }
     } else {
-      split1 = div.innerHTML.split('<hr class="normal-hr">');
-      divEnd = '<hr class="normal-hr"/>' + split1[split1.length - 1];
+      split1 = div.innerHTML.split('<hr class="upper-left-map-info-divider">');
+      divEnd = '<hr class="upper-left-map-info-divider"/>' + split1[split1.length - 1];
     }
 
-    split1 = div.innerHTML.split('<hr class="normal-hr">');
+    split1 = div.innerHTML.split('<hr class="upper-left-map-info-divider">');
 
     divContents += split1[0];
 
@@ -843,11 +850,11 @@ export class MapUtil {
       if (Object.keys(MapUtil.currentRasterLayers).length > 0) {
         var first = true;
         for (let key of Object.keys(MapUtil.currentRasterLayers)) {
-          if (divContents.includes('small-hr') && first === true) {
+          if (divContents.includes('upper-left-map-info-small-divider') && first === true) {
             divContents = divContents.substring(0, divContents.indexOf('<hr'));
             first = false;
           }
-          divContents += '<hr class="small-hr">Raster: ' +
+          divContents += '<hr class="upper-left-map-info-small-divider">Raster: ' +
             MapUtil.currentRasterLayers[key]['geoLayerName'] + '<br>' +
             '<b>Cell Value:</b> ' +
             MapUtil.isCellValueMissing(MapUtil.currentRasterLayers[key]['cellValue']);
@@ -872,24 +879,24 @@ export class MapUtil {
       // Iterate through each raster layer in the currentRasterLayers object, and add one's information to the div
       // innerHTML string.
       for (let key of Object.keys(MapUtil.currentRasterLayers)) {
-        if (divContents.includes('small-hr') && first === true) {
+        if (divContents.includes('upper-left-map-info-small-divider') && first === true) {
           divContents = divContents.substring(0, divContents.indexOf('<hr'));
           first = false;
         }
-        divContents += '<hr class="small-hr">Raster: ' +
+        divContents += '<hr class="upper-left-map-info-small-divider">Raster: ' +
           MapUtil.currentRasterLayers[key]['geoLayerName'] + '<br>' +
           '<b>Cell Value:</b> ' +
           MapUtil.isCellValueMissing(MapUtil.currentRasterLayers[key]['cellValue']);
       }
       // NOTE: Older way of showing the raster HTML innerHTML string, and possibly more stable than the current code.
-      // if (divContents.includes('small-hr')) {
+      // if (divContents.includes('upper-left-map-info-small-divider')) {
       //   divContents = divContents.substring(0, divContents.indexOf('<hr'));
       // }
-      // divContents += '<hr class="small-hr">Raster: ' +
+      // divContents += '<hr class="upper-left-map-info-small-divider">Raster: ' +
       // geoLayerView.name + '<br>' +
       // '<b>Cell Value:</b> ' +
       // MapUtil.isCellValueMissing(cellValue) +
-      // '<hr class="normal-hr"/>' +
+      // '<hr class="upper-left-map-info-divider"/>' +
       // split[1];
 
       // Tack on the bottom <hr> divider and the rest of the split string from before. Use split.length - 1 to always get the
@@ -1267,7 +1274,7 @@ export class MapUtil {
 
     divContents = ('<h4 id="geoLayerView">' + geoMapName + '</h4>' + '<p id="point-info"></p>');
     if (instruction != "") {
-      divContents += ('<hr class="normal-hr"/>' + '<p><i>' + instruction + '</i></p>');
+      divContents += ('<hr class="upper-left-map-info-divider"/>' + '<p><i>' + instruction + '</i></p>');
     }
     div.innerHTML = divContents;
   }
@@ -1424,7 +1431,7 @@ export class MapUtil {
     }
 
     if (instruction != "") {
-      divContents += ('<hr class="normal-hr"/>' + '<p><i>' + instruction + '</i></p>');
+      divContents += ('<hr class="upper-left-map-info-divider"/>' + '<p><i>' + instruction + '</i></p>');
     }
     // Once all properties are added to divContents, display them.
     div.innerHTML = divContents;

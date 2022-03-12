@@ -1,5 +1,4 @@
 <div id="map-container">
-
   <!-- Optionally define the sidebar content via HTML markup -->
   <div id="sidebar" class="leaflet-sidebar collapsed">
 
@@ -72,30 +71,16 @@
               <div
                 *ngIf="geoLayerViewGroup.properties.isBackground === undefined || geoLayerViewGroup.properties.isBackground === 'false'; else background">
 
-                <div class="card"><!-- Class unused. -->
-
-                  <legend-layer-group [geoLayerViewGroup]="geoLayerViewGroup">
+                <div>
+                  <legend-layer-group [geoLayerViewGroup]="geoLayerViewGroup"
+                                      [allFeatures]="allFeatures"
+                                      [categorizedLayerColors]="categorizedLayerColors"
+                                      [eventActions]="eventActions"
+                                      [graduatedLayerColors]="graduatedLayerColors"
+                                      [lastRefresh]="lastRefresh"
+                                      [layerClassificationInfo]="layerClassificationInfo"
+                                      [mainMap]="mainMap">
                   </legend-layer-group>
-
-                  <!-- TODO: This is where the original geoLayerViewGroup code was. -->
-
-                  <!-- TODO -->
-                  <div *ngIf="!geoLayerViewGroup.properties.docPath">
-                    <div class="geoLayerViewGroupMain">
-                      <button class="btn geoLayerViewGroupName" data-toggle="collapse"
-                        [attr.aria-controls]='"collapse-" + geoLayerViewGroup.geoLayerViewGroupId'
-                        [attr.data-target]='"#collapse-" + geoLayerViewGroup.geoLayerViewGroupId'
-                        matTooltip="Click to expand/collapse layer controls" [matTooltipShowDelay]="750"
-                        aria-expanded="true" data-cy="geoLayerViewGroupName">
-                        {{geoLayerViewGroup.name}}
-                      </button>
-
-                    </div>
-                  </div>
-
-                  <!-- TODO: The original legend content for non-background geoLayerViewGroups was here. -->
-                  <!-- <div [attr.id]='"collapse-" + geoLayerViewGroup.geoLayerViewGroupId' class="collapse show" aria-labelledby="headingOne"> -->
-                  <!-- </div> -->
                 </div>
 
               </div>
@@ -130,7 +115,7 @@
         </p>
       </div> -->
 
-      <!-- The Help / About side bar  -->
+      <!-- The Help / About sidebar. Can turn into its own separate component.  -->
       <div class="leaflet-sidebar-pane" id="information">
         <h1 class="leaflet-sidebar-header">
           Help / About
