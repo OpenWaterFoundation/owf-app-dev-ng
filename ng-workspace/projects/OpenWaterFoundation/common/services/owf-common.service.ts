@@ -84,6 +84,10 @@ export class OwfCommonService {
   public mapConfigLayerOrder: string[] = [];
   /** A string representing the path to the map configuration file. */
   public mapConfigPath: string = '';
+
+  private _mapConfig = new BehaviorSubject<any>({});
+  readonly mapConfig$ = this._mapConfig.asObservable();
+  private mapConfigTest = {};
   /** Object containing the original style for a given feature. */
   public originalFeatureStyle: any;
   /** Object containing a layer's geoLayerId as the key, and a boolean showing whether
@@ -307,7 +311,7 @@ export class OwfCommonService {
    * Check the background geoLayerViewGroup to see if the expandedInitial property exists and is set to true or false.
    * Show or hide the background layers depending which one is present, and false by default (hiding the layers)
    */
-  public getBackgroundExpandedInitial(): boolean {
+  public getBackgroundExpanded(): boolean {
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
         if (geoLayerViewGroup.properties.isBackground === 'true') {
@@ -319,6 +323,22 @@ export class OwfCommonService {
       }
     }
     return false;
+  }
+
+  /**
+   * @returns An array of all background geoLayerViewGroup objects.
+   */
+  public getBackgroundGeoLayerViewGroups(): any[] {
+    let allBackgroundGeoLayerViewGroups = [];
+
+    for (let geoMap of this.mapConfig.geoMaps) {
+      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
+        if (geoLayerViewGroup.properties.isBackground === 'true') {
+          allBackgroundGeoLayerViewGroups.push(geoLayerViewGroup);
+        }
+      }
+    }
+    return allBackgroundGeoLayerViewGroups;
   }
 
   /**
@@ -340,7 +360,7 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns an array of geoLayers containing each background layer as an object
+   * @returns An array of geoLayers containing each background layer as an object
    */
   public getBackgroundLayers(): any[] {
     let backgroundLayers: any[] = [];
@@ -498,7 +518,7 @@ export class OwfCommonService {
     for (let i = 0; i < this.appConfig.mainMenu.length; i++) {
       if (this.appConfig.mainMenu[i].menus) {
         for (let menu = 0; menu < this.appConfig.mainMenu[i].menus.length; menu++) {
-          if (this.appConfig.mainMenu[i].menus[menu].id == id) {
+          if (this.appConfig.mainMenu[i].menus[menu].id === id) {
             var path: string = '';
             let splitPath = this.appConfig.mainMenu[i].menus[menu].mapProject.split('/');
             for (let i = 0; i < splitPath.length - 1; i++) {
@@ -516,7 +536,7 @@ export class OwfCommonService {
           }
         }
       } else {
-        if (this.appConfig.mainMenu[i].id == id) {
+        if (this.appConfig.mainMenu[i].id === id) {
           var path: string = '';
           let splitPath = this.appConfig.mainMenu[i].split('/');
           for (let i = 0; i < splitPath.length - 1; i++) {
@@ -551,7 +571,7 @@ export class OwfCommonService {
    */
   public getGeometryType(id: string): string {
     for (let geoLayer of this.mapConfig.geoMaps[0].geoLayers) {
-      if (geoLayer.geoLayerId == id) {
+      if (geoLayer.geoLayerId === id) {
         return geoLayer.geometryType;
       }
     }
@@ -888,7 +908,7 @@ export class OwfCommonService {
 
     for (let geoLayerViewGroup of geoLayerViewGroups) {
       for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-        if (geoLayerView.geoLayerId == id) {
+        if (geoLayerView.geoLayerId === id) {
           geoLayerViewRet = geoLayerView.geoLayerSymbol;
         }
       }
@@ -1270,6 +1290,10 @@ export class OwfCommonService {
    */
   public setMapConfig(mapConfig: any): void {
     this.mapConfig = mapConfig;
+  }
+
+  public setMapConfigTest(mapConfig: any): void {
+    this._mapConfig.next(Object.assign(this.mapConfigTest, mapConfig))
   }
 
   /**

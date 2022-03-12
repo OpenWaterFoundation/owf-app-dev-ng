@@ -55,13 +55,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public allFeatures: {} = {};
   /** Template input property used by consuming applications or websites for passing
    * the path to the app configuration file. */
-  @Input('app-config') appConfig: any;
+  @Input('app-config') appConfigStandalonePath: any;
   /** Application version. */
   public appVersion: string;
-  /** Array of background map groups from the map config file. Used for displaying background maps
-   * in the sidebar panel. */
+  /** Array of background map groups from the map config file. Used for displaying
+   * background maps in the sidebar panel. */
   public backgroundMapGroups = [];
-  /** Accesses container ref in order to add and remove background layer components dynamically. */
+  /** Accesses container ref in order to add and remove background layer components
+   * dynamically. */
   public backgroundViewContainerRef: ViewContainerRef;
   /** Boolean showing if the path given to some file is incorrect. */
   public badPath = false;
@@ -77,27 +78,33 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public currentBackgroundLayer: string;
   /** The number of seconds since the last layer refresh. */
   public elapsedSeconds = 0;
-  /** An object containing any event actions with their id as the key and the action object itself as the value. */
+  /** An object containing any event actions with their id as the key and the action
+   * object itself as the value. */
   public eventActions: {} = {};
-  /** For the Leaflet map's config file subscription object so it can be closed on this component's destruction. */
+  /** For the Leaflet map's config file subscription object so it can be closed on
+   * this component's destruction. */
   private forkJoinSub$ = <any>Subscription;
   /** An object of Style-like objects containing:
    * key  : geoLayerId
    * value: object with style properties
    * For displaying a graduated symbol in the Leaflet legend. */
   public graduatedLayerColors = {};
-  /** Global value to access container ref in order to add and remove sidebar info components dynamically. */
+  /** Global value to access container ref in order to add and remove sidebar info
+   * components dynamically. */
   public infoViewContainerRef: ViewContainerRef;
-  /** Boolean test variable for use with Angular Material slide toggle. */
-  public isChecked = false;
-  /** Represents the Date string since the last time the layer was updated. */
+  /** Represents the Date string since the last time a layer was updated. */
   public lastRefresh = {};
   /** Object containing a layer geoLayerId as the ID, and an object of properties
    * set by a user-defined classification file. */
   public layerClassificationInfo = {};
-  /** Class variable to access container ref in order to add and remove map layer component dynamically. */
+  /** Class variable to access container ref in order to add and remove map layer
+   * component dynamically. */
   public layerViewContainerRef: ViewContainerRef;
-  /** Global value to access container ref in order to add and remove symbol descriptions components dynamically. */
+  /** Object that contains each geoLayerViewGroupId as the key, and a boolean describing
+   * whether the group's legend expansion panel is open or closed. */
+  public backgroundLegendExpansion = {};
+  /** Global value to access container ref in order to add and remove symbol descriptions
+   * components dynamically. */
   public legendSymbolsViewContainerRef: ViewContainerRef;
   /** The reference for the Leaflet map. */
   public mainMap: any;
@@ -149,7 +156,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param componentFactoryResolver Adding components dynamically.
   * @param dialog A reference to the MatDialog for creating and displaying a popup
   * dialog with a chart.
-  * @param route Used for getting the parameter 'id' passed in by the url and from the router.
+  * @param route Used for getting the parameter 'id' passed in by the url and from
+  * the router.
   */
   constructor(public owfCommonService: OwfCommonService,
               public dialog: MatDialog,
@@ -175,28 +183,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-  * Dynamically add the layer information to the sidebar coming in from the map configuration file.
+  * Dynamically add the layer information to the sidebar coming in from the map
+  * configuration file.
   * @param configFile 
   */
   private addLayerToSidebar(configFile: any) {
-    // reset the sidebar components so elements are added on top of each other
+    // Reset the sidebar components so elements are added on top of each other.
     this.resetSidebarComponents();
 
     // Creates new layerToggle component in sideBar for each layer specified in
     // the config file, sets data based on map service.
     // var geoLayers = configFile.geoMaps[0].geoLayers;
-
     let mapGroups: any[] = [];
-    // let backgroundMapGroups: any[] = [];
     let viewGroups: any = configFile.geoMaps[0].geoLayerViewGroups;
-    // var groupNumber = 0;
 
     viewGroups.forEach((group: any) => {
-      if (group.properties.isBackground == undefined ||
-        group.properties.isBackground == "false") {
+      if (group.properties.isBackground === undefined ||
+        group.properties.isBackground === "false") {
         mapGroups.push(group);
       }
-      if (group.properties.isBackground == "true")
+      if (group.properties.isBackground === "true")
         this.backgroundMapGroups.push(group);
     });
 
@@ -376,7 +382,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     var mapTitle = L.control({ position: 'topleft' });
     // Add the title to the map in a div whose class name is 'info'
     mapTitle.onAdd = function () {
-      this._div = L.DomUtil.create('div', 'info');
+      this._div = L.DomUtil.create('div', 'upper-left-map-info');
       this._div.id = 'title-card';
       this.update();
       // Without this, the mouse cannot select what's in the info div. With it, it can. This hopefully helps with the
@@ -450,7 +456,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       divContents = ('<h4 id="geoLayerView">' + mapName + '</h4>' + '<p id="point-info"></p>');
       if (instruction != "") {
-        divContents += ('<hr class="normal-hr"/>' + '<p id="instructions"><i>' + instruction + '</i></p>');
+        divContents += ('<hr class="upper-left-map-info-divider"/>' + '<p id="instructions"><i>' + instruction + '</i></p>');
       }
       div.innerHTML = divContents;
     }
@@ -1257,12 +1263,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         }
       }
     });
-    // Retrieve the expandedInitial and set to collapse if false or not present. If true, show all background layers
-    if (this.owfCommonService.getBackgroundExpandedInitial() === false) {
-      setTimeout(() => {
-        document.getElementById('collapse-background').setAttribute('class', 'collapse');
-      });
-    }
+    
     // If the sidebar has not already been initialized once then do so.
     if (this.sidebarInitialized == false) { this.createSidebar(); }
   } // END OF MAP BUILDING.
@@ -1280,15 +1281,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this.mainMap.removeLayer(layer);
       }
     });
-  }
-
-  /**
-  * Determine what layer the user clicked the clear button from, and rest the styling for the highlighted features
-  * @param geoLayerId The geoLayerId to determine which layer style should be reset
-  */
-  public clearSelections(geoLayerId: string): void {
-    var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayerId);
-    layerItem.removeAllSelectedLayers(this.mainMap);
   }
 
   /**
@@ -1465,22 +1457,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-  * @returns the value from the badPath object with the matching geoLayerId as the key
-  * @param geoLayerId The geoLayerId of the layer
-  */
-  public getBadPath(geoLayerId: string): string {
-    return this.owfCommonService.getBadPath(geoLayerId);
-  }
-
-  /**
-  * @returns the geometryType of the current geoLayer to determine what shape should be drawn in the legend
-  * @param geoLayerId The id of the current geoLayer
-  */
-  public getGeometryType(geoLayerId: string): any {
-    return this.owfCommonService.getGeometryType(geoLayerId);
-  }
-
-  /**
    * 
    */
   private initMapSettings(standalone?: boolean): void {
@@ -1494,6 +1470,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       // Set the configuration file class variable for the map service.
       this.owfCommonService.setMapConfig(mapConfig);
+      this.owfCommonService.setMapConfigTest(mapConfig);
       // Once the mapConfig object is retrieved and set, set the order in which they should be displayed.
       this.owfCommonService.setMapConfigLayerOrder();
       // Add components to the sidebar.
@@ -1501,22 +1478,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // Create the map.
       this.buildMap();
     });
-  }
-
-  /**
-  * @returns a boolean on whether the layer on the Leaflet map has a bad path so a red triangle is displayed
-  * on the layer's side bar legend
-  */
-  public isBadPath(geoLayerId: string): boolean {
-    return this.owfCommonService.isBadPath(geoLayerId);
-  }
-
-  /**
-  * @returns a boolean on whether the layer on the Leaflet map's service URL is unavailable
-  * @param geoLayerId The geoLayerId for the layer
-  */
-  public isServerUnavailable(geoLayerId: string): boolean {
-    return this.owfCommonService.isServerUnavailable(geoLayerId);
   }
 
   /**
@@ -1531,12 +1492,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.mapID = this.route.snapshot.paramMap.get('id');
 
       // Standalone Map.
-      if (this.appConfig) {
-        this.owfCommonService.getJSONData(this.appConfig).subscribe((appConfig: any) => {
+      if (this.appConfigStandalonePath) {
+        this.owfCommonService.getJSONData(this.appConfigStandalonePath).subscribe((appConfig: any) => {
           this.owfCommonService.setAppConfig(appConfig);
           this.initMapSettings(true);
         });
-      } else if (!this.appConfig) {
+      } else {
         // TODO: jpkeahey 2020.05.13 - This shows how the map config path isn't
         // set on a hard refresh because of async issues. Fix has been found and
         // now just needs to be implemented. Follow the APP_INITIALIZER token found
@@ -1545,41 +1506,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         setTimeout(() => {
           this.initMapSettings();
         }, 500);
-      } else {
-        console.error('Error!');
       }
     });
   }
-
-  // public ngAfterViewInit() {
-  //   // When the parameters in the URL are changed the map will refresh and load according to new configuration data.
-  //   this.routeSub$ = this.activatedRoute.params.subscribe(() => {
-
-  //     this.resetMapVariables();
-
-  //     this.mapID = this.activatedRoute.snapshot.paramMap.get('id');
-  //     if (this.mapID === null) return;
-
-  //     // Standalone Map.
-  //     if (this.appConfig) {
-  //       this.owfCommonService.getJSONData(this.appConfig).subscribe((appConfig: any) => {
-  //         this.owfCommonService.setAppConfig(appConfig);
-  //         this.initMapSettings(true);
-  //       });
-  //     } else if (!this.appConfig) {
-  //       // TODO: jpkeahey 2020.05.13 - This shows how the map config path isn't
-  //       // set on a hard refresh because of async issues. Fix has been found and
-  //       // now just needs to be implemented. Follow the APP_INITIALIZER token found
-  //       // in the SNODAS app to read all static files before the app initializes,
-  //       // therefore all info will have already been received.
-  //       setTimeout(() => {
-  //         this.initMapSettings();
-  //       }, 500);
-  //     } else {
-  //       console.error('Error!');
-  //     }
-  //   });
-  // }
 
   /**
   * Called once, before this Map Component instance is destroyed.
@@ -1629,40 +1558,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       });
 
     this.windowManager.addWindow(windowID, WindowType.D3);
-  }
-
-  /**
-  * Opens an attribute (data) table Dialog with the necessary configuration data.
-  * @param geoLayerId The geoLayerView's geoLayerId to be matched so the correct features are displayed
-  */
-  public openDataTableDialog(geoLayerView: any): void {
-    var windowID = geoLayerView.geoLayerId + '-dialog-data-table';
-    if (this.windowManager.windowExists(windowID) || this.allFeatures[geoLayerView.geoLayerId] === undefined) {
-      return;
-    }
-
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = {
-      allFeatures: this.allFeatures[geoLayerView.geoLayerId],
-      geoLayer: this.owfCommonService.getGeoLayerFromId(geoLayerView.geoLayerId),
-      geoLayerView: geoLayerView,
-      geoMapName: this.owfCommonService.getGeoMapName(),
-      layerClassificationInfo: this.layerClassificationInfo,
-      mapConfigPath: this.owfCommonService.getMapConfigPath(),
-      mainMap: this.mainMap
-    }
-    const dialogRef: MatDialogRef<DialogDataTableComponent, any> = this.dialog.open(DialogDataTableComponent, {
-      data: dialogConfig,
-      hasBackdrop: false,
-      panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
-      height: "750px",
-      width: "910px",
-      minHeight: "275px",
-      minWidth: "675px",
-      maxHeight: "90vh",
-      maxWidth: "90vw"
-    });
-    this.windowManager.addWindow(windowID, WindowType.TABLE);
   }
 
   /**
@@ -1844,107 +1739,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }
     });
 
-  }
-
-  /**
-  * Retrieves data asynchronously and creates an Image Gallery Dialog opened from the Leaflet side bar kebab menu.
-  * @param geoLayer The geoLayer object from the selected layer.
-  * @param geoLayerView The geoLayerView object from the selected layer.
-  */
-  public openImageGalleryDialogFromKebab(geoLayerId: any, geoLayerView: any): void {
-    var windowID = geoLayerId + '-dialog-gallery';
-    if (this.windowManager.windowExists(windowID)) {
-      return;
-    }
-
-    var resourcePath = this.eventActions[geoLayerView.properties.imageGalleryEventActionId].resourcePath;
-    let fullResourcePath = this.owfCommonService.buildPath(IM.Path.rP, [resourcePath]);
-
-    Papa.parse(fullResourcePath, {
-      delimiter: ",",
-      download: true,
-      comments: "#",
-      skipEmptyLines: true,
-      header: true,
-      complete: (result: any, file: any) => {
-
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.data = {
-          allFeatures: this.allFeatures[geoLayerId],
-          eventActions: this.eventActions,
-          geoLayerId: geoLayerId,
-          geoLayerView: geoLayerView,
-          mainMap: this.mainMap,
-          papaResult: result.data,
-          mapLayerItem: this.mapLayerManager.getMapLayerItem(geoLayerId)
-        }
-        const dialogRef: MatDialogRef<DialogGalleryComponent, any> = this.dialog.open(DialogGalleryComponent, {
-          data: dialogConfig,
-          hasBackdrop: false,
-          panelClass: ['custom-dialog-container', 'mat-elevation-z24'],
-          height: "700px",
-          width: "910px",
-          minHeight: "515px",
-          minWidth: "650px",
-          maxHeight: "700px",
-          maxWidth: "910px"
-        });
-
-        this.windowManager.addWindow(windowID, WindowType.GAL);
-      }
-    });
-  }
-
-  /**
-  * Creates the data dialog config object, adds it to the dialog ref object, and sets all other necessary options
-  * to create and open the layer properties dialog
-  */
-  public openPropertyDialog(geoLayerId: string, geoLayerViewName: any): void {
-
-    var windowID = geoLayerId + '-dialog-properties';
-    if (this.windowManager.windowExists(windowID)) {
-      return;
-    }
-
-    let layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayerId);
-    if (layerItem === null) return;
-
-    // Create a MatDialogConfig object to pass to the DialogPropertiesComponent for the graph that will be shown
-    const dialogConfig = new MatDialogConfig();
-
-    if (layerItem.isRasterLayer()) {
-      dialogConfig.data = {
-        geoLayer: this.owfCommonService.getGeoLayerFromId(geoLayerId),
-        geoLayerId: geoLayerId,
-        geoLayerViewName: geoLayerViewName,
-        layerProperties: [],
-        mapConfigPath: this.owfCommonService.getMapConfigPath()
-      }
-    } else {
-      dialogConfig.data = {
-        geoLayer: this.owfCommonService.getGeoLayerFromId(geoLayerId),
-        geoLayerId: geoLayerId,
-        geoLayerViewName: geoLayerViewName,
-        layerProperties: Object.keys(this.allFeatures[geoLayerId].features[0].properties),
-        mapConfigPath: this.owfCommonService.getMapConfigPath()
-      }
-    }
-
-    const dialogRef: MatDialogRef<DialogPropertiesComponent, any> = this.dialog.open(DialogPropertiesComponent, {
-      data: dialogConfig,
-      hasBackdrop: false,
-      panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
-      height: "700px",
-      width: "910px",
-      minHeight: "290px",
-      minWidth: "550px",
-      // vh = view height = 1% of the browser's height, so the max height will be 90% of the browser's height
-      maxHeight: "90vh",
-      // vw = view width = 1% of the browser's width, so the max width will be 90% of the browser's width
-      maxWidth: "90vw"
-    });
-
-    this.windowManager.addWindow(windowID, WindowType.TEXT);
   }
 
   /**
@@ -2244,107 +2038,5 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       subtree: true
     });
   }
-
-  /**
-   * 
-   * @param symbolProperties 
-   * @param styleType 
-   * @returns 
-   */
-  public styleInnerShape(symbolProperties: any, styleType: string): Object {
-    switch (styleType) {
-      case 'g':
-        return {
-          fill: MapUtil.verify(symbolProperties.fillColor, IM.Style.fillColor),
-          fillOpacity: MapUtil.verify(symbolProperties.fillOpacity, IM.Style.fillOpacity),
-        }
-    }
-  }
-
-  /**
-  * Style's the current legend object in the sidebar.
-  * @param symbolProperties The display style object for the current layer's legend.
-  * @param styleType A string or character differentiating between single symbol, categorized, and graduated style legend objects.
-  */
-  public styleOuterShape(symbolProperties: any, styleType: string): Object {
-
-    switch (styleType) {
-      // Return the styling object for a SingleSymbol classificationType map configuration property.
-      case 'ss':
-        return {
-          fill: MapUtil.verify(symbolProperties.properties.fillColor, IM.Style.fillColor),
-          fillOpacity: MapUtil.verify(symbolProperties.properties.fillOpacity, IM.Style.fillOpacity),
-          opacity: MapUtil.verify(symbolProperties.properties.opacity, IM.Style.opacity),
-          stroke: MapUtil.verify(symbolProperties.properties.color, IM.Style.color),
-          strokeWidth: MapUtil.verify(symbolProperties.properties.weight, IM.Style.weight)
-        };
-      // Return a styling object for a Categorized classificationType map configuration property.
-      case 'c':
-        return {
-          fill: MapUtil.verify(symbolProperties.fillColor, IM.Style.fillColor),
-          fillOpacity: MapUtil.verify(symbolProperties.fillOpacity, IM.Style.fillOpacity),
-          stroke: MapUtil.verify(symbolProperties.color, IM.Style.color),
-          strokeWidth: MapUtil.verify(symbolProperties.weight, IM.Style.weight)
-        };
-      // Return a styling object for a Graduated classificationType map configuration property.
-      case 'g':
-        return {
-          fillOpacity: '0',
-          stroke: MapUtil.verify(symbolProperties.color, IM.Style.color),
-          strokeOpacity: MapUtil.verify(symbolProperties.opacity, IM.Style.opacity),
-          strokeWidth: MapUtil.verify(symbolProperties.weight, IM.Style.weight)
-        }
-      // Stands for 'symbol missing'. Returns a default styling object.
-      case 'sm':
-        return {
-          fill: MapUtil.verify(undefined, IM.Style.fillColor),
-          fillOpacity: MapUtil.verify(undefined, IM.Style.fillOpacity),
-          opacity: MapUtil.verify(undefined, IM.Style.opacity),
-          stroke: MapUtil.verify(undefined, IM.Style.color),
-          strokeWidth: MapUtil.verify(undefined, IM.Style.weight)
-        }
-
-    }
-
-  }
-
-  /**
-  * Toggles Leaflet layer visibility, side bar description & symbol, and slide toggle button when it is clicked. Keeps the layer
-  * order integrity and (soon) the selectBehavior Single property. This is when either zero or one layer at most can be showing
-  * in a view group
-  * @param geoLayerId The current geoLayer ID
-  */
-  public toggleLayer(geoLayerId: string, geoLayerViewGroupId: string): void {
-    // Obtain the MapLayerItem for this layer.
-    var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayerId);
-    // If the layer hasn't been added to the map yet, layerItem will be null. Keep the checked attribute set to false so that
-    // nothing is done when the toggle button is clicked.
-    if (layerItem === null) {
-      (<HTMLInputElement>document.getElementById(geoLayerId + "-slider")).checked = false;
-      return;
-    }
-    let checked = (<HTMLInputElement>document.getElementById(geoLayerId + "-slider")).checked;
-
-    if (!checked) {
-      layerItem.removeItemLeafletLayerFromMainMap(this.mainMap);
-    }
-    // If checked
-    else {
-      // Check to see if the layer has already been added to the Leaflet map. If it has, add the layer again. If it hasn't
-      // (because of not being initially selected) use the addTo method on the layer and add to the map using the MapLayerItem
-      if (layerItem.isAddedToMainMap()) {
-        layerItem.addItemLeafletLayerToMainMap(this.mainMap);
-        if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
-          this.mapLayerManager.toggleOffOtherLayersOnMainMap(geoLayerId, this.mainMap, geoLayerViewGroupId);
-        }
-      } else {
-        layerItem.initItemLeafletLayerToMainMap(this.mainMap);
-        if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
-          this.mapLayerManager.toggleOffOtherLayersOnMainMap(geoLayerId, this.mainMap, geoLayerViewGroupId);
-        }
-      }
-      // When the slider is checked again, re-sort the layers so layer order is preserved.
-      this.mapLayerManager.setLayerOrder();
-    }
-  }
+  
 }

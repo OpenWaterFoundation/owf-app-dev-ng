@@ -2,6 +2,20 @@
 (set -o igncr) 2>/dev/null && set -o igncr; # this comment is required
 # The above line ensures that the script can be run on Cygwin/Linux even with Windows CRNL.
 
+# This script performs the following actions depending on the option provided when
+# run:
+#
+# 1. (default) Builds the Common library production files for testing, and uses
+# npm pack to create the gzipped tarball file for publishing.
+# 2. Builds the angulardev application in a way that the Map Component can be embedded
+# in a non-Angular created website.
+# 3. Prints a help message that describes the above two script actions.
+#
+
+BCyan='\033[1;36m'        # Cyan
+Green='\033[0;32m'        # Green
+Reset='\033[0m'           # Text Reset
+
 printUsage() {
   echo ""
   echo "  Usage: ${scriptName} [options ...]"
@@ -12,12 +26,11 @@ printUsage() {
   echo ""
   echo "  Command parameter options:"
   echo ""
-  echo "  -R                 Overrides the default production build on the Common"
-  echo "                     library, and instead builds the angulardev application."
-  echo "                     Replaces the hash value in each main bundle file in"
-  echo "                     its dist/ folder to the version number found in the"
-  echo "                     application's app.component.ts file."
-  echo "  -h                 Prints this usage message and exits."
+  echo "  -R          Overrides the default production build on the Common library,"
+  echo "              and instead builds the angulardev application with the Map Component"
+  echo "              as the entry component. All dist/angulardev/ files can then be"
+  echo "              used to embed the solo Map Component in another website."
+  echo "  -h          Prints this usage message and exits."
   echo ""
 }
 
@@ -71,36 +84,40 @@ while getopts ":hR" opt; do
 done
 
 if [ ${renameDistFiles} = "true" ]; then
-  # Build the AppDev application files.
-  echo "  Creating the AppDev application default production build files."
-  echo "  Running the build as 'ng build --configuration production"
+  # Build the AppDev application files with the Map Component as entryComponent.
+  echo ""
+  echo "))> Creating the AppDev application default production build files."
+  echo "))> Running the build as 'ng build --configuration production --outputHashing=all'"
+  echo ""
   (cd "${mainFolder}" && ng build --configuration production)
 
-  echo "  Renaming application build files to replace hash value with ${version}."
+  echo "))> Navigating to ${angularDevDistFolder}."
   cd "${angularDevDistFolder}" || exit
   # Replace the hash value with version in the main bundle files. The destination
   # file needs to be a string to insert the version variable.
-  mv main-es5.* "main-es5.${version}.js"
-  mv main-es2015.* "main-es2015.${version}.js"
-  mv polyfills-es5.* "polyfills-es5.${version}.js"
-  mv polyfills-es2015.* "polyfills-es2015.${version}.js"
-  mv runtime-es5.* "runtime-es5.${version}.js"
-  mv runtime-es2015.* "runtime-es2015.${version}.js"
-  mv scripts.* "scripts.${version}.js"
+  # echo "))> Renaming application build files to include '${version}' and removing index.html."
+  echo -e "))> Concatenating main bundle files into the ${BCyan}map-component.${version}.js${Reset} file."
+
+  cat scripts.* main.* polyfills.* runtime.* > "map-component.${version}.js"
+  rm scripts.* main.* polyfills.* runtime.* index.html favicon.ico
   mv styles.* "styles.${version}.css"
 
-  echo "  Application files successfully renamed."
-  echo ""
+  echo "))> Done."
+  echo -e "))> ${Green}Successfully built angulardev app with the Map Component as entryComponent.${Reset}"
 
 else
   # Build the Common Library files.
-  echo "  Creating Common library default production build files."
+  echo ""
+  echo "))> Creating Common library default production build files."
   echo ""
   # Change directory to the main folder and build the common library in a subshell.
   (cd "${mainFolder}" && ng build @OpenWaterFoundation/common --configuration production)
 
-  echo "  Creating the npm zipped tarball for the Common library."
+  echo "))> Creating the npm zipped tarball for the Common library."
   echo ""
   # Change directory to the common dist folder in another subshell.
   (cd "${commonDistFolder}" && npm pack)
+  echo ""
+  echo "))> Done."
+  echo -e "))> ${Green}Successfully built, gzipped and tarballed the @OpenWaterFoundation/common production files.${Reset}"
 fi

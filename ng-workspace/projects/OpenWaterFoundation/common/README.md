@@ -140,7 +140,8 @@ See the Common library [Changelog](CHANGELOG.md).
 
 ## Running Unit Tests
 
-Run `ng test common` to execute the unit tests via [Karma](https://karma-runner.github.io).
+From anywhere in the Angular project, run `ng test @OpenWaterFoundation/common`
+to execute the unit tests via [Karma](https://karma-runner.github.io).
 
 ## Code Scaffolding
 

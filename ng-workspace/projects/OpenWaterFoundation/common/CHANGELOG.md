@@ -10,6 +10,26 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.1.0 (2022-03-11) #
+
+### Bug Fixes ###
+
+* Fixed InfoMapper Issue #402: Long legend strings will now wrap in a way so that
+another feature strings won't cover each other.
+
+### Refactoring ###
+
+* Broke off large chunks of TypeScript, HTML & CSS code from the original Map Component
+into two child components for readability and maintainability. More components
+can easily be made in the future. The new components are:
+  * Legend Background Group Component
+  * Legend Layer Group Component
+* In the migration of the aforementioned code, vast amounts of unused CSS code
+from old classes were removed.
+* Since the InfoMapper version was already at 3.0.0 and is mostly void of any
+code that isn't setting up menus and configuration data, the Common library &
+InfoMapper will contain the same version number moving forward.
+
 # 0.7.3 #
 
 ### Bug Fixes ###

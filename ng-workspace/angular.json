@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false
+  },
   "version": 1, 
   "newProjectRoot": "projects",
   "projects": {
@@ -43,8 +46,8 @@
               "projects/angulardev/src/styles.css"
             ],
             "scripts": [
+              "node_modules/jquery/dist/jquery.js",
               "node_modules/leaflet/dist/leaflet.js",
-              "node_modules/jquery/dist/jquery.min.js",
               "node_modules/select2/dist/js/select2.min.js",
               "node_modules/leaflet-svg-shape-markers/dist/leaflet-svg-shape-markers.min.js",
               "node_modules/leaflet-sidebar-v2/js/leaflet-sidebar.js",

@@ -1,0 +1,39 @@
+<mat-accordion>
+  <mat-expansion-panel [expanded]="owfCommonService.getBackgroundExpanded()" hideToggle>
+
+    <mat-expansion-panel-header class="expansion-header"
+      attr.data-cy="{{geoLayerViewGroup.geoLayerViewGroupId}}-background-expansion-panel-header">
+      <mat-panel-title class="expansion-header-title">
+        {{geoLayerViewGroup.name}}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div *ngFor="let backgroundGeoLayerView of geoLayerViewGroup.geoLayerViews">
+
+      <!-- If the geoLayerView contains the separatorBefore property, insert this
+        divider to separate the background map(s) above from the one(s) below -->
+      <div *ngIf="backgroundGeoLayerView.properties.separatorBefore === 'true'"
+            class="background-geoLayerView-divider">
+      </div>
+      
+      <div class="background-layer-control-container">
+          
+        <div class="radio-container">
+          <input type="radio"
+                  id="{{backgroundGeoLayerView.name}}-radio"
+                  name="background-layer"
+                  value="{{backgroundGeoLayerView.name}}"
+                  (click)="selectBackgroundLayer(backgroundGeoLayerView.name)"/>
+        </div>
+          
+        <div class="label-container">
+          <label><b>{{backgroundGeoLayerView.name}}</b></label>
+          <label>{{backgroundGeoLayerView.description}}</label>
+        </div>
+          
+      </div>
+
+    </div>
+
+  </mat-expansion-panel>
+</mat-accordion>

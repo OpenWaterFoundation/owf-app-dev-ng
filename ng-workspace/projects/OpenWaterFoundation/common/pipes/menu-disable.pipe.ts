@@ -36,7 +36,7 @@ export class MenuDisablePipe implements PipeTransform {
             // `mutations` is an array of mutations that occurred
             // `me` is the MutationObserver instance
             let description = document.getElementById('description-' + geoLayerId);
-            let symbols = document.getElementById('symbols-' + geoLayerId);
+            let symbols = document.getElementById('all-symbols-' + geoLayerId);
   
             if (description && symbols) {
               handleCanvas(description, symbols);

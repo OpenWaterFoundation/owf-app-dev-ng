@@ -76,7 +76,7 @@ export class MapLayerItem {
     let description = jQuery("#description-" + this.layerItemGeoLayerId);
     description.css('visibility', 'visible');
     description.css('height', '100%');
-    let symbols = jQuery("#symbols-" + this.layerItemGeoLayerId);
+    let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
     symbols.css('visibility', 'visible');
     symbols.css('height', '100%');
   }
@@ -194,7 +194,7 @@ export class MapLayerItem {
     let description = jQuery("#description-" + this.layerItemGeoLayerId);
     description.css('visibility', 'visible');
     description.css('height', '100%');
-    let symbols = jQuery("#symbols-" + this.layerItemGeoLayerId);
+    let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
     symbols.css('visibility', 'visible');
     symbols.css('height', '100%');
   }
@@ -271,7 +271,7 @@ export class MapLayerItem {
     let description = jQuery("#description-" + this.layerItemGeoLayerId);
     description.css('visibility', 'hidden');
     description.css('height', 0);
-    let symbols = jQuery("#symbols-" + this.layerItemGeoLayerId);
+    let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
     symbols.css('visibility', 'hidden');
     symbols.css('height', 0);
   }

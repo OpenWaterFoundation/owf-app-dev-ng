@@ -1,5 +1,4 @@
 <div id="map-container">
-
   <!-- Optionally define the sidebar content via HTML markup -->
   <div id="sidebar" class="leaflet-sidebar collapsed">
 
@@ -9,12 +8,8 @@
       <ul role="tablist">
         <!-- Main menu button (Hamburger Icon) -->
         <li>
-          <a href="#home"
-              role="tab"
-              matTooltip="Main tools"
-              matTooltipShowDelay="750"
-              data-cy="sidebar-home">
-                <i class="fa fa-bars active"></i>
+          <a href="#home" role="tab" matTooltip="Main tools" matTooltipShowDelay="750" data-cy="sidebar-home">
+            <i class="fa fa-bars active"></i>
           </a>
         </li>
         <!-- Autopan button (4 directional arrows) -->
@@ -28,16 +23,17 @@
       example of another anchor that could be added -->
       <ul role="tablist">
         <li>
-          <a href="#information"
-              role="tab"
-              matTooltip="Help / About"
-              matTooltipShowDelay="750"
-              matTooltipPosition="right"
-              data-cy="sidebar-information">
+          <a href="#information" role="tab" matTooltip="Help / About" matTooltipShowDelay="750"
+            matTooltipPosition="right" data-cy="sidebar-information">
             <i class="fa fa-info-circle"></i>
           </a>
         </li>
-        <!-- <li><a matTooltip="External link to project on GitHub" href="https://github.com/nickpeihl/leaflet-sidebar-v2"><i class="fa fa-github"></i></a></li> -->
+        <!-- <li>
+          <a matTooltip="External link to project on GitHub"
+                href="https://github.com/nickpeihl/leaflet-sidebar-v2">
+            <i class="fa fa-github"></i>
+          </a>
+        </li> -->
       </ul>
 
     </div>
@@ -51,21 +47,18 @@
           <div *ngIf="owfCommonService.getMapConfig()">
             <div *ngIf="owfCommonService.getMapConfig().geoMaps[0].properties.docPath" class="geoMap-doc-button">
               <button class="btn geoMap-info-circle"
-                      (click)="openDocDialog(owfCommonService.getMapConfig().geoMaps[0].properties.docPath, owfCommonService.getMapConfig().geoMaps[0].geoMapId, owfCommonService.getMapConfig().geoMaps[0].name)"
-                      matTooltip="Click to view map documentation"
-                      [matTooltipShowDelay]="750">
+                (click)="openDocDialog(owfCommonService.getMapConfig().geoMaps[0].properties.docPath, owfCommonService.getMapConfig().geoMaps[0].geoMapId, owfCommonService.getMapConfig().geoMaps[0].name)"
+                matTooltip="Click to view map documentation" [matTooltipShowDelay]="750">
                 <i class="fa fa-info-circle fa-lg"></i>
               </button>
             </div>
           </div>
-          
-          <span matTooltip="Close sidebar"
-                [matTooltipShowDelay]="750"
-                class="leaflet-sidebar-close"
-                data-cy="sidebar-close">
-                  <i class="fa fa-caret-left"></i>
+
+          <span matTooltip="Close sidebar" [matTooltipShowDelay]="750" class="leaflet-sidebar-close"
+            data-cy="sidebar-close">
+            <i class="fa fa-caret-left"></i>
           </span>
-          
+
         </h1>
 
         <br>
@@ -75,487 +68,29 @@
           <div *ngIf="owfCommonService.getMapConfig()">
             <div *ngFor="let geoLayerViewGroup of owfCommonService.getMapConfig().geoMaps[0].geoLayerViewGroups">
 
-              <div *ngIf="geoLayerViewGroup.properties.isBackground == undefined || geoLayerViewGroup.properties.isBackground == 'false'; else background">
-                
-                <div class="card">
+              <div
+                *ngIf="geoLayerViewGroup.properties.isBackground === undefined || geoLayerViewGroup.properties.isBackground === 'false'; else background">
 
-                  <div *ngIf="geoLayerViewGroup.properties.docPath">
-
-                    <!-- Test code for implementing an Angular Material expansion panel. -->
-                    <!-- <mat-accordion>
-                      <mat-expansion-panel [expanded]="true" hideToggle>
-                        <mat-expansion-panel-header>
-                          <mat-panel-title>
-                            Line Maps
-                          </mat-panel-title>
-                          <mat-panel-description>
-                            <div class="geoLayerViewGroup-doc-button">
-                        
-                              <button mat-icon-button
-                                      [matMenuTriggerFor]="geoLayerViewGroupMenu"
-                                      matTooltip="Click to view layer group menu options"
-                                      [matTooltipShowDelay]="750"
-                                      matTooltipPosition="above"
-                                      data-cy="geoLayerViewGroupKebab">
-                                <mat-icon class="white-dots">more_vert</mat-icon>
-                              </button>
-                              <mat-menu #geoLayerViewGroupMenu="matMenu">
-                                <button mat-menu-item
-                                        class="menu-button"
-                                        (click)="openDocDialog(geoLayerViewGroup.properties.docPath, geoLayerViewGroup.geoLayerViewGroupId, geoLayerViewGroup.name)"
-                                        [disabled]="geoLayerViewGroup.properties.docPath | menuDisable"
-                                        matTooltip="Click to view layer group documentation"
-                                        [matTooltipShowDelay]="750"
-                                        matTooltipPosition="after"
-                                        data-cy="geoLayerViewGroupInformation">
-                                  <i class="fa fa-info-circle fa-2x info-circle"></i>
-                                Information
-                                </button>
-                              </mat-menu>
-      
-                            </div>
-                          </mat-panel-description>
-                        </mat-expansion-panel-header>
-                        <p>This is the primary content of the panel.</p>
-                      </mat-expansion-panel>
-                    </mat-accordion> -->
-
-                    <div class="btn-group geoLayerViewGroupMain">
-
-                      <button class="btn geoLayerViewGroupNameDoc"
-                              data-toggle="collapse"
-                              matTooltip="Click to expand/collapse layer controls"
-                              matTooltipPosition="above"
-                              [matTooltipShowDelay]="750"
-                              [attr.aria-controls]='"collapse-" + geoLayerViewGroup.geoLayerViewGroupId'
-                              [attr.data-target]='"#collapse-" + geoLayerViewGroup.geoLayerViewGroupId'
-                              aria-expanded="true"
-                              data-cy="geoLayerViewGroupNameDoc">
-                        {{geoLayerViewGroup.name}}
-                      </button>
-
-                      <div class="geoLayerViewGroup-doc-button">
-                        
-                        <button mat-icon-button
-                                [matMenuTriggerFor]="geoLayerViewGroupMenu"
-                                matTooltip="Click to view layer group menu options"
-                                [matTooltipShowDelay]="750"
-                                matTooltipPosition="above"
-                                data-cy="geoLayerViewGroupKebab">
-                          <mat-icon class="white-dots">more_vert</mat-icon>
-                        </button>
-                        <mat-menu #geoLayerViewGroupMenu="matMenu">
-                          <button mat-menu-item
-                                  class="menu-button"
-                                  (click)="openDocDialog(geoLayerViewGroup.properties.docPath, geoLayerViewGroup.geoLayerViewGroupId, geoLayerViewGroup.name)"
-                                  [disabled]="geoLayerViewGroup.properties.docPath | menuDisable"
-                                  matTooltip="Click to view layer group documentation"
-                                  [matTooltipShowDelay]="750"
-                                  matTooltipPosition="after"
-                                  data-cy="geoLayerViewGroupInformation">
-                            <i class="fa fa-info-circle fa-2x info-circle"></i>
-                          Information
-                          </button>
-                        </mat-menu>
-
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div *ngIf="!geoLayerViewGroup.properties.docPath">
-                    <div class="geoLayerViewGroupMain">
-                      <button class="btn geoLayerViewGroupName"
-                              data-toggle="collapse"
-                              [attr.aria-controls]='"collapse-" + geoLayerViewGroup.geoLayerViewGroupId'
-                              [attr.data-target]='"#collapse-" + geoLayerViewGroup.geoLayerViewGroupId'
-                              matTooltip="Click to expand/collapse layer controls"
-                              [matTooltipShowDelay]="750"
-                              aria-expanded="true"
-                              data-cy="geoLayerViewGroupName">
-                        {{geoLayerViewGroup.name}}
-                      </button>
-  
-                    </div>
-                  </div>
-
-                  <div [attr.id]='"collapse-" + geoLayerViewGroup.geoLayerViewGroupId' class="collapse show" aria-labelledby="headingOne">
-
-                    <div class="card-body">
-
-                      <!-- Here go through each geoLayerView and just show them. No need for trying to dynamically create
-                      each one as a component. Just show each one of them here -->
-                      <div *ngFor="let geoLayerView of geoLayerViewGroup.geoLayerViews; let numOfViews = index">
-
-                        <div class="layer-control">
-                          <!-- matTooltip="Time since last refresh: {{lastRefresh}}" -->
-                          <!-- matTooltip="Seconds since last refresh: {{elapsedSeconds}}" -->
-                          <div *ngIf="geoLayerView.properties.refreshInterval !== ''" class="layer-title"
-                                matTooltip="Time since last refresh: {{lastRefresh[geoLayerView.geoLayerId]}}"
-                                matTooltipPosition="above">
-                            {{geoLayerView.name}}
-                          </div>
-
-                          <div *ngIf="geoLayerView.properties.refreshInterval === ''" class="layer-title">
-                            {{geoLayerView.name}}
-                          </div>
-
-                          <div class="layer-viz-icon">
-                            
-                            <button mat-icon-button
-                                    class="layer-viz-button"
-                                    [disabled]="true"
-                                    [hidden]="geoLayerView.eventHandlers | menuDisable: 'vizCheck'">
-                              <!-- For displaying a graph looking icon in the layer control -->
-                              <mat-icon matTooltip="Click features on this layer for data visualization"
-                                        [matTooltipShowDelay]="750">
-                                timeline
-                              </mat-icon>
-                              <!-- For displaying a hand pressing a button in the layer control -->
-                              <!-- <mat-icon matTooltip="Click on features for this layer for data visualization"
-                                        [matTooltipShowDelay]="750">
-                                touch_app
-                              </mat-icon> -->
-                            </button>
-                          </div>
-
-                          <div class="layer-kebab-menu">
-                            <button mat-icon-button
-                                    [matMenuTriggerFor]="geoLayerMenu"
-                                    matTooltip="Click to view layer menu options"
-                                    [matTooltipShowDelay]="750"
-                                    attr.data-cy="{{geoLayerView.geoLayerId}}-kebab">
-                              <mat-icon class="green-dots">more_vert</mat-icon>
-                            </button>
-                            <mat-menu #geoLayerMenu="matMenu">
-                              <button mat-menu-item
-                                      class="menu-button"
-                                      (click)="openDocDialog(geoLayerView.properties.docPath, geoLayerView.geoLayerViewId, geoLayerView.name)"
-                                      [disabled]="geoLayerView.properties.docPath | menuDisable"
-                                      attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-information">
-                                <i class="fa fa-info-circle fa-2x info-circle"></i>
-                              Information
-                              </button>
-                              <!-- TODO: jpkeahey 2020.10.30 - Uncomment out to try disabling the data table button when
-                              a layer is toggled off on the Leaflet map -->
-                              <!-- [disabled]="geoLayerView.geoLayerId | menuDisable: 'dataTableCheck': 'true'" -->
-                              <button mat-menu-item
-                                      class="menu-button"
-                                      (click)="openDataTableDialog(geoLayerView)"
-                                      [hidden]="allFeatures[geoLayerView.geoLayerId] | menuDisable"
-                                      attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-data-table">
-                                <i class="fa fa-table fa-2x"></i>
-                                Data Table & Search
-                              </button>
-
-                              <button mat-menu-item
-                                      class="menu-button"
-                                      (click)="openImageGalleryDialogFromKebab(geoLayerView.geoLayerId, geoLayerView)"
-                                      [hidden]="geoLayerView.properties.imageGalleryEventActionId | menuDisable"
-                                      attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-image-gallery">
-                                <i class="fa fa-picture-o fa-2x"></i>
-                              Image Gallery
-                              </button>
-
-                              <button mat-menu-item
-                                      class="menu-button"
-                                      (click)="openPropertyDialog(geoLayerView.geoLayerId, geoLayerView.name)"
-                                      [hidden]="geoLayerView.properties.imageBounds | menuDisable : 'imageCheck'"
-                                      attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-properties">
-                                <i class="fa fa-list fa-2x"></i>
-                                Properties
-                              </button>
-                              <!-- [disabled]="mainMap | menuDisable : 'selectedCheck' : geoLayerView.geoLayerId" -->
-                              <!-- [disabled]="checkIfHighlighted(geoLayerView.geoLayerId)" -->
-                              <button mat-menu-item
-                                      class="menu-button"
-                                      (click)="clearSelections(geoLayerView.geoLayerId)"
-                                      [hidden]="geoLayerView.properties.imageBounds | menuDisable : 'imageCheck'"
-                                      matTooltip="Clear highlighted features in the layer"
-                                      matTooltipPosition="after"
-                                      matTooltipShowDelay="750"
-                                      attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-clear-selection">
-                                <i class="fa fa-dot-circle-o fa-2x"></i>
-                                Clear Selection
-                              </button>
-                              
-                              <!-- <button mat-menu-item
-                                      class="menu-button"
-                                      (click)="findFromAddress(geoLayerView.geoLayerId)"
-                                      matTooltip="Zoom to coordinates of an address"
-                                      matTooltipPosition="after"
-                                      matTooltipShowDelay="750">
-                                <i class="fa fa-building fa-2x"></i>
-                                Find From Address
-                              </button> -->
-                            </mat-menu>
-
-                          </div>
-
-                          <div class="layer-toggle">
-                            <!-- <mat-slide-toggle id="{{geoLayerView.geoLayerId}}-slider"
-                                              [(ngModel)]="isChecked"
-                                              (change)="toggleLayer_test($event, geoLayerView.geoLayerId)">
-                            </mat-slide-toggle> -->
-
-                            <label matTooltip="Show/hide this layer on the map"
-                                    matTooltipShowDelay="750">
-                              <input id="{{geoLayerView.geoLayerId}}-slider"
-                                      type="checkbox"
-                                      [attr.checked]="geoLayerView.properties.selectedInitial | menuDisable: 'toggleCheck' : geoLayerView.geoLayerId"
-                                      (click)="toggleLayer(geoLayerView.geoLayerId, geoLayerViewGroup.geoLayerViewGroupId)">
-                              <span class="slider round"></span>
-                            </label>
-                          </div>
-
-                          <!-- This div can become an ngIf for a layer refresh. -->
-                          <!-- <div>
-                            Layer last refreshed at xx:xx:xx
-                          </div> -->
-  
-                          <div class="layer-description" id="description-{{geoLayerView.geoLayerId}}">
-                            {{geoLayerView.description}}
-                          </div>
-                        </div>
-                                              
-                        <!-- Check to see if the geoLayerSymbol is missing to display a default symbol in the legend. -->
-                        <div *ngIf="!geoLayerView.geoLayerSymbol; else symbolExists"
-                              class="symbols"
-                              id="symbols-{{geoLayerView.geoLayerId}}">
-                          <svg class="layer-icon" width="18" height="18">
-                            <rect width="18" height="18" [ngStyle]="styleOuterShape(geoLayerView, 'sm')"/>
-                          </svg>
-                        </div>
-                        <ng-template #symbolExists>
-                        
-                          <div class="symbols" id="symbols-{{geoLayerView.geoLayerId}}">
-
-                            <!-- SINGLE SYMBOL -->
-                            <div *ngIf="geoLayerView.geoLayerSymbol.classificationType.toUpperCase() === 'SINGLESYMBOL'" class="polygon">
-                              <!-- LINE -->
-                              <div *ngIf="this.getGeometryType(geoLayerView.geoLayerId).toUpperCase().includes('LINESTRING')">
-                                <svg class="layer-icon" height="10" width="25">
-                                  <line x1="5" y1="5" x2="25" y2="5" [ngStyle]="styleOuterShape(geoLayerView.geoLayerSymbol, 'ss')" style="stroke-width:2"/>
-                                </svg>
-                              </div>
-                              <!-- USER-PROVIDED DEFAULT MARKER -->
-                              <div  *ngIf="geoLayerView.geoLayerSymbol.properties.symbolImage">
-                                <img class="layer-icon"
-                                      [attr.src]="this.owfCommonService.buildPath('symbolImagePath', [geoLayerView.geoLayerSymbol.properties.symbolImage])">
-                              </div>
-                              <!-- BUILT-IN DEFAULT MARKER -->
-                              <div *ngIf="geoLayerView.geoLayerSymbol.properties.builtinSymbolImage">
-                                <img  class="layer-icon"
-                                      [attr.src]="this.owfCommonService.buildPath('builtinSymbolImagePath', [geoLayerView.geoLayerSymbol.properties.builtinSymbolImage])">
-                              </div>
-                              <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolShape; else defaultLegend">
-                                <!-- SQUARE -->
-                                <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolShape.toUpperCase() == 'SQUARE'">
-                                  <svg class="layer-icon" width="18" height="18">
-                                    <rect width="18" height="18" [ngStyle]="styleOuterShape(geoLayerView.geoLayerSymbol, 'ss')"/>
-                                  </svg>
-                                </div>
-                                <!-- TRIANGLE & TRIANGLE-UP -->
-                                <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolShape.toUpperCase() == 'TRIANGLE' ||
-                                geoLayerView.geoLayerSymbol.properties.symbolShape.toUpperCase() == 'TRIANGLE-UP'">
-                                  <svg class="layer-icon" height="18" width="18">
-                                    <polygon points="9,1 1,17 17,17" [ngStyle]="styleOuterShape(geoLayerView.geoLayerSymbol, 'ss')"/>
-                                  </svg>
-                                </div>
-                                <!-- TRIANGLE-DOWN -->
-                                <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolShape.toUpperCase() == 'TRIANGLE-DOWN'">
-                                  <svg class="layer-icon" height="18" width="18">
-                                    <polygon points="0,0 18,0, 9,18" [ngStyle]="styleOuterShape(geoLayerView.geoLayerSymbol, 'ss')"/>
-                                  </svg>
-                                </div>
-                                <!-- DIAMOND -->
-                                <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolShape.toUpperCase() == 'DIAMOND'">
-                                  <svg class="layer-icon" height="18" width="18">
-                                    <polygon points="0,9 9,18 18,9 9,0" [ngStyle]="styleOuterShape(geoLayerView.geoLayerSymbol, 'ss')"/>
-                                  </svg>
-                                </div>
-                                <!-- CIRCLE -->
-                                <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolShape.toUpperCase() == 'CIRCLE'">
-                                  <svg class="layer-icon" height="20" width="20">
-                                    <circle cx="10" cy="10" r="8" [ngStyle]="styleOuterShape(geoLayerView.geoLayerSymbol, 'ss')"/>
-                                  </svg>
-                                </div>
-                                <!-- X -->
-                                <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolShape.toUpperCase() == 'X'">
-                                  <svg class="layer-icon" height="18" width="18">
-                                    <line x1="0" y1="0" x2="18" y2="18"
-                                          [ngStyle]="styleOuterShape(geoLayerView.geoLayerSymbol, 'ss')"/>
-                                    <line x1="18" y1="0" x2="0" y2="18"
-                                          [ngStyle]="styleOuterShape(geoLayerView.geoLayerSymbol, 'ss')"/>
-                                  </svg>
-                                </div>
-                              </div>
-                              <ng-template #defaultLegend>
-                                <!-- Image -->
-                                <div *ngIf="geoLayerView.geoLayerSymbol.properties.legendImagePath">
-                                  <img [src]="geoLayerView.geoLayerSymbol.properties.legendImagePath">
-                                </div>
-                                <!-- Examine the geoLayerSymbol properties to determine if a default legend
-                                symbol needs to be shown. -->
-                                <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolImage === undefined &&
-                                geoLayerView.geoLayerSymbol.properties.builtinSymbolImage === undefined &&
-                                geoLayerView.geoLayerSymbol.properties.legendImagePath === undefined &&
-                                !this.getGeometryType(geoLayerView.geoLayerId).toUpperCase().includes('LINESTRING')">
-                                  <svg class="layer-icon" width="18" height="18">
-                                    <rect width="18" height="18" [ngStyle]="styleOuterShape(geoLayerView.geoLayerSymbol, 'ss')"/>
-                                  </svg>
-                                </div>
-                              </ng-template>
-                            </div>
-
-                            <!-- CATEGORIZED -->
-                            <div *ngIf="geoLayerView.geoLayerSymbol.classificationType.toUpperCase() ===  'CATEGORIZED'" class="polygon">
-                              <div *ngIf="categorizedLayerColors[geoLayerView.geoLayerId]">
-                                <div *ngFor="let location of categorizedLayerColors[geoLayerView.geoLayerId]; let i = index">
-                                  <div *ngIf="(i % 2) === 0" class="polygon-display-div">
-                                    <!-- SQUARE will be default for polygons -->
-                                    <svg class="layer-icon" width="18" height="18">
-                                      <rect width="18" height="18"
-                                            [ngStyle]="styleOuterShape(categorizedLayerColors[geoLayerView.geoLayerId][i + 1], 'c')"/>
-                                    </svg>
-                                    {{location}}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <!-- GRADUATED -->
-                            <div *ngIf="geoLayerView.geoLayerSymbol.classificationType.toUpperCase() === 'GRADUATED'" class="polygon">
-                              <div *ngIf="graduatedLayerColors[geoLayerView.geoLayerId]">
-                                <div *ngFor="let graduatedSymbolLine of graduatedLayerColors[geoLayerView.geoLayerId];" class="raster-display-div">
-                                  <!-- SQUARE -->
-                                  <div *ngIf="!geoLayerView.geoLayerSymbol.properties.symbolShape || geoLayerView.geoLayerSymbol.properties.symbolShape.toUpperCase() == 'SQUARE'">
-                                  <svg class='graduated-symbol' width="18" height="18">
-                                    <rect width="18" height="18" [ngStyle]="styleInnerShape(graduatedSymbolLine, 'g')" />
-                                    <rect width="18" height="18" [ngStyle]="styleOuterShape(graduatedSymbolLine, 'g')" />
-                                  </svg>
-                                  <div *ngIf="!graduatedSymbolLine.label; else displayLabel" class="grad-label">
-                                    {{graduatedSymbolLine | menuDisable: 'IMGradLabel' : geoLayerView.geoLayerId}}
-                                  </div>
-                                  <ng-template #displayLabel>
-                                    {{graduatedSymbolLine.label}}
-                                  </ng-template>
-                                  </div>
-                                  <!-- TRIANGLE -->
-                                  <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolShape && geoLayerView.geoLayerSymbol.properties.symbolShape.toUpperCase() == 'TRIANGLE'">
-                                    <svg class='graduated-symbol' height="18" width="18">
-                                      <polygon points="9,1 1,17 17,17" [ngStyle]="styleOuterShape(graduatedSymbolLine, 'g')" />
-                                    </svg>
-                                    <div *ngIf="!graduatedSymbolLine.label; else displayLabel" class="grad-label">
-                                      {{graduatedSymbolLine | menuDisable: 'IMGradLabel' : geoLayerView.geoLayerId}}                                    </div>
-                                    <ng-template #displayLabel>
-                                      {{graduatedSymbolLine.label}}
-                                    </ng-template>
-                                  </div>
-                                  <!-- CIRCLE -->
-                                  <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolShape && geoLayerView.geoLayerSymbol.properties.symbolShape.toUpperCase() == 'CIRCLE'">
-                                    <svg class='graduated-symbol' height="20" width="20">
-                                      <circle cx="10" cy="10" r="8" [ngStyle]="styleOuterShape(graduatedSymbolLine, 'g')" />
-                                    </svg>
-                                    <div *ngIf="!graduatedSymbolLine.label; else displayLabel" class="grad-label">
-                                      {{graduatedSymbolLine | menuDisable: 'IMGradLabel' : geoLayerView.geoLayerId}}
-                                    </div>
-                                    <ng-template #displayLabel>
-                                      {{graduatedSymbolLine.label}}
-                                    </ng-template>
-                                  </div> 
-                                </div>
-                              </div>
-                            </div>
-
-                            <!-- <div>
-                              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                            </div> -->
-                            <div *ngIf="isServerUnavailable(geoLayerView.geoLayerId)" class="status">
-                              <mat-icon matTooltip="Data service unavailable. Refresh at a later time"
-                                        [matTooltipShowDelay]="250"
-                                        data-cy="serverUnavailable">warning</mat-icon>
-                            </div>
-                            <div *ngIf="isBadPath(geoLayerView.geoLayerId)" class="status">
-                              <mat-icon [matTooltip]="'Bad Resource Path: ' + getBadPath(geoLayerView.geoLayerId)"
-                                        [matTooltipShowDelay]="250"
-                                        data-cy="badPath">warning</mat-icon>
-                            </div>
-
-                          </div>
-                        </ng-template>
-                        <!-- Check if the layer is the only one, or the last one. If it isn't draw the divider so there can be
-                        something separating two layers -->
-                        <div *ngIf="numOfViews !== geoLayerViewGroup.geoLayerViews.length - 1">
-                          <hr class="divider">
-                        </div>
-
-                      </div>
-
-                    </div>
-                  </div>
+                <div>
+                  <legend-layer-group [geoLayerViewGroup]="geoLayerViewGroup"
+                                      [allFeatures]="allFeatures"
+                                      [categorizedLayerColors]="categorizedLayerColors"
+                                      [eventActions]="eventActions"
+                                      [graduatedLayerColors]="graduatedLayerColors"
+                                      [lastRefresh]="lastRefresh"
+                                      [layerClassificationInfo]="layerClassificationInfo"
+                                      [mainMap]="mainMap">
+                  </legend-layer-group>
                 </div>
 
               </div>
 
               <ng-template #background>
-                
-                <div class="card">
-                  <div class="card-header" id="background-layers">
-                    <h5 class="mb-0">
-                      <button class="btn backgroundViewGroup"
-                              data-target="#collapse-background"
-                              data-toggle="collapse"
-                              matTooltip="Click to expand/collapse background layer controls"
-                              matTooltipShowDelay="750"
-                              matTooltipPosition="above"
-                              aria-expanded="true"
-                              aria-controls="collapseOne"
-                              data-cy="backgroundViewGroup">
-                        {{geoLayerViewGroup.name}}
-                      </button>
-                    </h5>
-                  </div>
-
-                  <div id="collapse-background" class="collapse show"
-                        aria-labelledby="headingOne"
-                        data-parent="#background-layers">
-                    <div class="card-body">
-                      <div *ngFor="let backgroundGroup of backgroundMapGroups">
-                        <div *ngFor="let backgroundGeoLayerView of backgroundGroup.geoLayerViews">
-
-                          <!-- If the geoLayerView contains the separatorBefore property, insert this divider
-                          to separate the background map(s) above from the one(s) below -->
-                          <div *ngIf="backgroundGeoLayerView.properties.separatorBefore == 'true'" class="dropdown-divider"></div>
-                          <!-- This div needs to exist as a container for the table tags so as to keep them
-                            separate from each other. This also keeps them from having an all gray background color
-                            if the above div is displayed -->
-                          <div>
-                            <tr>
-                              <input type="radio"
-                                      id="{{backgroundGeoLayerView.name}}-radio"
-                                      name="background-layer"
-                                      value="{{backgroundGeoLayerView.name}}"
-                                      (click)="selectBackgroundLayer(backgroundGeoLayerView.name)">
-                              <td class="name">
-                                <b>{{backgroundGeoLayerView.name}}</b>
-                                <div class="description">{{backgroundGeoLayerView.description}}</div>
-                              </td>
-                            </tr>
-                          </div>
-
-                        </div>
-                      </div>
-                      
-                      <!-- <ng-template testing></ng-template> -->
-                    </div>
-                  </div>
-                </div>
-                <!-- Test code for using an Angular library -->
-                <!-- <lib-ng-test-lib item="/test/path.txt"></lib-ng-test-lib> -->
-                <!-- <lib-ng-test-lib [item]="pathVariable"></lib-ng-test-lib> -->
+                <legend-background-group [geoLayerViewGroup]="geoLayerViewGroup"
+                                          (callSelectBackgroundLayer)="selectBackgroundLayer($event)">
+                </legend-background-group>
               </ng-template>
-              
+
             </div>
           </div>
 
@@ -580,7 +115,7 @@
         </p>
       </div> -->
 
-      <!-- The Help / About side bar  -->
+      <!-- The Help / About sidebar. Can turn into its own separate component.  -->
       <div class="leaflet-sidebar-pane" id="information">
         <h1 class="leaflet-sidebar-header">
           Help / About
@@ -591,24 +126,24 @@
           <p>
             <b>Application {{appVersion}}</b>
           </p>
-        
+
           <p>
             <b>InfoMapper {{(projectVersion | async)?.version}}</b><br>
             Developed by the Open Water Foundation<br>
             The InfoMapper displays spatial data and related information.<br><br>
-        
+
             Copyright 2018-2022 Open Water Foundation<br><br>
-        
-            License GPLv3+:  GNU GPL version 3 or later<br><br>
-        
+
+            License GPLv3+: GNU GPL version 3 or later<br><br>
+
             There is ABSOLUTELY NO WARRANTY; for details see the
             'Disclaimer of Warranty' section of the GPLv3 license in the LICENSE file.
             This is free software: you are free to change and redistribute it
             under the conditions of the GPLv3 license in the LICENSE file.
           </p>
-        
+
         </div>
-        <!-- <ng-template side-panel-info-host></ng-template> -->
+
       </div>
 
     </div>

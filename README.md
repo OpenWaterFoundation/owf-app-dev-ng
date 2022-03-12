@@ -523,51 +523,11 @@ For detailed instructions on building and publishing the AppDev library, visit t
 library
 [README file](ng-workspace/projects/OpenWaterFoundation/common/README.md).
 
-> **IMPORTANT:** If previously testing the library using the above development
-instructions, the application's `package.json` file contains the path to the
-local library files. This needs to be changed to the most recent published
+> **IMPORTANT:** If testing the Common library using the above development instructions,
+the application `package.json @OpenWaterFoundation/common` property will contain the
+path to the local library files, instead of the library version to download from the
+npm GitHub registry. This needs to be changed back to the most recently published
 (or desired) version before pushing up any changes to GitHub.
-
-## Using MapComponent as an Embeddable Element ##
-
-The MapComponent can be embedded into a website. The necessary lines in
-`app.module.ts` **must** be changed so that when the `create-common-package.sh`
-script is run, it will create the MapComponent as the entry component, and will
-not bootstrap the AppComponent. This is done so only the MapComponent is "seen"
-as the project.
-
-```typescript
-  // Comment out when running ng serve for testing or ng build --configuration production.
-  // Uncomment out when running ./create-common-package.sh -R for building the
-  // application so that only the MapComponent is seen.
-
-  // entryComponents: [
-  //   MapComponent
-  // ],
-
-  // Comment out when running ./create-common-package.sh -R for building the application
-  // so that only the Map Component can be seen. It will try to display the <app-root></app-root>
-  // element if it isn't. Uncomment out when ng serve or ng build --configuration production
-  // is being used for testing or building the project so that the application is used.
-  
-  bootstrap: [
-    AppComponent
-  ]
-})
-export class AppModule {
-  constructor(private injector: Injector) {
-    // Creates a custom HTML element with the name `common-map`. Displays the Map
-    // Component in another application or website. Comment out when running ng serve
-    // or ng build --configuration production. Uncomment out when running
-    // ./create-common-package.sh -R for building the application so that only the
-    // MapComponent is created, and the site can use <common-map> as a tag in the HTML file.
-
-    // const webComponent = createCustomElement(MapComponent, {injector});
-    // customElements.define('common-map', webComponent);
-  }
-
-}
-```
 
 ## Angular Tasks ##
 
@@ -878,7 +838,7 @@ AngularDev.**
 The site can be built in a `dist` folder for local testing by using
 the command
 
-`ng build --prod --aot=true --baseHref=. --prod=true --extractCss=true --namedChunks=false --outputHashing=all --sourceMap=false`
+`ng build --aot=true --baseHref=. --configuration production --extractCss=true --namedChunks=false --outputHashing=all --sourceMap=false`
 
 The content of the `dist` folder can imitate a production build of the
 InfoMapper. To run the InfoMapper in its distributable form, navigate to

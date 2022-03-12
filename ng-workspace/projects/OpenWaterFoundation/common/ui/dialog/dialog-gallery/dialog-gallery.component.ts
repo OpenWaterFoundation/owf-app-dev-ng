@@ -243,6 +243,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    */
   public zoomToFeatures(index: number): void {
     // Attempt to create the layers array, with each feature object as an element.
+    // Use the Leaflet getLayers() LayerGroup method to obtain an array of layers.
     var layers = this.mapLayerItem.leafletLayer.getLayers();
 
     // If the selected (or highlighted) layer exists, zoom to it on the map.
@@ -276,7 +277,6 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
         padding: [475, 0]
       });
     }
-
   }
 
 }
