@@ -8,7 +8,8 @@
       <ul role="tablist">
         <!-- Main menu button (Hamburger Icon) -->
         <li>
-          <a href="#home" role="tab" matTooltip="Main tools" matTooltipShowDelay="750" data-cy="sidebar-home">
+          <a href="#home" role="tab" matTooltip="Main tools"
+              matTooltipShowDelay="750" data-cy="sidebar-home">
             <i class="fa fa-bars active"></i>
           </a>
         </li>
@@ -42,12 +43,12 @@
     <div class="leaflet-sidebar-content">
       <div class="leaflet-sidebar-pane" id="home">
         <h1 class="leaflet-sidebar-header">
-          <div *ngIf="owfCommonService.getGeoMapName()" class="geoMap-title">{{owfCommonService.getGeoMapName()}}</div>
+          <div *ngIf="geoMapName" class="geoMap-title">{{geoMapName}}</div>
 
-          <div *ngIf="owfCommonService.getMapConfig()">
-            <div *ngIf="owfCommonService.getMapConfig().geoMaps[0].properties.docPath" class="geoMap-doc-button">
+          <div *ngIf="mapConfig">
+            <div *ngIf="geoMapDocPath" class="geoMap-doc-button">
               <button class="btn geoMap-info-circle"
-                (click)="openDocDialog(owfCommonService.getMapConfig().geoMaps[0].properties.docPath, owfCommonService.getMapConfig().geoMaps[0].geoMapId, owfCommonService.getMapConfig().geoMaps[0].name)"
+                (click)="openDocDialog(geoMapDocPath, geoMapId, geoMapName)"
                 matTooltip="Click to view map documentation" [matTooltipShowDelay]="750">
                 <i class="fa fa-info-circle fa-lg"></i>
               </button>
@@ -65,8 +66,8 @@
 
         <div class="accordion" id="sidebar-accordion">
 
-          <div *ngIf="owfCommonService.getMapConfig()">
-            <div *ngFor="let geoLayerViewGroup of owfCommonService.getMapConfig().geoMaps[0].geoLayerViewGroups">
+          <div *ngIf="mapConfig">
+            <div *ngFor="let geoLayerViewGroup of allGeoLayerViewGroups">
 
               <div
                 *ngIf="geoLayerViewGroup.properties.isBackground === undefined || geoLayerViewGroup.properties.isBackground === 'false'; else background">

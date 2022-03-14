@@ -587,13 +587,6 @@ export class OwfCommonService {
   }
 
   /**
-   * Sets the @var geoMapID to the layer's geoMapId property.
-   */
-  public getGeoMapID(): string { 
-    return this.geoMapID;
-  }
-
-  /**
    * @returns a geoLayer object in the geoMapProject whose geoLayerId matches the @param id
    * @param id The geoLayerId to be matched with
    */
@@ -609,7 +602,7 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns a reversed array of all geoLayer objects in the geoMapProject
+   * @returns A reversed array of all geoLayer objects in the geoMapProject.
    */
   public getGeoLayers(): any[] {
     let geoLayers: any[] = [];
@@ -624,9 +617,10 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns a reversed array of all geoLayerViewGroupId's in the geoMapProject. The array is reversed so when it's iterated
-   * over, it will bring each one representing a map layer to the front of the map. This will ultimately put the layers in the
-   * correct order with the first group on top, and subsequent groups below.
+   * @returns A reversed array of all geoLayerViewGroupId's in the geoMapProject.
+   * The array is reversed so when it's iterated over, it will bring each one representing
+   * a map layer to the front of the map. This will ultimately put the layers in
+   * the correct order with the first group on top, and subsequent groups below.
    */
   public getGeoLayerViewGroupIdOrder(): string[] {
     var allGeoLayerViewGroups: string[] = [];
@@ -679,7 +673,21 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns the name attribute to the FIRST geoMap in the geoMapProject
+   * @returns The FIRST geoMap docPath property.
+   */
+  public getGeoMapDocPath(): string {
+    return this.getMapConfig().geoMaps[0].properties.docPath;
+  }
+
+  /**
+   * @returns The geoMapId property from the FIRST geoMap in the map configuration.
+   */
+   public getGeoMapID(): string { 
+    return this.geoMapID;
+  }
+
+  /**
+   * @returns The name attribute to the FIRST geoMap in the geoMapProject.
    */
   public getGeoMapName(): string {
     if (this.mapConfig) {
@@ -730,10 +738,9 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns an array of the list of layer view groups from the app config file.
-   * NOTE: This still uses geoMaps[0] and does not take into account more geoMaps in an app config file.
+   * @returns An array of the geoLayerViewGroups from the FIRST geoMap.
    */
-  public getLayerGroups(): any[] {
+  public getGeoLayerViewGroups(): any[] {
     return this.mapConfig.geoMaps[0].geoLayerViewGroups;
   }
 
@@ -769,7 +776,8 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns the entire @var mapConfig object obtained from the map configuration file. Essentially the geoMapProject.
+   * @returns The entire @var mapConfig object obtained from the map configuration
+   * file. Essentially the geoMapProject.
    */
   public getMapConfig() {
     return this.mapConfig;
