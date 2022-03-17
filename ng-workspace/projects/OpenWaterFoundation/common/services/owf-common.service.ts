@@ -495,11 +495,13 @@ export class OwfCommonService {
    * for use of relative paths used by other files.
    * @param id The app config id assigned to each menu.
    */
-  public getFullMapConfigPath(id: string, standalone?: boolean): string {
-
-    if (standalone === true) {
+  public getFullMapConfigPath(id: string, standalone?: string, configPath?: string): string {
+    
+    // Create a standalone map if standalone is defined.
+    if (standalone === 'app') {
       var path: string = '';
       let splitPath = this.appConfig.standaloneMap.mapProject.split('/');
+      
       for (let i = 0; i < splitPath.length - 1; i++) {
         path += splitPath[i] + '/';
       }
@@ -511,6 +513,24 @@ export class OwfCommonService {
         this.setMapConfigPath(path);
         this.setGeoJSONBasePath(this.appConfig.standaloneMap.mapProject);
         return this.appConfig.standaloneMap.mapProject;
+      }
+    } else if (standalone === 'map') {
+      var path: string = '';
+      let splitPath: string[] = [];
+
+      splitPath = configPath.split('/');
+      
+      for (let i = 0; i < splitPath.length - 1; i++) {
+        path += splitPath[i] + '/';
+      }
+      if (path.startsWith('/')) {
+        this.setMapConfigPath(path.substring(1));
+        this.setGeoJSONBasePath(configPath.substring(1));
+        return configPath.substring(1);
+      } else {
+        this.setMapConfigPath(path);
+        this.setGeoJSONBasePath(configPath);
+        return configPath;
       }
     }
     // TODO: jpkeahey 2022-02-25 - Here is that pesky error if this function is

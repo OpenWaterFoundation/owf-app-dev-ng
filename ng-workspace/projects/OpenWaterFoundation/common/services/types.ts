@@ -309,6 +309,16 @@ export enum GraphProp {
 }
 
 /**
+ * Testing for Dashboard tiles.
+ */
+export interface Tile {
+  color: string;
+  cols: number;
+  rows: number;
+  content: string;
+}
+
+/**
  * Enum representing the supported Window Types (Dialog Types) for the WindowManager.
  */
 // export enum WindowType {

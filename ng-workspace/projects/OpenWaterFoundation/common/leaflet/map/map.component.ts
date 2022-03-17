@@ -105,6 +105,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public legendSymbolsViewContainerRef: ViewContainerRef;
   /** The reference for the Leaflet map. */
   public mainMap: any;
+  /**
+   * 
+   */
+  @Input('map-config') mapConfigStandalonePath: string;
   /** The map configuration subscription, unsubscribed to on component destruction. */
   private mapConfigSub$ = <any>Subscription;
   /** Determines whether the map config file path was correct, found, and read in.
@@ -1516,9 +1520,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * Initialize a map for a full application if no parameter is given, or for a
    * standalone map if the true boolean is provided.
    */
-  private initMapSettings(standalone?: boolean): void {
+  private initMapSettings(standalone?: string, configPath?: string): void {
     let fullMapConfigPath = this.owfCommonService.getAppPath() +
-    this.owfCommonService.getFullMapConfigPath(this.mapID, standalone);
+    this.owfCommonService.getFullMapConfigPath(this.mapID, standalone, configPath);
 
     this.mapConfigSub$ = this.owfCommonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
     .subscribe((mapConfig: any) => {
@@ -1557,12 +1561,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       this.mapID = this.route.snapshot.paramMap.get('id');
 
-      // Standalone Map.
+      // Standalone Map for website embedding.
       if (this.appConfigStandalonePath) {
         this.owfCommonService.getJSONData(this.appConfigStandalonePath).subscribe((appConfig: any) => {
           this.owfCommonService.setAppConfig(appConfig);
-          this.initMapSettings(true);
+          this.initMapSettings('app');
         });
+      }
+      // Standalone map for use in another Angular module.
+      else if (this.mapConfigStandalonePath) {
+        this.initMapSettings('map', this.mapConfigStandalonePath);
       } else {
         // TODO: jpkeahey 2020.05.13 - This shows how the map config path isn't
         // set on a hard refresh because of async issues. Fix has been found and
