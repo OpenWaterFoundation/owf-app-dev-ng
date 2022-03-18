@@ -1,7 +1,13 @@
+/* CLASSES */
+
+
+/* Each tile in the Grid List. */
 /* mat-grid-tile {
     background: lightblue;
 } */
 
+/* The overarching Grid List container. */
 mat-grid-list {
     background-color: rgb(0, 1, 58);
+    height: 100%;
 }
