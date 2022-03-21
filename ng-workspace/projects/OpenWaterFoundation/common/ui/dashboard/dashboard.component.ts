@@ -19,7 +19,7 @@ export class DashboardComponent implements AfterViewInit {
     { cols: 2, rows: 1, color: 'lightgrey', content: 'stuff' },
     { cols: 1, rows: 1, color: 'lightgrey', content: 'stuff' },
     { cols: 1, rows: 1, color: 'lightgrey', content: 'stuff' },
-    { cols: 4, rows: 2, color: 'lightgrey', content: 'map' },
+    { cols: 4, rows: 2, color: 'lightgrey', content: 'map' }
   ];
 
 
