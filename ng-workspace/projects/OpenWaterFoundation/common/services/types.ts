@@ -151,6 +151,7 @@ export interface MainMenu {
   id?: string;
   name?: string;
   align?: string;
+  action?: string;
   enabled?: any;
   tooltip?: string;
   visible?: any;

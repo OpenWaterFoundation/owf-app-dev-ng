@@ -1577,9 +1577,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         // now just needs to be implemented. Follow the APP_INITIALIZER token found
         // in the SNODAS app to read all static files before the app initializes,
         // therefore all info will have already been received.
-        setTimeout(() => {
+        // setTimeout(() => {
           this.initMapSettings();
-        }, 500);
+        // }, 500);
       }
     });
   }
