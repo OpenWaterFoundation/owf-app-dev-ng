@@ -179,6 +179,7 @@ export enum Path {
   cPP = 'contentPagePath',
   cPage = 'Content Page',
   d3P = 'D3Path',
+  dbP = 'dashboardPath',
   dP = 'docPath',
   dVP = 'dateValuePath',
   dUP = 'dataUnitsPath',
@@ -309,14 +310,38 @@ export enum GraphProp {
   ct = 'chartType'
 }
 
-/**
- * Testing for Dashboard tiles.
- */
-export interface Tile {
-  color: string;
-  cols: number;
+/** Main Dashboard configuration object. */
+export interface DashboardConf {
+  metadata: DashboardMetadata;
+  layout: DashboardLayout;
+  widgets: DashboardWidget[];
+}
+
+/** Dashboard metadata object. */
+export interface DashboardMetadata {
+  version?: string;
+  author?: string;
+  title?: string;
+}
+
+/** Dashboard layout object. */
+export interface DashboardLayout {
+  backgroundColor?: string;
+  columns: number;
+  gutterSize?: string;
+}
+
+/** Dashboard widget object. */
+export interface DashboardWidget {
+  columns: number;
+  content: any;
   rows: number;
-  content: string;
+  style?: WidgetTileStyle;
+}
+
+/** Styling for the MatGridTile in the Dashboard Component. */
+export interface WidgetTileStyle {
+  backgroundColor?: string;
 }
 
 /**

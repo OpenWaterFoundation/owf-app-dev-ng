@@ -1,40 +1,49 @@
-import { AfterViewInit,
-          Component }       from '@angular/core';
+import { Component }        from '@angular/core';
+import { ActivatedRoute }   from '@angular/router';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
+
 
 @Component({
   selector: 'dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent {
 
-  tiles: IM.Tile[] = [
-    { cols: 3, rows: 2, color: 'lightgrey', content: 'stuff' },
-    { cols: 1, rows: 3, color: 'lightgrey', content: 'more stuff' },
-    { cols: 1, rows: 1, color: 'lightgrey', content: 'stuff' },
-    { cols: 2, rows: 1, color: 'lightgrey', content: 'stuff' },
-    { cols: 2, rows: 1, color: 'lightgrey', content: 'stuff' },
-    { cols: 1, rows: 1, color: 'lightgrey', content: 'stuff' },
-    { cols: 1, rows: 1, color: 'lightgrey', content: 'stuff' },
-    { cols: 4, rows: 2, color: 'lightgrey', content: 'map' }
-  ];
+  dashboardConf: IM.DashboardConf;
 
 
   /**
    * 
-   * @param owfCommonService The reference to the injected Common library.
+   * @param owfCommonService The injected Common library service.
+   * @param route The injected ActivatedRoute for determining the correct URL and
+   * Dashboard to be displayed.
    */
-  constructor(private owfCommonService: OwfCommonService) {}
+  constructor(private owfCommonService: OwfCommonService,
+              private route: ActivatedRoute) {}
+
 
   /**
    * Called right after the constructor.
    */
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
+    var id = this.route.snapshot.paramMap.get('id');
+    var dashboardConfigPath = this.owfCommonService.getDashboardConfigPathFromId(id);
+
+    this.owfCommonService.getJSONData(this.owfCommonService.getAppPath() + dashboardConfigPath)
+    .subscribe((dashboardConfig: IM.DashboardConf) => {
+      this.dashboardConf = dashboardConfig;
+
+      console.log(this.dashboardConf);
+    });
   }
 
-  
+  setMatGridTileStyle(style: IM.WidgetTileStyle): any {
+    return {
+      backgroundColor: style.backgroundColor
+    }
+  }
 
 }

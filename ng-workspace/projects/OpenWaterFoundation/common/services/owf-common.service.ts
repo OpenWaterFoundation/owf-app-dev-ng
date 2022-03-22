@@ -33,6 +33,10 @@ export class OwfCommonService {
    * under assets/app. If not, this string will be changed to 'assets/app-default'
    * and the default InfoMapper set up will be used instead. */
   public appPath: string = 'assets/app/';
+  /**
+   * 
+   */
+  public dashboardConfigPath: string;
   /** An array of DataUnit objects that each contain the precision for different
    * types of data, from degrees to mile per hour. Read from the application config
    * file top level property dataUnitsPath. */
@@ -139,6 +143,7 @@ export class OwfCommonService {
       case IM.Path.cP:
       case IM.Path.csvPath:
       case IM.Path.d3P:
+      case IM.Path.dbP:
       case IM.Path.dVP:
       case IM.Path.dUP:
       case IM.Path.dP:
@@ -238,6 +243,7 @@ export class OwfCommonService {
         } else {
           return 'assets/app-default/' + path;
         }
+      case IM.Path.dbP:
       case IM.Path.dUP:
       case IM.Path.mP:
       case IM.Path.sIP:
@@ -433,8 +439,43 @@ export class OwfCommonService {
     }
   }
 
+  public getDashboardConfigPath(): string { return this.dashboardConfigPath; }
+
   /**
-   * @returns the array of DataUnits
+   * 
+   * @param id 
+   * @returns 
+   */
+   public getDashboardConfigPathFromId(id: string): string {
+    var dashboardPathExt: string;
+    var splitDashboardPath: string[];
+    var dashboardPath = '';
+
+    for (let mainMenu of this.appConfig.mainMenu) {
+      if (mainMenu.menus) {
+        for (let subMenu of mainMenu.menus) {
+          if (subMenu.id === id) dashboardPathExt = subMenu.dashboardFile;
+        }
+      } else {
+        if (mainMenu.id === id) dashboardPathExt = mainMenu.dashboardFile;
+      }
+    }
+
+    splitDashboardPath = dashboardPathExt.split('/');
+
+    for (let i = 0; i < splitDashboardPath.length - 1; i++) {
+      dashboardPath += splitDashboardPath[i] + '/';
+    }
+
+    dashboardPath.startsWith('/') ?
+    this.dashboardConfigPath = dashboardPath.substring(1) :
+    this.dashboardConfigPath = dashboardPath;
+
+    return dashboardPathExt;
+  }
+
+  /**
+   * @returns The array of DataUnits from the DATAUNIT file.
    */
   public getDataUnitArray(): any[] { return this.dataUnits; }
 
@@ -491,9 +532,14 @@ export class OwfCommonService {
   }
 
   /**
-   * Returns the full path (minus the assets/app/) to the map configuration file, and sets the path without the file name as well
-   * for use of relative paths used by other files.
+   * Gets the path to the map config file matching the provided id, and sets the
+   * paths to the map configuration and geoJson files.
    * @param id The app config id assigned to each menu.
+   * @param standalone Represents what kind of standalone map is being created.
+   * This can be either `app` or `map`.
+   * @param configPath The path to the map configuration file if a standalone `map`
+   * is being created.
+   * @returns The path (minus the assets/app/) to the map configuration file.
    */
   public getFullMapConfigPath(id: string, standalone?: string, configPath?: string): string {
     
@@ -533,8 +579,7 @@ export class OwfCommonService {
         return configPath;
       }
     }
-    // TODO: jpkeahey 2022-02-25 - Here is that pesky error if this function is
-    // called before the appConfig variable is set.
+    
     for (let i = 0; i < this.appConfig.mainMenu.length; i++) {
       if (this.appConfig.mainMenu[i].menus) {
         for (let menu = 0; menu < this.appConfig.mainMenu[i].menus.length; menu++) {
@@ -572,17 +617,15 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns the current selected markdown path's full path starting from the @var appPath
+   * @returns The current selected markdown path's full path starting from the @var appPath.
    */
-  public getFullMarkdownPath(): string { return this.fullMarkdownPath }
+  public getFullMarkdownPath(): string { return this.fullMarkdownPath; }
 
   /**
    * @returns The path to the Gapminder config path. Is an empty string if no path
    * was previously set.
    */
-  public getGapminderConfigPath(): string {
-    return this.gapminderConfigPath;
-  }
+  public getGapminderConfigPath(): string { return this.gapminderConfigPath; }
 
   /**
    * Goes through each geoLayer in the GeoMapProject and if one matches with the given geoLayerId parameter,
@@ -602,9 +645,7 @@ export class OwfCommonService {
    * @returns the base path to the GeoJson files being used in the application. When prepended with the @var appPath,
    * shows the full path the application needs to find any GeoJson file
    */
-  public getGeoJSONBasePath(): string {
-    return this.geoJSONBasePath;
-  }
+  public getGeoJSONBasePath(): string { return this.geoJSONBasePath; }
 
   /**
    * @returns a geoLayer object in the geoMapProject whose geoLayerId matches the @param id
@@ -702,9 +743,7 @@ export class OwfCommonService {
   /**
    * @returns The geoMapId property from the FIRST geoMap in the map configuration.
    */
-   public getGeoMapID(): string { 
-    return this.geoMapID;
-  }
+  public getGeoMapID(): string { return this.geoMapID; }
 
   /**
    * @returns The name attribute to the FIRST geoMap in the geoMapProject.
@@ -719,14 +758,13 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns the file path as a string obtained from a graph template file that shows where the graph data file can be found
+   * @returns The file path as a string obtained from a graph template file that
+   * shows where the graph data file can be found.
    */
-  public getGraphFilePath(): string {
-    return this.graphFilePath;
-  }
+  public getGraphFilePath(): string { return this.graphFilePath; }
 
   /**
-   * @returns the homePage property in the app-config file without the first '/' slash.
+   * @returns The homePage property in the app-config file without the first '/' slash.
    */
   public getHomePage(): string {
     if (this.appConfig.homePage) {
@@ -740,8 +778,8 @@ export class OwfCommonService {
 
   /**
    * Read data asynchronously from a file or URL and return it as a JSON object.
-   * @param path The path or URL to the file needed to be read
-   * @returns The JSON retrieved from the host as an Observable
+   * @param path The path or URL to the file needed to be read.
+   * @returns The JSON retrieved from the host as an Observable.
    */
   public getJSONData(path: string, type?: string, id?: string): Observable<any> {
     // This creates an options object with the optional headers property to add headers to the request. This could solve some
@@ -765,11 +803,9 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns the array of layer marker data, such as size, color, icon, etc.
+   * @returns The array of layer marker data, such as size, color, icon, etc.
    */
-  public getLayerMarkerData(): void {
-    return this.mapConfig.layerViewGroups;
-  }
+  public getLayerMarkerData(): void { return this.mapConfig.layerViewGroups; }
 
   /**
    * NOTE: This function is not currently being used, as it's being used by functions in map.component.ts that have
@@ -791,24 +827,18 @@ export class OwfCommonService {
    * @returns The layerError object, which contains any layer geoLayerId's of a
    * layer that has run into a critical error.
    */
-  public getLayerError(): any {
-    return this.layerError;
-  }
+  public getLayerError(): any { return this.layerError; }
 
   /**
    * @returns The entire @var mapConfig object obtained from the map configuration
    * file. Essentially the geoMapProject.
    */
-  public getMapConfig() {
-    return this.mapConfig;
-  }
+  public getMapConfig() { return this.mapConfig; }
 
   /**
    * @returns the relative path to the map configuration file for the application
    */
-  public getMapConfigPath(): string {
-    return this.mapConfigPath;
-  }
+  public getMapConfigPath(): string { return this.mapConfigPath; }
 
   /**
    * @returns the style object containing the original properties for a given feature
@@ -832,15 +862,13 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns the upper level geoMapProject properties object.
+   * @returns The upper level geoMapProject properties object.
    */
-  public getProperties(): {} {
-    return this.mapConfig.properties;
-  }
+  public getProperties(): {} { return this.mapConfig.properties; }
 
   /**
-   * Returns the geoLayerView's refreshInterval property, converted to a number if it can
-   * be, and 0 if not.
+   * Returns the geoLayerView's refreshInterval property, converted to a number
+   * if it can be, and 0 if not.
    * @param geoLayerId The geoLayerId to match with.
    */
   public getRefreshInterval(geoLayerId: string): number {
@@ -897,8 +925,8 @@ export class OwfCommonService {
       var rawOffset = rawOffset.toUpperCase();
       var splitOffset = rawOffset.split(' ');
 
-      // Iterate over each spaced item in the string and insert each number in the delayArr in
-      // the order HR, MIN, SEC.
+      // Iterate over each spaced item in the string and insert each number in the
+      // delayArr in the order HR, MIN, SEC.
       for (var elem of splitOffset) {
         if (elem.includes('H')) {
           var hours = elem.split('H')[0];
@@ -927,7 +955,8 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns a geoLayerSymbol object from the geoLayerView whose geoLayerId matches with @param id
+   * @returns A geoLayerSymbol object from the geoLayerView whose geoLayerId matches
+   * with @param id.
    * @param id The geoLayerId to match with.
    */
   public getSymbolDataFromID(id: string): any {
@@ -945,7 +974,8 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns all information before the first tilde (~) in the TSID from the graph template file. 
+   * @returns all information before the first tilde (~) in the TSID from the graph
+   * template file. 
    */
   public getTSIDLocation(): string { return this.graphTSID; }
 
@@ -956,7 +986,7 @@ export class OwfCommonService {
    * @param type - Optional type of the property error. Was it a home page, template, etc.
    * @param result - Optional value to return as the observable result.
    */
-   private handleError<T> (path: string, type?: string, id?: string, result?: T) {
+  private handleError<T> (path: string, type?: string, id?: string, result?: T) {
     return (error: any): Observable<T> => {
 
       switch(error.status) {
@@ -1018,8 +1048,9 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns a boolean showing whether the layer containing the given @var geoLayerId has been given a bad path
-   * @param geoLayerId The geoLayerId from the layer to match to
+   * @returns A boolean showing whether the layer containing the given @var geoLayerId
+   * has been given a bad path.
+   * @param geoLayerId The geoLayerId from the layer to match to.
    */
   public isBadPath(geoLayerId: string): boolean { 
     if (this.badPath) {
@@ -1028,8 +1059,9 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns a boolean showing whether the layer containing the given @var geoLayerId is unavailable to be shown on the map
-   * @param geoLayerId The geoLayerId from the layer to match to
+   * @returns a boolean showing whether the layer containing the given @var geoLayerId =
+   * is unavailable to be shown on the map.
+   * @param geoLayerId The geoLayerId from the layer to match to.
    */
   public isServerUnavailable(geoLayerId: string): boolean {
     if (this.serverUnavailable[geoLayerId] === true) {
@@ -1051,13 +1083,18 @@ export class OwfCommonService {
   }
 
   /**
-   * While the end of the value string from the graph template file hasn't ended yet, look for the '${' start
-   * that we need and build the property, adding it to the propertyArray when we've detected the end of the
-   * property. Find each one in the value until the value line is done.
-   * @param key In order to provide a better console warning, we bring the key from replaceProperties()
-   * @param value The line being read from the graph template file that contains the ${ } property.
-   * @param featureProperties The object containing the feature's key and value pair properties.
-   * @returns the entire line read in, with all ${property} notation converted to the correct  
+   * While the end of the value string from the graph template file hasn't ended
+   * yet, look for the '${' start that we need and build the property, adding it
+   * to the propertyArray when we've detected the end of the property. Find each
+   * one in the value until the value line is done.
+   * @param line 
+   * @param featureProperties The object containing the feature's key and value
+   * pair properties.
+   * @param key Optional parameter to provide a better console warning by logging
+   * the key.
+   * @param labelProp Optional parameter
+   * @returns The entire line read in, with all ${property} notation converted correctly
+   * by replacing all ${} properties with the correct string.
    */
   public obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any, labelProp?: boolean): string {
 
@@ -1270,9 +1307,7 @@ export class OwfCommonService {
    * 
    * @param path 
    */
-  public setFullMarkdownPath(path: string) {
-    this.fullMarkdownPath = path;
-  }
+  public setFullMarkdownPath(path: string) { this.fullMarkdownPath = path; }
 
   /**
    * Sets @var gapminderConfigPath to the supplied absolute path. Used for using
@@ -1352,9 +1387,7 @@ export class OwfCommonService {
    * Sets the @var mapConfigPath to the path of the map configuration file in the application.
    * @param path The path to set to
    */
-  public setMapConfigPath(path: string): void {
-    this.mapConfigPath = path;
-  }
+  public setMapConfigPath(path: string): void { this.mapConfigPath = path; }
 
   /**
    * 

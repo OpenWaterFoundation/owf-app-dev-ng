@@ -1,13 +1,14 @@
+/* TAGS */
+
+/* The overarching Grid List tag. */
+mat-grid-list {
+  height: 100%;
+}
+
 /* CLASSES */
 
-
-/* Each tile in the Grid List. */
-/* mat-grid-tile {
-    background: lightblue;
-} */
-
-/* The overarching Grid List container. */
-mat-grid-list {
-    background-color: rgb(0, 1, 58);
-    height: 100%;
+/* Div container displayed if/when the DashboardConf object is created. Must be
+set to 100% for each of the tiles to show up. */
+.dashboard-container {
+  height: 100%;
 }

@@ -1522,6 +1522,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private initMapSettings(standalone?: string, configPath?: string): void {
     let fullMapConfigPath = this.owfCommonService.getAppPath() +
+    // Get AND sets the map config path and geoJson path for relative path use.
     this.owfCommonService.getFullMapConfigPath(this.mapID, standalone, configPath);
 
     this.mapConfigSub$ = this.owfCommonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
