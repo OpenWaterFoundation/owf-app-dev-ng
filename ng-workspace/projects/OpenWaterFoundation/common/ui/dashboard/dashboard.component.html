@@ -7,8 +7,18 @@
       [colspan]="widget.columns"
       [rowspan]="widget.rows"
       [ngStyle]="setMatGridTileStyle(widget.style)">
-      {{widget.content}}
-  
+
+      <div *ngIf="widget.type === 'stuff'">
+        Stuff
+      </div>
+
+      <div *ngIf="widget.type === 'image'" class="widget-container">
+        <widget-image [dataPath]="widget.dataPath"></widget-image>
+      </div>
+
+      <div *ngIf="widget.type === 'map'" class="widget-container">
+        <common-map [map-config]="widget.dataPath"></common-map>
+      </div>
     </mat-grid-tile>
 
   </mat-grid-list>

@@ -12,3 +12,9 @@ set to 100% for each of the tiles to show up. */
 .dashboard-container {
   height: 100%;
 }
+
+/* Div container that holds the widget  */
+.widget-container {
+  height: 100%;
+  width: 100%;
+}

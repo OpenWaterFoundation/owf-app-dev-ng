@@ -471,7 +471,9 @@ export class OwfCommonService {
     this.dashboardConfigPath = dashboardPath.substring(1) :
     this.dashboardConfigPath = dashboardPath;
 
-    return dashboardPathExt;
+    return dashboardPathExt.startsWith('/') ?
+    dashboardPathExt.substring(1) :
+    dashboardPathExt;
   }
 
   /**
