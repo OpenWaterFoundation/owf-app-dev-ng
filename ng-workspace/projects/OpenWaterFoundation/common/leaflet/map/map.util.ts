@@ -1439,14 +1439,14 @@ export class MapUtil {
 
   /**
    * Confirms that the given style option is correct, and if not, given a default so the map can still be displayed
-   * @param styleProperty 
-   * @param styleType 
+   * @param styleProp
+   * @param style 
    */
-  public static verify(styleProperty: any, style: IM.Style): any {
+  public static verify(styleProp: any, style: IM.Style): any {
     // The property exists, so return it to be used in the style
     // TODO: jpkeahey 2020.06.15 - Maybe check to see if it's a correct property?
-    if (styleProperty) {
-      return styleProperty;
+    if (styleProp) {
+      return styleProp;
     }
     // The property does not exist, so return a default value.
     else {

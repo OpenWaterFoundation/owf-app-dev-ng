@@ -237,13 +237,18 @@ export class OwfCommonService {
         } else {
           return this.getMapConfigPath() + path;
         }
+      case IM.Path.dbP:
+        if (path.startsWith('/')) {
+          return path.substring(1);
+        } else {
+          return this.getDashboardConfigPath() + path;
+        }
       case IM.Path.bSIP:
         if (path.startsWith('/')) {
           return 'assets/app-default/' + path.substring(1);
         } else {
           return 'assets/app-default/' + path;
         }
-      case IM.Path.dbP:
       case IM.Path.dUP:
       case IM.Path.mP:
       case IM.Path.sIP:

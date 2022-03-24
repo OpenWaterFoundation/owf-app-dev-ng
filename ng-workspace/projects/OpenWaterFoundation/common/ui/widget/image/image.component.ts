@@ -12,7 +12,17 @@ import * as IM              from '@OpenWaterFoundation/common/services';
 })
 export class ImageComponent {
 
+  /** The attribute provided as an attribute to this component when created, e.g.
+   *   <widget-image [dataPath]="path/to/image.png"></widget-image> */
   @Input() dataPath: string;
+
+  errorType: string;
+  /** The path to the image file after it has been built with the OWF service to
+   * deal with either an absolute or relative path provided. */
+  fullDataPath: string;
+
+  widgetError: boolean;
+
 
   /**
    * 
@@ -25,7 +35,13 @@ export class ImageComponent {
    * Called right after the constructor.
    */
   ngOnInit(): void {
-    
+
+    if (!this.dataPath) {
+      this.widgetError = true;
+      this.errorType = 'no dataPath';
+      return;
+    }
+    this.fullDataPath = this.owfCommonService.buildPath(IM.Path.dbP, [this.dataPath]);
   }
 
   

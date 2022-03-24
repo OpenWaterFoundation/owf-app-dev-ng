@@ -1,0 +1,24 @@
+<div id="example-button-center">
+  <!-- Use $#13; to add a newline to the matTooltip. -->
+  <button mat-raised-button
+          id="owf-common-examples"
+          matTooltip="Click to update info in other widgets"
+          [matTooltipShowDelay]="500"
+          matTooltipPosition="left"
+          [matMenuTriggerFor]="menu"
+          #menuTrigger="matMenuTrigger"
+          (click)="menuTrigger.openMenu()"
+          routerLinkActive="link-active">All Basins</button>
+
+  <mat-menu #menu>
+    <button mat-menu-item
+            (click)="sendData('Poudre Basin')">
+      Poudre Basin
+    </button>
+
+    <button mat-menu-item
+            (click)="sendData('Arkansas Basin')">
+      Arkansas Basin
+    </button>
+  </mat-menu>
+</div>

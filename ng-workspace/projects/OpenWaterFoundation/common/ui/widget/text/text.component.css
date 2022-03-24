@@ -1,0 +1,17 @@
+/* CLASSES */
+
+/* This can be 100% of the height, since it's a child of .doc-box above, and so will be 100% relative to it */
+.doc-contents-text {
+  height: 100%;
+  margin-bottom: 0px;
+}
+
+/* ID's */
+
+/* The container around the HTML. Ensures the text isn't hitting the sides of the
+div with padding and creates a scrollbar only if it needs to. */
+#textHTMLDiv, #docMarkdownDiv {
+  height: 100%;
+  padding: 5px;
+  overflow: auto;
+}

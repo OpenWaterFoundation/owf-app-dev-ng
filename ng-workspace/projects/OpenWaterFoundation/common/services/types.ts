@@ -344,6 +344,13 @@ export interface WidgetTileStyle {
   backgroundColor?: string;
 }
 
+export enum Widget {
+  err = 'Error',
+  img = 'Image',
+  sel = 'Selector',
+  text = 'Text'
+}
+
 /**
  * Enum representing the supported Window Types (Dialog Types) for the WindowManager.
  */

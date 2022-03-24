@@ -1,7 +1,7 @@
 import { NgModule }       from '@angular/core';
 import { CommonModule }   from '@angular/common';
 
-
+import { ErrorModule } from '../error/error.module';
 import { ImageComponent } from './image.component';
 
 
@@ -13,7 +13,9 @@ import { ImageComponent } from './image.component';
     ImageComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+
+    ErrorModule
   ]
 })
 export class ImageModule { }

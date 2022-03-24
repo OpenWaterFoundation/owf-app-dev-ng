@@ -1,8 +1,12 @@
-import { Component }        from '@angular/core';
+import { Component,
+          OnDestroy }       from '@angular/core';
 import { ActivatedRoute }   from '@angular/router';
+
+import { Subscription }     from 'rxjs';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
+
 
 
 @Component({
@@ -10,10 +14,16 @@ import * as IM              from '@OpenWaterFoundation/common/services';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnDestroy{
 
+  /**
+   * 
+   */
   dashboardConf: IM.DashboardConf;
-
+  /**
+   * 
+   */
+  dashboardConfigPathSub$: Subscription;
 
   /**
    * 
@@ -32,17 +42,54 @@ export class DashboardComponent {
     var id = this.route.snapshot.paramMap.get('id');
     var dashboardConfigPath = this.owfCommonService.getDashboardConfigPathFromId(id);
 
-    this.owfCommonService.getJSONData(this.owfCommonService.getAppPath() + dashboardConfigPath)
+    this.dashboardConfigPathSub$ = this.owfCommonService
+    .getJSONData(this.owfCommonService.getAppPath() + dashboardConfigPath)
     .subscribe((dashboardConfig: IM.DashboardConf) => {
       this.dashboardConf = dashboardConfig;
-
-      console.log(this.dashboardConf);
     });
   }
 
+  /**
+   * Called once, before the instance is destroyed.
+   */
+  ngOnDestroy(): void {
+    this.dashboardConfigPathSub$.unsubscribe();
+  }
+
+  /**
+   * Manipulates the style object given in the dashboard configuration file,
+   * and adds in any default settings including the entire object if necessary.
+   * @param style The style object to check.
+   * @returns A style object that has had its properties verified.
+   */
   setMatGridTileStyle(style: IM.WidgetTileStyle): any {
+    // If no style object is provided, return the default object.
+    if (!style) {
+      return {
+        backgroundColor: 'gray'
+      }
+    }
+
     return {
-      backgroundColor: style.backgroundColor
+      backgroundColor: this.verify(style.backgroundColor, IM.Style.color)
+    }
+  }
+
+  /**
+   * Sets a style object's property to a default if it isn't provided in the dashboard
+   * configuration file.
+   * @param styleProp The style property to examine.
+   * @param style The InfoMapper style type to differentiate types.
+   */
+  verify(styleProp: any, style: IM.Style): any {
+    if (styleProp) {
+      return styleProp;
+    }
+    // The property does not exist, so return a default value.
+    else {
+      switch (style) {
+        case IM.Style.color: return 'gray';
+      }
     }
   }
 
