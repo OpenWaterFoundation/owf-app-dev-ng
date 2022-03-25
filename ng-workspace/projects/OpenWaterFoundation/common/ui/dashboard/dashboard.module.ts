@@ -6,7 +6,8 @@ import { MatGridListModule }  from '@angular/material/grid-list';
 import { MapModule }          from '@OpenWaterFoundation/common/leaflet';
 import { ImageModule,
           SelectorModule,
-          TextModule }    from '@OpenWaterFoundation/common/ui/widget';
+          StatusIndicatorModule,
+          TextModule }        from '@OpenWaterFoundation/common/ui/widget';
 
 import { DashboardComponent } from './dashboard.component';
 
@@ -26,6 +27,7 @@ import { DashboardComponent } from './dashboard.component';
     MapModule,
     ImageModule,
     SelectorModule,
+    StatusIndicatorModule,
     TextModule
   ]
 })

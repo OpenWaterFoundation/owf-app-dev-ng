@@ -7,6 +7,9 @@ export * from './image/image.module';
 // SELECTOR Widget.
 export * from './selector/selector.component';
 export * from './selector/selector.module';
+// Status Indicator.
+export * from './status-indicator/status-indicator.component';
+export * from './status-indicator/status-indicator.module';
 // TEXT Widget.
 export * from './text/text.component';
 export * from './text/text.module';
