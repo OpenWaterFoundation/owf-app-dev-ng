@@ -9,6 +9,6 @@
   <showdown [value]="text" class="doc-contents-text"></showdown>
 </div>
 
-<div *ngIf="widgetError">
+<div *ngIf="widgetError" class="error-widget-comp-container">
   <widget-error [errorType]="errorType" [name]="'Text'"></widget-error>
 </div>

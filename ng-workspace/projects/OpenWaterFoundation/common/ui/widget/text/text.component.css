@@ -6,6 +6,12 @@
   margin-bottom: 0px;
 }
 
+/*  */
+.error-widget-comp-container {
+  height: 100%;
+  width: 100%;
+}
+
 /* ID's */
 
 /* The container around the HTML. Ensures the text isn't hitting the sides of the
