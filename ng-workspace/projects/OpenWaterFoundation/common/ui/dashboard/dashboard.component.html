@@ -9,8 +9,8 @@
     [rowspan]="widget.rows"
     [ngStyle]="setMatGridTileStyle(widget.style)">
 
-      <div *ngIf="widget.type === 'statusIndicator'" class="widget-container">
-        <widget-status-indicator [title]="widget.title"></widget-status-indicator>
+      <div *ngIf="widget.type === 'chart'" class="widget-container">
+        <widget-test></widget-test>
       </div>
 
       <div *ngIf="widget.type === 'image'" class="widget-container">
@@ -23,6 +23,10 @@
 
       <div *ngIf="widget.type === 'selector'" class="widget-container">
         <widget-selector></widget-selector>
+      </div>
+
+      <div *ngIf="widget.type === 'statusIndicator'" class="widget-container">
+        <widget-status-indicator [title]="widget.title"></widget-status-indicator>
       </div>
 
       <div *ngIf="widget.type === 'textHTML' || widget.type === 'textMarkdown'" class="widget-container">

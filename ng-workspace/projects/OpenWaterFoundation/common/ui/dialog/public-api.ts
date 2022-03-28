@@ -34,3 +34,6 @@ export * from './dialog-TSGraph/dialog-TSGraph.module';
 // DIALOG IMAGE
 export * from './dialog-image/dialog-image.component';
 export * from './dialog-image/dialog-image.module';
+
+// DIALOG SERVICE
+export * from './dialog.service';

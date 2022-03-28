@@ -843,7 +843,7 @@ export class OwfCommonService {
   public getMapConfig() { return this.mapConfig; }
 
   /**
-   * @returns the relative path to the map configuration file for the application
+   * @returns The relative path to the map configuration file for the application
    */
   public getMapConfigPath(): string { return this.mapConfigPath; }
 
