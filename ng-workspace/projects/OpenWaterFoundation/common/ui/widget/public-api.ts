@@ -1,6 +1,6 @@
 // CHART Widget.
-export * from './chart/test.component';
-export * from './chart/test.module';
+export * from './chart/chart.component';
+export * from './chart/chart.module';
 // ERROR Widget.
 export * from './error/error.component';
 export * from './error/error.module';

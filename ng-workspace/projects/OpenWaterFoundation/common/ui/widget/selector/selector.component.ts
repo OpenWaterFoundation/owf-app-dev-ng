@@ -1,6 +1,10 @@
 import { Component,
           EventEmitter,
-          Output }           from '@angular/core';
+          Input,
+          Output, 
+          ViewChild }       from '@angular/core';
+
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
@@ -14,7 +18,18 @@ import { WidgetService }    from '../widget.service';
 })
 export class SelectorComponent {
 
+  /** The reference to the virtual scroll viewport in the template file by using
+   * the @ViewChild decorator. The change detector looks for the first element or
+   * directive matching the selector in the view DOM, and if it changes, the property
+   * is updated. */
+   @ViewChild(CdkVirtualScrollViewport, { static: false }) cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
+
+  @Input() dataPath: string;
+
+  items = Array.from({length: 100000}).map((_, i) => `Item #${i}`);
+
   @Output() testEmit = new EventEmitter<any>();
+
 
   /**
    * 
@@ -25,14 +40,47 @@ export class SelectorComponent {
 
 
   /**
+   * Called when mat-option is clicked from the Date Mat Form Field. It sends data back to the Map component
+   * with the date so the map and necessary Leaflet controls can be updated.
+   * @param date The date a user has selected.
+   */
+  callUpdateMapDate(date: string): void {
+    console.log('Stuff definitely happened!');
+  }
+
+  /**
    * Called right after the constructor.
    */
   ngOnInit(): void {
-    
+    this.owfCommonService.getJSONData(this.owfCommonService.buildPath(IM.Path.dbP, [this.dataPath]))
+    .subscribe((geoJson: any) => {
+      console.log(geoJson);
+    })
+  }
+
+  /**
+   * Whenever the mat-select field is clicked, check if the event exists and use the
+   * @ViewChild decorated class variable to check the size of the viewport and scroll
+   * to the first element; this way, the viewport will always start there.
+   */
+  openSelectChange($event: any): void {
+    if ($event) {
+      this.cdkVirtualScrollViewPort.scrollToIndex(0);
+      this.cdkVirtualScrollViewPort.checkViewportSize();
+    }
   }
 
   sendData(data: string): void {
-    this.widgetService.setTestObs(data);
+    console.log(data);
+    // this.widgetService.setTestObs(data);
+  }
+
+  /**
+   * Calls either the searchDates or searchBasins function depending which search bar is being used.
+   * @param event The KeyboardEvent object created every time a key is pressed by the user.
+   */
+  userInput(event: any, inputType: string) {
+    console.log(event);
   }
 
 }

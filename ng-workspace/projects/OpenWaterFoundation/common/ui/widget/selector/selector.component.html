@@ -1,6 +1,30 @@
 <div id="example-button-center">
+
+  <mat-form-field id="select-form" appearance="fill">
+    <mat-label>Choose Item</mat-label>
+    <mat-select name="date-selection"
+    (openedChange)="openSelectChange($event)">
+      <cdk-virtual-scroll-viewport [itemSize]="48"
+      [minBufferPx]="540"
+      [maxBufferPx]="540"
+      [style.width.px]="311"
+      [style.height.px]="240">
+        <input matInput
+        id="search"
+        placeholder="Search items..."
+        (keyup)="userInput($event, 'date')">
+        <mat-option *cdkVirtualFor="let item of items"
+        (click)="callUpdateMapDate('date')"
+        [value]="item"
+        [style.height.px]="48">
+          {{item}}
+        </mat-option>
+      </cdk-virtual-scroll-viewport>
+    </mat-select>
+  </mat-form-field>
+
   <!-- Use $#13; to add a newline to the matTooltip. -->
-  <button mat-raised-button
+  <!-- <button mat-raised-button
           id="owf-common-examples"
           matTooltip="Click to update info in other widgets"
           [matTooltipShowDelay]="500"
@@ -8,9 +32,18 @@
           [matMenuTriggerFor]="menu"
           #menuTrigger="matMenuTrigger"
           (click)="menuTrigger.openMenu()"
-          routerLinkActive="link-active">All Basins</button>
+          routerLinkActive="link-active">Choose Basin</button>
 
   <mat-menu #menu>
+    <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+      <div *cdkVirtualFor="let item of items" class="example-item">
+        <button mat-menu-item
+            (click)="sendData(item)">
+          {{item}}
+        </button>
+      </div>
+    </cdk-virtual-scroll-viewport>
+
     <button mat-menu-item
             (click)="sendData('Poudre Basin')">
       Poudre Basin
@@ -20,5 +53,5 @@
             (click)="sendData('Arkansas Basin')">
       Arkansas Basin
     </button>
-  </mat-menu>
+  </mat-menu> -->
 </div>

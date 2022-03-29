@@ -10,7 +10,7 @@
     [ngStyle]="setMatGridTileStyle(widget.style)">
 
       <div *ngIf="widget.type === 'chart'" class="widget-container">
-        <widget-test></widget-test>
+        <widget-chart [chartData]="chartObject"></widget-chart>
       </div>
 
       <div *ngIf="widget.type === 'image'" class="widget-container">
@@ -22,7 +22,7 @@
       </div>
 
       <div *ngIf="widget.type === 'selector'" class="widget-container">
-        <widget-selector></widget-selector>
+        <widget-selector [dataPath]="widget.dataPath"></widget-selector>
       </div>
 
       <div *ngIf="widget.type === 'statusIndicator'" class="widget-container">

@@ -981,12 +981,6 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns all information before the first tilde (~) in the TSID from the graph
-   * template file. 
-   */
-  public getTSIDLocation(): string { return this.graphTSID; }
-
-  /**
    * Handles the HTTP operation that failed, and lets the app continue by returning
    * an empty result.
    * @param path - Name of the path used that failed.

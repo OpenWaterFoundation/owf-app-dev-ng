@@ -3,15 +3,15 @@ import { CommonModule }      from '@angular/common';
 
 import { MatTooltipModule }  from '@angular/material/tooltip';
 
-import { TestComponent }    from './test.component';
+import { ChartComponent }    from './chart.component';
 
 
 @NgModule({
   declarations: [
-    TestComponent
+    ChartComponent
   ],
   exports: [
-    TestComponent
+    ChartComponent
   ],
   imports: [
     CommonModule,
@@ -19,4 +19,4 @@ import { TestComponent }    from './test.component';
     MatTooltipModule
   ]
 })
-export class TestModule { }
+export class ChartModule { }

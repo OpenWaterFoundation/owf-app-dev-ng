@@ -4,7 +4,7 @@ import { CommonModule }       from '@angular/common';
 import { MatGridListModule }  from '@angular/material/grid-list';
 
 import { MapModule }          from '@OpenWaterFoundation/common/leaflet';
-import { TestModule,
+import { ChartModule,
           ImageModule,
           SelectorModule,
           StatusIndicatorModule,
@@ -27,7 +27,7 @@ import { DashboardComponent } from './dashboard.component';
 
     MapModule,
 
-    TestModule,
+    ChartModule,
     ImageModule,
     SelectorModule,
     StatusIndicatorModule,
