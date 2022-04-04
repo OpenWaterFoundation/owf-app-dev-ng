@@ -1,12 +1,14 @@
-import { Injectable } from "@angular/core";
+import { Injectable }  from "@angular/core";
 
-import { DateTime }   from '@OpenWaterFoundation/common/util/time';
-import * as IM        from '@OpenWaterFoundation/common/services';
+import { DateTime }    from '@OpenWaterFoundation/common/util/time';
+import * as IM         from '@OpenWaterFoundation/common/services';
+
+import { ChartModule } from './chart.module';
 
 import { add,
           format,
           isEqual,
-          parseISO }  from 'date-fns';
+          parseISO }   from 'date-fns';
 
 /** The DialogService provides helper function to all Dialog Components in the Common
  * library. Any function not directly related to a Dialog Component's core functionality

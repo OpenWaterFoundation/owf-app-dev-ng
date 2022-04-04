@@ -6,7 +6,6 @@ import { Observable, Subscription }       from 'rxjs';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
-import { WidgetService }    from '../widget.service';
 
 
 @Component({
@@ -45,8 +44,7 @@ export class TextComponent implements OnDestroy{
    * 
    * @param owfCommonService The injected Common library service.
    */
-  constructor(private owfCommonService: OwfCommonService,
-              private widgetService: WidgetService) {}
+  constructor(private owfCommonService: OwfCommonService) {}
 
 
   /**

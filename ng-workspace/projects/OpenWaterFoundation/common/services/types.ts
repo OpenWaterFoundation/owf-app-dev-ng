@@ -80,6 +80,7 @@ export enum SaveFileType {
 
 /** Enum with the currently supported InfoMapper style properties. */
 export enum Style {
+  backgroundColor,
   color,
   fillOpacity,
   fillColor,
@@ -117,7 +118,7 @@ export enum Widget {
 /** Interface for Typing the main AppConfig JSON object created by the user. */
 export interface AppConfig {
   title?: string;
-  homePage?: string;
+  homePage: string;
   favicon?: string;
   dataUnitsPath?: string;
   googleAnalyticsTrackingId?: string;
@@ -534,4 +535,5 @@ export interface DashboardWidget {
 /** Styling for the MatGridTile in the Dashboard Component. */
 export interface WidgetTileStyle {
   backgroundColor?: string;
+  textColor?: string;
 }

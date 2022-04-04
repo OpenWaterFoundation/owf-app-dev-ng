@@ -8,7 +8,8 @@ import { MatDialog,
           MAT_DIALOG_DATA }       from '@angular/material/dialog';
 
 import { forkJoin,
-          Observable }            from 'rxjs';
+          Observable, 
+          Subscription }          from 'rxjs';
 
 import { DialogTSTableComponent } from '../dialog-tstable/dialog-tstable.component';
 
@@ -54,6 +55,9 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   private downloadFileName: string;
   /** The object containing all of the layer's feature properties. */
   public featureProperties: any;
+  /** Subscription to be unsubscribed to at component destruction to prevent memory
+   * leaks.*/
+  private forkJoinSub$: Subscription;
   /** The absolute or relative path to the data file used to populate the graph
    * being created. */
   public graphFilePath: string;
@@ -74,7 +78,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   public TSArrayOGResultRef: TS[];
   /** The string representing the TSID before the first tilde (~) in the graph template
    * object. Used to help create a unique graph ID. */
-  public TSID_Location: string;
+  public TSIDLocation: string;
   /** An array containing the value header names after the initial DATE / TIME
    * header. To be passed to dialog-tstable for downloading files. */
   public valueColumns: string[] = [];
@@ -105,7 +109,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     this.graphTemplateObject = dataObject.data.graphTemplate;
     this.graphFilePath = dataObject.data.graphFilePath;
     this.mapConfigPath = dataObject.data.mapConfigPath;
-    this.TSID_Location = dataObject.data.TSID_Location;
+    this.TSIDLocation = dataObject.data.TSIDLocation;
   }
 
 
@@ -523,7 +527,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     };
     // Plots the actual plotly graph with the given <div> id, data array, layout and configuration objects organize and maintain
     // multiple opened dialogs in the future.  (https://plotly.com/javascript/plotlyjs-function-reference/#plotlyplot)
-    Plotly.react(this.windowID + this.TSID_Location, finalData, layout, plotlyConfig);
+    Plotly.react(this.windowID + this.TSIDLocation, finalData, layout, plotlyConfig);
   }
 
   /**
@@ -558,7 +562,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     this.owfCommonService.setMapConfigPath(this.mapConfigPath);
     this.owfCommonService.setChartTemplateObject(this.graphTemplateObject);
     this.owfCommonService.setGraphFilePath(this.graphFilePath);
-    this.owfCommonService.setTSIDLocation(this.TSID_Location);
+    this.owfCommonService.setTSIDLocation(this.TSIDLocation);
     // Set the mainTitleString to be used by the map template file to display as
     // the TSID location (for now).
     this.mainTitleString = this.graphTemplateObject['product']['properties'].MainTitleString;
@@ -595,6 +599,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * and remove it from the window manager.
    */
   public ngOnDestroy(): void {
+    this.forkJoinSub$.unsubscribe();
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }
@@ -727,7 +732,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     
     // Now that the array has all the Observables needed, forkJoin and subscribe to them all. Their results will now be
     // returned as an Array with each index corresponding to the order in which they were pushed onto the array.
-    forkJoin(dataArray).subscribe((resultsArray: TS[]) => {
+    this.forkJoinSub$ = forkJoin(dataArray).subscribe((resultsArray: TS[]) => {
       this.TSArrayOGResultRef = resultsArray;
       this.createTSConfig(resultsArray);
     });

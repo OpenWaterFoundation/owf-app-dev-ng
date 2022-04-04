@@ -3,7 +3,6 @@ import { Component,
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
-import { WidgetService }    from '../widget.service';
 
 
 @Component({
@@ -35,8 +34,7 @@ export class ErrorComponent {
    * @param owfCommonService The injected Common library service.
    * @param widgetService The inject local Widget service.
    */
-  constructor(private owfCommonService: OwfCommonService,
-              private widgetService: WidgetService) {}
+  constructor(private owfCommonService: OwfCommonService) {}
 
 
   /**

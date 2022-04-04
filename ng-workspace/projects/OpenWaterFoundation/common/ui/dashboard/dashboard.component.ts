@@ -27,9 +27,8 @@ export class DashboardComponent implements OnDestroy {
 
   chartObject = {
     downloadFileName: '${featureAttribute:wdid}-diversions.csv',
-    graphFilePath: '/data-ts/0300911.DWR.DivTotal.Month.stm',
+    graphFilePath: '/data-ts/0300911.DWR.DivTotal.Month.csv',
     mapConfigPath: 'data-maps/map-configuration-files/',
-    TSID_Location: '0300911.DWR.DivTotal.Month',
     featureProperties: {
       division: 1,
       waterDistrict: 3,
@@ -61,7 +60,7 @@ export class DashboardComponent implements OnDestroy {
       thirdParty: "False",
       timeTest: 1645465265000
     },
-    graphTemplateObject: {
+    graphTemplate: {
       product : {
         properties : {
           CurrentDateTime : "None",
@@ -73,7 +72,7 @@ export class DashboardComponent implements OnDestroy {
           MainTitleFontName : "Arial",
           MainTitleFontSize : "20",
           MainTitleFontStyle : "Plain",
-          MainTitleString : "${featureAttribute:wdid} Total Diversion",
+          MainTitleString : "${featureAttribute:abbrev} - ${featureAttribute:wdid} Streamflow & Diversion",
           OutputFile : "C:\\temp\\tmp.jpg",
           ProductID : "Product1",
           ProductName : "",
@@ -170,30 +169,52 @@ export class DashboardComponent implements OnDestroy {
             ZoomEnabled : "True",
             ZoomGroup : "1"
           },
-          data : [ {
-            properties : {
-              Color : "red",
-              DataLabelFormat : "",
-              DataLabelPosition : "Right",
-              Enabled : "True",
-              FlaggedDataSymbolStyle : "None",
-              GraphType : "Line",
-              LegendFormat : "Auto",
-              LineStyle : "Solid",
-              LineWidth : "1",
-              SymbolSize : "0",
-              SymbolStyle : "None",
-              TSAlias : "${featureAttribute:wdid}-DivTotal",
-              TSID : "${featureAttribute:wdid}.DWR.DivTotal.Month~StateMod~/data-ts/${featureAttribute:wdid}.DWR.DivTotal.Month.stm",
-              XAxis : "Bottom",
-              YAxis : "Left"
-            }
-          } ],
+          data : [
+            {
+              properties : {
+                Color : "DodgerBlue",
+                DataLabelFormat : "",
+                DataLabelPosition : "Right",
+                Enabled : "True",
+                FlaggedDataSymbolStyle : "None",
+                GraphType : "Line",
+                LegendFormat : "Auto",
+                LineStyle : "Solid",
+                LineWidth : "1",
+                SymbolSize : "0",
+                SymbolStyle : "None",
+                TSAlias : "${featureAttribute:wdid}-DivTotal",
+                TSID : "${featureAttribute:wdid}.DWR.DivTotal.Month~StateMod~/data-ts/${featureAttribute:wdid}.DWR.DivTotal.Month.csv",
+                XAxis : "Bottom",
+                YAxis : "Left"
+              }
+            },
+            // {
+            //   properties : {
+            //     Color : "red",
+            //     DataLabelFormat : "",
+            //     DataLabelPosition : "Right",
+            //     Enabled : "True",
+            //     FlaggedDataSymbolStyle : "None",
+            //     GraphType : "Line",
+            //     LegendFormat : "Auto",
+            //     LineStyle : "Solid",
+            //     LineWidth : "1",
+            //     SymbolSize : "0",
+            //     SymbolStyle : "None",
+            //     TSAlias : "${featureAttribute:wdid}-Streamflow",
+            //     TSID : "${featureAttribute:wdid}.StateMod.Streamflow.Month~StateMod~/data-ts/${featureAttribute:wdid}.StateMod.Streamflow.Month.stm",
+            //     XAxis : "Bottom",
+            //     YAxis : "Left"
+            //   }
+            // }
+          ],
           annotations : [ ]
         } ]
       }
     }
   };
+
 
   /**
    * 
@@ -241,7 +262,8 @@ export class DashboardComponent implements OnDestroy {
     }
 
     return {
-      backgroundColor: this.verify(style.backgroundColor, IM.Style.color)
+      backgroundColor: this.verify(style.backgroundColor, IM.Style.backgroundColor),
+      color: this.verify(style.textColor, IM.Style.color)
     }
   }
 
@@ -258,7 +280,8 @@ export class DashboardComponent implements OnDestroy {
     // The property does not exist, so return a default value.
     else {
       switch (style) {
-        case IM.Style.color: return 'gray';
+        case IM.Style.backgroundColor: return 'gray';
+        case IM.Style.color: return 'black';
       }
     }
   }

@@ -6,9 +6,9 @@ import { BehaviorSubject,
 import * as IM             from '@OpenWaterFoundation/common/services';
 
 
-@Injectable({
-  providedIn: 'root'
-})
+// @Injectable({
+//   providedIn: 'root'
+// })
 export class WidgetService {
 
   private testObs$: BehaviorSubject<string> = new BehaviorSubject('No basin selected.');

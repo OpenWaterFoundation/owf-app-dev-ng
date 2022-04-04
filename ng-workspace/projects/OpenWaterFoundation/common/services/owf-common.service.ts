@@ -417,6 +417,32 @@ export class OwfCommonService {
   }
 
   /**
+   * 
+   * @param graphData The graph template object read in from the graph template
+   * JSON file.
+   * 
+   * @returns An object with at least the path to the chart data file. Will also
+   * return the TSID location if the getLocation param is given.
+   */
+  public getChartTSIDLocation(graphData: IM.GraphData): { path: string, location?: string } {
+
+    var filePath: string;
+    // Depending on whether it's a full TSID used in the graph template file, determine
+    // what the file path of the StateMod file is. (TSIDLocation~/path/to/filename.stm OR
+    // TSIDLocation~StateMod~/path/to/filename.stm)
+    if (graphData.properties.TSID.split('~').length === 2) {
+      filePath = graphData.properties.TSID.split('~')[1];
+    } else if (graphData.properties.TSID.split('~').length === 3) {
+      filePath = graphData.properties.TSID.split('~')[2];
+    }
+
+    return {
+      path: filePath,
+      location: graphData.properties.TSID.split('~')[0]
+    }
+  }
+
+  /**
    * Iterates through all menus and sub-menus in the application configuration file and
    * @returns the markdownFile (contentPage) path found there that matches the given geoLayerId
    * @param id The geoLayerId to compare with

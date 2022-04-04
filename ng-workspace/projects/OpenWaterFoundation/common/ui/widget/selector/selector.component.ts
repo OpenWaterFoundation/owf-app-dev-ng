@@ -8,7 +8,6 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
-import { WidgetService }    from '../widget.service';
 
 
 @Component({
@@ -18,15 +17,16 @@ import { WidgetService }    from '../widget.service';
 })
 export class SelectorComponent {
 
+  allFeatures: any[];
   /** The reference to the virtual scroll viewport in the template file by using
    * the @ViewChild decorator. The change detector looks for the first element or
    * directive matching the selector in the view DOM, and if it changes, the property
    * is updated. */
-   @ViewChild(CdkVirtualScrollViewport, { static: false }) cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
+  @ViewChild(CdkVirtualScrollViewport, { static: false }) cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
 
   @Input() dataPath: string;
 
-  items = Array.from({length: 100000}).map((_, i) => `Item #${i}`);
+  filteredFeatures: any[];
 
   @Output() testEmit = new EventEmitter<any>();
 
@@ -35,8 +35,7 @@ export class SelectorComponent {
    * 
    * @param owfCommonService The injected Common library service.
    */
-  constructor(private owfCommonService: OwfCommonService,
-              private widgetService: WidgetService) {}
+  constructor(private owfCommonService: OwfCommonService) {}
 
 
   /**
@@ -55,6 +54,8 @@ export class SelectorComponent {
     this.owfCommonService.getJSONData(this.owfCommonService.buildPath(IM.Path.dbP, [this.dataPath]))
     .subscribe((geoJson: any) => {
       console.log(geoJson);
+      this.allFeatures = geoJson.features;
+      this.filteredFeatures = this.allFeatures;
     })
   }
 
@@ -70,17 +71,44 @@ export class SelectorComponent {
     }
   }
 
+  /**
+   * 
+   * @param inputValue 
+   * @param key 
+   */
+  searchFeatures(inputValue: string, key: string) {
+    // If the value in the search bar is empty, then all dates can be shown.
+    if (inputValue === '') {
+      return this.allFeatures;
+    }
+
+    let filter = inputValue.toLowerCase();
+
+    if (key.toLowerCase() === 'backspace') {
+      return this.allFeatures.filter((feature: any) => {
+        return feature.properties.abbrev.toLowerCase().includes(filter);
+      });
+    } else {
+      return this.filteredFeatures.filter((feature: any) => {
+        return feature.properties.abbrev.toLowerCase().includes(filter);
+      });
+    }
+  }
+
   sendData(data: string): void {
     console.log(data);
     // this.widgetService.setTestObs(data);
   }
 
   /**
-   * Calls either the searchDates or searchBasins function depending which search bar is being used.
+   * 
    * @param event The KeyboardEvent object created every time a key is pressed by the user.
    */
   userInput(event: any, inputType: string) {
-    console.log(event);
+
+    if (inputType === 'feature') {
+      this.filteredFeatures = this.searchFeatures(event.target.value, event.key);
+    }
   }
 
 }

@@ -1,11 +1,13 @@
 import { Component,
           Inject,
+          OnDestroy,
           OnInit }          from '@angular/core';
 import { MatDialogRef,
           MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { forkJoin,
-          Observable }      from 'rxjs';
+          Observable, 
+          Subscription }    from 'rxjs';
 
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
 
@@ -38,7 +40,11 @@ declare const Plotly: any;
   templateUrl: './dialog-heatmap.component.html',
   styleUrls: ['./dialog-heatmap.component.css', '../main-dialog-style.css']
 })
-export class DialogHeatmapComponent implements OnInit {
+export class DialogHeatmapComponent implements OnInit, OnDestroy {
+
+  /** Subscription to be unsubscribed to at component destruction to prevent memory
+   * leaks.*/
+  private forkJoinSub$: Subscription;
   /** Path to the data being displayed in the heatmap. */
   public graphFilePath: string;
   /** The geoLayer object from the map configuration file. */
@@ -179,10 +185,17 @@ export class DialogHeatmapComponent implements OnInit {
   }
 
   /**
+   * Called once, before the instance is destroyed.
+   */
+  ngOnDestroy(): void {
+    this.forkJoinSub$.unsubscribe();
+  }
+
+  /**
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-   public onClose(): void {
+  onClose(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }
@@ -192,7 +205,7 @@ export class DialogHeatmapComponent implements OnInit {
    * files, create a TS object, and add it to an array.
    * @param dataPath The path type describing what kind of file is being processed.
    */
-  public parseTSFile(dataPath: IM.Path): void {
+  parseTSFile(dataPath: IM.Path): void {
     // Defines a TSObject so it can be instantiated as the desired object later.
     var TSObject: any;
     // Create an array to hold the Observables of each file read.
@@ -227,7 +240,7 @@ export class DialogHeatmapComponent implements OnInit {
 
     // Now that the array has all the Observables needed, forkJoin and subscribe to them all. Their results will now be
     // returned as an Array with each index corresponding to the order in which they were pushed onto the array.
-    forkJoin(dataArray).subscribe((resultsArray: TS[]) => {
+    this.forkJoinSub$ = forkJoin(dataArray).subscribe((resultsArray: TS[]) => {
       this.createHeatmap(resultsArray);
     });
 

@@ -15,7 +15,7 @@ xdescribe('DialogTSGraphComponent', () => {
 
   const dataObject = {
     data: {
-      TSID_Location: "Weld.DOLA.Population.Year",
+      TSIDLocation: "Weld.DOLA.Population.Year",
       chartPackage: undefined,
       featureProperties: {
         co_fips: "123",

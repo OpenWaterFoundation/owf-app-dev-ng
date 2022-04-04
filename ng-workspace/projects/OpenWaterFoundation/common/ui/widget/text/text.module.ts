@@ -29,6 +29,8 @@ import { TextComponent }  from './text.component';
     }),
 
     ErrorModule
+  ],
+  providers: [
   ]
 })
 export class TextModule { }

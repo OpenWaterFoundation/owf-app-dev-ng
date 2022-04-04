@@ -976,7 +976,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                           var actionArray: string[] = [];
                           var actionLabelArray: string[] = [];
                           var graphFilePath: string;
-                          var TSID_Location: string;
+                          var TSIDLocation: string;
                           var resourcePathArray: string[] = [];
                           var downloadFileNameArray: any[] = [];
                           var windowID: string;
@@ -1073,7 +1073,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                       // path we want to use so our dialog-content
                                       // component can determine what kind of file
                                       // was given.
-                                      TSID_Location = TSID.split('~')[0];
+                                      TSIDLocation = TSID.split('~')[0];
                                       // If the TSID has one tilde (~), set the
                                       // path using the correct index compared to
                                       // if the TSID contains two tildes.
@@ -1084,7 +1084,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                       }
                                     } else console.error('The TSID has not been set in the graph template file');
 
-                                    _this.openTSGraphDialog(graphTemplateObject, graphFilePath, TSID_Location, chartPackageArray[i],
+                                    _this.openTSGraphDialog(graphTemplateObject, graphFilePath, TSIDLocation, chartPackageArray[i],
                                       featureProperties, downloadFileNameArray[i] ? downloadFileNameArray[i] : null, windowID);
                                   });
                               }
@@ -1102,7 +1102,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                     // Split on the ~ and set the actual file path
                                     // we want to use so our dialog-content component
                                     // can determine what kind of file was given.
-                                    TSID_Location = TSID.split('~')[0];
+                                    TSIDLocation = TSID.split('~')[0];
                                     // If the TSID has one tilde (~), set the path
                                     // using the correct index compared to if
                                     // the TSID contains two tildes.
@@ -1827,7 +1827,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param graphTemplateObject The template config object of the current graph being shown
   * @param graphFilePath The file path to the current graph that needs to be read
   */
-  private openTSGraphDialog(graphTemplateObject: any, graphFilePath: string, TSID_Location: string,
+  private openTSGraphDialog(graphTemplateObject: any, graphFilePath: string, TSIDLocation: string,
     chartPackage: string, featureProperties: any, downloadFileName?: string, windowID?: string): void {
 
     // Create a MatDialogConfig object to pass to the DialogTSGraphComponent for
@@ -1845,7 +1845,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // the spread operator. More information was found here:
       // https://medium.com/@oprearocks/what-do-the-three-dots-mean-in-javascript-bc5749439c9a
       ...(downloadFileName && { downloadFileName: downloadFileName }),
-      TSID_Location: TSID_Location
+      TSIDLocation: TSIDLocation
     }
     const dialogRef: MatDialogRef<DialogTSGraphComponent, any> = this.dialog.open(DialogTSGraphComponent, {
       data: dialogConfig,

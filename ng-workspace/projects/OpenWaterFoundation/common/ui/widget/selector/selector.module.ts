@@ -1,9 +1,6 @@
 import { NgModule }           from '@angular/core';
 import { CommonModule }       from '@angular/common';
 
-import { BrowserModule }           from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { FormsModule,
           ReactiveFormsModule } from '@angular/forms';
 
@@ -18,17 +15,6 @@ import { ScrollingModule }    from '@angular/cdk/scrolling';
 
 import { SelectorComponent }  from './selector.component';
 
-import { MatDatepickerModule }     from '@angular/material/datepicker';
-import { MatDialogModule }         from '@angular/material/dialog';
-import { MatExpansionModule }      from '@angular/material/expansion';
-import { DateAdapter,
-          ErrorStateMatcher,
-          MatNativeDateModule, 
-          MAT_DATE_FORMATS}        from '@angular/material/core';
-import { MatSidenavModule }        from '@angular/material/sidenav';
-import { MatSliderModule }         from '@angular/material/slider';
-import { MatToolbarModule }        from '@angular/material/toolbar';
-
 
 @NgModule({
   declarations: [
@@ -38,16 +24,6 @@ import { MatToolbarModule }        from '@angular/material/toolbar';
     SelectorComponent
   ],
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-
-    MatDatepickerModule,
-MatDialogModule,
-MatExpansionModule,
-MatSidenavModule,
-MatSliderModule,
-MatToolbarModule,
-
     CommonModule,
     
     FormsModule,

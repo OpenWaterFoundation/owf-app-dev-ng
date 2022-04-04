@@ -1,15 +1,14 @@
 import { Component,
-          Inject,
           Input,
           OnDestroy, 
           OnInit}                 from '@angular/core';
 import { MatDialog,
           MatDialogConfig,
-          MatDialogRef,
-          MAT_DIALOG_DATA }       from '@angular/material/dialog';
+          MatDialogRef }          from '@angular/material/dialog';
 
 import { forkJoin,
-          Observable }            from 'rxjs';
+          Observable, 
+          Subscription }          from 'rxjs';
 
 import { OwfCommonService }       from '@OpenWaterFoundation/common/services';
 import * as IM                    from '@OpenWaterFoundation/common/services';
@@ -38,22 +37,26 @@ declare var Plotly: any;
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.css']
 })
-export class ChartComponent {
+export class ChartComponent implements OnInit, OnDestroy {
+
+
+  public allCSVResults: {result: any, index: number}[] = [];
   /** The array of objects to pass to the tstable component for data table creation. */
   public attributeTable: any[] = [];
   /** This variable lets the template file know if neither a CSV, DateValue, or
   * StateMod file is given. */
   public badFile = false;
-  /**
-   * 
-   */
+  /** The object with the necessary chart data for displaying a Plotly chart. */
   @Input() chartData: any;
   /** A string containing the name to be passed to the TSTableComponent's first
   * column name: DATE or DATE / TIME. */
   public dateTimeColumnName: string;
+  /** Subscription to be unsubscribed to at component destruction to prevent memory
+   * leaks.*/
+  private forkJoinSub$: Subscription;
   /** The graph template object retrieved from the popup configuration file property
   * resourcePath. */
-  public graphTemplateObject: any;
+  public graphTemplate: IM.GraphTemplate;
   /** The name of the download file for the dialog-tstable component. */
   private downloadFileName: string;
   /** The object containing all of the layer's feature properties. */
@@ -72,13 +75,15 @@ export class ChartComponent {
   /** Used as a path resolver and contains the path to the map configuration that
   * is using this TSGraphComponent. To be set in the app service for relative paths. */
   public mapConfigPath: string;
+
+  public totalCSVFiles = 0;
   /** The array of TS objects that was originally read in using the StateMod or DateValue
   * Java converted code. Used as a reference in the dialog-tstable component for
   * downloading to the user's local machine. */
   public TSArrayOGResultRef: TS[];
   /** The string representing the TSID before the first tilde (~) in the graph template
   * object. Used to help create a unique graph ID. */
-  public TSID_Location: string;
+  public TSIDLocation: string;
   /** An array containing the value header names after the initial DATE / TIME
   * header. To be passed to dialog-tstable for downloading files. */
   public valueColumns: string[] = [];
@@ -106,7 +111,8 @@ export class ChartComponent {
   * data array.
   * @param units The units being used on the graph to be shown as a column.
   */
-  private addToAttributeTable(x_axisLabels: string[], axisObject: any, TSAlias: string, units: string, TSIndex: number, datePrecision?: number): void {
+  private addToAttributeTable(x_axisLabels: string[], axisObject: any, TSAlias: string,
+    units: string, TSIndex: number, datePrecision?: number): void {
     // Retrieve the output precision from the DataUnits array if it exists, and if not default to 2
     var outputPrecision = this.determineOutputPrecision(units);
     // For the first column header name, have it be DATE if the datePrecision is week, month or year,
@@ -236,67 +242,69 @@ export class ChartComponent {
   }
 
   /**
-  * Takes the results given from Papa Parse and creates a PopulateGraph instance by assigning its members. It then adds the
-  * PopulateGraph instance to an array for each CSV file found in the graph config file
-  * @param results The results array returned asynchronously from Papa Parse. Contains at least one result object
+  * Takes all results given from Papa Parse and creates a PopulateGraph instance
+  * by assigning its members so it can be used by createPlotlyGraph.
+  * @param parsedData The results object returned asynchronously from Papa Parse.
+  * Contains at least one result array with its index in the graphTemplate data
+  * array.
   */
-  private createCSVConfig(results: any[]): void {
+  private createCSVConfig(parsedData: {result: any[], index: number}[]): void {
 
-    var chartConfig: Object = this.graphTemplateObject;
-    var chartConfigData = chartConfig['product']['subProducts'][0]['data'];
-    var chartConfigProp = chartConfig['product']['subProducts'][0]['properties'];
+    var chartConfigData = this.graphTemplate.product.subProducts[0].data;
+    var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     var configArray: IM.PopulateGraph[] = [];
     var templateYAxisTitle: string;
-    var chartJSGraph: boolean;
     var legendPosition: any;
+    console.log(parsedData);
+    throw new Error('Actually there is no error. :)');
 
-    for (let rIndex = 0; rIndex < results.length; rIndex++) {
+    // for (let rIndex = 0; rIndex < parsedData.length; rIndex++) {
 
-      // Set up the parts of the graph that won't need to be set more than once, such as the LeftYAxisTitleString
-      if (rIndex === 0) {
-        templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
-        legendPosition = this.chartService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition);
-      }
-      // These two are the string representing the keys in the current result.
-      // They will be used to populate the x- and y-axis arrays.
-      let x_axis = Object.keys(results[rIndex].data[0])[0];
-      let y_axis = Object.keys(results[rIndex].data[0])[1];
+    //   // Set properties that won't need to be set more than once.
+    //   if (rIndex === 0) {
+    //     templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
+    //     legendPosition = this.chartService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition);
+    //   }
+    //   // These two are the string representing the keys in the current result.
+    //   // They will be used to populate the x- and y-axis arrays.
+    //   let x_axis = Object.keys(parsedData[rIndex].result.data[0])[0];
+    //   let y_axis = Object.keys(parsedData.result[rIndex].data[0])[1];
 
-      // Populate the arrays needed for the x- and y-axes.
-      var x_axisLabels: string[] = [];
-      var y_axisData: number[] = [];
-      for (let resultObj of results[rIndex].data) {
-        x_axisLabels.push(resultObj[x_axis]);
-        y_axisData.push(parseFloat(resultObj[y_axis]));
-      }
-      // Populate various other chart properties. They will be checked for validity in createGraph().
-      var graphType: string = chartConfigData[rIndex]['properties'].GraphType.toLowerCase();
-      var backgroundColor: string = chartConfigData[rIndex]['properties'].Color;
-      var TSAlias: string = chartConfigData[rIndex]['properties'].TSAlias;
-      var units: string = chartConfigProp.LeftYAxisUnits;
+    //   // Populate the arrays needed for the x- and y-axes.
+    //   var x_axisLabels: string[] = [];
+    //   var y_axisData: number[] = [];
+    //   for (let resultObj of parsedData.result[rIndex].data) {
+    //     x_axisLabels.push(resultObj[x_axis]);
+    //     y_axisData.push(parseFloat(resultObj[y_axis]));
+    //   }
+    //   // Populate various other chart properties. They will be checked for validity in createGraph().
+    //   var graphType: string = chartConfigData[parsedData.index].properties.GraphType.toLowerCase();
+    //   var backgroundColor: string = chartConfigData[parsedData.index].properties.Color;
+    //   var TSAlias: string = chartConfigData[rIndex].properties.TSAlias;
+    //   var units: string = chartConfigProp.LeftYAxisUnits;
 
-      var datePrecision: number = this.chartService.determineDatePrecision(chartConfigData[rIndex]['properties'].TSID);
-      var legendLabel = this.chartService.formatLegendLabel(chartConfigData[rIndex]['properties'].TSID);
+    //   var datePrecision: number = this.chartService.determineDatePrecision(chartConfigData[parsedData.index].properties.TSID);
+    //   var legendLabel = this.chartService.formatLegendLabel(chartConfigData[parsedData.index].properties.TSID);
 
-      this.addToAttributeTable(x_axisLabels, { csv_y_axisData: y_axisData }, (TSAlias !== '') ? TSAlias : legendLabel, units, rIndex, datePrecision);
+    //   this.addToAttributeTable(x_axisLabels, { csv_y_axisData: y_axisData }, (TSAlias !== '') ? TSAlias : legendLabel, units, rIndex, datePrecision);
 
-      // Create the PopulateGraph instance that will be passed to create either the Chart.js or Plotly.js graph
-      var config: IM.PopulateGraph = {
-        chartMode: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.cm),
-        chartType: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.ct),
-        dataLabels: x_axisLabels,
-        datasetData: y_axisData,
-        datasetBackgroundColor: backgroundColor,
-        graphFileType: 'csv',
-        legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
-        legendPosition: legendPosition,
-        yAxesLabelString: templateYAxisTitle
-      }
-      // Push the config instance into the configArray to be sent to createXXXGraph()
-      configArray.push(config);
-    }
+    //   // Create the PopulateGraph instance that will be passed to create either the Chart.js or Plotly.js graph
+    //   var config: IM.PopulateGraph = {
+    //     chartMode: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.cm),
+    //     chartType: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.ct),
+    //     dataLabels: x_axisLabels,
+    //     datasetData: y_axisData,
+    //     datasetBackgroundColor: backgroundColor,
+    //     graphFileType: 'csv',
+    //     legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
+    //     legendPosition: legendPosition,
+    //     yAxesLabelString: templateYAxisTitle
+    //   }
+    //   // Push the config instance into the configArray to be sent to createXXXGraph()
+    //   configArray.push(config);
+    // }
 
-    this.createPlotlyGraph(configArray, true);
+    // this.createPlotlyGraph(configArray, true);
   }
 
   /**
@@ -305,11 +313,10 @@ export class ChartComponent {
   */
   private createTSConfig(timeSeries: TS[]): void {
 
-    var chartConfig: Object = this.graphTemplateObject;
+    var chartConfig: Object = this.graphTemplate;
     var chartConfigData: any[] = chartConfig['product']['subProducts'][0]['data'];
     var chartConfigProp = chartConfig['product']['subProducts'][0]['properties'];
     var configArray: IM.PopulateGraph[] = [];
-    var chartJSGraph: boolean;
     var templateYAxisTitle: string = '';
     var legendPosition: any;
 
@@ -402,7 +409,7 @@ export class ChartComponent {
   * @param CSV Boolean representing if a CSV data file was provided.
   */
   private createPlotlyGraph(totalGraphConfig: IM.PopulateGraph[], CSV: boolean): void {
-    // The final data array of objects that is given to Plotly.react() to create the graph.
+    // The final data array of objects that is given to Plotly.react to create the graph.
     var finalData: { x: number[], y: number[], type: string }[] = [];
     // The data object being pushed onto the finalData array.
     var data: any;
@@ -412,7 +419,7 @@ export class ChartComponent {
 
     // Iterate over the config array and add the necessary configuration data into
     // the data object that will be added to the finalData array. The finalData array
-    // is what's given as the second argument to Plotly.react();
+    // is what's given as the second argument to Plotly.react.
     for (let graphConfig of totalGraphConfig) {
       data = {};
 
@@ -485,10 +492,10 @@ export class ChartComponent {
       responsive: true,
       scrollZoom: true
     };
-    // Plots the actual plotly graph with the given <div> id, data array, layout
+    // Plots the plotly graph with the given <div> id (TSIDLocation), data array, layout
     // and configuration objects organize and maintain multiple opened dialogs in
-    // the future.  (https://plotly.com/javascript/plotlyjs-function-reference/#plotlyplot)
-    Plotly.react(this.TSID_Location, finalData, layout, plotlyConfig);
+    // the future. (https://plotly.com/javascript/plotlyjs-function-reference/#plotlyreact)
+    Plotly.react(this.TSIDLocation, finalData, layout, plotlyConfig);
   }
 
   /**
@@ -514,50 +521,97 @@ export class ChartComponent {
   }
 
   /**
-  * Initial function call when the Dialog component is created. Determines whether
-  * a CSV or StateMod file is to be read for graph creation.
-  */
-  // TODO: jpkeahey 2020.07.02 - Might need to change how this is implemented, since Steve said both CSV and StateMod (or other)
-  // files could be in the same popup template file. They might not be mutually exclusive in the future.
-  ngOnInit(): void {
+   * Determine how many total CSV files are to be asynchronously retrieved by iterating
+   * over all graphData objects and checking their TSID property.
+   */
+  private getCSVFilesToRetrieve(): void {
+    this.graphTemplate.product.subProducts[0].data.forEach((graphData) => {
+      if (graphData.properties.TSID.includes('.csv')) {
+        this.totalCSVFiles += 1;
+      }
+    });
+  }
+
+  /**
+   * Initializes this components class variables and performs other necessary actions
+   * to set up and display a chart.
+   */
+  private initChartVars(): void {
 
     this.featureProperties = this.chartData.featureProperties;
     this.downloadFileName = this.chartData.downloadFileName ? this.chartData.downloadFileName : undefined;
-    this.graphTemplateObject = this.chartData.graphTemplateObject;
+    this.graphTemplate = this.chartData.graphTemplate;
     this.graphFilePath = this.chartData.graphFilePath;
     this.mapConfigPath = this.chartData.mapConfigPath;
-    this.TSID_Location = this.chartData.TSID_Location;
-    // Replace the ${} properties in the graphTemplateObject from the graph
+    // Replace the ${properties} in the graphTemplate object from the graph
     // template file.
-    MapUtil.replaceProperties(this.graphTemplateObject, this.featureProperties);
+    MapUtil.replaceProperties(this.graphTemplate, this.featureProperties);
+    // Set the class variable TSIDLocation to the first dataGraph object from the
+    // graphTemplate object. This is used as a unique identifier for the Plotly
+    // graph <div> id attribute.
+    this.TSIDLocation = this.owfCommonService.getChartTSIDLocation(this.graphTemplate.product.subProducts[0].data[0]).location;
 
-    // console.log(this.featureProperties);
-    // console.log(this.downloadFileName);
-    // console.log(this.graphTemplateObject);
-    // console.log(this.graphFilePath);
-    // console.log(this.mapConfigPath);
-    // console.log(this.TSID_Location);
-
+    this.getCSVFilesToRetrieve();
+    // TODO: Delete this next.
     this.owfCommonService.setMapConfigPath(this.mapConfigPath);
     // Set the mainTitleString to be used by the map template file to display as
     // the TSID location (for now).
-    this.mainTitleString = this.graphTemplateObject['product']['properties'].MainTitleString;
+    this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
+  }
 
-    if (this.graphFilePath.includes('.csv')) {
-      this.parseCSVFile();
-      this.isTSFile = false;
-    }
-    else if (this.graphFilePath.includes('.stm')) {
-      this.parseTSFile(IM.Path.sMP);
-      this.isTSFile = true;
-    }
-    else if (this.graphFilePath.includes('.dv')) {
-      this.parseTSFile(IM.Path.dVP);
-      this.isTSFile = true;
-    }
-    else {
-      this.badFile = true;
-    }
+  /**
+  * Initial function call when the Dialog component is created. Determines whether
+  * a CSV or StateMod file is to be read for graph creation.
+  */
+  ngOnInit(): void {
+
+    this.initChartVars();
+
+    // if (this.graphFilePath.includes('.csv')) {
+    //   this.parseCSVFile();
+    //   this.isTSFile = false;
+    // }
+    // else if (this.graphFilePath.includes('.stm')) {
+    //   this.parseTSFile(IM.Path.sMP);
+    //   this.isTSFile = true;
+    // }
+    // else if (this.graphFilePath.includes('.dv')) {
+    //   this.parseTSFile(IM.Path.dVP);
+    //   this.isTSFile = true;
+    // }
+    // else {
+    //   this.badFile = true;
+    // }
+
+    // Iterate over all graphData objects in the graph template file.
+    this.graphTemplate.product.subProducts[0].data.forEach((graphData, index) => {
+
+      if (graphData.properties.TSID.includes('.csv')) {
+        this.testParseCSVFile(graphData, index);
+      }
+    });
+  }
+
+  private testParseCSVFile(graphData: IM.GraphData, index: number): void {
+    // The file path string to the TS File.
+    var filePath = this.owfCommonService.getChartTSIDLocation(graphData).path;
+
+    Papa.parse(this.owfCommonService.buildPath(IM.Path.csvPath, [filePath]), {
+      delimiter: ",",
+      download: true,
+      comments: "#",
+      skipEmptyLines: true,
+      header: true,
+      complete: (result: any, file: any) => {
+        this.allCSVResults.push({result: result, index: index});
+
+        if (this.allCSVResults.length === this.totalCSVFiles) {
+          console.log(this.allCSVResults);
+          this.createCSVConfig(this.allCSVResults);
+        }
+      }
+    });
+
   }
 
   /**
@@ -570,6 +624,7 @@ export class ChartComponent {
   * Called once, before the instance is destroyed.
   */
   public ngOnDestroy(): void {
+    this.forkJoinSub$.unsubscribe();
   }
 
   /**
@@ -618,88 +673,80 @@ export class ChartComponent {
   /**
   * Calls Papa Parse to asynchronously read in a CSV file.
   */
-  private parseCSVFile(): void {
+  // private parseCSVFile(): void {
 
-    // The array of each data object in the graph config file
-    var dataArray: any[] = this.graphTemplateObject['product']['subProducts'][0]['data'];
-    // This array will hold all results returned from Papa Parse, whether one CSV is used, or multiple
-    var allResults: any[] = [];
-    // The file path string to the TS File
-    var filePath: string;
+  //   // The array of each data object in the graph config file.
+  //   var graphDataArray: IM.GraphData[] = this.graphTemplate.product.subProducts[0].data;
+  //   // This array will hold all results returned from Papa Parse, whether one CSV is used, or multiple
+  //   var allResults: any[] = [];
+  //   // The file path string to the TS File
+  //   var filePath: string;
 
-    // Go through each data object in the templateObject from the graph config file
-    for (let data of dataArray) {
+  //   // Go through each data object in the templateObject from the graph config file
+  //   for (let graphData of graphDataArray) {
 
-      // Depending on whether it's a full TSID used in the graph template file, determine what the file path of the StateMod
-      // file is. (TSIDLocation~/path/to/filename.stm OR TSIDLocation~StateMod~/path/to/filename.stm)
-      if (data.properties.TSID.split('~').length === 2) {
-        filePath = data.properties.TSID.split('~')[1];
-      } else if (data.properties.TSID.split('~').length === 3) {
-        filePath = data.properties.TSID.split('~')[2];
-      }
+  //     filePath = this.owfCommonService.getChartTSIDLocation(graphData).path;
 
-      Papa.parse(this.owfCommonService.buildPath(IM.Path.csvPath, [filePath]), {
-        delimiter: ",",
-        download: true,
-        comments: "#",
-        skipEmptyLines: true,
-        header: true,
-        complete: (result: any, file: any) => {
-          allResults.push(result);
+  //     Papa.parse(this.owfCommonService.buildPath(IM.Path.csvPath, [filePath]), {
+  //       delimiter: ",",
+  //       download: true,
+  //       comments: "#",
+  //       skipEmptyLines: true,
+  //       header: true,
+  //       complete: (result: any, file: any) => {
+  //         allResults.push(result);
 
-          if (allResults.length === dataArray.length) {
-            this.createCSVConfig(allResults);
-          }
-        }
-      });
+  //         if (allResults.length === graphDataArray.length) {
+  //           console.log(allResults);
+  //           this.createCSVConfig(allResults);
+  //         }
+  //       }
+  //     });
 
-    }
+  //   }
 
-  }
+  // }
 
   /**
-  * A StateMod file is being processed here. Get the template object to determine if there is more than one time series to
-  * display. So either one StateMod file is read, or a forkJoin needs to be used to read multiple StateMod files asynchronously.
-  * @param TSFile A string defining whether the TSFile to be created is StateMod or DateValue
+  * Determines if there is more than one time series to display, and processes each
+  * one.
+  * @param TSFile A string defining whether the TSFile to be created is StateMod
+  * or DateValue.
   */
   private parseTSFile(TSFile: IM.Path): void {
 
     // Defines a TSObject so it can be instantiated as the desired object later.
-    var TSObject: any;
+    var TSObject: StateMod_TS | DateValueTS;
     // Create an array to hold the Observables of each file read.
-    var dataArray: Observable<any>[] = [];
-    // The file path string to the TS File.
-    var filePath: string;
-    // The TSID used by the readTimeSeries function in the converted Java code that utilizes it as a TS identifier.
-    var TSIDLocation: string;
+    var dataArray: Observable<TS>[] = [];
+    // The array of each data object in the graph config file.
+    var graphDataArray = this.graphTemplate.product.subProducts[0].data;
 
     switch (TSFile) {
       case IM.Path.sMP: TSObject = new StateMod_TS(this.owfCommonService); break;
       case IM.Path.dVP: TSObject = new DateValueTS(this.owfCommonService); break;
     }
 
+    for (let graphData of graphDataArray) {
 
-    for (let data of this.graphTemplateObject['product']['subProducts'][0]['data']) {
-      // Obtain the TSID location for the readTimeSeries method.
-      TSIDLocation = data.properties.TSID.split('~')[0];
-      // If a full TSID used in the graph template file, determine the file path of the StateMod
-      // file. (TSIDLocation~/path/to/filename.stm OR TSIDLocation~StateMod~/path/to/filename.stm)
-      if (data.properties.TSID.split('~').length === 2) {
-        filePath = data.properties.TSID.split('~')[1];
-      } else if (data.properties.TSID.split('~').length === 3) {
-        filePath = data.properties.TSID.split('~')[2];
-      }
+      var chartLocation = this.owfCommonService.getChartTSIDLocation(graphData);
+      var TSIDLocation = chartLocation.location;
+      // The file path string to the TS File.
+      var filePath = chartLocation.path;
+      
       // Don't subscribe yet!  
-      dataArray.push(TSObject.readTimeSeries(TSIDLocation, this.owfCommonService.buildPath(TSFile, [filePath]),
+      dataArray.push(
+        TSObject.readTimeSeries(TSIDLocation, this.owfCommonService.buildPath(TSFile, [filePath]),
         null,
         null,
         null,
-        true));
+        true)
+      );
     }
 
     // Now that the array has all the Observables needed, forkJoin and subscribe to them all. Their results will now be
     // returned as an Array with each index corresponding to the order in which they were pushed onto the array.
-    forkJoin(dataArray).subscribe((resultsArray: TS[]) => {
+    this.forkJoinSub$ = forkJoin(dataArray).subscribe((resultsArray: TS[]) => {
       this.TSArrayOGResultRef = resultsArray;
       this.createTSConfig(resultsArray);
     });

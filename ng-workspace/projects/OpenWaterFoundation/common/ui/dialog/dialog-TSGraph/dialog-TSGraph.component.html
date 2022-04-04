@@ -33,14 +33,14 @@
   <!-- Show plotly.js by default if a chartPackage was not given -->
   <div *ngIf="!chartPackage" class="chartPackage">
     <div class="showGraph">
-      <div [attr.id]="windowID + TSID_Location"
+      <div [attr.id]="windowID + TSIDLocation"
             attr.data-cy="{{windowID}}-plotly-tsgraph-dialog"></div>
     </div>
   </div>
   <!-- Create and display a Plotly graph if the showGraph Dialog class variable is true -->
   <div *ngIf="chartPackage" class="chartPackage">
     <div *ngIf="chartPackage.toUpperCase() === 'PLOTLY'" class="showGraph">
-      <div [attr.id]="windowID + TSID_Location"></div>
+      <div [attr.id]="windowID + TSIDLocation"></div>
     </div>
   </div>
 

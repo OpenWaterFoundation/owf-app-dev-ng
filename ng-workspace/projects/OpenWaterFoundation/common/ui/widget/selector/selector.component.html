@@ -1,8 +1,8 @@
-<div id="example-button-center">
+<div class="selector-center">
 
-  <mat-form-field id="select-form" appearance="fill">
+  <mat-form-field class="select-form" appearance="fill">
     <mat-label>Choose Item</mat-label>
-    <mat-select name="date-selection"
+    <mat-select name="item-selection"
     (openedChange)="openSelectChange($event)">
       <cdk-virtual-scroll-viewport [itemSize]="48"
       [minBufferPx]="540"
@@ -10,48 +10,17 @@
       [style.width.px]="311"
       [style.height.px]="240">
         <input matInput
-        id="search"
+        class="search-input"
         placeholder="Search items..."
-        (keyup)="userInput($event, 'date')">
-        <mat-option *cdkVirtualFor="let item of items"
+        (keyup)="userInput($event, 'feature')">
+        <mat-option *cdkVirtualFor="let feature of filteredFeatures"
         (click)="callUpdateMapDate('date')"
-        [value]="item"
+        [value]="feature.properties.abbrev"
         [style.height.px]="48">
-          {{item}}
+          {{feature.properties.abbrev}}
         </mat-option>
       </cdk-virtual-scroll-viewport>
     </mat-select>
   </mat-form-field>
 
-  <!-- Use $#13; to add a newline to the matTooltip. -->
-  <!-- <button mat-raised-button
-          id="owf-common-examples"
-          matTooltip="Click to update info in other widgets"
-          [matTooltipShowDelay]="500"
-          matTooltipPosition="left"
-          [matMenuTriggerFor]="menu"
-          #menuTrigger="matMenuTrigger"
-          (click)="menuTrigger.openMenu()"
-          routerLinkActive="link-active">Choose Basin</button>
-
-  <mat-menu #menu>
-    <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
-      <div *cdkVirtualFor="let item of items" class="example-item">
-        <button mat-menu-item
-            (click)="sendData(item)">
-          {{item}}
-        </button>
-      </div>
-    </cdk-virtual-scroll-viewport>
-
-    <button mat-menu-item
-            (click)="sendData('Poudre Basin')">
-      Poudre Basin
-    </button>
-
-    <button mat-menu-item
-            (click)="sendData('Arkansas Basin')">
-      Arkansas Basin
-    </button>
-  </mat-menu> -->
 </div>
