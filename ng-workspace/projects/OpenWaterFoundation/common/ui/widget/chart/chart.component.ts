@@ -248,63 +248,62 @@ export class ChartComponent implements OnInit, OnDestroy {
   * Contains at least one result array with its index in the graphTemplate data
   * array.
   */
-  private createCSVConfig(parsedData: {result: any[], index: number}[]): void {
+  private createCSVConfig(parsedData: {result: any, index: number}[]): void {
 
-    var chartConfigData = this.graphTemplate.product.subProducts[0].data;
+    var allGraphData = this.graphTemplate.product.subProducts[0].data;
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     var configArray: IM.PopulateGraph[] = [];
     var templateYAxisTitle: string;
     var legendPosition: any;
     console.log(parsedData);
-    throw new Error('Actually there is no error. :)');
 
-    // for (let rIndex = 0; rIndex < parsedData.length; rIndex++) {
+    for (let rIndex = 0; rIndex < parsedData.length; rIndex++) {
 
-    //   // Set properties that won't need to be set more than once.
-    //   if (rIndex === 0) {
-    //     templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
-    //     legendPosition = this.chartService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition);
-    //   }
-    //   // These two are the string representing the keys in the current result.
-    //   // They will be used to populate the x- and y-axis arrays.
-    //   let x_axis = Object.keys(parsedData[rIndex].result.data[0])[0];
-    //   let y_axis = Object.keys(parsedData.result[rIndex].data[0])[1];
+      // Set properties that won't need to be set more than once.
+      if (rIndex === 0) {
+        templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
+        legendPosition = this.chartService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition);
+      }
+      // These two are the string representing the keys in the current result.
+      // They will be used to populate the x- and y-axis arrays.
+      let x_axis = Object.keys(parsedData[rIndex].result.data[0])[0];
+      let y_axis = Object.keys(parsedData[rIndex].result.data[0])[1];
 
-    //   // Populate the arrays needed for the x- and y-axes.
-    //   var x_axisLabels: string[] = [];
-    //   var y_axisData: number[] = [];
-    //   for (let resultObj of parsedData.result[rIndex].data) {
-    //     x_axisLabels.push(resultObj[x_axis]);
-    //     y_axisData.push(parseFloat(resultObj[y_axis]));
-    //   }
-    //   // Populate various other chart properties. They will be checked for validity in createGraph().
-    //   var graphType: string = chartConfigData[parsedData.index].properties.GraphType.toLowerCase();
-    //   var backgroundColor: string = chartConfigData[parsedData.index].properties.Color;
-    //   var TSAlias: string = chartConfigData[rIndex].properties.TSAlias;
-    //   var units: string = chartConfigProp.LeftYAxisUnits;
+      // Populate the arrays needed for the x- and y-axes.
+      var x_axisLabels: string[] = [];
+      var y_axisData: number[] = [];
+      for (let resultObj of parsedData[rIndex].result.data) {
+        x_axisLabels.push(resultObj[x_axis]);
+        y_axisData.push(parseFloat(resultObj[y_axis]));
+      }
+      // Populate various other chart properties. They will be checked for validity in createGraph().
+      var graphType: string = allGraphData[parsedData[rIndex].index].properties.GraphType.toLowerCase();
+      var backgroundColor: string = allGraphData[parsedData[rIndex].index].properties.Color;
+      var TSAlias: string = allGraphData[parsedData[rIndex].index].properties.TSAlias;
+      var units: string = chartConfigProp.LeftYAxisUnits;
 
-    //   var datePrecision: number = this.chartService.determineDatePrecision(chartConfigData[parsedData.index].properties.TSID);
-    //   var legendLabel = this.chartService.formatLegendLabel(chartConfigData[parsedData.index].properties.TSID);
+      var datePrecision: number = this.chartService.determineDatePrecision(allGraphData[parsedData[rIndex].index].properties.TSID);
+      var legendLabel = this.chartService.formatLegendLabel(allGraphData[parsedData[rIndex].index].properties.TSID);
 
-    //   this.addToAttributeTable(x_axisLabels, { csv_y_axisData: y_axisData }, (TSAlias !== '') ? TSAlias : legendLabel, units, rIndex, datePrecision);
+      this.addToAttributeTable(x_axisLabels, { csv_y_axisData: y_axisData }, (TSAlias !== '') ? TSAlias : legendLabel, units, rIndex, datePrecision);
 
-    //   // Create the PopulateGraph instance that will be passed to create either the Chart.js or Plotly.js graph
-    //   var config: IM.PopulateGraph = {
-    //     chartMode: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.cm),
-    //     chartType: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.ct),
-    //     dataLabels: x_axisLabels,
-    //     datasetData: y_axisData,
-    //     datasetBackgroundColor: backgroundColor,
-    //     graphFileType: 'csv',
-    //     legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
-    //     legendPosition: legendPosition,
-    //     yAxesLabelString: templateYAxisTitle
-    //   }
-    //   // Push the config instance into the configArray to be sent to createXXXGraph()
-    //   configArray.push(config);
-    // }
+      // Create the PopulateGraph instance that will be passed to create either the Chart.js or Plotly.js graph
+      var config: IM.PopulateGraph = {
+        chartMode: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.cm),
+        chartType: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.ct),
+        dataLabels: x_axisLabels,
+        datasetData: y_axisData,
+        datasetBackgroundColor: backgroundColor,
+        graphFileType: 'csv',
+        legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
+        legendPosition: legendPosition,
+        yAxesLabelString: templateYAxisTitle
+      }
+      // Push the config instance into the configArray to be sent to createXXXGraph()
+      configArray.push(config);
+    }
 
-    // this.createPlotlyGraph(configArray, true);
+    this.createPlotlyGraph(configArray, true);
   }
 
   /**
@@ -606,7 +605,6 @@ export class ChartComponent implements OnInit, OnDestroy {
         this.allCSVResults.push({result: result, index: index});
 
         if (this.allCSVResults.length === this.totalCSVFiles) {
-          console.log(this.allCSVResults);
           this.createCSVConfig(this.allCSVResults);
         }
       }
