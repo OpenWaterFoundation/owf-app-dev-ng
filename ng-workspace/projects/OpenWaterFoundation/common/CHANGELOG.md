@@ -17,7 +17,8 @@ These elements will only be added if they are applicable for the new version.
 * Created the Dashboard entry point for taking in a dashboard configuration file
 and displaying widgets. The following widgets were implemented:
   * `Error` - Only created on dashboard config error.
-  * `Image` - Displaying a single image.
+  * `Chart` - Displays a JavaScript Plotly chart in the widget.
+  * `Image` - Displays a single image.
   * `Selector` - **WIP** Select and choose an item in a list and possibly
   update other widgets.
   * `Status Indicator` **WIP** Displays a title and main data point with

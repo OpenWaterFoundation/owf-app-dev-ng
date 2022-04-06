@@ -493,6 +493,7 @@ export interface PopulateGraph {
   dateType?: string;
   endDate?: string;
   graphFileType: string;
+  isCSV?: boolean;
   legendLabel: string;
   legendPosition: any;
   plotlyDatasetData?: number[];

@@ -14,7 +14,7 @@
         placeholder="Search items..."
         (keyup)="userInput($event, 'feature')">
         <mat-option *cdkVirtualFor="let feature of filteredFeatures"
-        (click)="callUpdateMapDate('date')"
+        (click)="updateItem(feature)"
         [value]="feature.properties.abbrev"
         [style.height.px]="48">
           {{feature.properties.abbrev}}

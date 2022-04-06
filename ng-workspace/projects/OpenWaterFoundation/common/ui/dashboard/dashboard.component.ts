@@ -27,8 +27,6 @@ export class DashboardComponent implements OnDestroy {
 
   chartObject = {
     downloadFileName: '${featureAttribute:wdid}-diversions.csv',
-    graphFilePath: '/data-ts/0300911.DWR.DivTotal.Month.csv',
-    mapConfigPath: 'data-maps/map-configuration-files/',
     featureProperties: {
       division: 1,
       waterDistrict: 3,
@@ -172,6 +170,25 @@ export class DashboardComponent implements OnDestroy {
           data : [
             {
               properties : {
+                Color : "MidnightBlue",
+                DataLabelFormat : "",
+                DataLabelPosition : "Right",
+                Enabled : "True",
+                FlaggedDataSymbolStyle : "None",
+                GraphType : "Line",
+                LegendFormat : "Auto",
+                LineStyle : "Solid",
+                LineWidth : "1",
+                SymbolSize : "0",
+                SymbolStyle : "None",
+                TSAlias : "Streamflow",
+                TSID : "${featureAttribute:wdid}.StateMod.Streamflow.Month~StateMod~/data-ts/${featureAttribute:wdid}.StateMod.Streamflow.Month.stm",
+                XAxis : "Bottom",
+                YAxis : "Left"
+              }
+            },
+            {
+              properties : {
                 Color : "DodgerBlue",
                 DataLabelFormat : "",
                 DataLabelPosition : "Right",
@@ -183,31 +200,12 @@ export class DashboardComponent implements OnDestroy {
                 LineWidth : "1",
                 SymbolSize : "0",
                 SymbolStyle : "None",
-                TSAlias : "${featureAttribute:wdid}-DivTotal",
+                TSAlias : "DivTotal",
                 TSID : "${featureAttribute:wdid}.DWR.DivTotal.Month~StateMod~/data-ts/${featureAttribute:wdid}.DWR.DivTotal.Month.csv",
                 XAxis : "Bottom",
                 YAxis : "Left"
               }
-            },
-            // {
-            //   properties : {
-            //     Color : "red",
-            //     DataLabelFormat : "",
-            //     DataLabelPosition : "Right",
-            //     Enabled : "True",
-            //     FlaggedDataSymbolStyle : "None",
-            //     GraphType : "Line",
-            //     LegendFormat : "Auto",
-            //     LineStyle : "Solid",
-            //     LineWidth : "1",
-            //     SymbolSize : "0",
-            //     SymbolStyle : "None",
-            //     TSAlias : "${featureAttribute:wdid}-Streamflow",
-            //     TSID : "${featureAttribute:wdid}.StateMod.Streamflow.Month~StateMod~/data-ts/${featureAttribute:wdid}.StateMod.Streamflow.Month.stm",
-            //     XAxis : "Bottom",
-            //     YAxis : "Left"
-            //   }
-            // }
+            }
           ],
           annotations : [ ]
         } ]

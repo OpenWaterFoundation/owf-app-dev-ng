@@ -124,7 +124,7 @@ export class OwfCommonService {
    */
   public buildPath(pathType: string, arg?: any[]): string {
     // If a URL is given as the path that needs to be built, just return it so the
-    // http GET request can be performed
+    // http GET request can be performed.
     if (arg) {
       if (arg[0].startsWith('https') || arg[0].startsWith('http') || arg[0].startsWith('www')) {
         return arg[0];
@@ -210,10 +210,11 @@ export class OwfCommonService {
   }
 
   /**
-   * Formats the path with either the correct relative path prepended to the destination file, or the removal of the beginning
-   * '/' forward slash or an absolute path.
-   * @param path The given path to format
-   * @param pathType A string representing the type of path being formatted, so the correct handling can be used.
+   * Formats the path with either the correct relative path prepended to the destination
+   * file, or the removal of the beginning '/' forward slash or an absolute path.
+   * @param path The path to format.
+   * @param pathType A string representing the type of path being formatted, so
+   * the correct handling can be used.
    */
   public formatPath(path: string, pathType: string): string {
 
@@ -264,10 +265,14 @@ export class OwfCommonService {
   }
 
   /**
-   * Format the @var saveFileName, dependant on the SaveFileType or if a downloadFile property was given in a popup template file.
-   * @param saveFileName The string representing the name that the download file will be called, or undefined if none was given.
-   * @param saveFileType The enum Type describing what kind of save file is trying to be formatted.
-   * @param featureProperties The object containing all features and values for a feature; for replacing ${property} notation.
+   * Format the @var saveFileName, dependant on the SaveFileType or if a downloadFile
+   * property was given in a popup template file.
+   * @param saveFileName The string representing the name that the download file
+   * will be called, or undefined if none was given.
+   * @param saveFileType The enum Type describing what kind of save file is trying
+   * to be formatted.
+   * @param featureProperties The object containing all features and values for a
+   * feature; for replacing ${property} notation.
    */
   public formatSaveFileName(saveFileName: string, saveFileType: IM.SaveFileType, featureProperties?: any): string {
     var warning = 'Undefined detected in the save file name. Confirm "saveFile" property and/or property notation ${ } is correct';

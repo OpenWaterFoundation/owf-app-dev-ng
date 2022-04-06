@@ -2,12 +2,13 @@ import { Component,
           EventEmitter,
           Input,
           Output, 
-          ViewChild }       from '@angular/core';
+          ViewChild }               from '@angular/core';
 
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { OwfCommonService }         from '@OpenWaterFoundation/common/services';
+import * as IM                      from '@OpenWaterFoundation/common/services';
+import { WidgetService }            from '../widget.service';
 
 
 @Component({
@@ -35,16 +36,17 @@ export class SelectorComponent {
    * 
    * @param owfCommonService The injected Common library service.
    */
-  constructor(private owfCommonService: OwfCommonService) {}
+  constructor(private owfCommonService: OwfCommonService,
+    private widgetService: WidgetService) {}
 
 
   /**
    * Called when mat-option is clicked from the Date Mat Form Field. It sends data back to the Map component
    * with the date so the map and necessary Leaflet controls can be updated.
-   * @param date The date a user has selected.
+   * @param feature The date a user has selected.
    */
-  callUpdateMapDate(date: string): void {
-    console.log('Stuff definitely happened!');
+  updateItem(feature: any): void {
+    console.log(feature);
   }
 
   /**

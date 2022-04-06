@@ -9,6 +9,8 @@ import { add,
           format,
           isEqual,
           parseISO }   from 'date-fns';
+import { BehaviorSubject,
+          Observable } from "rxjs";
 
 /** The DialogService provides helper function to all Dialog Components in the Common
  * library. Any function not directly related to a Dialog Component's core functionality
@@ -19,13 +21,40 @@ import { add,
 })
 export class ChartService {
 
+  public allGraphObjectsSource: BehaviorSubject<IM.PopulateGraph[]> = new BehaviorSubject([]);
+
 
   constructor() {}
 
-  /************************* D3 DIALOG COMPONENT *************************/
+
+  /************************* CHART WIDGET COMPONENT *************************/
+
+  /**
+   * 
+   */
+  public get allGraphObjects(): Observable<IM.PopulateGraph[]> {
+    return this.allGraphObjectsSource.asObservable();
+  }
+
+  /**
+   * 
+   * @param popGraph 
+   */
+  public addPopulateGraph(popGraph: IM.PopulateGraph): void {
+    this.allGraphObjectsSource.next([...this.allGraphObjectsSource.value, popGraph]);
+  }
+
+  /**
+   * 
+   */
+  public resetPopulateGraph(): void {
+    this.allGraphObjectsSource.next([]);
+  }
+
+  /*************************** D3 DIALOG COMPONENT ***************************/
 
 
-  /************************* DATA TABLE DIALOG COMPONENT *************************/
+  /*********************** DATA TABLE DIALOG COMPONENT ***********************/
 
   /**
    * Determines the smallest zoom bound to create that displays all selected features
@@ -135,10 +164,14 @@ export class ChartService {
    * @param endDate Date to be the last index in the returned array of dates.
    * @param interval String describing the interval of how far apart each date should be.
    */
-  public getDates(startDate: any, endDate: any, interval: string): any {
+  public getDates(startDate: any, endDate: any, interval: string): string[] {
 
-    var graphDates: any[] = [];
-    var dataTableDates: any[] = [];
+    const DAYFORMAT = 'yyyy-MM-DD',
+    MONTHFORMAT = 'yyyy-MM',
+    YEARFORMAT = 'yyyy';
+
+
+    var allDates: string[] = [];
     var currentDate: any;
 
     switch (interval) {
@@ -155,12 +188,11 @@ export class ChartService {
         while (currentDate <= endDate) {
           // Push an ISO 8601 formatted version of the date into the x axis array
           // that will be used for the data table.
-          dataTableDates.push(currentDate.format('YYYY-MM-DD'));
-          graphDates.push(currentDate);
+          allDates.push(format(currentDate, DAYFORMAT));
           currentDate = addDays.call(currentDate, 1);
         }
 
-        return { graphDates: graphDates, dataTableDates: dataTableDates };
+        return allDates;
 
       case 'months':
         // Only have to parse the string once here using ISO formatting.
@@ -171,17 +203,15 @@ export class ChartService {
         while (!isEqual(currentDate, stopDate)) {
           // Push an ISO 8601 formatted version of the date into the x axis array
           // that will be used for the data table.
-          dataTableDates.push(format(currentDate, 'yyyy-MM'));
-          graphDates.push(format(currentDate, 'MMM yyyy'));
+          allDates.push(format(currentDate, MONTHFORMAT));
           currentDate = add(currentDate, { months: 1 });
         }
         // Finish adding the last month between the dates.
         if (isEqual(currentDate, stopDate)) {
-          dataTableDates.push(format(currentDate, 'yyyy-MM'));
-          graphDates.push(format(currentDate, 'MMM yyyy'));
+          allDates.push(format(currentDate, MONTHFORMAT));
         }
 
-        return { graphDates: graphDates, dataTableDates: dataTableDates };
+        return allDates;
 
       case 'years':        
         // Only have to parse the string once here using ISO formatting.
@@ -192,17 +222,15 @@ export class ChartService {
         while (!isEqual(currentDate, stopDate)) {
           // Push an ISO 8601 formatted version of the date into the x axis array
           // that will be used for the data table.
-          dataTableDates.push(format(currentDate, 'yyyy'));
-          graphDates.push(format(currentDate, 'yyyy'));
+          allDates.push(format(currentDate, YEARFORMAT));
           currentDate = add(currentDate, { years: 1 });
         }
         // Finish adding the last year between the dates.
         if (isEqual(currentDate, stopDate)) {
-          dataTableDates.push(format(currentDate, 'yyyy'));
-          graphDates.push(format(currentDate, 'yyyy'));
+          allDates.push(format(currentDate, YEARFORMAT));
         }
 
-        return { graphDates: graphDates, dataTableDates: dataTableDates };      
+        return allDates;      
     } 
   }
 

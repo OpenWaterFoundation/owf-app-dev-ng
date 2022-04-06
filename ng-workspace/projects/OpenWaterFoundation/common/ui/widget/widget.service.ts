@@ -6,9 +6,9 @@ import { BehaviorSubject,
 import * as IM             from '@OpenWaterFoundation/common/services';
 
 
-// @Injectable({
-//   providedIn: 'root'
-// })
+@Injectable({
+  providedIn: 'root'
+})
 export class WidgetService {
 
   private testObs$: BehaviorSubject<string> = new BehaviorSubject('No basin selected.');
@@ -17,11 +17,11 @@ export class WidgetService {
   constructor() {}
 
   
-  getTestObs(): Observable<string> {
+  public getTestObs(): Observable<string> {
     return this.testObs$.asObservable();
   }
 
-  setTestObs(data: string): void {
+  public setTestObs(data: string): void {
     this.testObs$.next(data);
   }
 }
