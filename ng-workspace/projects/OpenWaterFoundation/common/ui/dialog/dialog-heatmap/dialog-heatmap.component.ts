@@ -13,7 +13,7 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
-import { StateMod_TS }      from '@OpenWaterFoundation/common/dwr/statemod';
+import { StateModTS }      from '@OpenWaterFoundation/common/dwr/statemod';
 import { DateValueTS,
           DayTS,
           MonthTS,
@@ -216,7 +216,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
     var TSIDLocation: string;
 
     switch (dataPath) {
-      case IM.Path.sMP: TSObject = new StateMod_TS(this.owfCommonService); break;
+      case IM.Path.sMP: TSObject = new StateModTS(this.owfCommonService); break;
       case IM.Path.dVP: TSObject = new DateValueTS(this.owfCommonService); break;
     }
 

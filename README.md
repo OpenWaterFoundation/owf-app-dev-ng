@@ -298,11 +298,11 @@ export * from '@OpenWaterFoundation/common/util/time';
 The `public-api.ts` file exports all modules under the folder and therefore can be used when
 importing from the library; hence the term 'main entry point'. It is the single
 entry point into the library for an application. For example, if the `common` library only had a
-main entry point, then a consuming application could import the following for the `StateMod_TS`
+main entry point, then a consuming application could import the following for the `StateModTS`
 class:
 
 ```typescript
-import { StateMod_TS  } from '@OpenWaterFoundation/common';
+import { StateModTS  } from '@OpenWaterFoundation/common';
 ```
 or the `StringUtil` class:
 ```typescript
@@ -315,7 +315,7 @@ can be used to:
 
 1. Implement precise imports, e.g.
     ```typescript
-    import { StateMod_TS } from '@OpenWaterFoundation/common/dwr/statemod';
+    import { StateModTS } from '@OpenWaterFoundation/common/dwr/statemod';
     import { StringUtil }  from '@OpenWaterFoundation/common/util/string';
     ```
 2. Enable the ability for a library to split up its dependencies. The default import

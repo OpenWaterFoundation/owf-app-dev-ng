@@ -55,7 +55,6 @@ export class SelectorComponent {
   ngOnInit(): void {
     this.owfCommonService.getJSONData(this.owfCommonService.buildPath(IM.Path.dbP, [this.dataPath]))
     .subscribe((geoJson: any) => {
-      console.log(geoJson);
       this.allFeatures = geoJson.features;
       this.filteredFeatures = this.allFeatures;
     })

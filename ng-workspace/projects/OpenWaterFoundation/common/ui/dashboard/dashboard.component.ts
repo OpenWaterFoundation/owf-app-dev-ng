@@ -182,7 +182,7 @@ export class DashboardComponent implements OnDestroy {
                 SymbolSize : "0",
                 SymbolStyle : "None",
                 TSAlias : "Streamflow",
-                TSID : "${featureAttribute:wdid}.StateMod.Streamflow.Month~StateMod~/data-ts/${featureAttribute:wdid}.StateMod.Streamflow.Month.stm",
+                TSID : "${featureAttribute:wdid}.StateMod.Streamflow.Month~StateMod~https://raw.githubusercontent.com/OpenWaterFoundation/owf-app-infomapper-ng/master/infomapper/src/assets/app-default/testing/data-files/${featureAttribute:wdid}.StateMod.Streamflow.Month.stm",
                 XAxis : "Bottom",
                 YAxis : "Left"
               }

@@ -15,7 +15,7 @@ import * as IM                    from '@OpenWaterFoundation/common/services';
 
 import { DialogTSTableComponent } from '@OpenWaterFoundation/common/ui/dialog';
 
-import { StateMod_TS }            from '@OpenWaterFoundation/common/dwr/statemod';
+import { StateModTS }            from '@OpenWaterFoundation/common/dwr/statemod';
 import { MonthTS,
           TS,
           YearTS,
@@ -39,11 +39,14 @@ declare var Plotly: any;
 })
 export class ChartComponent implements OnInit, OnDestroy {
 
-
+  /** Array of objects with the PapaParse result and the object's index from the
+   * graph template object's IM.GraphData array. */
   public allCSVResults: {result: any, index: number}[] = [];
-
+  /** Subscription for every IM.GraphData object to be displayed in the chart. */
   private allGraphObjectsSub$: Subscription;
-
+  /**
+   * Array of all 
+   */
   public allTSObservables: Observable<TS>[] = [];
   /** The array of objects to pass to the tstable component for data table creation. */
   public attributeTable: any[] = [];
@@ -676,10 +679,10 @@ export class ChartComponent implements OnInit, OnDestroy {
    */
   private parseTSFile(graphData: IM.GraphData, index: number, TSFile: IM.Path): void {
     // Defines a TSObject so it can be instantiated as the desired object later.
-    var TSObject: StateMod_TS | DateValueTS;
+    var TSObject: StateModTS | DateValueTS;
 
     switch (TSFile) {
-      case IM.Path.sMP: TSObject = new StateMod_TS(this.owfCommonService); break;
+      case IM.Path.sMP: TSObject = new StateModTS(this.owfCommonService); break;
       case IM.Path.dVP: TSObject = new DateValueTS(this.owfCommonService); break;
     }
 
@@ -688,7 +691,6 @@ export class ChartComponent implements OnInit, OnDestroy {
     // The file path string to the TS File.
     var filePath = chartLocation.path;
     
-    // Don't subscribe yet!  
     this.allTSObservables.push(
       TSObject.readTimeSeries(TSIDLocation, this.owfCommonService.buildPath(TSFile, [filePath]),
       null,

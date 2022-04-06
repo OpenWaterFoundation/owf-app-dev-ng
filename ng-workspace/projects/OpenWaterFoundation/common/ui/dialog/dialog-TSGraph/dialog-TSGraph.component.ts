@@ -13,7 +13,7 @@ import { forkJoin,
 
 import { DialogTSTableComponent } from '../dialog-tstable/dialog-tstable.component';
 
-import { StateMod_TS }            from '@OpenWaterFoundation/common/dwr/statemod';
+import { StateModTS }            from '@OpenWaterFoundation/common/dwr/statemod';
 import { MonthTS,
           TS,
           YearTS,
@@ -707,7 +707,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     var TSIDLocation: string;
 
     switch (TSFile) {
-      case IM.Path.sMP: TSObject = new StateMod_TS(this.owfCommonService); break;
+      case IM.Path.sMP: TSObject = new StateModTS(this.owfCommonService); break;
       case IM.Path.dVP: TSObject = new DateValueTS(this.owfCommonService); break;
     }
 

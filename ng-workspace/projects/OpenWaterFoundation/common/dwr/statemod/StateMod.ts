@@ -21,7 +21,7 @@ import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 //   templateUrl: '',
 //   styleUrls: []
 // })
-export class StateMod_TS {
+export class StateModTS {
 
   constructor(private owfCommonService: OwfCommonService) {
   }
@@ -50,7 +50,7 @@ export class StateMod_TS {
                                                 units?: string, read_data?: boolean): Observable<TS> {
     let ts = null;
     
-    // let routine = "StateMod_TS.readTimeSeries";
+    // let routine = "StateModTS.readTimeSeries";
 
     if (filename == null) {
       throw new Error("Requesting StateMod file with null filename.");
@@ -63,7 +63,7 @@ export class StateMod_TS {
     // }
     // BufferedReader in = null;
     var data_interval = TimeInterval.MONTH;
-    // let message = null, routine = "StateMod_TS.getFileDataInterval";
+    // let message = null, routine = "StateModTS.getFileDataInterval";
     // BufferedReader ifp = null;
     // var ifp;
     // var iline = null;
@@ -194,7 +194,7 @@ export class StateMod_TS {
 
     var chval: string,
         line: string = ""
-        // routine: string = "StateMod_TS.readTimeSeriesList";
+        // routine: string = "StateModTS.readTimeSeriesList";
 
     var v: any[] = [];
     var date: any = null;
