@@ -1,0 +1,26 @@
+<div class="selector-center">
+
+  <mat-form-field class="select-form" appearance="fill">
+    <mat-label>Choose Item</mat-label>
+    <mat-select name="item-selection"
+    (openedChange)="openSelectChange($event)">
+      <cdk-virtual-scroll-viewport [itemSize]="48"
+      [minBufferPx]="540"
+      [maxBufferPx]="540"
+      [style.width.px]="311"
+      [style.height.px]="240">
+        <input matInput
+        class="search-input"
+        placeholder="Search items..."
+        (keyup)="userInput($event, 'feature')">
+        <mat-option *cdkVirtualFor="let feature of filteredFeatures"
+        (click)="updateItem(feature)"
+        [value]="feature.properties.abbrev"
+        [style.height.px]="48">
+          {{feature.properties.abbrev}}
+        </mat-option>
+      </cdk-virtual-scroll-viewport>
+    </mat-select>
+  </mat-form-field>
+
+</div>

@@ -105,6 +105,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public legendSymbolsViewContainerRef: ViewContainerRef;
   /** The reference for the Leaflet map. */
   public mainMap: any;
+  /**
+   * 
+   */
+  @Input('map-config') mapConfigStandalonePath: string;
   /** The map configuration subscription, unsubscribed to on component destruction. */
   private mapConfigSub$ = <any>Subscription;
   /** Determines whether the map config file path was correct, found, and read in.
@@ -972,7 +976,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                           var actionArray: string[] = [];
                           var actionLabelArray: string[] = [];
                           var graphFilePath: string;
-                          var TSID_Location: string;
+                          var TSIDLocation: string;
                           var resourcePathArray: string[] = [];
                           var downloadFileNameArray: any[] = [];
                           var windowID: string;
@@ -1069,7 +1073,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                       // path we want to use so our dialog-content
                                       // component can determine what kind of file
                                       // was given.
-                                      TSID_Location = TSID.split('~')[0];
+                                      TSIDLocation = TSID.split('~')[0];
                                       // If the TSID has one tilde (~), set the
                                       // path using the correct index compared to
                                       // if the TSID contains two tildes.
@@ -1080,7 +1084,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                       }
                                     } else console.error('The TSID has not been set in the graph template file');
 
-                                    _this.openTSGraphDialog(graphTemplateObject, graphFilePath, TSID_Location, chartPackageArray[i],
+                                    _this.openTSGraphDialog(graphTemplateObject, graphFilePath, TSIDLocation, chartPackageArray[i],
                                       featureProperties, downloadFileNameArray[i] ? downloadFileNameArray[i] : null, windowID);
                                   });
                               }
@@ -1098,7 +1102,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                     // Split on the ~ and set the actual file path
                                     // we want to use so our dialog-content component
                                     // can determine what kind of file was given.
-                                    TSID_Location = TSID.split('~')[0];
+                                    TSIDLocation = TSID.split('~')[0];
                                     // If the TSID has one tilde (~), set the path
                                     // using the correct index compared to if
                                     // the TSID contains two tildes.
@@ -1516,9 +1520,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * Initialize a map for a full application if no parameter is given, or for a
    * standalone map if the true boolean is provided.
    */
-  private initMapSettings(standalone?: boolean): void {
+  private initMapSettings(standalone?: string, configPath?: string): void {
     let fullMapConfigPath = this.owfCommonService.getAppPath() +
-    this.owfCommonService.getFullMapConfigPath(this.mapID, standalone);
+    // Get AND sets the map config path and geoJson path for relative path use.
+    this.owfCommonService.getFullMapConfigPath(this.mapID, standalone, configPath);
 
     this.mapConfigSub$ = this.owfCommonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
     .subscribe((mapConfig: any) => {
@@ -1557,21 +1562,25 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       this.mapID = this.route.snapshot.paramMap.get('id');
 
-      // Standalone Map.
+      // Standalone Map for website embedding.
       if (this.appConfigStandalonePath) {
         this.owfCommonService.getJSONData(this.appConfigStandalonePath).subscribe((appConfig: any) => {
           this.owfCommonService.setAppConfig(appConfig);
-          this.initMapSettings(true);
+          this.initMapSettings('app');
         });
+      }
+      // Standalone map for use in another Angular module.
+      else if (this.mapConfigStandalonePath) {
+        this.initMapSettings('map', this.mapConfigStandalonePath);
       } else {
         // TODO: jpkeahey 2020.05.13 - This shows how the map config path isn't
         // set on a hard refresh because of async issues. Fix has been found and
         // now just needs to be implemented. Follow the APP_INITIALIZER token found
         // in the SNODAS app to read all static files before the app initializes,
         // therefore all info will have already been received.
-        setTimeout(() => {
+        // setTimeout(() => {
           this.initMapSettings();
-        }, 500);
+        // }, 500);
       }
     });
   }
@@ -1818,7 +1827,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param graphTemplateObject The template config object of the current graph being shown
   * @param graphFilePath The file path to the current graph that needs to be read
   */
-  private openTSGraphDialog(graphTemplateObject: any, graphFilePath: string, TSID_Location: string,
+  private openTSGraphDialog(graphTemplateObject: any, graphFilePath: string, TSIDLocation: string,
     chartPackage: string, featureProperties: any, downloadFileName?: string, windowID?: string): void {
 
     // Create a MatDialogConfig object to pass to the DialogTSGraphComponent for
@@ -1836,7 +1845,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // the spread operator. More information was found here:
       // https://medium.com/@oprearocks/what-do-the-three-dots-mean-in-javascript-bc5749439c9a
       ...(downloadFileName && { downloadFileName: downloadFileName }),
-      TSID_Location: TSID_Location
+      TSIDLocation: TSIDLocation
     }
     const dialogRef: MatDialogRef<DialogTSGraphComponent, any> = this.dialog.open(DialogTSGraphComponent, {
       data: dialogConfig,

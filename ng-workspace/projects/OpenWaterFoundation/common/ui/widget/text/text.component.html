@@ -1,0 +1,14 @@
+<!-- BehaviorSubject testing. It works! -->
+<!-- <div>
+  {{testData | async}}
+</div> -->
+
+<div *ngIf="isHTML" id="textHTMLDiv"></div>
+
+<div *ngIf="isMarkdown" id="docMarkdownDiv">
+  <showdown [value]="text" class="doc-contents-text"></showdown>
+</div>
+
+<div *ngIf="widgetError" class="error-widget-comp-container">
+  <widget-error [errorType]="errorType" [name]="'Text'"></widget-error>
+</div>

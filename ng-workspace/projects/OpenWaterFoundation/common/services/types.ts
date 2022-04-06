@@ -1,16 +1,132 @@
-// The interfaces below are typed for use throughout the common library, as well as the ability to be utilized by
-// outside consuming applications. It helps define different objects mainly related to the InfoMapper for now.
+// The interfaces and enums below are typed for use throughout the common library, as well
+// as the ability to be utilized by outside consuming applications. It helps define
+// different objects mainly related to the InfoMapper for now.
+
+// ENUM
+
+/** Enum for each supported D3 chart type. */
+export enum D3Chart {
+  tree = 'tidyTree',
+  treemap = 'treeMap',
+  // sankey,
+  bar = 'bar'
+  // line,
+  // scatter
+}
+
+/** Graph properties of a TSTool created time series graph object. */
+export enum GraphProp {
+  bc = 'backgroundColor',
+  cm = 'chartMode',
+  ct = 'chartType'
+}
+
+/** Enum containing the different operators that are covered for graduated symbols. */
+export enum Operator {
+  gt = '>',
+  gtet = '>=',
+  lt = '<',
+  ltet = '<='
+}
+
+/** Enum with the supported file paths for the InfoMapper. */
+export enum Path {
+  aCP = 'appConfigPath',
+  bSIP = 'builtinSymbolImagePath',
+  csvPath = 'csvPath',
+  cP = 'classificationPath',
+  cPP = 'contentPagePath',
+  cPage = 'Content Page',
+  d3P = 'D3Path',
+  dbP = 'dashboardPath',
+  dP = 'docPath',
+  dVP = 'dateValuePath',
+  dUP = 'dataUnitsPath',
+  eCP = 'eventConfigPath',
+  fMCP = 'fullMapConfigPath',
+  gP = 'gapminderPath',
+  gLGJP = 'geoLayerGeoJsonPath',
+  hPP = 'homePagePath',
+  iGP = 'imageGalleryPath',
+  iP = 'imagePath',
+  mP = 'markdownPath',
+  raP = 'rasterPath',
+  rP = 'resourcePath',
+  sIP = 'symbolImagePath',
+  sMP = 'stateModPath',
+  vP = 'versionPath'
+}
+
+/** Enum with the currently supported ${Property} functions. */
+export enum PropFunction {
+  toMixedCase = '.toMixedCase(',
+  replace = '.replace('
+}
+
+/** Enum for every type of layer refresh represented in the Map Component. */
+export enum RefreshType {
+  image,
+  raster,
+  tile,
+  vector
+}
+
+/** Enum representing the 3 types of files that can be downloaded in an application. */
+export enum SaveFileType {
+  dataTable,
+  text,
+  tstable
+}
+
+/** Enum with the currently supported InfoMapper style properties. */
+export enum Style {
+  backgroundColor,
+  color,
+  fillOpacity,
+  fillColor,
+  opacity,
+  size,
+  shape,
+  weight
+}
+
+/** Enum for each implemented Widget Type. */
+export enum Widget {
+  err = 'Error',
+  img = 'Image',
+  sel = 'Selector',
+  text = 'Text'
+}
+
+/** Enum representing the supported Window Types (Dialog Types) for the WindowManager. */
+// export enum WindowType {
+//   D3 = 'D3',
+//   DOC = 'Documentation',
+//   HEAT = 'Heatmap',
+//   GAL = 'Gallery',
+//   GAP = 'Gapminder',
+//   PROJ = 'Project',
+//   TABLE = 'Table',
+//   TEXT = 'Text',
+//   TSGRAPH = 'TSGraph'
+// }
+
+// INTERFACES
+
+/////////////////////////////// APPLICATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /** Interface for Typing the main AppConfig JSON object created by the user. */
 export interface AppConfig {
   title?: string;
-  homePage?: string;
+  homePage: string;
   favicon?: string;
   dataUnitsPath?: string;
   googleAnalyticsTrackingId?: string;
   version?: string;
   mainMenu?: MainMenu[];
 }
+
+////////////////////////////// GEOMAPPROJECT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /** Interface for Typing the GeoMapProject JSON object created by the GeoProcessor. */
 export interface GeoMapProject {
@@ -111,6 +227,8 @@ export interface GeoLayerSymbol {
   }
 }
 
+///////////////////////////////// EVENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 /** Interface for Typing the EventConfig JSON object created by the user. */
 export interface EventConfig {
   id?: string;
@@ -146,11 +264,14 @@ export interface EventHandler {
   }
 }
 
+////////////////////////////////// MENUS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 /** Interface for Typing the MainMenu JSON object created by the user. */
 export interface MainMenu {
   id?: string;
   name?: string;
   align?: string;
+  action?: string;
   enabled?: any;
   tooltip?: string;
   visible?: any;
@@ -169,55 +290,7 @@ export interface SubMenu {
   visible?: any;
 }
 
-/** Enum with the supported file paths for the InfoMapper. */
-export enum Path {
-  aCP = 'appConfigPath',
-  bSIP = 'builtinSymbolImagePath',
-  csvPath = 'csvPath',
-  cP = 'classificationPath',
-  cPP = 'contentPagePath',
-  cPage = 'Content Page',
-  d3P = 'D3Path',
-  dP = 'docPath',
-  dVP = 'dateValuePath',
-  dUP = 'dataUnitsPath',
-  eCP = 'eventConfigPath',
-  fMCP = 'fullMapConfigPath',
-  gP = 'gapminderPath',
-  gLGJP = 'geoLayerGeoJsonPath',
-  hPP = 'homePagePath',
-  iGP = 'imageGalleryPath',
-  iP = 'imagePath',
-  mP = 'markdownPath',
-  raP = 'rasterPath',
-  rP = 'resourcePath',
-  sIP = 'symbolImagePath',
-  sMP = 'stateModPath',
-  vP = 'versionPath'
-}
-
-/** Enum for every type of layer refresh represented in the Map Component. */
-export enum RefreshType {
-  image,
-  raster,
-  tile,
-  vector
-}
-
-/** Enum representing the 3 types of files that can be downloaded in an application. */
-export enum SaveFileType {
-  dataTable,
-  text,
-  tstable
-}
-
-/** Enum containing the different operators that are covered for graduated symbols. */
-export enum Operator {
-  gt = '>',
-  gtet = '>=',
-  lt = '<',
-  ltet = '<='
-}
+///////////////////////////////// LEAFLET \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   
 /** Interface used for creating Bounds objects that contain Latitude and Longitude
  * bounds for zooming on a Leaflet map. */
@@ -226,23 +299,6 @@ export interface Bounds {
   SWMinLat: number;
   NEMaxLong: number;
   SWMinLong: number;
-}
-
-/** Enum with the currently supported InfoMapper style properties. */
-export enum Style {
-  color,
-  fillOpacity,
-  fillColor,
-  opacity,
-  size,
-  shape,
-  weight
-}
-
-/** Enum with the currently supported ${Property} functions. */
-export enum PropFunction {
-  toMixedCase = '.toMixedCase(',
-  replace = '.replace('
 }
 
 /**
@@ -257,6 +313,8 @@ export interface LeafletEvent {
   index?: number;
   symbol?: any;
 }
+
+///////////////////////////////// GRAPHS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /** Interface for containing properties to be used with creating a D3 chart. */
 export interface D3Prop {
@@ -273,14 +331,156 @@ export interface D3Prop {
   margin?: number;
 }
 
-/** Enum for each supported D3 chart type. */
-export enum D3Chart {
-  tree = 'tidyTree',
-  treemap = 'treeMap',
-  // sankey,
-  bar = 'bar'
-  // line,
-  // scatter
+/** The main object for the created graph template JSON file made from TSTool. */
+export interface GraphTemplate {
+  product?: GraphProd
+}
+
+/**  The product object with top level properties, and the array of sub products. */
+export interface GraphProd {
+  properties?: GraphProdProp,
+  subProducts?: GraphSubProd[]
+}
+
+/** The top level properties for the graph template object, e.g. the main graph title. */
+export interface GraphProdProp {
+  CurrentDateTime?: string,
+  CurrentDateTimeColor?: string,
+  Enabled?: string,
+  LayoutNumberOfCols?: string,
+  LayoutNumberOfRows?: string,
+  LayoutType?: string,
+  MainTitleFontName?: string,
+  MainTitleFontSize?: string,
+  MainTitleFontStyle?: string,
+  MainTitleString?: string,
+  OutputFile?: string,
+  ProductID?: string,
+  ProductName?: string,
+  ProductType?: string,
+  ShowDrawingAreaOutline?: string,
+  SubTitleFontName?: string,
+  SubTitleFontSize?: string,
+  SubTitleFontStyle?: string,
+  SubTitleString?: string,
+  TotalHeight?: string,
+  TotalWidth?: string
+}
+
+/** The subProduct object with more granular properties, and each graph's data object. */
+export interface GraphSubProd {
+  properties?: GraphSubProdProp
+  data?: GraphData[],
+  annotations?: []
+}
+
+/** The properties for the Graph's subProduct object. */
+export interface GraphSubProdProp {
+  AnnotationProvider?: string,
+  BottomXAxisLabelFontName?: string,
+  BottomXAxisLabelFontSize?: string,
+  BottomXAxisLabelFontStyle?: string,
+  BottomXAxisMajorGridColor?: string,
+  BottomXAxisMinorGridColor?: string,
+  BottomXAxisTitleFontName?: string,
+  BottomXAxisTitleFontSize?: string,
+  BottomXAxisTitleFontStyle?: string,
+  BottomXAxisTitleString?: string,
+  DataLabelFontName?: string,
+  DataLabelFontSize?: string,
+  DataLabelFontStyle?: string,
+  DataLabelFormat?: string,
+  DataLabelPosition?: string,
+  Enabled?: string,
+  GraphType?: string,
+  LayoutYPercent?: string,
+  LeftYAxisDirection?: string,
+  LeftYAxisIgnoreUnits?: string,
+  LeftYAxisLabelFontName?: string,
+  LeftYAxisLabelFontSize?: string,
+  LeftYAxisLabelFontStyle?: string,
+  LeftYAxisLabelPrecision?: string,
+  LeftYAxisLegendPosition?: string,
+  LeftYAxisMajorGridColor?: string,
+  LeftYAxisMajorTickColor?: string,
+  LeftYAxisMax?: string,
+  LeftYAxisMin?: string,
+  LeftYAxisMinorGridColor?: string,
+  LeftYAxisTitleFontName?: string,
+  LeftYAxisTitleFontSize?: string,
+  LeftYAxisTitleFontStyle?: string,
+  LeftYAxisTitlePosition?: string,
+  LeftYAxisTitleRotation?: string,
+  LeftYAxisTitleString?: string,
+  LeftYAxisType?: string,
+  LeftYAxisUnits?: string,
+  LegendFontName?: string,
+  LegendFontSize?: string,
+  LegendFontStyle?: string,
+  LegendFormat?: string,
+  LegendPosition?: string,
+  MainTitleFontName?: string,
+  MainTitleFontSize?: string,
+  MainTitleFontStyle?: string,
+  MainTitleString?: string,
+  RightYAxisDirection?: string,
+  RightYAxisGraphType?: string,
+  RightYAxisIgnoreUnits?: string,
+  RightYAxisLabelFontName?: string,
+  RightYAxisLabelFontSize?: string,
+  RightYAxisLabelFontStyle?: string,
+  RightYAxisLabelPrecision?: string,
+  RightYAxisLegendPosition?: string,
+  RightYAxisMajorGridColor?: string,
+  RightYAxisMajorTickColor?: string,
+  RightYAxisMax?: string,
+  RightYAxisMin?: string,
+  RightYAxisMinorGridColor?: string,
+  RightYAxisTitleFontName?: string,
+  RightYAxisTitleFontSize?: string,
+  RightYAxisTitleFontStyle?: string,
+  RightYAxisTitlePosition?: string,
+  RightYAxisTitleRotation?: string,
+  RightYAxisTitleString?: string,
+  RightYAxisType?: string,
+  RightYAxisUnits?: string,
+  SelectedTimeSeriesLineWidth?: string,
+  SubTitleFontName?: string,
+  SubTitleFontSize?: string,
+  SubTitleFontStyle?: string,
+  SubTitleString?: string,
+  TopXAxisLabelFontName?: string,
+  TopXAxisLabelFontSize?: string,
+  TopXAxisLabelFontStyle?: string,
+  TopXAxisTitleFontName?: string,
+  TopXAxisTitleFontSize?: string,
+  TopXAxisTitleFontStyle?: string,
+  ZoomEnabled?: string,
+  ZoomGroup?: string
+}
+
+/** The Graph's subProduct data object, which only has a properties object. */
+export interface GraphData {
+  properties?: GraphDataProp
+}
+
+/** The properties for each graph being created in the graph template object. */
+export interface GraphDataProp {
+  Color?: string,
+  DataLabelFormat?: string,
+  DataLabelPosition?: string,
+  Enabled?: string,
+  FlaggedDataSymbolStyle?: string,
+  GraphType?: string,
+  LegendFormat?: string,
+  LineStyle?: string,
+  LineWidth?: string,
+  SymbolSize?: string,
+  SymbolStyle?: string,
+  TSAlias?: string,
+  TSID?: string,
+  XAxis?: string,
+  YAxis?: string
 }
 
 /** A general object to help in using a graphing package API. */
@@ -293,6 +493,7 @@ export interface PopulateGraph {
   dateType?: string;
   endDate?: string;
   graphFileType: string;
+  isCSV?: boolean;
   legendLabel: string;
   legendPosition: any;
   plotlyDatasetData?: number[];
@@ -301,24 +502,39 @@ export interface PopulateGraph {
   yAxesLabelString: string;
 }
 
-/** Graph properties of a TSTool created time series graph object. */
-export enum GraphProp {
-  bc = 'backgroundColor',
-  cm = 'chartMode',
-  ct = 'chartType'
+//////////////////////////////// DASHBOARD \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+/** Main Dashboard configuration object. */
+export interface DashboardConf {
+  metadata: DashboardMetadata;
+  layout: DashboardLayout;
+  widgets: DashboardWidget[];
 }
 
-/**
- * Enum representing the supported Window Types (Dialog Types) for the WindowManager.
- */
-// export enum WindowType {
-//   D3 = 'D3',
-//   DOC = 'Documentation',
-//   HEAT = 'Heatmap',
-//   GAL = 'Gallery',
-//   GAP = 'Gapminder',
-//   PROJ = 'Project',
-//   TABLE = 'Table',
-//   TEXT = 'Text',
-//   TSGRAPH = 'TSGraph'
-// }
+/** Dashboard metadata object. */
+export interface DashboardMetadata {
+  version?: string;
+  author?: string;
+  title?: string;
+}
+
+/** Dashboard layout object. */
+export interface DashboardLayout {
+  backgroundColor?: string;
+  columns: number;
+  gutterSize?: string;
+}
+
+/** Dashboard widget object. */
+export interface DashboardWidget {
+  columns: number;
+  content: any;
+  rows: number;
+  style?: WidgetTileStyle;
+}
+
+/** Styling for the MatGridTile in the Dashboard Component. */
+export interface WidgetTileStyle {
+  backgroundColor?: string;
+  textColor?: string;
+}

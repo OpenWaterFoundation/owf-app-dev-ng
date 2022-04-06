@@ -1,0 +1,13 @@
+<!-- Image exists. -->
+<div *ngIf="fullDataPath" class="image-container">
+
+  <img [src]="fullDataPath">
+
+</div>
+
+<!-- Image does not exist. -->
+<div *ngIf="widgetError" class="no-image-container">
+  <widget-error [errorType]="errorType" [name]="'Image'"></widget-error>
+</div>
+
+<!-- <i class="fa fa-chain-broken fa-5x"></i> -->

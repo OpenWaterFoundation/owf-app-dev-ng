@@ -457,7 +457,7 @@ export class OwfCommonComponent implements OnInit {
       // condition that saveFile is defined, using the spread operator. More information was found here:
       // https://medium.com/@oprearocks/what-do-the-three-dots-mean-in-javascript-bc5749439c9a
       // ...(downloadFileName && { downloadFileName: downloadFileName }),
-      // TSID_Location: TSID_Location
+      // TSIDLocation: TSIDLocation
     }
     const dialogRef: MatDialogRef<DialogTSGraphComponent, any> = this.dialog.open(DialogTSGraphComponent, {
       data: dialogConfig,

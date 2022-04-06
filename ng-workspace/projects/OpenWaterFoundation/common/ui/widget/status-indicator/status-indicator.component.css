@@ -1,0 +1,76 @@
+/* CLASSES */
+
+/* Vertically and horizontally centers the status-indicator-container <div> in  */
+.center-all-info {
+  padding: 5px;
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* If the change is bad, display red. */
+.change-icon-bad {
+  color: rgb(168, 0, 0);
+}
+
+/* If the change is good, display green. */
+.change-icon-good {
+  color: rgb(0, 102, 0);
+}
+
+/* Sets the width of each possible change icon that can be displayed. */
+.change-icon-size {
+  width: 10%;
+}
+
+/* Passing font awesome icon. */
+.fa-check {
+  color: rgb(0, 243, 0);
+}
+
+/* Warning font awesome icon. */
+.fa-exclamation {
+  color: rgb(243, 243, 0);
+}
+
+/* Failure font awesome icon. */
+.fa-times {
+  color: rgb(247, 0, 0);
+}
+
+/* Div for the icon and changes information at the bottom of the widget. */
+.icon-and-changes-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Div for the main icon and data for the widget. */
+.icon-and-data-container {
+  display: flex;
+}
+
+/* Styles the main data field. */
+.indicator-data {
+  width: 50%;
+  font-size: xxx-large;
+  margin: 5px 0px 0px 0px;
+}
+
+/* The <div> containing each of the indicator icons. */
+.indicator-icon {
+  width: 50%;
+}
+
+/* The <div> containing all elements in the widget. */
+.status-indicator-container {
+  text-align: center;
+  width: 100%;
+}
+
+/* The title for the status indicator widget. */
+.status-title {
+  margin: 0;
+}

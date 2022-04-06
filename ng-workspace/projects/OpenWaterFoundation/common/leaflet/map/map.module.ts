@@ -16,6 +16,9 @@ import { LegendLayerGroupModule }      from './legend/legend-layer-group/legend-
   declarations: [
     MapComponent
   ],
+  exports: [
+    MapComponent
+  ],
   imports: [
     CommonModule,
     BrowserAnimationsModule,

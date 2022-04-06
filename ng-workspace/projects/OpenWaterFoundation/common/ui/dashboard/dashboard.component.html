@@ -1,0 +1,40 @@
+<div *ngIf="dashboardConf" class="dashboard-container">
+
+  <mat-grid-list [cols]="dashboardConf.layout.columns" rowHeight="fit" 
+  [gutterSize]="dashboardConf.layout.gutterSize ? dashboardConf.layout.gutterSize : 1"
+  [style.background]="dashboardConf.layout.backgroundColor">
+
+    <mat-grid-tile *ngFor="let widget of dashboardConf.widgets"
+    [colspan]="widget.columns"
+    [rowspan]="widget.rows"
+    [ngStyle]="setMatGridTileStyle(widget.style)">
+
+      <div *ngIf="widget.type === 'chart'" class="widget-container">
+        <widget-chart [chartData]="chartObject"></widget-chart>
+      </div>
+
+      <div *ngIf="widget.type === 'image'" class="widget-container">
+        <widget-image [dataPath]="widget.dataPath"></widget-image>
+      </div>
+
+      <div *ngIf="widget.type === 'map'" class="widget-container">
+        <common-map [map-config]="widget.dataPath"></common-map>
+      </div>
+
+      <div *ngIf="widget.type === 'selector'" class="widget-container">
+        <widget-selector [dataPath]="widget.dataPath"></widget-selector>
+      </div>
+
+      <div *ngIf="widget.type === 'statusIndicator'" class="widget-container">
+        <widget-status-indicator [title]="widget.title"></widget-status-indicator>
+      </div>
+
+      <div *ngIf="widget.type === 'textHTML' || widget.type === 'textMarkdown'" class="widget-container">
+        <widget-text [dataPath]="widget.dataPath"></widget-text>
+      </div>
+      
+    </mat-grid-tile>
+
+  </mat-grid-list>
+
+</div>

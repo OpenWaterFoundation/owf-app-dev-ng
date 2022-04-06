@@ -112,14 +112,16 @@ export class DialogTSTableComponent implements OnInit, OnDestroy {
   public saveDataTable(): void {
     // If the file read in was a Time Series file, call the imported TSTool code to deal with creating the right string for CSV creation
     if (this.isTSFile) {
-      var writeDelimited: WriteDelimitedFile_Command = new WriteDelimitedFile_Command();
-      var textToSave: string = writeDelimited.writeTimeSeries(this.TSArrayRef, this.dateTimeColumnName, DateTimeFormatterType.C, null,
-      this.valueColumns.join(','), null, ',', 2, 'NaN', null, null, [''], ['problems']);
+      var writeDelimited = new WriteDelimitedFile_Command();
+      var textToSave: string = writeDelimited.writeTimeSeries(
+        this.TSArrayRef, this.dateTimeColumnName, DateTimeFormatterType.C, null,
+        this.valueColumns.join(','), null, ',', 2, 'NaN', null, null, [''], ['problems']
+      );
       var data = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
       // Send the download file name to format it correctly, along with the SaveFileType enum
       FileSaver.saveAs(data, this.owfCommonService.formatSaveFileName(this.downloadFileName, IM.SaveFileType.tstable, this.featureProperties));
     }
-    // If the file read in was itself a CSV file, create the correct string for downloading the file again. This is similar
+    // If the file read in was a CSV file, create the correct string for downloading the file again. This is similar
     // to regular data table dialog download
     else {
       var textToSave = '';

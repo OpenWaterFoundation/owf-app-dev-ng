@@ -1,0 +1,20 @@
+/* TAGS */
+
+/* The overarching Grid List tag. */
+mat-grid-list {
+  height: 100%;
+}
+
+/* CLASSES */
+
+/* Div container displayed if/when the DashboardConf object is created. Must be
+set to 100% for each of the tiles to show up. */
+.dashboard-container {
+  height: 100%;
+}
+
+/* Div container that holds the widget  */
+.widget-container {
+  height: 100%;
+  width: 100%;
+}

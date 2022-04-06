@@ -1,0 +1,44 @@
+/* CLASSES */
+
+/*  */
+::ng-deep .mat-focused .mat-form-field-label {
+  /*change color of label*/
+  color: #9DB66B !important;
+ }
+
+ /* Change color of the form's underline. */
+::ng-deep.mat-form-field-underline {
+  background-color: #9DB66B !important;
+} 
+
+/* Change color of underline when focused. */
+::ng-deep.mat-form-field-ripple {
+ background-color: #9DB66B !important;;
+}
+
+/* Change color of the mat-select arrow. */
+::ng-deep .mat-select-arrow {
+  color: #9DB66B !important;
+}
+
+/* The main mat-form-field to be shown in the widget. */
+.select-form {
+  padding: 0px;
+  font-size: 13px;
+}
+
+/* The top level <div> wrapper that displays using flex. */
+.selector-center {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The input field after the mat-select is clicked. */
+.search-input {
+  height: 48px;
+  width: 242px;
+  padding: 0px 10px 0px 10px;
+}
