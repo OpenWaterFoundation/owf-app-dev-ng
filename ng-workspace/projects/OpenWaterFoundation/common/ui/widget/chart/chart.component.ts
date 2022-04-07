@@ -24,6 +24,7 @@ import { DataUnits }              from '@OpenWaterFoundation/common/util/io';
 import { WindowManager,
           WindowType }            from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapUtil }                from '@OpenWaterFoundation/common/leaflet';
+import { DataStoreManager }       from '@OpenWaterFoundation/common/util/datastore';
 import { ChartService }           from './chart.service';
 
 import * as Papa                  from 'papaparse';
@@ -58,6 +59,10 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** A string containing the name to be passed to the TSTableComponent's first
   * column name: DATE or DATE / TIME. */
   public dateTimeColumnName: string;
+  /**
+   * 
+   */
+  private dsManager: DataStoreManager = DataStoreManager.getInstance();
   /** Subscription to be unsubscribed to at component destruction to prevent memory
    * leaks.*/
   private forkJoinSub$: Subscription;
@@ -544,7 +549,8 @@ export class ChartComponent implements OnInit, OnDestroy {
     // Set the class variable TSIDLocation to the first dataGraph object from the
     // graphTemplate object. This is used as a unique identifier for the Plotly
     // graph <div> id attribute.
-    this.TSIDLocation = this.owfCommonService.getChartTSIDLocation(this.graphTemplate.product.subProducts[0].data[0]).location;
+    this.TSIDLocation = this.owfCommonService.parseTSID(
+      this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
 
     this.setTotalFilesToRetrieve();
     // Set the mainTitleString to be used by the map template file to display as
@@ -566,15 +572,17 @@ export class ChartComponent implements OnInit, OnDestroy {
     // Iterate over all graphData objects in the graph template file.
     this.graphTemplate.product.subProducts[0].data.forEach((graphData, index) => {
 
-      if (graphData.properties.TSID.includes('.csv')) {
+      var TSID = this.owfCommonService.parseTSID(graphData.properties.TSID);
+
+      if (TSID.path.includes('.csv')) {
         this.parseCSVFile(graphData, index);
         this.isTSFile = false;
       }
-      else if (graphData.properties.TSID.includes('.stm')) {
+      else if (TSID.dataStore.includes('dv') || TSID.dataStore.toUpperCase().includes('DATEVALUE')) {
         this.parseTSFile(graphData, index, IM.Path.sMP);
         this.isTSFile = true;
       }
-      else if (graphData.properties.TSID.includes('.dv')) {
+      else if (TSID.dataStore.includes('stm') || TSID.dataStore.toUpperCase().includes('STATEMOD')) {
         this.parseTSFile(graphData, index, IM.Path.dVP);
         this.isTSFile = true;
       }
@@ -652,7 +660,7 @@ export class ChartComponent implements OnInit, OnDestroy {
    */
   private parseCSVFile(graphData: IM.GraphData, index: number): void {
     // The file path string to the TS File.
-    var filePath = this.owfCommonService.getChartTSIDLocation(graphData).path;
+    var filePath = this.owfCommonService.parseTSID(graphData.properties.TSID).path;
 
     Papa.parse(this.owfCommonService.buildPath(IM.Path.csvPath, [filePath]), {
       delimiter: ",",
@@ -678,26 +686,10 @@ export class ChartComponent implements OnInit, OnDestroy {
    * @param TSFile 
    */
   private parseTSFile(graphData: IM.GraphData, index: number, TSFile: IM.Path): void {
-    // Defines a TSObject so it can be instantiated as the desired object later.
-    var TSObject: StateModTS | DateValueTS;
-
-    switch (TSFile) {
-      case IM.Path.sMP: TSObject = new StateModTS(this.owfCommonService); break;
-      case IM.Path.dVP: TSObject = new DateValueTS(this.owfCommonService); break;
-    }
-
-    var chartLocation = this.owfCommonService.getChartTSIDLocation(graphData);
-    var TSIDLocation = chartLocation.location;
-    // The file path string to the TS File.
-    var filePath = chartLocation.path;
     
     this.allTSObservables.push(
-      TSObject.readTimeSeries(TSIDLocation, this.owfCommonService.buildPath(TSFile, [filePath]),
-      null,
-      null,
-      null,
-      true)
-    );
+      this.dsManager.readTimeSeries(this.owfCommonService, graphData));
+
     this.TSOrder.push(index);
 
     if (this.allTSObservables.length === this.totalTSFiles) {

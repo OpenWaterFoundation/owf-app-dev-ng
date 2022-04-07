@@ -17,7 +17,7 @@ import { BehaviorSubject,
  * will be present here.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: ChartModule
 })
 export class ChartService {
 

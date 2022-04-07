@@ -4,6 +4,14 @@
 
 // ENUM
 
+/**
+ * 
+ */
+ export enum DataStore {
+  dateValue,
+  stateMod
+}
+
 /** Enum for each supported D3 chart type. */
 export enum D3Chart {
   tree = 'tidyTree',
@@ -537,4 +545,15 @@ export interface DashboardWidget {
 export interface WidgetTileStyle {
   backgroundColor?: string;
   textColor?: string;
+}
+
+/////////////////////////////// Time Series \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+/**
+ * 
+ */
+export interface TSID {
+  location?: string;
+  dataStore?: string;
+  path?: string;
 }

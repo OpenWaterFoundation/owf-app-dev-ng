@@ -9,6 +9,7 @@ import * as $ from 'jquery';
  */
 // @dynamic
 export class MapLayerManager {
+  
   /** The instance of this MapLayerManager object. */
   private static instance: MapLayerManager;
   /** String array containing the geoLayerId of the reverse order each layer should
