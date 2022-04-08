@@ -4,15 +4,14 @@
 
 // ENUM
 
-/**
- * 
- */
- export enum DataStore {
-  dateValue,
-  stateMod
+/** All supported DataStore types. */
+export enum DataStoreType {
+  delimited = 'owf.datastore.delimited',
+  dateValue = 'owf.datastore.datevalue',
+  stateMod = 'owf.datastore.statemod'
 }
 
-/** Enum for each supported D3 chart type. */
+/** Each supported D3 chart type. */
 export enum D3Chart {
   tree = 'tidyTree',
   treemap = 'treeMap',
@@ -29,7 +28,7 @@ export enum GraphProp {
   ct = 'chartType'
 }
 
-/** Enum containing the different operators that are covered for graduated symbols. */
+/** The different operators that are covered for graduated symbols. */
 export enum Operator {
   gt = '>',
   gtet = '>=',
@@ -37,7 +36,7 @@ export enum Operator {
   ltet = '<='
 }
 
-/** Enum with the supported file paths for the InfoMapper. */
+/** The supported file paths for the InfoMapper. */
 export enum Path {
   aCP = 'appConfigPath',
   bSIP = 'builtinSymbolImagePath',
@@ -65,7 +64,7 @@ export enum Path {
   vP = 'versionPath'
 }
 
-/** Enum with the currently supported ${Property} functions. */
+/** The currently supported ${Property} functions. */
 export enum PropFunction {
   toMixedCase = '.toMixedCase(',
   replace = '.replace('
@@ -86,7 +85,7 @@ export enum SaveFileType {
   tstable
 }
 
-/** Enum with the currently supported InfoMapper style properties. */
+/** The currently supported InfoMapper style properties. */
 export enum Style {
   backgroundColor,
   color,
@@ -98,7 +97,7 @@ export enum Style {
   weight
 }
 
-/** Enum for each implemented Widget Type. */
+/** Each implemented Widget Type. */
 export enum Widget {
   err = 'Error',
   img = 'Image',
@@ -123,7 +122,7 @@ export enum Widget {
 
 /////////////////////////////// APPLICATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/** Interface for Typing the main AppConfig JSON object created by the user. */
+/** The main AppConfig JSON object created by the user. */
 export interface AppConfig {
   title?: string;
   homePage: string;
@@ -136,7 +135,7 @@ export interface AppConfig {
 
 ////////////////////////////// GEOMAPPROJECT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/** Interface for Typing the GeoMapProject JSON object created by the GeoProcessor. */
+/** The GeoMapProject JSON object created by the GeoProcessor. */
 export interface GeoMapProject {
   geoMapProjectId?: string;
   name?: string;
@@ -149,7 +148,7 @@ export interface GeoMapProject {
   };
   geoMaps?: GeoMap[]
 }
-/** Interface for Typing the GeoMap JSON object created by the GeoProcessor. */
+/** The GeoMap JSON object created by the GeoProcessor. */
 export interface GeoMap {
   geoMapId?: string;
   name?: string;
@@ -163,7 +162,7 @@ export interface GeoMap {
   geoLayers?: GeoLayer[];
   geoLayerViewGroups?: GeoLayerViewGroup[];
 }
-/** Interface for Typing the GeoLayer JSON object created by the GeoProcessor. */
+/** The GeoLayer JSON object created by the GeoProcessor. */
 export interface GeoLayer {
   geoLayerId?: string;
   name?: string;
@@ -180,7 +179,7 @@ export interface GeoLayer {
   },
   history?: string[];
 }
-/** Interface for Typing the GeoLayerViewGroup JSON object created by the GeoProcessor. */
+/** The GeoLayerViewGroup JSON object created by the GeoProcessor. */
 export interface GeoLayerViewGroup {
   geoLayerViewGroupId?: string;
   name?: string;
@@ -193,7 +192,7 @@ export interface GeoLayerViewGroup {
   },
   geoLayerViews?: GeoLayerView[];
 }
-/** Interface for Typing the GeoLayerView JSON object created by the GeoProcessor. */
+/** The GeoLayerView JSON object created by the GeoProcessor. */
 export interface GeoLayerView {
   geoLayerViewId?: string;
   name?: string;
@@ -209,7 +208,7 @@ export interface GeoLayerView {
   geoLayerSymbol?: GeoLayerSymbol;
 }
 
-/** Interface for Typing the GeoLayerSymbol JSON object created by the GeoProcessor. */
+/** The GeoLayerSymbol JSON object created by the GeoProcessor. */
 export interface GeoLayerSymbol {
   name?: string;
   description?: string;
@@ -237,7 +236,7 @@ export interface GeoLayerSymbol {
 
 ///////////////////////////////// EVENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/** Interface for Typing the EventConfig JSON object created by the user. */
+/** The EventConfig JSON object created by the user. */
 export interface EventConfig {
   id?: string;
   name?: string;
@@ -250,7 +249,7 @@ export interface EventConfig {
   actions?: EventAction[];
 }
 
-/** Interface for Typing the EventAction JSON object created by the user. */
+/** The EventAction JSON object created by the user. */
 export interface EventAction {
   label?: string;
   action: string;
@@ -261,7 +260,7 @@ export interface EventAction {
   saveFile?: string;
 }
 
-/** Interface for Typing the EventHandler JSON object created by the user. */
+/** The EventHandler JSON object created by the user. */
 export interface EventHandler {
   eventType?: string;
   action?: string;
@@ -274,7 +273,7 @@ export interface EventHandler {
 
 ////////////////////////////////// MENUS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/** Interface for Typing the MainMenu JSON object created by the user. */
+/** The MainMenu JSON object created by the user. */
 export interface MainMenu {
   id?: string;
   name?: string;
@@ -286,7 +285,7 @@ export interface MainMenu {
   menus?: SubMenu[];
 }
 
-/** Interface for Typing the SubMenu JSON object created by the user. */
+/** The SubMenu JSON object created by the user. */
 export interface SubMenu {
   name?:  string;
   action?:  string;
@@ -300,7 +299,7 @@ export interface SubMenu {
 
 ///////////////////////////////// LEAFLET \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   
-/** Interface used for creating Bounds objects that contain Latitude and Longitude
+/** Used for creating Bounds objects that contain Latitude and Longitude
  * bounds for zooming on a Leaflet map. */
 export interface Bounds {
   NEMaxLat: number;
@@ -324,7 +323,7 @@ export interface LeafletEvent {
 
 ///////////////////////////////// GRAPHS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/** Interface for containing properties to be used with creating a D3 chart. */
+/** Properties to be used with creating a D3 chart. */
 export interface D3Prop {
   chartType: D3Chart;
   dataPath: string;
@@ -344,7 +343,7 @@ export interface GraphTemplate {
   product?: GraphProd
 }
 
-/**  The product object with top level properties, and the array of sub products. */
+/** The product object with top level properties, and the array of sub products. */
 export interface GraphProd {
   properties?: GraphProdProp,
   subProducts?: GraphSubProd[]
@@ -549,9 +548,15 @@ export interface WidgetTileStyle {
 
 /////////////////////////////// Time Series \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/**
- * 
- */
+
+export interface DataStore {
+  name: string,
+  type: string,
+  rootUrl: string,
+  aliases?: string[]
+}
+
+/** An object representing a parsed full TSID string. */
 export interface TSID {
   location?: string;
   dataStore?: string;

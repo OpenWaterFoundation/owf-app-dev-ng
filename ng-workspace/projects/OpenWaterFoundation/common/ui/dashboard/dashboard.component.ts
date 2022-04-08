@@ -182,7 +182,7 @@ export class DashboardComponent implements OnDestroy {
                 SymbolSize : "0",
                 SymbolStyle : "None",
                 TSAlias : "Streamflow",
-                TSID : "${featureAttribute:wdid}.StateMod.Streamflow.Month~StateMod~/data-ts/${featureAttribute:wdid}.StateMod.Streamflow.Month.csv",
+                TSID : "${featureAttribute:wdid}.StateMod.Streamflow.Month~STM~/data-ts/${featureAttribute:wdid}.StateMod.Streamflow.Month.stm",
                 XAxis : "Bottom",
                 YAxis : "Left"
               }
@@ -201,7 +201,7 @@ export class DashboardComponent implements OnDestroy {
                 SymbolSize : "0",
                 SymbolStyle : "None",
                 TSAlias : "DivTotal",
-                TSID : "${featureAttribute:wdid}.DWR.DivTotal.Month~StateMod~/data-ts/${featureAttribute:wdid}.DWR.DivTotal.Month.csv",
+                TSID : "${featureAttribute:wdid}.DWR.DivTotal.Month~STM~/data-ts/${featureAttribute:wdid}.DWR.DivTotal.Month.stm",
                 XAxis : "Bottom",
                 YAxis : "Left"
               }

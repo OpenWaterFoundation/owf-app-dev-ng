@@ -3,8 +3,6 @@ import { Injectable }  from "@angular/core";
 import { DateTime }    from '@OpenWaterFoundation/common/util/time';
 import * as IM         from '@OpenWaterFoundation/common/services';
 
-import { ChartModule } from './chart.module';
-
 import { add,
           format,
           isEqual,
@@ -17,7 +15,7 @@ import { BehaviorSubject,
  * will be present here.
  */
 @Injectable({
-  providedIn: ChartModule
+  providedIn: 'root'
 })
 export class ChartService {
 

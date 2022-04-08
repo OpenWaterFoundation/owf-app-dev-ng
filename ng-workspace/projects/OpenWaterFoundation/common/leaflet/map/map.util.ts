@@ -10,18 +10,16 @@ declare var L: any;
 
 
 /**
- * This MapUtil class is a utilization class for the Map and its child Dialog Component classes. All of these classes ultimately
- * end up dealing with data that comes from the Map Component, hence the map.util name. It helps with data manipulation and other
- * computational helper functions that take up quite a bit of space in the component classes. This will hopefully clean up code
- * and keep it easier to read and manage in the future. Also, it's good practice in the exporting and importing of functions for
- * components.
+ * A utilization class for the Map Component and some Dialog Component classes.
+ * It helps with unit & integration testing using Jasmine and Karma by keeping code
+ * out of the Component class, which has proven difficult to test due to their size.
  */
 // @dynamic
 export class MapUtil {
-  /**
-   * Object with the geoLayerId as the key, and an object for displaying a raster cell's information in the upper left Leaflet
-   * Control div popup. Used for keeping track of multiple rasters shown on the map.
-   */
+  
+  /** Object with the geoLayerId as the key, and an object for displaying a raster
+   * cell's information in the upper left Leaflet Control div popup. Used for keeping
+   * track of multiple rasters shown on the map. */
   private static currentRasterLayers: any = {};
   /** The constant containing the colors of a defaulted color table for displaying categorized layers. */
   public static readonly defaultColorTable =
@@ -29,19 +27,15 @@ export class MapUtil {
       '#66a3ff', '#003cb3', '#3400b3', '#6a00b3', '#9b00b3', '#b30092', '#b30062', '#b30029'];
   /** Holds the original style object of a feature on the layer. */
   private static originalStyle: any;
-  /**
-   * The instance of the MapLayerManager, a helper class that manages MapLayerItem objects with Leaflet layers
-   * and other layer data for displaying, ordering, and highlighting.
-   */
+  /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
+   * objects with Leaflet layers and other layer data for displaying, ordering,
+   * and highlighting. */
   public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
-  /**
-   * The constant variable for what a cell value will contain as a missing value.
-   * NOTE: May be turned into an array in the future for a list of all known missing values.
-   */
+  /** The constant variable for what a cell value will contain as a missing value.
+   * NOTE: May be turned into an array in the future for a list of all known missing
+   * values. */
   private static readonly missingValue = -3.3999999521443642e38;
-  /**
-   * A read only constant object for dynamically using operators between two integers.
-   */
+  /** A read only object for dynamically using operators between two integers. */
   public static readonly operators = {
     '>': function (a: any, b: any) { return a > b; },
     '>=': function (a: any, b: any) { return a >= b; },

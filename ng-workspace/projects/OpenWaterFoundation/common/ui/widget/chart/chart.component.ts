@@ -15,7 +15,7 @@ import * as IM                    from '@OpenWaterFoundation/common/services';
 
 import { DialogTSTableComponent } from '@OpenWaterFoundation/common/ui/dialog';
 
-import { StateModTS }            from '@OpenWaterFoundation/common/dwr/statemod';
+import { StateModTS }             from '@OpenWaterFoundation/common/dwr/statemod';
 import { MonthTS,
           TS,
           YearTS,
@@ -578,12 +578,12 @@ export class ChartComponent implements OnInit, OnDestroy {
         this.parseCSVFile(graphData, index);
         this.isTSFile = false;
       }
-      else if (TSID.dataStore.includes('dv') || TSID.dataStore.toUpperCase().includes('DATEVALUE')) {
-        this.parseTSFile(graphData, index, IM.Path.sMP);
+      else if (TSID.dataStore.toUpperCase().includes('DV') || TSID.dataStore.toUpperCase().includes('DATEVALUE')) {
+        this.parseTSFile(graphData, index);
         this.isTSFile = true;
       }
-      else if (TSID.dataStore.includes('stm') || TSID.dataStore.toUpperCase().includes('STATEMOD')) {
-        this.parseTSFile(graphData, index, IM.Path.dVP);
+      else if (TSID.dataStore.toUpperCase().includes('STM') || TSID.dataStore.toUpperCase().includes('STATEMOD')) {
+        this.parseTSFile(graphData, index);
         this.isTSFile = true;
       }
       else {
@@ -683,18 +683,19 @@ export class ChartComponent implements OnInit, OnDestroy {
    * 
    * @param graphData 
    * @param index 
-   * @param TSFile 
    */
-  private parseTSFile(graphData: IM.GraphData, index: number, TSFile: IM.Path): void {
+  private parseTSFile(graphData: IM.GraphData, index: number): void {
     
     this.allTSObservables.push(
-      this.dsManager.readTimeSeries(this.owfCommonService, graphData));
+      this.dsManager.getTimeSeries(this.owfCommonService, graphData.properties.TSID)
+    );
 
     this.TSOrder.push(index);
 
     if (this.allTSObservables.length === this.totalTSFiles) {
-      // Now that the array has all the Observables needed, forkJoin and subscribe to them all. Their results will now be
-      // returned as an Array with each index corresponding to the order in which they were pushed onto the array.
+      // Now that the array has all the Observables needed, forkJoin and subscribe
+      // to them all. Their results will now be returned as an Array with each index
+      // corresponding to the order in which they were pushed onto the array.
       this.forkJoinSub$ = forkJoin(this.allTSObservables).subscribe((resultsArray: TS[]) => {
         this.TSArrayOGResultRef = resultsArray;
         this.createTSConfig(resultsArray);

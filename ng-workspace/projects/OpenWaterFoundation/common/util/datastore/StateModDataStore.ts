@@ -13,15 +13,15 @@ export class StateModDataStore {
   constructor() {}
 
 
-  public static readTimeSeries(service: OwfCommonService, TSID: IM.TSID): Observable<TS> {
-    var stateModTS = new StateModTS(service);
-    
-    
+  public static readTimeSeries(service: OwfCommonService, fullTSID: IM.TSID): Observable<TS> {
 
-    return stateModTS.readTimeSeries(TSID.location, service.buildPath(IM.Path.sMP, [TSID.path]),
+    return new StateModTS(service).readTimeSeries(
+      fullTSID.location,
+      service.buildPath(IM.Path.sMP, [fullTSID.path]),
       null,
       null,
       null,
-      true);
+      true
+    );
   }
 }
