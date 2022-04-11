@@ -6,8 +6,10 @@ import { MatDialog,
           MatDialogConfig,
           MatDialogRef }          from '@angular/material/dialog';
 
-import { forkJoin,
+import { catchError,
+          forkJoin,
           Observable, 
+          of, 
           Subscription }          from 'rxjs';
 
 import { OwfCommonService }       from '@OpenWaterFoundation/common/services';
@@ -42,9 +44,11 @@ export class ChartComponent implements OnInit, OnDestroy {
 
   /** Array of objects with the PapaParse result and the object's index from the
    * graph template object's IM.GraphData array. */
-  public allCSVResults: {result: any, index: number}[] = [];
-  /** Subscription for every IM.GraphData object to be displayed in the chart. */
-  private allGraphObjectsSub$: Subscription;
+  public allCSVResults: Observable<any>[] = [];
+
+  /** Subscription to be unsubscribed to at component destruction to prevent memory
+   * leaks.*/
+  private allResultsSub$: Subscription;
   /**
    * Array of all 
    */
@@ -56,16 +60,19 @@ export class ChartComponent implements OnInit, OnDestroy {
   public badFile = false;
   /** The object with the necessary chart data for displaying a Plotly chart. */
   @Input() chartData: any;
+
+  dataIndex: number[] = [];
+
+  dataStoreIndex: string[] = [];
   /** A string containing the name to be passed to the TSTableComponent's first
   * column name: DATE or DATE / TIME. */
   public dateTimeColumnName: string;
+
+  private delimitedOrder: number[] = [];
   /**
    * 
    */
   private dsManager: DataStoreManager = DataStoreManager.getInstance();
-  /** Subscription to be unsubscribed to at component destruction to prevent memory
-   * leaks.*/
-  private forkJoinSub$: Subscription;
   /** The graph template object retrieved from the popup configuration file property
   * resourcePath. */
   public graphTemplate: IM.GraphTemplate;
@@ -254,64 +261,59 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Takes all results given from Papa Parse and creates a PopulateGraph instance
-  * by assigning its members so it can be used by createPlotlyGraph.
-  * @param parsedData The results object returned asynchronously from Papa Parse.
+  * Takes a Papa Parse result object and creates a PopulateGraph instance
+  * for the Plotly graphing package API.
+  * @param delimitedData The results object returned asynchronously from Papa Parse.
   * Contains at least one result array with its index in the graphTemplate data
   * array.
   */
-  private createCSVConfig(parsedData: {result: any, index: number}[]): void {
+   private makeDelimitedPlotlyObject(delimitedData: any, graphData: IM.GraphData): IM.PopulateGraph {
 
-    var allGraphData = this.graphTemplate.product.subProducts[0].data;
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     var templateYAxisTitle: string;
     var legendPosition: any;
 
-    for (let rIndex = 0; rIndex < parsedData.length; rIndex++) {
+    // Set properties that won't need to be set more than once.
+    // if (i === 0) {
+    templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
+    legendPosition = this.chartService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition);
+    // }
+    // These two are the string representing the keys in the current result.
+    // They will be used to populate the X & Y axes arrays.
+    let x_axis = Object.keys(delimitedData.data[0])[0];
+    let y_axis = Object.keys(delimitedData.data[0])[1];
 
-      // Set properties that won't need to be set more than once.
-      if (rIndex === 0) {
-        templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
-        legendPosition = this.chartService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition);
-      }
-      // These two are the string representing the keys in the current result.
-      // They will be used to populate the x- and y-axis arrays.
-      let x_axis = Object.keys(parsedData[rIndex].result.data[0])[0];
-      let y_axis = Object.keys(parsedData[rIndex].result.data[0])[1];
+    // Populate the arrays needed for the X & Y axes.
+    var x_axisLabels: string[] = [];
+    var y_axisData: number[] = [];
+    for (let resultObj of delimitedData.data) {
+      x_axisLabels.push(resultObj[x_axis]);
+      y_axisData.push(parseFloat(resultObj[y_axis]));
+    }
+    // Populate various other chart properties. They will be checked for validity in createGraph().
+    var graphType: string = graphData.properties.GraphType.toLowerCase();
+    var backgroundColor: string = graphData.properties.Color;
+    var TSAlias: string = graphData.properties.TSAlias;
+    var units: string = chartConfigProp.LeftYAxisUnits;
 
-      // Populate the arrays needed for the x- and y-axes.
-      var x_axisLabels: string[] = [];
-      var y_axisData: number[] = [];
-      for (let resultObj of parsedData[rIndex].result.data) {
-        x_axisLabels.push(resultObj[x_axis]);
-        y_axisData.push(parseFloat(resultObj[y_axis]));
-      }
-      // Populate various other chart properties. They will be checked for validity in createGraph().
-      var graphType: string = allGraphData[parsedData[rIndex].index].properties.GraphType.toLowerCase();
-      var backgroundColor: string = allGraphData[parsedData[rIndex].index].properties.Color;
-      var TSAlias: string = allGraphData[parsedData[rIndex].index].properties.TSAlias;
-      var units: string = chartConfigProp.LeftYAxisUnits;
+    var datePrecision: number = this.chartService.determineDatePrecision(graphData.properties.TSID);
+    var legendLabel = this.chartService.formatLegendLabel(graphData.properties.TSID);
 
-      var datePrecision: number = this.chartService.determineDatePrecision(allGraphData[parsedData[rIndex].index].properties.TSID);
-      var legendLabel = this.chartService.formatLegendLabel(allGraphData[parsedData[rIndex].index].properties.TSID);
+    // this.addToAttributeTable(x_axisLabels, { csv_y_axisData: y_axisData },
+    //   (TSAlias !== '') ? TSAlias : legendLabel, units, i, datePrecision);
 
-      this.addToAttributeTable(x_axisLabels, { csv_y_axisData: y_axisData }, (TSAlias !== '') ? TSAlias : legendLabel, units, rIndex, datePrecision);
-
-      // Create the PopulateGraph instance that will be passed to create either the Chart.js or Plotly.js graph
-      var chartConfig: IM.PopulateGraph = {
-        chartMode: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.cm),
-        chartType: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.ct),
-        dataLabels: x_axisLabels,
-        datasetData: y_axisData,
-        datasetBackgroundColor: backgroundColor,
-        graphFileType: 'csv',
-        isCSV: true,
-        legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
-        legendPosition: legendPosition,
-        yAxesLabelString: templateYAxisTitle
-      }
-      // Push the config instance into the configArray to be sent to createXXXGraph()
-      this.chartService.addPopulateGraph(chartConfig);
+    // Return the PopulateGraph instance that will be passed to create the Chart.js graph.
+    return {
+      chartMode: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.cm),
+      chartType: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.ct),
+      dataLabels: x_axisLabels,
+      datasetData: y_axisData,
+      datasetBackgroundColor: backgroundColor,
+      graphFileType: 'csv',
+      isCSV: true,
+      legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
+      legendPosition: legendPosition,
+      yAxesLabelString: templateYAxisTitle
     }
   }
 
@@ -321,79 +323,74 @@ export class ChartComponent implements OnInit, OnDestroy {
   * @param timeSeries The array of all Time Series objects retrieved asynchronously
   * from the StateMod file.
   */
-  private createTSConfig(timeSeries: TS[]): void {
+   private makeTSPlotlyObject(timeSeries: TS, graphData: IM.GraphData): IM.PopulateGraph {
 
-    var allGraphData = this.graphTemplate.product.subProducts[0].data;
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     var templateYAxisTitle: string = '';
     var legendPosition: any;
 
-    // Go through each time series object in the timeSeries array and create a PopulateGraph
-    // instance for each one.
-    for (let i = 0; i < timeSeries.length; i++) {
-      // Set up the parts of the graph object that won't need to be set more than once.
-      if (i === 0) {
-        templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
-        legendPosition = this.chartService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition, allGraphData.length);
-      }
+    // Set up the parts of the graph object that won't need to be set more than once.
+    // TODO: Think about moving this up a method.
+    // if (i === 0) {
+    templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
+    legendPosition = this.chartService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition,
+      this.graphTemplate.product.subProducts[0].data.length);
+    // }
 
-      var XAxisLabels: string[];
-      var type = '';
+    var XAxisLabels: string[];
+    var type = '';
 
-      if (timeSeries[i] instanceof MonthTS) {
-        type = 'months';
-        XAxisLabels = this.chartService.getDates(
-          timeSeries[i].getDate1().getYear() + "-" + this.chartService.zeroPad(timeSeries[i].getDate1().getMonth(), 2),
-          timeSeries[i].getDate2().getYear() + "-" + this.chartService.zeroPad(timeSeries[i].getDate2().getMonth(), 2),
-          type);
-      } else if (timeSeries[i] instanceof YearTS) {
-        type = 'years';
-        XAxisLabels = this.chartService.getDates(
-          timeSeries[i].getDate1().getYear(),
-          timeSeries[i].getDate2().getYear(),
-          type);
-      }
+    if (timeSeries instanceof MonthTS) {
+      type = 'months';
+      XAxisLabels = this.chartService.getDates(
+        timeSeries.getDate1().getYear() + "-" + this.chartService.zeroPad(timeSeries.getDate1().getMonth(), 2),
+        timeSeries.getDate2().getYear() + "-" + this.chartService.zeroPad(timeSeries.getDate2().getMonth(), 2),
+        type);
+    } else if (timeSeries instanceof YearTS) {
+      type = 'years';
+      XAxisLabels = this.chartService.getDates(
+        timeSeries.getDate1().getYear(),
+        timeSeries.getDate2().getYear(),
+        type);
+    }
 
-      var start = timeSeries[i].getDate1().getYear() + "-" + this.chartService.zeroPad(timeSeries[i].getDate1().getMonth(), 2);
-      var end = timeSeries[i].getDate2().getYear() + "-" + this.chartService.zeroPad(timeSeries[i].getDate2().getMonth(), 2);
+    var start = timeSeries.getDate1().getYear() + "-" + this.chartService.zeroPad(timeSeries.getDate1().getMonth(), 2);
+    var end = timeSeries.getDate2().getYear() + "-" + this.chartService.zeroPad(timeSeries.getDate2().getMonth(), 2);
 
-      var axisObject = this.chartService.setAxisObject(timeSeries[i], XAxisLabels, type);
-      // Populate the rest of the properties from the graph config file. This uses
-      // the more granular graphType for each time series.
-      var chartType: string = allGraphData[this.TSOrder[i]]['properties'].GraphType.toLowerCase();
-      var backgroundColor: string = allGraphData[this.TSOrder[i]]['properties'].Color;
-      var TSAlias: string = allGraphData[this.TSOrder[i]]['properties'].TSAlias;
-      var units: string = timeSeries[i].getDataUnits();
-      var datePrecision = timeSeries[i].getDataIntervalBase();
+    var axisObject = this.chartService.setAxisObject(timeSeries, XAxisLabels, type);
+    // Populate the rest of the properties from the graph config file. This uses
+    // the more granular graphType for each time series.
+    var chartType: string = graphData.properties.GraphType.toLowerCase();
+    var backgroundColor: string = graphData.properties.Color;
+    var TSAlias: string = graphData.properties.TSAlias;
+    var units: string = timeSeries.getDataUnits();
+    var datePrecision = timeSeries.getDataIntervalBase();
 
-      var legendLabel: string;
-      if (allGraphData[this.TSOrder[i]].properties.LegendFormat === "Auto") {
-        legendLabel = timeSeries[i].formatLegend('%A');
-      } else {
-        legendLabel = timeSeries[i].formatLegend(allGraphData[this.TSOrder[i]].properties.LegendFormat);
-      }
+    var legendLabel: string;
+    if (graphData.properties.LegendFormat === "Auto") {
+      legendLabel = timeSeries.formatLegend('%A');
+    } else {
+      legendLabel = timeSeries.formatLegend(graphData.properties.LegendFormat);
+    }
 
-      this.addToAttributeTable(XAxisLabels, axisObject, (TSAlias !== '') ? TSAlias : legendLabel,
-        units, i, datePrecision);
+    // this.addToAttributeTable(XAxisLabels, axisObject, (TSAlias !== '') ? TSAlias : legendLabel,
+    //   units, i, datePrecision);
 
-      // Create the PopulateGraph object to pass to the createGraph function.
-      var chartConfig: IM.PopulateGraph = {
-        chartMode: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.cm),
-        chartType: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.ct),
-        dateType: type,
-        datasetData: axisObject.chartJS_yAxisData,
-        plotlyDatasetData: axisObject.plotly_yAxisData,
-        plotly_xAxisLabels: XAxisLabels,
-        datasetBackgroundColor: this.chartService.verifyPlotlyProp(backgroundColor, IM.GraphProp.bc),
-        graphFileType: 'TS',
-        legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
-        legendPosition: legendPosition,
-        startDate: start,
-        endDate: end,
-        yAxesLabelString: templateYAxisTitle
-      }
-
-      this.chartService.addPopulateGraph(chartConfig);
+    // Return the PopulateGraph instance that will be passed to create the Chart.js graph.
+    return {
+      chartMode: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.cm),
+      chartType: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.ct),
+      dateType: type,
+      datasetData: axisObject.chartJS_yAxisData,
+      plotlyDatasetData: axisObject.plotly_yAxisData,
+      plotly_xAxisLabels: XAxisLabels,
+      datasetBackgroundColor: this.chartService.verifyPlotlyProp(backgroundColor, IM.GraphProp.bc),
+      graphFileType: 'TS',
+      legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
+      legendPosition: legendPosition,
+      startDate: start,
+      endDate: end,
+      yAxesLabelString: templateYAxisTitle
     }
   }
 
@@ -538,7 +535,7 @@ export class ChartComponent implements OnInit, OnDestroy {
    * Initializes this components class variables and performs other necessary actions
    * to set up and display a chart.
    */
-  private initChartVars(): void {
+  private initChartVariables(): void {
 
     this.featureProperties = this.chartData.featureProperties;
     this.downloadFileName = this.chartData.downloadFileName ? this.chartData.downloadFileName : undefined;
@@ -567,47 +564,59 @@ export class ChartComponent implements OnInit, OnDestroy {
   */
   ngOnInit(): void {
 
-    this.initChartVars();
-
-    // Iterate over all graphData objects in the graph template file.
-    this.graphTemplate.product.subProducts[0].data.forEach((graphData, index) => {
-
-      var TSID = this.owfCommonService.parseTSID(graphData.properties.TSID);
-
-      if (TSID.path.includes('.csv')) {
-        this.parseCSVFile(graphData, index);
-        this.isTSFile = false;
-      }
-      else if (TSID.dataStore.toUpperCase().includes('DV') || TSID.dataStore.toUpperCase().includes('DATEVALUE')) {
-        this.parseTSFile(graphData, index);
-        this.isTSFile = true;
-      }
-      else if (TSID.dataStore.toUpperCase().includes('STM') || TSID.dataStore.toUpperCase().includes('STATEMOD')) {
-        this.parseTSFile(graphData, index);
-        this.isTSFile = true;
-      }
-      else {
-        this.badFile = true;
-      }
-    });
-
-    // Wait until all Plotly supported PopulateGraph objects have been added to
-    // the array, and then create the Chart with all graphs.
-    this.allGraphObjectsSub$ = this.chartService.allGraphObjects
-    .subscribe((allGraphObjects: IM.PopulateGraph[]) => {
-
-      if (allGraphObjects.length === this.totalGraphsToMake) {
-        this.createPlotlyGraph(allGraphObjects);
-      }
-    });
+    this.initChartVariables();
+    this.obtainAndCreateAllGraphs();
   }
 
   /**
-  * Called once, before the instance is destroyed.
+  * Called once, before the instance is destroyed. Unsubscribes from all subscriptions
+  * to prevent memory leaks.
   */
   public ngOnDestroy(): void {
-    this.forkJoinSub$.unsubscribe();
-    this.allGraphObjectsSub$.unsubscribe();
+    this.allResultsSub$.unsubscribe();
+  }
+
+  /**
+   * Use the DataStoreManager to obtain all data necessary to display on a Plotly
+   * chart.
+   */
+  private obtainAndCreateAllGraphs(): void {
+
+    var allDataObservables: Observable<any>[] = [];
+    var allGraphObjects: IM.PopulateGraph[] = [];
+    // The array of all graphData objects in the graph template file.
+    const graphData = this.graphTemplate.product.subProducts[0].data;
+
+    // Iterate over all graphData objects in the graph template file.
+    graphData.forEach((graphData) => {
+      var dataObservable = this.dsManager.getDataStoreData(this.owfCommonService, graphData.properties.TSID);
+      allDataObservables.push(dataObservable);
+    });
+
+    // TODO: jpkeahey 2022-04-11 Make sure to handle errors correctly.
+    const forkedData = forkJoin(allDataObservables).pipe(
+      catchError((error: any) => of(error))
+    );
+
+    this.allResultsSub$ = forkedData.subscribe((allResults: any[]) => {
+
+      allResults.forEach((result: any, i: number) => {
+        var TSID = this.owfCommonService.parseTSID(graphData[i].properties.TSID);
+        var dataStore = this.dsManager.getDataStoreType(TSID.dataStore);
+
+        switch(dataStore) {
+          case IM.DataStoreType.delimited:
+            allGraphObjects.push(this.makeDelimitedPlotlyObject(result, graphData[i]));
+            break;
+          case IM.DataStoreType.dateValue:
+          case IM.DataStoreType.stateMod:
+            allGraphObjects.push(this.makeTSPlotlyObject(result, graphData[i]));
+            break;
+        }
+      });
+
+      this.createPlotlyGraph(allGraphObjects);
+    });
   }
 
   /**
@@ -650,57 +659,6 @@ export class ChartComponent implements OnInit, OnDestroy {
       maxWidth: "90vw"
     });
     this.windowManager.addWindow(windowID, WindowType.TABLE);
-    
-  }
-
-  /**
-   * 
-   * @param graphData 
-   * @param index 
-   */
-  private parseCSVFile(graphData: IM.GraphData, index: number): void {
-    // The file path string to the TS File.
-    var filePath = this.owfCommonService.parseTSID(graphData.properties.TSID).path;
-
-    Papa.parse(this.owfCommonService.buildPath(IM.Path.csvPath, [filePath]), {
-      delimiter: ",",
-      download: true,
-      comments: "#",
-      skipEmptyLines: true,
-      header: true,
-      complete: (result: any, file: any) => {
-        this.allCSVResults.push({result: result, index: index});
-
-        if (this.allCSVResults.length === this.totalCSVFiles) {
-          this.createCSVConfig(this.allCSVResults);
-        }
-      }
-    });
-
-  }
-
-  /**
-   * 
-   * @param graphData 
-   * @param index 
-   */
-  private parseTSFile(graphData: IM.GraphData, index: number): void {
-    
-    this.allTSObservables.push(
-      this.dsManager.getTimeSeries(this.owfCommonService, graphData.properties.TSID)
-    );
-
-    this.TSOrder.push(index);
-
-    if (this.allTSObservables.length === this.totalTSFiles) {
-      // Now that the array has all the Observables needed, forkJoin and subscribe
-      // to them all. Their results will now be returned as an Array with each index
-      // corresponding to the order in which they were pushed onto the array.
-      this.forkJoinSub$ = forkJoin(this.allTSObservables).subscribe((resultsArray: TS[]) => {
-        this.TSArrayOGResultRef = resultsArray;
-        this.createTSConfig(resultsArray);
-      });
-    }
     
   }
 

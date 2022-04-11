@@ -22,6 +22,6 @@ export class StateModDataStore {
       null,
       null,
       true
-    );
+    )
   }
 }

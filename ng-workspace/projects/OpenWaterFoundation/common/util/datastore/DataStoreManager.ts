@@ -17,7 +17,7 @@ import { StateModDataStore }  from './StateModDataStore';
 export class DataStoreManager {
 
   // The hard coded 'built in' DataStores for the Common library.
-  readonly builtInDataStores: IM.DataStore[] = [
+  private readonly builtInDataStores: IM.DataStore[] = [
     {
       name: "Delimited",
       type: "owf.datastore.delimited",
@@ -84,14 +84,14 @@ export class DataStoreManager {
    * @param dataStoreStr The dataStore string from the full TSID.
    * @returns A string of the DataStoreType.
    */
-  private getDataStoreType(dataStoreStr: string): string {
+  public getDataStoreType(dataStoreStr: string): string {
 
     // First try checking each dataStore's name property.
     for (let dataStore of this.builtInDataStores) {
       if (dataStore.name.toUpperCase() === dataStoreStr.toUpperCase()) {
         return dataStore.type;
       } 
-      // If the exact name not found, try each alias.
+      // If the exact name not found, try each alias if provided.
       if (dataStore.aliases) {
         for (let alias of dataStore.aliases) {
           if (alias.toUpperCase() === dataStoreStr.toUpperCase()) {
@@ -101,44 +101,25 @@ export class DataStoreManager {
       }
     }
 
+    // Iterate over user added dataStores.
+    for (let userDataStore of this.userDataStores) {
+      if (userDataStore.name.toUpperCase() === dataStoreStr.toUpperCase()) {
+        return userDataStore.type;
+      } 
+      if (userDataStore.aliases) {
+        for (let alias of userDataStore.aliases) {
+          if (alias.toUpperCase() === dataStoreStr.toUpperCase()) {
+            return userDataStore.type;
+          }
+        }
+      }
+    }
+
     return 'unknown';
   }
 
-  /**
-   * 
-   * @param service 
-   * @param TSID 
-   */
-  public initReadDelimitedData(service: OwfCommonService, TSID: string) {
-    // Parse the TSID string into the TSID object.
-    var fullTSID = service.parseTSID(TSID);
-    var dataStore = this.getDataStoreType(fullTSID.dataStore);
-
-    switch(dataStore) {
-      // case IM.DataStoreType.delimited: return DelimitedDataStore.readDelimitedData(service, fullTSID);
-      case 'unknown':
-      default: console.error('Unsupported DataStore.');
-    }
+  public setUserDataStores(allUserDataStores: IM.DataStore[]): void {
+    
   }
 
-  /**
-   * Performs the actions necessary to set up a Time Series DataStore so it can
-   * call its readTimeSeries function.
-   * @param service The OwfCommonService to be used in the DataStore.
-   * @param TSID The full TSID string to be used in the time series creation.
-   * @returns A TS object as an observable.
-   */
-  public getTimeSeries(service: OwfCommonService, TSID: string): Observable<TS> {
-    // Parse the TSID string into the TSID object.
-    var fullTSID = service.parseTSID(TSID);
-
-    var dataStore = this.getDataStoreType(fullTSID.dataStore);
-
-    switch(dataStore) {
-      // case IM.DataStoreType.dateValue: return DateValueDataStore.readTimeSeries(service, TSID);
-      case IM.DataStoreType.stateMod: return StateModDataStore.readTimeSeries(service, fullTSID);
-      case 'unknown':
-      default: console.error('Unsupported DataStore.'); return of(null);
-    }
-  }
 }
