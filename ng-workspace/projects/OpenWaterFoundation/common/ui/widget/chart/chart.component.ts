@@ -17,20 +17,15 @@ import * as IM                    from '@OpenWaterFoundation/common/services';
 
 import { DialogTSTableComponent } from '@OpenWaterFoundation/common/ui/dialog';
 
-import { StateModTS }             from '@OpenWaterFoundation/common/dwr/statemod';
 import { MonthTS,
           TS,
-          YearTS,
-          DateValueTS }           from '@OpenWaterFoundation/common/ts';
+          YearTS }                from '@OpenWaterFoundation/common/ts';
 import { DataUnits }              from '@OpenWaterFoundation/common/util/io';
 import { WindowManager,
           WindowType }            from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapUtil }                from '@OpenWaterFoundation/common/leaflet';
-import { DataStoreManager }       from '@OpenWaterFoundation/common/util/datastore';
+import { DatastoreManager }       from '@OpenWaterFoundation/common/util/datastore';
 import { ChartService }           from './chart.service';
-
-import * as Papa                  from 'papaparse';
-
 // I believe that if this type of 'import' is used, the package needs to be added
 // to the angular.json scripts array.
 declare var Plotly: any;
@@ -63,7 +58,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 
   dataIndex: number[] = [];
 
-  dataStoreIndex: string[] = [];
+  datastoreIndex: string[] = [];
   /** A string containing the name to be passed to the TSTableComponent's first
   * column name: DATE or DATE / TIME. */
   public dateTimeColumnName: string;
@@ -72,7 +67,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   /**
    * 
    */
-  private dsManager: DataStoreManager = DataStoreManager.getInstance();
+  private dsManager: DatastoreManager = DatastoreManager.getInstance();
   /** The graph template object retrieved from the popup configuration file property
   * resourcePath. */
   public graphTemplate: IM.GraphTemplate;
@@ -290,7 +285,8 @@ export class ChartComponent implements OnInit, OnDestroy {
       x_axisLabels.push(resultObj[x_axis]);
       y_axisData.push(parseFloat(resultObj[y_axis]));
     }
-    // Populate various other chart properties. They will be checked for validity in createGraph().
+    // Populate various other chart properties. They will be checked for validity
+    // in createPlotlyGraph().
     var graphType: string = graphData.properties.GraphType.toLowerCase();
     var backgroundColor: string = graphData.properties.Color;
     var TSAlias: string = graphData.properties.TSAlias;
@@ -577,7 +573,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Use the DataStoreManager to obtain all data necessary to display on a Plotly
+   * Use the DatastoreManager to obtain all data necessary to display on a Plotly
    * chart.
    */
   private obtainAndCreateAllGraphs(): void {
@@ -589,7 +585,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     // Iterate over all graphData objects in the graph template file.
     graphData.forEach((graphData) => {
-      var dataObservable = this.dsManager.getDataStoreData(this.owfCommonService, graphData.properties.TSID);
+      var dataObservable = this.dsManager.getDatastoreData(this.owfCommonService, graphData.properties.TSID);
       allDataObservables.push(dataObservable);
     });
 
@@ -602,14 +598,14 @@ export class ChartComponent implements OnInit, OnDestroy {
 
       allResults.forEach((result: any, i: number) => {
         var TSID = this.owfCommonService.parseTSID(graphData[i].properties.TSID);
-        var dataStore = this.dsManager.getDataStoreType(TSID.dataStore);
+        var datastore = this.dsManager.getDatastore(TSID.datastore);
 
-        switch(dataStore) {
-          case IM.DataStoreType.delimited:
+        switch(datastore.type) {
+          case IM.DatastoreType.delimited:
             allGraphObjects.push(this.makeDelimitedPlotlyObject(result, graphData[i]));
             break;
-          case IM.DataStoreType.dateValue:
-          case IM.DataStoreType.stateMod:
+          case IM.DatastoreType.dateValue:
+          case IM.DatastoreType.stateMod:
             allGraphObjects.push(this.makeTSPlotlyObject(result, graphData[i]));
             break;
         }

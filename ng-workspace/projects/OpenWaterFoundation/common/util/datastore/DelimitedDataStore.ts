@@ -9,13 +9,13 @@ import { Subscriber } from 'rxjs';
 
 
 // @dynamic
-export class DelimitedDataStore {
+export class DelimitedDatastore {
 
 
   constructor() {}
 
 
-  public static readDelimitedData(service: OwfCommonService, fullTSID: IM.TSID): Observable<any> {
+  static readDelimitedData(service: OwfCommonService, fullTSID: IM.TSID): Observable<any> {
 
     return new Observable((subscriber: Subscriber<any>) => {
       Papa.parse(service.buildPath(IM.Path.csvPath, [fullTSID.path]), {

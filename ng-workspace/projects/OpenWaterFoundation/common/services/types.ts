@@ -4,8 +4,8 @@
 
 // ENUM
 
-/** All supported DataStore types. */
-export enum DataStoreType {
+/** All supported Datastore types. */
+export enum DatastoreType {
   delimited = 'owf.datastore.delimited',
   dateValue = 'owf.datastore.datevalue',
   stateMod = 'owf.datastore.statemod'
@@ -130,6 +130,7 @@ export interface AppConfig {
   dataUnitsPath?: string;
   googleAnalyticsTrackingId?: string;
   version?: string;
+  datastores?: Datastore[];
   mainMenu?: MainMenu[];
 }
 
@@ -549,7 +550,7 @@ export interface WidgetTileStyle {
 /////////////////////////////// Time Series \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-export interface DataStore {
+export interface Datastore {
   name: string,
   type: string,
   rootUrl: string,
@@ -559,6 +560,6 @@ export interface DataStore {
 /** An object representing a parsed full TSID string. */
 export interface TSID {
   location?: string;
-  dataStore?: string;
+  datastore?: string;
   path?: string;
 }

@@ -201,7 +201,7 @@ export class DashboardComponent implements OnDestroy {
                 SymbolSize : "0",
                 SymbolStyle : "None",
                 TSAlias : "DivTotal",
-                TSID : "${featureAttribute:wdid}.DWR.DivTotal.Month~STM~/data-ts/${featureAttribute:wdid}.DWR.DivTotal.Month.stm",
+                TSID : "${featureAttribute:wdid}.DWR.DivTotal.Month~StateModGitHub~/testing/data-files/${featureAttribute:wdid}.DWR.DivTotal.Month.stm",
                 XAxis : "Bottom",
                 YAxis : "Left"
               }

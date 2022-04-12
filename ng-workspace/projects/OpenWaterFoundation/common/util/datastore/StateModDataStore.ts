@@ -7,17 +7,28 @@ import * as IM              from '@OpenWaterFoundation/common/services';
 
 
 // @dynamic
-export class StateModDataStore {
+export class StateModDatastore {
 
 
   constructor() {}
 
 
-  public static readTimeSeries(service: OwfCommonService, fullTSID: IM.TSID): Observable<TS> {
+  public static readTimeSeries(service: OwfCommonService, datastore: IM.Datastore,
+  fullTSID: IM.TSID): Observable<TS> {
+
+    var convertedPath: string;
+
+    if (datastore.rootUrl !== null) {
+      convertedPath = datastore.rootUrl + fullTSID.path
+    } else {
+      convertedPath = fullTSID.path
+    }
+
+    console.log('convertedPath:', convertedPath);
 
     return new StateModTS(service).readTimeSeries(
       fullTSID.location,
-      service.buildPath(IM.Path.sMP, [fullTSID.path]),
+      service.buildPath(IM.Path.sMP, [convertedPath]),
       null,
       null,
       null,

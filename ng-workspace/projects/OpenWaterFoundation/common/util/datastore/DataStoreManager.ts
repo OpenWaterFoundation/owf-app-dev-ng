@@ -1,23 +1,22 @@
 import { Observable }         from 'rxjs/internal/Observable';
 import { of }                 from 'rxjs';
 
-import { TS }                 from '@OpenWaterFoundation/common/ts';
 import { OwfCommonService }   from '@OpenWaterFoundation/common/services';
 import * as IM                from '@OpenWaterFoundation/common/services';
 
-import { DateValueDataStore } from './DateValueDataStore';
-import { DelimitedDataStore } from './DelimitedDataStore';
-import { StateModDataStore }  from './StateModDataStore';
+import { DateValueDatastore } from './DateValueDatastore';
+import { DelimitedDatastore } from './DelimitedDatastore';
+import { StateModDatastore }  from './StateModDatastore';
 
 
 /**
  * 
  */
 // @dynamic
-export class DataStoreManager {
+export class DatastoreManager {
 
-  // The hard coded 'built in' DataStores for the Common library.
-  private readonly builtInDataStores: IM.DataStore[] = [
+  // The hard coded 'built in' Datastores for the Common library.
+  private readonly builtInDatastores: IM.Datastore[] = [
     {
       name: "Delimited",
       type: "owf.datastore.delimited",
@@ -38,9 +37,9 @@ export class DataStoreManager {
     }
   ];
 
-  private userDataStores: IM.DataStore[] = [];
+  private userDatastores: IM.Datastore[] = [];
   /** The singleton instance of this MapLayerManager class. */
-  private static instance: DataStoreManager;
+  private static instance: DatastoreManager;
 
 
   private constructor() {}
@@ -50,76 +49,87 @@ export class DataStoreManager {
    * Only one instance of this MapLayerManager can be used at one time, making it
    * a singleton class.
    */
-  public static getInstance(): DataStoreManager {
-    if (!DataStoreManager.instance) { DataStoreManager.instance = new DataStoreManager(); }
-    return DataStoreManager.instance;
+  public static getInstance(): DatastoreManager {
+    if (!DatastoreManager.instance) { DatastoreManager.instance = new DatastoreManager(); }
+    return DatastoreManager.instance;
   }
 
   /**
-   * 
-   * @param service 
-   * @param TSID 
-   * @returns 
+   * @param service The OWF service for fetching data.
+   * @param TSID The full TSID string.
+   * @returns The data from the requested Datastore as an observable.
    */
-  public getDataStoreData(service: OwfCommonService, TSID: string): Observable<any> {
+  public getDatastoreData(service: OwfCommonService, TSID: string): Observable<any> {
     // Parse the TSID string into the TSID object.
     var fullTSID = service.parseTSID(TSID);
-    var dataStore = this.getDataStoreType(fullTSID.dataStore);
+    var datastore = this.getDatastore(fullTSID.datastore);
 
-    switch(dataStore) {
-      case IM.DataStoreType.delimited:
-        return DelimitedDataStore.readDelimitedData(service, fullTSID);
-      case IM.DataStoreType.dateValue:
-        return DateValueDataStore.readTimeSeries(service, fullTSID);
-      case IM.DataStoreType.stateMod:
-        return StateModDataStore.readTimeSeries(service, fullTSID);
+    switch(datastore.type) {
+      case IM.DatastoreType.delimited:
+        return DelimitedDatastore.readDelimitedData(service, fullTSID);
+      case IM.DatastoreType.dateValue:
+        return DateValueDatastore.readTimeSeries(service, fullTSID);
+      case IM.DatastoreType.stateMod:
+        return StateModDatastore.readTimeSeries(service, datastore, fullTSID);
       case 'unknown':
-      default: console.error('Unsupported DataStore.'); return of(null);
+      default: console.error('Unsupported Datastore.'); return of(null);
     }
   }
 
   /**
-   * Looks through the list of built in DataStore names & aliases, then user DataStore
+   * Looks through the list of built in Datastore names & aliases, then user Datastore
    * names & aliases in that order, and checks if the provided string matches them.
-   * @param dataStoreStr The dataStore string from the full TSID.
-   * @returns A string of the DataStoreType.
+   * @param datastoreStr The datastore string from the full TSID.
+   * @returns A string of the DatastoreType.
    */
-  public getDataStoreType(dataStoreStr: string): string {
+  public getDatastore(datastoreStr: string): IM.Datastore {
 
-    // First try checking each dataStore's name property.
-    for (let dataStore of this.builtInDataStores) {
-      if (dataStore.name.toUpperCase() === dataStoreStr.toUpperCase()) {
-        return dataStore.type;
+    // First try checking each datastore's name property.
+    for (let datastore of this.builtInDatastores) {
+      if (datastore.name.toUpperCase() === datastoreStr.toUpperCase()) {
+        return datastore;
       } 
       // If the exact name not found, try each alias if provided.
-      if (dataStore.aliases) {
-        for (let alias of dataStore.aliases) {
-          if (alias.toUpperCase() === dataStoreStr.toUpperCase()) {
-            return dataStore.type;
+      if (datastore.aliases) {
+        for (let alias of datastore.aliases) {
+          if (alias.toUpperCase() === datastoreStr.toUpperCase()) {
+            return datastore;
           }
         }
       }
     }
 
-    // Iterate over user added dataStores.
-    for (let userDataStore of this.userDataStores) {
-      if (userDataStore.name.toUpperCase() === dataStoreStr.toUpperCase()) {
-        return userDataStore.type;
+    // Iterate over user added datastores.
+    for (let userDatastore of this.userDatastores) {
+      if (userDatastore.name.toUpperCase() === datastoreStr.toUpperCase()) {
+        return userDatastore;
       } 
-      if (userDataStore.aliases) {
-        for (let alias of userDataStore.aliases) {
-          if (alias.toUpperCase() === dataStoreStr.toUpperCase()) {
-            return userDataStore.type;
+      if (userDatastore.aliases) {
+        for (let alias of userDatastore.aliases) {
+          if (alias.toUpperCase() === datastoreStr.toUpperCase()) {
+            return userDatastore;
           }
         }
       }
     }
 
-    return 'unknown';
+    return {
+      name: 'unknown',
+      type: 'unknown',
+      rootUrl: 'unknown'
+    };
   }
 
-  public setUserDataStores(allUserDataStores: IM.DataStore[]): void {
-    
+  /**
+   * Sets the DatastoreManager's userDatastores array with all user added Datastore
+   * objects from the `app-config.json` file.
+   * @param allUserDatastores The array of all user provided datastores from the
+   * application configuration file.
+   */
+  public setUserDatastores(allUserDatastores: IM.Datastore[]): void {
+    for (let datastore of allUserDatastores) {
+      this.userDatastores.push(datastore);
+    }
   }
 
 }

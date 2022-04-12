@@ -1201,8 +1201,8 @@ export class OwfCommonService {
   /**
    * Parses a full TSID string into its smaller components.
    * @param fullTSID The full TSID string to parse.
-   * @returns An object with at least the TSIDLocation and dataStore, and the path
-   * to the dataStore file if given.
+   * @returns An object with at least the TSIDLocation and datastore, and the path
+   * to the datastore file if given.
    */
    public parseTSID(fullTSID: string): IM.TSID {
 
@@ -1212,13 +1212,13 @@ export class OwfCommonService {
     if (fullTSID.split('~').length === 2) {
       return {
         location: fullTSID.split('~')[0],
-        dataStore: fullTSID.split('~')[1],
+        datastore: fullTSID.split('~')[1],
         path: null
       }
     } else if (fullTSID.split('~').length === 3) {
       return {
         location: fullTSID.split('~')[0],
-        dataStore: fullTSID.split('~')[1],
+        datastore: fullTSID.split('~')[1],
         path: fullTSID.split('~')[2]
       }
     }

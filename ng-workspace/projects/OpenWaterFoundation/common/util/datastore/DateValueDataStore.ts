@@ -7,7 +7,7 @@ import * as IM              from '@OpenWaterFoundation/common/services';
 
 
 // @dynamic
-export class DateValueDataStore {
+export class DateValueDatastore {
 
 
   constructor() {}
