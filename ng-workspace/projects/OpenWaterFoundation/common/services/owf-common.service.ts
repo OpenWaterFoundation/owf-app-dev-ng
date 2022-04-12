@@ -1,5 +1,5 @@
 import { Injectable }      from '@angular/core';
-import { HttpClient }      from '@angular/common/http';
+import { HttpClient, HttpErrorResponse }      from '@angular/common/http';
 import { MapLayerManager } from '@OpenWaterFoundation/common/ui/layer-manager';
 
 import { catchError }      from 'rxjs/operators';
@@ -1026,22 +1026,22 @@ export class OwfCommonService {
 
       switch(type) {
         case IM.Path.fMCP:
-          console.error('Confirm the app configuration property \'mapProject\' with id \'' + id + '\' is the correct path');
+          console.error("Confirm the app configuration property 'mapProject' with id '" + id + "' is the correct path");
           break;
         case IM.Path.gLGJP:
-          console.error('Confirm the map configuration property \'sourcePath\' is the correct path');
+          console.error("Confirm the map configuration property 'sourcePath' is the correct path");
           break;
         case IM.Path.eCP:
-          console.error('Confirm the map configuration EventHandler property \'eventConfigPath\' is the correct path');
+          console.error("Confirm the map configuration EventHandler property 'eventConfigPath' is the correct path");
           break;
         case IM.Path.aCP:
-          console.error('No app-config.json detected in ' + this.appPath + '. Confirm app-config.json exists in ' + this.appPath);
+          console.error("No app-config.json detected in " + this.appPath + ". Confirm app-config.json exists in " + this.appPath);
           break;
         case IM.Path.cPage:
-          console.error('Confirm the app configuration property \'markdownFilepath\' with id \'' + id + '\' is the correct path');
+          console.error("Confirm the app configuration property 'markdownFilepath' with id '" + id + "' is the correct path");
           break;
         case IM.Path.rP:
-          console.error('Confirm the popup configuration file property \'resourcePath\' is the correct path');
+          console.error("Confirm the popup configuration file property 'resourcePath' is the correct path");
           break;
       }
       // TODO: jpkeahey 2020.07.22 - Don't show a map error no matter what. I'll probably want to in some cases.
@@ -1049,7 +1049,7 @@ export class OwfCommonService {
       // Let the app keep running by returning an empty result. Because each service
       // method returns a different kind of Observable result, this function takes a
       // type parameter so it can return the safe value as the type that the application expects.
-      return of(result as T);
+      return of(error);
     };
   }
 

@@ -12,9 +12,12 @@ export class StateModDatastore {
 
   constructor() {}
 
+  private convertPath(): string {
+    return;
+  }
 
-  public static readTimeSeries(service: OwfCommonService, datastore: IM.Datastore,
-  fullTSID: IM.TSID): Observable<TS> {
+
+  public static readTimeSeries(service: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
 
     var convertedPath: string;
 
@@ -33,6 +36,6 @@ export class StateModDatastore {
       null,
       null,
       true
-    )
+    );
   }
 }

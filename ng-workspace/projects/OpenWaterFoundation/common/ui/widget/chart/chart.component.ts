@@ -37,17 +37,9 @@ declare var Plotly: any;
 })
 export class ChartComponent implements OnInit, OnDestroy {
 
-  /** Array of objects with the PapaParse result and the object's index from the
-   * graph template object's IM.GraphData array. */
-  public allCSVResults: Observable<any>[] = [];
-
   /** Subscription to be unsubscribed to at component destruction to prevent memory
    * leaks.*/
   private allResultsSub$: Subscription;
-  /**
-   * Array of all 
-   */
-  public allTSObservables: Observable<TS>[] = [];
   /** The array of objects to pass to the tstable component for data table creation. */
   public attributeTable: any[] = [];
   /** This variable lets the template file know if neither a CSV, DateValue, or
@@ -55,15 +47,9 @@ export class ChartComponent implements OnInit, OnDestroy {
   public badFile = false;
   /** The object with the necessary chart data for displaying a Plotly chart. */
   @Input() chartData: any;
-
-  dataIndex: number[] = [];
-
-  datastoreIndex: string[] = [];
   /** A string containing the name to be passed to the TSTableComponent's first
   * column name: DATE or DATE / TIME. */
   public dateTimeColumnName: string;
-
-  private delimitedOrder: number[] = [];
   /**
    * 
    */
@@ -83,10 +69,6 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** A string representing the documentation retrieved from the txt, md, or html
   * file to be displayed for a layer. */
   public mainTitleString: string;
-
-  public totalCSVFiles = 0;
-
-  public totalTSFiles = 0;
 
   public totalGraphsToMake: number;
   /** The array of TS objects that was originally read in using the StateMod or DateValue
@@ -509,23 +491,10 @@ export class ChartComponent implements OnInit, OnDestroy {
     return 2;
   }
 
-  /**
-   * Determine how many total CSV files are to be asynchronously retrieved by iterating
-   * over all graphData objects and checking their TSID property.
-   */
-  private setTotalFilesToRetrieve(): void {
-    this.graphTemplate.product.subProducts[0].data.forEach((graphData) => {
-      if (graphData.properties.TSID.includes('.csv')) {
-        this.totalCSVFiles += 1;
-      } else if (graphData.properties.TSID.includes('.stm')) {
-        this.totalTSFiles += 1;
-      } else if (graphData.properties.TSID.includes('.dv')) {
-        this.totalTSFiles += 1;
-      }
-    });
-
-    this.totalGraphsToMake = this.totalCSVFiles + this.totalTSFiles;
-  }
+  private handleError<T> (path: string, type?: string, id?: string, result?: T) {
+    return (error: any): Observable<T> => {
+      return of(result as T);
+    }}
 
   /**
    * Initializes this components class variables and performs other necessary actions
@@ -545,7 +514,6 @@ export class ChartComponent implements OnInit, OnDestroy {
     this.TSIDLocation = this.owfCommonService.parseTSID(
       this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
 
-    this.setTotalFilesToRetrieve();
     // Set the mainTitleString to be used by the map template file to display as
     // the TSID location (for now).
     this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
@@ -589,14 +557,16 @@ export class ChartComponent implements OnInit, OnDestroy {
       allDataObservables.push(dataObservable);
     });
 
-    // TODO: jpkeahey 2022-04-11 Make sure to handle errors correctly.
-    const forkedData = forkJoin(allDataObservables).pipe(
-      catchError((error: any) => of(error))
-    );
-
-    this.allResultsSub$ = forkedData.subscribe((allResults: any[]) => {
+    this.allResultsSub$ = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
 
       allResults.forEach((result: any, i: number) => {
+
+        // Check for any errors.
+        if (result.error) {
+          console.error('This graph object has errored and will not be shown on the Chart.');
+          return;
+        }
+
         var TSID = this.owfCommonService.parseTSID(graphData[i].properties.TSID);
         var datastore = this.dsManager.getDatastore(TSID.datastore);
 
