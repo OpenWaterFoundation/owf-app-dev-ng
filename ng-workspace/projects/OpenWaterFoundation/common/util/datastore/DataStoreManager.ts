@@ -66,9 +66,9 @@ export class DatastoreManager {
 
     switch(datastore.type) {
       case IM.DatastoreType.delimited:
-        return DelimitedDatastore.readDelimitedData(service, fullTSID);
+        return DelimitedDatastore.readDelimitedData(service, datastore, fullTSID);
       case IM.DatastoreType.dateValue:
-        return DateValueDatastore.readTimeSeries(service, fullTSID);
+        return DateValueDatastore.readTimeSeries(service, datastore, fullTSID);
       case IM.DatastoreType.stateMod:
         return StateModDatastore.readTimeSeries(service, datastore, fullTSID);
       case 'unknown':

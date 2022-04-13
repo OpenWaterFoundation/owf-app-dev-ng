@@ -13,11 +13,32 @@ export class DateValueDatastore {
   constructor() {}
 
 
-  public static readTimeSeries(service: OwfCommonService, fullTSID: IM.TSID): Observable<TS> {
+  private static convertPath(rootUrl: string, path: string): string {
+
+    if (rootUrl.endsWith('/') && path.startsWith('/')) {
+      return rootUrl + path.substring(1);
+    } else if (!rootUrl.endsWith('/') && path.startsWith('/') ||
+    rootUrl.endsWith('/') && !path.startsWith('/')) {
+      return rootUrl + path;
+    } else if (!rootUrl.endsWith('/') && !path.startsWith('/')) {
+      return rootUrl + '/' + path;
+    }
+    return;
+  }
+
+  public static readTimeSeries(service: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
+
+    var convertedPath: string;
+
+    if (datastore.rootUrl !== null) {
+      convertedPath = DateValueDatastore.convertPath(datastore.rootUrl, fullTSID.path);
+    } else {
+      convertedPath = fullTSID.path
+    }
 
     return new DateValueTS(service).readTimeSeries(
       fullTSID.location,
-      service.buildPath(IM.Path.sMP, [fullTSID.path]),
+      service.buildPath(IM.Path.sMP, [convertedPath]),
       null,
       null,
       null,

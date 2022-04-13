@@ -527,7 +527,6 @@ export class ChartComponent implements OnInit, OnDestroy {
   * a CSV or StateMod file is to be read for graph creation.
   */
   ngOnInit(): void {
-
     this.initChartVariables();
     this.obtainAndCreateAllGraphs();
   }

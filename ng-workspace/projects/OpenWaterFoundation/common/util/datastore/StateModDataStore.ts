@@ -12,22 +12,29 @@ export class StateModDatastore {
 
   constructor() {}
 
-  private convertPath(): string {
+
+  private static convertPath(rootUrl: string, path: string): string {
+
+    if (rootUrl.endsWith('/') && path.startsWith('/')) {
+      return rootUrl + path.substring(1);
+    } else if (!rootUrl.endsWith('/') && path.startsWith('/') ||
+    rootUrl.endsWith('/') && !path.startsWith('/')) {
+      return rootUrl + path;
+    } else if (!rootUrl.endsWith('/') && !path.startsWith('/')) {
+      return rootUrl + '/' + path;
+    }
     return;
   }
-
 
   public static readTimeSeries(service: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
 
     var convertedPath: string;
 
     if (datastore.rootUrl !== null) {
-      convertedPath = datastore.rootUrl + fullTSID.path
+      convertedPath = StateModDatastore.convertPath(datastore.rootUrl, fullTSID.path);
     } else {
       convertedPath = fullTSID.path
     }
-
-    console.log('convertedPath:', convertedPath);
 
     return new StateModTS(service).readTimeSeries(
       fullTSID.location,
