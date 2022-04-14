@@ -91,13 +91,13 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
   /**
    * @constructor for the DialogTSGraph Component.
-   * @param owfCommonService A reference to the top level service OwfCommonService.
+   * @param commonService A reference to the top level service OwfCommonService.
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
    * @param dialogService A reference to the map service, for sending data.
    * @param data The incoming templateGraph object containing data about from the graph template file.
    */
   constructor(private dialogService: DialogService,
-              public owfCommonService: OwfCommonService,
+              public commonService: OwfCommonService,
               public dialog: MatDialog,
               public dialogRef: MatDialogRef<DialogTSGraphComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
@@ -538,7 +538,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * @param units String representing the units being displayed in the TSGraph.
    */
   private determineOutputPrecision(units: string): number {
-    var dataUnits: DataUnits[] = this.owfCommonService.getDataUnitArray();
+    var dataUnits: DataUnits[] = this.commonService.getDataUnitArray();
 
     if (dataUnits && dataUnits.length > 0) {
       for (let dataUnit of dataUnits) {
@@ -559,10 +559,10 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   // TODO: jpkeahey 2020.07.02 - Might need to change how this is implemented, since Steve said both CSV and StateMod (or other)
   // files could be in the same popup template file. They might not be mutually exclusive in the future.
   ngOnInit(): void {
-    this.owfCommonService.setMapConfigPath(this.mapConfigPath);
-    this.owfCommonService.setChartTemplateObject(this.graphTemplateObject);
-    this.owfCommonService.setGraphFilePath(this.graphFilePath);
-    this.owfCommonService.setTSIDLocation(this.TSIDLocation);
+    this.commonService.setMapConfigPath(this.mapConfigPath);
+    this.commonService.setChartTemplateObject(this.graphTemplateObject);
+    this.commonService.setGraphFilePath(this.graphFilePath);
+    this.commonService.setTSIDLocation(this.TSIDLocation);
     // Set the mainTitleString to be used by the map template file to display as
     // the TSID location (for now).
     this.mainTitleString = this.graphTemplateObject['product']['properties'].MainTitleString;
@@ -651,7 +651,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    */
   private parseCSVFile(): void {
 
-    var templateObject: Object = this.owfCommonService.getChartTemplateObject();
+    var templateObject: Object = this.commonService.getChartTemplateObject();
     // The array of each data object in the graph config file
     var dataArray: any[] = templateObject['product']['subProducts'][0]['data'];
     // This array will hold all results returned from Papa Parse, whether one CSV is used, or multiple
@@ -670,7 +670,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
         filePath = data.properties.TSID.split('~')[2];
       }
 
-      Papa.parse(this.owfCommonService.buildPath(IM.Path.csvPath, [filePath]), {
+      Papa.parse(this.commonService.buildPath(IM.Path.csvPath, [filePath]), {
         delimiter: ",",
         download: true,
         comments: "#",
@@ -696,7 +696,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    */
   private parseTSFile(TSFile: IM.Path): void {
 
-    var templateObject = this.owfCommonService.getChartTemplateObject();
+    var templateObject = this.commonService.getChartTemplateObject();
     // Defines a TSObject so it can be instantiated as the desired object later.
     var TSObject: any;
     // Create an array to hold the Observables of each file read.
@@ -707,8 +707,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     var TSIDLocation: string;
 
     switch (TSFile) {
-      case IM.Path.sMP: TSObject = new StateModTS(this.owfCommonService); break;
-      case IM.Path.dVP: TSObject = new DateValueTS(this.owfCommonService); break;
+      case IM.Path.sMP: TSObject = new StateModTS(this.commonService); break;
+      case IM.Path.dVP: TSObject = new DateValueTS(this.commonService); break;
     }
 
     
@@ -723,7 +723,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
         filePath = data.properties.TSID.split('~')[2];
       }
       // Don't subscribe yet!  
-      dataArray.push(TSObject.readTimeSeries(TSIDLocation, this.owfCommonService.buildPath(TSFile, [filePath]),
+      dataArray.push(TSObject.readTimeSeries(TSIDLocation, this.commonService.buildPath(TSFile, [filePath]),
       null,
       null,
       null,

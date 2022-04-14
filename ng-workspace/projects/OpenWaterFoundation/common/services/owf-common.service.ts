@@ -291,7 +291,7 @@ export class OwfCommonService {
       } else {
         // At this point the saveFileName is the value of the saveFile property from the popup config file. None of its
         // ${property} notation has been converted, so the obtainPropertiesFromLine function is called to do so.
-        saveFileName = this.obtainPropertiesFromLine(saveFileName, featureProperties);
+        saveFileName = this.obtainPropertiesFromLine(saveFileName, featureProperties).line;
         return saveFileName;
       }
 
@@ -1093,7 +1093,7 @@ export class OwfCommonService {
    * yet, look for the '${' start that we need and build the property, adding it
    * to the propertyArray when we've detected the end of the property. Find each
    * one in the value until the value line is done.
-   * @param line 
+   * @param line The string to search through.
    * @param featureProperties The object containing the feature's key and value
    * pair properties.
    * @param key Optional parameter to provide a better console warning by logging
@@ -1102,8 +1102,9 @@ export class OwfCommonService {
    * @returns The entire line read in, with all ${property} notation converted correctly
    * by replacing all ${} properties with the correct string.
    */
-  public obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any, labelProp?: boolean): string {
+  public obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any, labelProp?: boolean): IM.ParsedProp {
 
+    var allFoundProps: string[] = [];
     var propertyString = '';
     var currentIndex = 0;
     var formattedLine = '';
@@ -1133,6 +1134,7 @@ export class OwfCommonService {
         } else {
           let throwaway = propertyString.split(':')[0];
           prop = propertyString.split(':')[1];
+          allFoundProps.push(prop);
         }
         
         featureValue = featureProperties[prop];
@@ -1186,16 +1188,17 @@ export class OwfCommonService {
         formattedLine += featureValue;
         propertyString = '';
       }
-      // The first conditional was not met, so the current and next letters of the line are not '${'. Double check to make sure
-      // the current letter exists, 
+      // The first conditional was not met, so the current and next letters of the
+      // line are not '${'. Double check to make sure the current letter exists.
       if (line[currentIndex] !== undefined) {
         formattedLine += line[currentIndex];
         currentIndex++;
       }
     }
-    // The while loop is finished; the entire line has been iterated over, and the variable formattedLine has been rewritten
-    // to replace all the ${property} notation with the correct feature value
-    return formattedLine;
+    // The while loop is finished; the entire line has been iterated over, and the
+    // variable formattedLine has been rewritten to replace all the ${property}
+    // notation with the correct feature value. 
+    return { foundProps: allFoundProps, line: formattedLine };
   }
 
   /**

@@ -26,9 +26,9 @@ export class ImageComponent {
 
   /**
    * 
-   * @param owfCommonService The injected Common library service.
+   * @param commonService The injected Common library service.
    */
-  constructor(private owfCommonService: OwfCommonService) {}
+  constructor(private commonService: OwfCommonService) {}
 
 
   /**
@@ -41,7 +41,7 @@ export class ImageComponent {
       this.errorType = 'no dataPath';
       return;
     }
-    this.fullDataPath = this.owfCommonService.buildPath(IM.Path.dbP, [this.dataPath]);
+    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.dataPath]);
   }
 
   

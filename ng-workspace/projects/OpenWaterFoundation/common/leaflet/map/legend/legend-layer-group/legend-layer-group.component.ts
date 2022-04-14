@@ -72,10 +72,10 @@ export class LegendLayerGroupComponent implements AfterViewInit {
 
   /**
    * The LegendLayerGroup constructor.
-   * @param owfCommonService The reference to the injected Common library.
+   * @param commonService The reference to the injected Common library.
    * @param dialog The reference to the MatDialog service.
    */
-  constructor(public owfCommonService: OwfCommonService,
+  constructor(public commonService: OwfCommonService,
               public dialog: MatDialog) {}
 
   /**
@@ -110,7 +110,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   * @param geoLayerId The geoLayerId of the layer
   */
   getBadPath(geoLayerId: string): string {
-    return this.owfCommonService.getBadPath(geoLayerId);
+    return this.commonService.getBadPath(geoLayerId);
   }
 
   /**
@@ -119,7 +119,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   * @param geoLayerId The current geoLayerId.
   */
   getGeometryType(geoLayerId: string): any {
-    return this.owfCommonService.getGeometryType(geoLayerId);
+    return this.commonService.getGeometryType(geoLayerId);
   }
 
   /**
@@ -127,7 +127,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   * red triangle is displayed on the layer's side bar legend.
   */
   isBadPath(geoLayerId: string): boolean {
-    return this.owfCommonService.isBadPath(geoLayerId);
+    return this.commonService.isBadPath(geoLayerId);
   }
 
   /**
@@ -135,7 +135,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   * @param geoLayerId The geoLayerId for the layer
   */
   isServerUnavailable(geoLayerId: string): boolean {
-    return this.owfCommonService.isServerUnavailable(geoLayerId);
+    return this.commonService.isServerUnavailable(geoLayerId);
   }
 
   /**
@@ -158,7 +158,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
     else if (docPath.includes('.md')) { markdown = true; }
     else if (docPath.includes('.html')) { html = true; }
 
-    this.owfCommonService.getPlainText(this.owfCommonService.buildPath(IM.Path.dP, [docPath]), IM.Path.dP)
+    this.commonService.getPlainText(this.commonService.buildPath(IM.Path.dP, [docPath]), IM.Path.dP)
       .pipe(take(1))
       .subscribe((doc: any) => {
 
@@ -169,10 +169,10 @@ export class LegendLayerGroupComponent implements AfterViewInit {
           docText: text,
           docMarkdown: markdown,
           docHtml: html,
-          fullMarkdownPath: this.owfCommonService.getFullMarkdownPath(),
+          fullMarkdownPath: this.commonService.getFullMarkdownPath(),
           geoId: geoId,
           geoName: geoName,
-          mapConfigPath: this.owfCommonService.getMapConfigPath(),
+          mapConfigPath: this.commonService.getMapConfigPath(),
           windowID: windowID
         }
 
@@ -204,11 +204,11 @@ export class LegendLayerGroupComponent implements AfterViewInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       allFeatures: this.allFeatures[geoLayerView.geoLayerId],
-      geoLayer: this.owfCommonService.getGeoLayerFromId(geoLayerView.geoLayerId),
+      geoLayer: this.commonService.getGeoLayerFromId(geoLayerView.geoLayerId),
       geoLayerView: geoLayerView,
-      geoMapName: this.owfCommonService.getGeoMapName(),
+      geoMapName: this.commonService.getGeoMapName(),
       layerClassificationInfo: this.layerClassificationInfo,
-      mapConfigPath: this.owfCommonService.getMapConfigPath(),
+      mapConfigPath: this.commonService.getMapConfigPath(),
       mainMap: this.mainMap
     }
     const dialogRef: MatDialogRef<DialogDataTableComponent, any> = this.dialog.open(DialogDataTableComponent, {
@@ -238,7 +238,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
     }
 
     var resourcePath = this.eventActions[geoLayerView.properties.imageGalleryEventActionId].resourcePath;
-    let fullResourcePath = this.owfCommonService.buildPath(IM.Path.rP, [resourcePath]);
+    let fullResourcePath = this.commonService.buildPath(IM.Path.rP, [resourcePath]);
 
     Papa.parse(fullResourcePath, {
       delimiter: ",",
@@ -297,19 +297,19 @@ export class LegendLayerGroupComponent implements AfterViewInit {
 
     if (layerItem.isRasterLayer()) {
       dialogConfig.data = {
-        geoLayer: this.owfCommonService.getGeoLayerFromId(geoLayerId),
+        geoLayer: this.commonService.getGeoLayerFromId(geoLayerId),
         geoLayerId: geoLayerId,
         geoLayerViewName: geoLayerViewName,
         layerProperties: [],
-        mapConfigPath: this.owfCommonService.getMapConfigPath()
+        mapConfigPath: this.commonService.getMapConfigPath()
       }
     } else {
       dialogConfig.data = {
-        geoLayer: this.owfCommonService.getGeoLayerFromId(geoLayerId),
+        geoLayer: this.commonService.getGeoLayerFromId(geoLayerId),
         geoLayerId: geoLayerId,
         geoLayerViewName: geoLayerViewName,
         layerProperties: Object.keys(this.allFeatures[geoLayerId].features[0].properties),
-        mapConfigPath: this.owfCommonService.getMapConfigPath()
+        mapConfigPath: this.commonService.getMapConfigPath()
       }
     }
 

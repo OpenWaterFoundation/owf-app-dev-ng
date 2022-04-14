@@ -82,11 +82,11 @@ export class DialogDataTableLightComponent implements OnInit {
 
   /**
    * @constructor for the Dialog Data Table.
-   * @param owfCommonService The reference to the OwfCommonService injected object.
+   * @param commonService The reference to the OwfCommonService injected object.
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
    * @param dataObject The object containing data passed from the Component that created this Dialog.
    */
-  constructor(public owfCommonService: OwfCommonService,
+  constructor(public commonService: OwfCommonService,
               public dialog: MatDialog,
               public dialogRef: MatDialogRef<DialogDataTableLightComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
@@ -299,7 +299,7 @@ export class DialogDataTableLightComponent implements OnInit {
     }
 
     var data = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
-    FileSaver.saveAs(data, this.owfCommonService.formatSaveFileName(this.geoLayer.geoLayerId, IM.SaveFileType.dataTable));
+    FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.geoLayer.geoLayerId, IM.SaveFileType.dataTable));
   }
 
   /**

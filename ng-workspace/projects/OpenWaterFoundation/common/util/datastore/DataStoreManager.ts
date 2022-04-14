@@ -72,7 +72,9 @@ export class DatastoreManager {
       case IM.DatastoreType.stateMod:
         return StateModDatastore.readTimeSeries(service, datastore, fullTSID);
       case 'unknown':
-      default: console.error('Unsupported Datastore.'); return of(null);
+      default:
+        console.error("Unsupported datastore '" + fullTSID.datastore + "'.");
+        return of({ error: "An error has occurred." });
     }
   }
 

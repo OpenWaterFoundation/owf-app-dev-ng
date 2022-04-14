@@ -734,9 +734,9 @@ export class DataUnits {
   more information.  This version calls the other version with define_dimensions as true.
   @param dfile Units file to read (can be a URL).
   */
-  // public static readNWSUnitsFile ( dfilePath: string, owfCommonService: OwfCommonService ): void {
+  // public static readNWSUnitsFile ( dfilePath: string, commonService: OwfCommonService ): void {
   //   // Read in the file path or URL to the file asynchronously
-  //   owfCommonService.getPlainText(dfilePath, 'dataUnitsPath').pipe(map((dfile: any) => {
+  //   commonService.getPlainText(dfilePath, 'dataUnitsPath').pipe(map((dfile: any) => {
   //     let dfileArray = dfile.split('\n');
   //     // Convert the returned string above into an array of strings as an argument
   //     this.readNWSUnitsFileBool ( dfileArray, true );

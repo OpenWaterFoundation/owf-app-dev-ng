@@ -174,12 +174,12 @@
             <!-- USER-PROVIDED DEFAULT MARKER -->
             <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolImage">
               <img class="layer-icon"
-              [attr.src]="owfCommonService.buildPath('symbolImagePath', [geoLayerView.geoLayerSymbol.properties.symbolImage])">
+              [attr.src]="commonService.buildPath('symbolImagePath', [geoLayerView.geoLayerSymbol.properties.symbolImage])">
             </div>
             <!-- BUILT-IN DEFAULT MARKER -->
             <div *ngIf="geoLayerView.geoLayerSymbol.properties.builtinSymbolImage">
               <img class="layer-icon"
-              [attr.src]="owfCommonService.buildPath('builtinSymbolImagePath', [geoLayerView.geoLayerSymbol.properties.builtinSymbolImage])">
+              [attr.src]="commonService.buildPath('builtinSymbolImagePath', [geoLayerView.geoLayerSymbol.properties.builtinSymbolImage])">
             </div>
             <!-- SYMBOL SHAPE -->
             <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolShape; else defaultLegend">

@@ -11,6 +11,11 @@ export enum DatastoreType {
   stateMod = 'owf.datastore.statemod'
 }
 
+export enum DataType {
+  geoJson = 'geoJson',
+  CDSSWebService = 'CDSSWebService'
+}
+
 /** Each supported D3 chart type. */
 export enum D3Chart {
   tree = 'tidyTree',
@@ -535,9 +540,11 @@ export interface DashboardLayout {
 
 /** Dashboard widget object. */
 export interface DashboardWidget {
-  columns: number;
-  content: any;
-  rows: number;
+  type: string;
+  name?: string;
+  description?: string;
+  columns?: number;
+  rows?: number;
   style?: WidgetTileStyle;
 }
 
@@ -545,6 +552,13 @@ export interface DashboardWidget {
 export interface WidgetTileStyle {
   backgroundColor?: string;
   textColor?: string;
+}
+
+///////////////////////////////// Widgets \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+export interface ChartWidget extends DashboardWidget {
+  dataPath: string;
+  graphTemplatePath: string;
 }
 
 /////////////////////////////// Time Series \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -562,4 +576,11 @@ export interface TSID {
   location?: string;
   datastore?: string;
   path?: string;
+}
+
+/////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+export interface ParsedProp {
+  foundProps: string[];
+  line: string;
 }

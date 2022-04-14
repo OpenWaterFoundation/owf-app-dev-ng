@@ -37,9 +37,9 @@ export class StatusIndicatorComponent {
 
   /**
    * 
-   * @param owfCommonService The injected Common library service.
+   * @param commonService The injected Common library service.
    */
-  constructor(private owfCommonService: OwfCommonService) {}
+  constructor(private commonService: OwfCommonService) {}
 
 
   /**

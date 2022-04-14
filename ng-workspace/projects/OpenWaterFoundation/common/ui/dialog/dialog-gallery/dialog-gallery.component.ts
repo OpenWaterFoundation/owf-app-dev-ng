@@ -60,13 +60,13 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
   /**
    * Creates and displays an Image Gallery with png, jpg, and similar files in a
    * Material Dialog.
-   * @param owfCommonService The reference to the app service injected object.
+   * @param commonService The reference to the app service injected object.
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation
    * and sending of data.
    * @param dataObject The object containing data passed from the Component that
    * created this Dialog.
    */
-  constructor(public owfCommonService: OwfCommonService,
+  constructor(public commonService: OwfCommonService,
               public dialogRef: MatDialogRef<DialogGalleryComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
@@ -205,7 +205,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
     if (imagePath.startsWith('http') || imagePath.startsWith('https') || imagePath.startsWith('www')) {
       return imagePath;
     } else {
-      return this.owfCommonService.getAppPath() + this.owfCommonService.getMapConfigPath() + imagePath;
+      return this.commonService.getAppPath() + this.commonService.getMapConfigPath() + imagePath;
     }
   }
 
@@ -213,7 +213,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    * Called once after the constructor.
    */
   ngOnInit(): void {
-    // this.owfCommonService.setMapConfigPath(this.mapConfigPath);
+    // this.commonService.setMapConfigPath(this.mapConfigPath);
     this.buildGallery();
   }
 

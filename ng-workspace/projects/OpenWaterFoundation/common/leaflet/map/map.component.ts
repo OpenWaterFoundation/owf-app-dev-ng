@@ -153,13 +153,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   /**
   * @constructor Creates the Map Component instance.
-  * @param owfCommonService A reference to the common library service.
+  * @param commonService A reference to the common library service.
   * @param dialog A reference to the MatDialog for creating and displaying a popup
   * dialog with a chart.
   * @param route Used for getting the parameter 'id' passed in by the url and from
   * the router.
   */
-  constructor(public owfCommonService: OwfCommonService,
+  constructor(public commonService: OwfCommonService,
               public dialog: MatDialog,
               private route: ActivatedRoute) {
     if (window['Cypress']) window['MapComponent'] = this;
@@ -171,8 +171,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * from the Angular documentation found here: https://angular.io/guide/dynamic-component-loader.
   */
   private addInfoToSidebar(): void {
-    this.appVersion = this.owfCommonService.appConfig.version;
-    this.projectVersion = this.owfCommonService.getJSONData('assets/version.json', IM.Path.vP);
+    this.appVersion = this.commonService.appConfig.version;
+    this.projectVersion = this.commonService.getJSONData('assets/version.json', IM.Path.vP);
   }
 
   /**
@@ -221,7 +221,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * @returns All geoLayerViewGroups from the FIRST geoMap.
    */
   get allGeoLayerViewGroups(): any {
-    return this.owfCommonService.getGeoLayerViewGroups();
+    return this.commonService.getGeoLayerViewGroups();
   }
 
   /**
@@ -306,7 +306,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     var _this = this;
 
     // Create background layers from the configuration file.
-    let backgroundLayers: any[] = this.owfCommonService.getBackgroundLayers();
+    let backgroundLayers: any[] = this.commonService.getBackgroundLayers();
     // Iterate over each background layer, create them using tileLayer, and add
     // them to the baseMaps class object.
     backgroundLayers.forEach((geoLayer: IM.GeoLayer) => {
@@ -314,13 +314,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         attribution: geoLayer.properties.attribution,
         maxZoom: geoLayer.properties.zoomLevelMax ? parseInt(geoLayer.properties.zoomLevelMax) : 18
       });
-      this.baseMaps[this.owfCommonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId).name] = leafletBackgroundLayer;
+      this.baseMaps[this.commonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId).name] = leafletBackgroundLayer;
 
-      var bkgdGeoLayerView = this.owfCommonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId);
+      var bkgdGeoLayerView = this.commonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId);
       
       if (bkgdGeoLayerView.properties.refreshInterval) {
-        var refreshInterval = this.owfCommonService.getRefreshInterval(bkgdGeoLayerView.geoLayerId);
-        var refreshOffset = this.owfCommonService.getRefreshOffset(bkgdGeoLayerView.geoLayerId, refreshInterval);
+        var refreshInterval = this.commonService.getRefreshInterval(bkgdGeoLayerView.geoLayerId);
+        var refreshOffset = this.commonService.getRefreshOffset(bkgdGeoLayerView.geoLayerId, refreshInterval);
         // Check if the parsing was successful. 
         if (isNaN(refreshInterval)) {
         } else {
@@ -333,7 +333,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     // Create a Leaflet Map and set the default layers.
     this.mainMap = L.map('mapID', {
-      layers: [this.baseMaps[this.owfCommonService.getDefaultBackgroundLayer()]],
+      layers: [this.baseMaps[this.commonService.getDefaultBackgroundLayer()]],
       // We're using our own zoom control for the map, so we don't need the default
       zoomControl: false,
       wheelPxPerZoomLevel: 150,
@@ -341,14 +341,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
 
     // Retrieve the initial extent from the config file and set the map view
-    let extentInitial = this.owfCommonService.getExtentInitial();
+    let extentInitial = this.commonService.getExtentInitial();
     this.mainMap.setView([extentInitial[1], extentInitial[0]], extentInitial[2]);
 
     // Set the default layer radio check to true
     this.setDefaultBackgroundLayer();
 
     // Add the background layers to the maps control in the topright
-    if (this.owfCommonService.getBackgroundLayersMapControl()) {
+    if (this.commonService.getBackgroundLayersMapControl()) {
       L.control.layers(this.baseMaps).addTo(this.mainMap);
     }
 
@@ -360,7 +360,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
 
     // Get the map name from the config file.
-    let mapName: string = this.owfCommonService.getGeoMapName();
+    let mapName: string = this.commonService.getGeoMapName();
     // Create the control on the Leaflet map
     var mapTitle = L.control({ position: 'topleft' });
     // Add the title to the map in a div whose class name is 'info'
@@ -440,7 +440,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       div.innerHTML = divContents;
     }
 
-    var geoLayerViewGroups: IM.GeoLayerViewGroup[] = this.owfCommonService.getGeoLayerViewGroups();
+    var geoLayerViewGroups: IM.GeoLayerViewGroup[] = this.commonService.getGeoLayerViewGroups();
 
     // Iterate through each geoLayerView in every geoLayerViewGroup, and create
     // & add a Leaflet map layer for them.
@@ -450,9 +450,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
 
           // Obtain the geoLayer for use in creating this Leaflet layer.
-          let geoLayer: IM.GeoLayer = this.owfCommonService.getGeoLayerFromId(geoLayerView.geoLayerId);
+          let geoLayer: IM.GeoLayer = this.commonService.getGeoLayerFromId(geoLayerView.geoLayerId);
           // Obtain the symbol data for use in creating this Leaflet layer.
-          let symbol: IM.GeoLayerSymbol = this.owfCommonService.getSymbolDataFromID(geoLayer.geoLayerId);
+          let symbol: IM.GeoLayerSymbol = this.commonService.getSymbolDataFromID(geoLayer.geoLayerId);
           // A geoLayerSymbol object was not provided in the geoLayerView, so leave
           // the user an error message and log an error message that one needs to
           // be added to show something other than default styling.
@@ -463,7 +463,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           }
           // Obtain the event handler information from the geoLayerView for use
           // in creating this Leaflet layer.
-          let eventHandlers: IM.EventHandler[] = this.owfCommonService.getGeoLayerViewEventHandler(geoLayer.geoLayerId);
+          let eventHandlers: IM.EventHandler[] = this.commonService.getGeoLayerViewEventHandler(geoLayer.geoLayerId);
 
           var asyncData: Observable<any>[] = [];
 
@@ -472,11 +472,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           // }
 
           // Put the path to the layer data file no matter what. If file is for
-          // a raster, the handleError function in the owfCommonService will skip
+          // a raster, the handleError function in the commonService will skip
           // it and won't log any errors.
           asyncData.push(
-            this.owfCommonService.getJSONData(
-              this.owfCommonService.buildPath(IM.Path.gLGJP, [geoLayer.sourcePath]), IM.Path.gLGJP, geoLayer.geoLayerId
+            this.commonService.getJSONData(
+              this.commonService.buildPath(IM.Path.gLGJP, [geoLayer.sourcePath]), IM.Path.gLGJP, geoLayer.geoLayerId
             )
           );
           // Push each event handler onto the async array if there are any.
@@ -489,16 +489,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                   'it, will be supported in the future, and should be used instead');
                 // Use the http GET request function and pass it the returned formatted path.
                 asyncData.push(
-                  this.owfCommonService.getJSONData(
-                    this.owfCommonService.buildPath(IM.Path.eCP, [event.properties.popupConfigPath]), IM.Path.eCP, this.mapID
+                  this.commonService.getJSONData(
+                    this.commonService.buildPath(IM.Path.eCP, [event.properties.popupConfigPath]), IM.Path.eCP, this.mapID
                   )
                 );
               }
               else if (event.properties.eventConfigPath) {
                 // Use the http GET request function and pass it the returned formatted path.
                 asyncData.push(
-                  this.owfCommonService.getJSONData(
-                    this.owfCommonService.buildPath(IM.Path.eCP, [event.properties.eventConfigPath]), IM.Path.eCP, this.mapID
+                  this.commonService.getJSONData(
+                    this.commonService.buildPath(IM.Path.eCP, [event.properties.eventConfigPath]), IM.Path.eCP, this.mapID
                   )
                 );
               }
@@ -521,7 +521,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               console.error('An error retrieving the "' + geoLayer.geoLayerId +
               '" layer data occurred. Error code: ' + results[0].error.code +
               '. Error message: "' + results[0].error.message + '". Turning layer off.');
-              this.owfCommonService.addLayerError(geoLayer.geoLayerId);
+              this.commonService.addLayerError(geoLayer.geoLayerId);
               return;
             }
 
@@ -550,7 +550,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               symbol.classificationType.toUpperCase().includes('SINGLESYMBOL')) {
               // TODO: jkeahey 2021.5.11 - Is anything in this conditional necessary?
               if (symbol.properties.classificationFile) {
-                Papa.parse(this.owfCommonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+                Papa.parse(this.commonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
                   delimiter: ",",
                   download: true,
                   comments: "#",
@@ -632,7 +632,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
               if (symbol.properties.classificationFile) {
 
-                Papa.parse(this.owfCommonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+                Papa.parse(this.commonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
                   delimiter: ",",
                   download: true,
                   comments: "#",
@@ -658,7 +658,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                       weight: result.data[0].weight
                     };
 
-                    var geoLayerView = this.owfCommonService.getGeoLayerView(geoLayer.geoLayerId);
+                    var geoLayerView = this.commonService.getGeoLayerView(geoLayer.geoLayerId);
                     var results = result.data;
 
                     let data = new L.geoJson(this.allFeatures[geoLayer.geoLayerId], {
@@ -728,7 +728,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             // Display an image on the map.
             else if (geoLayer.layerType.toUpperCase().includes('IMAGE')) {
               var imageLayer = L.imageOverlay(
-                this.owfCommonService.buildPath(IM.Path.iP, [geoLayer.sourcePath]),
+                this.commonService.buildPath(IM.Path.iP, [geoLayer.sourcePath]),
                 MapUtil.parseImageBounds(geoLayerView.properties.imageBounds),
                 {
                   opacity: MapUtil.verify(symbol.properties.opacity, IM.Style.opacity)
@@ -752,8 +752,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
               // Check if the image layer needs to be refreshed.
               if (geoLayerView.properties.refreshInterval) {
-                var refreshInterval = this.owfCommonService.getRefreshInterval(geoLayerView.geoLayerId);
-                var refreshOffset = this.owfCommonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
+                var refreshInterval = this.commonService.getRefreshInterval(geoLayerView.geoLayerId);
+                var refreshOffset = this.commonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
                 // Confirm the parsing was successful by checking if getRefreshInterval
                 // returned a number.
                 if (!isNaN(refreshInterval)) {
@@ -766,7 +766,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             else {
               // If the point layer contains a classification file for styling.
               if (symbol.properties.classificationFile) {
-                Papa.parse(this.owfCommonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+                Papa.parse(this.commonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
                   delimiter: ",",
                   download: true,
                   comments: "#",
@@ -810,15 +810,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                         else if (symbol.properties.symbolImage) {
 
                           let markerIcon = new L.icon({
-                            iconUrl: this.owfCommonService.getAppPath() +
-                            this.owfCommonService.formatPath(symbol.properties.symbolImage, IM.Path.sIP),
+                            iconUrl: this.commonService.getAppPath() +
+                            this.commonService.formatPath(symbol.properties.symbolImage, IM.Path.sIP),
                             iconAnchor: MapUtil.createAnchorArray(symbol.properties.symbolImage, symbol.properties.imageAnchorPoint)
                           });
 
                           let leafletMarker = L.marker(latlng, { icon: markerIcon });
                           // Determine if there are eventHandlers on this layer
                           // by checking its geoLayerView object.
-                          var geoLayerView = this.owfCommonService.getGeoLayerView(geoLayer.geoLayerId);
+                          var geoLayerView = this.commonService.getGeoLayerView(geoLayer.geoLayerId);
 
                           MapUtil.createLayerTooltips(leafletMarker, eventObject, geoLayerView.properties.imageGalleryEventActionId,
                             geoLayerView.geoLayerSymbol.properties.labelText, this.count);
@@ -829,7 +829,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                         // Create a built-in (default) marker image layer
                         else if (symbol.properties.builtinSymbolImage) {
                           let markerIcon = new L.icon({
-                            iconUrl: this.owfCommonService.formatPath(symbol.properties.builtinSymbolImage, IM.Path.bSIP),
+                            iconUrl: this.commonService.formatPath(symbol.properties.builtinSymbolImage, IM.Path.bSIP),
                             iconAnchor: MapUtil.createAnchorArray(symbol.properties.builtinSymbolImage, symbol.properties.imageAnchorPoint)
                           });
                           return L.marker(latlng, { icon: markerIcon })
@@ -868,15 +868,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                     else if (symbol.properties.symbolImage) {
 
                       let markerIcon = new L.icon({
-                        iconUrl: this.owfCommonService.getAppPath() +
-                        this.owfCommonService.formatPath(symbol.properties.symbolImage, IM.Path.sIP),
+                        iconUrl: this.commonService.getAppPath() +
+                        this.commonService.formatPath(symbol.properties.symbolImage, IM.Path.sIP),
                         iconAnchor: MapUtil.createAnchorArray(symbol.properties.symbolImage, symbol.properties.imageAnchorPoint)
                       });
 
                       let leafletMarker = L.marker(latlng, { icon: markerIcon });
                       // Determine if there are eventHandlers on this layer by
                       // checking its geoLayerView object.
-                      var geoLayerView = this.owfCommonService.getGeoLayerView(geoLayer.geoLayerId);
+                      var geoLayerView = this.commonService.getGeoLayerView(geoLayer.geoLayerId);
 
                       MapUtil.createLayerTooltips(leafletMarker, eventObject, geoLayerView.properties.imageGalleryEventActionId,
                         geoLayerView.geoLayerSymbol.properties.labelText, this.count);
@@ -887,7 +887,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                     // Create a built-in (default) marker image layer.
                     else if (symbol.properties.builtinSymbolImage) {
                       let markerIcon = new L.icon({
-                        iconUrl: this.owfCommonService.formatPath(symbol.properties.builtinSymbolImage, IM.Path.bSIP),
+                        iconUrl: this.commonService.formatPath(symbol.properties.builtinSymbolImage, IM.Path.bSIP),
                         iconAnchor: MapUtil.createAnchorArray(symbol.properties.builtinSymbolImage, symbol.properties.imageAnchorPoint)
                       });
                       return L.marker(latlng, { icon: markerIcon })
@@ -914,8 +914,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             // Refresh a map vector layer based on the refreshInterval property in
             // the map config file. Make sure to check if it is a vector layer.
             if (geoLayerView.properties.refreshInterval && geoLayer.layerType.toUpperCase().includes('VECTOR')) {
-              var refreshInterval = this.owfCommonService.getRefreshInterval(geoLayerView.geoLayerId);
-              var refreshOffset = this.owfCommonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
+              var refreshInterval = this.commonService.getRefreshInterval(geoLayerView.geoLayerId);
+              var refreshOffset = this.commonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
               // Confirm the parsing was successful by checking if getRefreshInterval
               // returned a number.
               if (!isNaN(refreshInterval)) {
@@ -960,7 +960,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                             return;
                           } else {
                             if (!feature.geometry.type.toUpperCase().includes('POLYGON')) {
-                              MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.owfCommonService.getGeoMapName());
+                              MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.commonService.getGeoMapName());
                             }
                           }
                         },
@@ -1043,24 +1043,24 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 // any ${properties}, replace the ${property} for
                                 // the resourcePath only.
                                 var resourcePath = MapUtil.obtainPropertiesFromLine(resourcePathArray[i], featureProperties);
-                                let fullResourcePath = _this.owfCommonService.buildPath(IM.Path.rP, [resourcePath]);
+                                let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePath]);
                                 // Add this window ID to the windowManager so a
                                 // user can't open it more than once.
                                 _this.windowManager.addWindow(windowID, WindowType.TEXT);
 
-                                _this.owfCommonService.getPlainText(fullResourcePath, IM.Path.rP).subscribe((text: any) => {
+                                _this.commonService.getPlainText(fullResourcePath, IM.Path.rP).subscribe((text: any) => {
                                   _this.openTextDialog(text, fullResourcePath, windowID);
                                 });
                               }
                               // Display a Time Series graph in a Dialog popup.
                               else if (actionArray[i].toUpperCase() === 'DISPLAYTIMESERIES') {
 
-                                let fullResourcePath = _this.owfCommonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
+                                let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
                                 // Add this window ID to the windowManager so a
                                 // user can't open it more than once.
                                 _this.windowManager.addWindow(windowID, WindowType.TSGRAPH);
 
-                                _this.owfCommonService.getJSONData(fullResourcePath, IM.Path.rP, _this.mapID)
+                                _this.commonService.getJSONData(fullResourcePath, IM.Path.rP, _this.mapID)
                                   .subscribe((graphTemplateObject: Object) => {
                                     // Replaces all ${} property notations with
                                     // the correct feature in the TSTool graph
@@ -1090,9 +1090,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                               }
                               // Display a Heatmap Dialog.
                               else if (actionArray[i].toUpperCase() === 'DISPLAYHEATMAP') {
-                                let fullResourcePath = _this.owfCommonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
+                                let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
 
-                                _this.owfCommonService.getJSONData(fullResourcePath).subscribe((graphTemplateObject: any) => {
+                                _this.commonService.getJSONData(fullResourcePath).subscribe((graphTemplateObject: any) => {
                                   // Replaces all ${} property notations with the
                                   // correct feature in the TSTool graph template object.
                                   MapUtil.replaceProperties(graphTemplateObject, featureProperties);
@@ -1116,8 +1116,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 });
                                 
                               } else if (actionArray[i].toUpperCase() === 'DISPLAYD3VIZ') {
-                                var fullVizPath = _this.owfCommonService.buildPath(IM.Path.d3P, [resourcePathArray[i]])
-                                _this.owfCommonService.getJSONData(fullVizPath).subscribe((d3Prop: IM.D3Prop) => {
+                                var fullVizPath = _this.commonService.buildPath(IM.Path.d3P, [resourcePathArray[i]])
+                                _this.commonService.getJSONData(fullVizPath).subscribe((d3Prop: IM.D3Prop) => {
                                   _this.openD3VizDialog(geoLayer, d3Prop);
                                 });
                               }
@@ -1171,7 +1171,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                           MapUtil.updateFeature(e, geoLayer, geoLayerView, eventObject['hover-eCP'].layerAttributes);
                         },
                         mouseout: function (e: any) {
-                          MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.owfCommonService.getGeoMapName());
+                          MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.commonService.getGeoMapName());
                         },
                         click: ((e: any) => {
                           if (multipleEventsSet === true) {
@@ -1213,7 +1213,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                           MapUtil.updateFeature(e, geoLayer, geoLayerView);
                         },
                         mouseout: function (e: any) {
-                          MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.owfCommonService.getGeoMapName());
+                          MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.commonService.getGeoMapName());
                         },
                         click: ((e: any) => {
 
@@ -1245,7 +1245,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                     MapUtil.updateFeature(e, geoLayer, geoLayerView);
                   },
                   mouseout: function (e: any) {
-                    MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.owfCommonService.getGeoMapName());
+                    MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.commonService.getGeoMapName());
                   },
                   click: ((e: any) => {
                     // Create the default HTML property popup.
@@ -1328,7 +1328,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     // Uses the fetch API with the given path to get the tiff file in assets to
     // create the raster layer.
-    fetch(this.owfCommonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
+    fetch(this.commonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
     .then((response: any) => response.arrayBuffer())
     .then((arrayBuffer: any) => {
       parseGeoRaster(arrayBuffer).then((georaster: any) => {
@@ -1337,7 +1337,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         if (symbol && symbol.properties.classificationFile) {
           this.categorizedLayerColors[geoLayer.geoLayerId] = [];
 
-          Papa.parse(this.owfCommonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+          Papa.parse(this.commonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
             delimiter: ",",
             download: true,
             comments: "#",
@@ -1380,7 +1380,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               }
               // With the help of GeoBlaze, use Leaflet Map Events for clicking
               // and/or hovering over a raster layer.
-              const blaze = geoblaze.load(this.owfCommonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
+              const blaze = geoblaze.load(this.commonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
               .then((georaster: any) => {
                 let layerItem = _this.mapLayerManager.getMapLayerItem(geoLayerView.geoLayerId);
 
@@ -1454,8 +1454,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Check to see if the layer needs to be refreshed. Don't need to check if it's
     // a raster layer, it has to be to get to this code.
     if (geoLayerView.properties.refreshInterval) {
-      var refreshInterval = this.owfCommonService.getRefreshInterval(geoLayerView.geoLayerId);
-      var refreshOffset = this.owfCommonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
+      var refreshInterval = this.commonService.getRefreshInterval(geoLayerView.geoLayerId);
+      var refreshOffset = this.commonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
       // Check if the parsing was successful. 
       if (isNaN(refreshInterval)) {
       } else {
@@ -1491,7 +1491,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   public findFromAddress() {
     var testAddress = 'https://api.geocod.io/v1.6/geocode?q=1109+N+Highland+St%2c+Arlington+VA&api_key=e794ffb42737727f9904673702993bd96707bf6';
-    this.owfCommonService.getJSONData(testAddress).subscribe((address: any) => {
+    this.commonService.getJSONData(testAddress).subscribe((address: any) => {
     });
   }
 
@@ -1499,21 +1499,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * @returns The geoMap docPath property from the FIRST geoMap.
    */
   get geoMapDocPath(): string {
-    return this.owfCommonService.getGeoMapDocPath();
+    return this.commonService.getGeoMapDocPath();
   }
 
   /**
    * @returns The geoMapId property from the FIRST geoMap.
    */
   get geoMapId(): string {
-    return this.owfCommonService.getGeoMapID();
+    return this.commonService.getGeoMapID();
   }
 
   /**
    * @returns The name property from the FIRST geoMap.
    */
   get geoMapName(): string {
-    return this.owfCommonService.getGeoMapName();
+    return this.commonService.getGeoMapName();
   }
 
   /**
@@ -1521,21 +1521,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * standalone map if the true boolean is provided.
    */
   private initMapSettings(standalone?: string, configPath?: string): void {
-    let fullMapConfigPath = this.owfCommonService.getAppPath() +
+    let fullMapConfigPath = this.commonService.getAppPath() +
     // Get AND sets the map config path and geoJson path for relative path use.
-    this.owfCommonService.getFullMapConfigPath(this.mapID, standalone, configPath);
+    this.commonService.getFullMapConfigPath(this.mapID, standalone, configPath);
 
-    this.mapConfigSub$ = this.owfCommonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
+    this.mapConfigSub$ = this.commonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
     .subscribe((mapConfig: any) => {
-      // this.owfCommonService.setGeoMapID(mapConfig.geoMaps[0].geoMapId);
-      // console.log(this.mapManager.mapAlreadyCreated(this.owfCommonService.getGeoMapID()));
+      // this.commonService.setGeoMapID(mapConfig.geoMaps[0].geoMapId);
+      // console.log(this.mapManager.mapAlreadyCreated(this.commonService.getGeoMapID()));
 
       // Set the configuration file class variable for the map service.
-      this.owfCommonService.setMapConfig(mapConfig);
-      this.owfCommonService.setMapConfigTest(mapConfig);
+      this.commonService.setMapConfig(mapConfig);
+      this.commonService.setMapConfigTest(mapConfig);
       // Once the mapConfig object is retrieved and set, set the order in which
       // they should be displayed.
-      this.owfCommonService.setMapConfigLayerOrder();
+      this.commonService.setMapConfigLayerOrder();
       // Add components to the sidebar.
       this.addLayerToSidebar(mapConfig);
       // Create the map.
@@ -1547,7 +1547,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * Returns the map configuration object from the OWF Common Service.
    */
   get mapConfig(): any {
-    return this.owfCommonService.getMapConfig();
+    return this.commonService.getMapConfig();
   }
 
   /**
@@ -1564,8 +1564,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       // Standalone Map for website embedding.
       if (this.appConfigStandalonePath) {
-        this.owfCommonService.getJSONData(this.appConfigStandalonePath).subscribe((appConfig: any) => {
-          this.owfCommonService.setAppConfig(appConfig);
+        this.commonService.getJSONData(this.appConfigStandalonePath).subscribe((appConfig: any) => {
+          this.commonService.setAppConfig(appConfig);
           this.initMapSettings('app');
         });
       }
@@ -1654,7 +1654,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     else if (docPath.includes('.md')) markdown = true;
     else if (docPath.includes('.html')) html = true;
 
-    this.owfCommonService.getPlainText(this.owfCommonService.buildPath(IM.Path.dP, [docPath]), IM.Path.dP)
+    this.commonService.getPlainText(this.commonService.buildPath(IM.Path.dP, [docPath]), IM.Path.dP)
       .pipe(take(1))
       .subscribe((doc: any) => {
 
@@ -1665,10 +1665,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           docText: text,
           docMarkdown: markdown,
           docHtml: html,
-          fullMarkdownPath: this.owfCommonService.getFullMarkdownPath(),
+          fullMarkdownPath: this.commonService.getFullMarkdownPath(),
           geoId: geoId,
           geoName: geoName,
-          mapConfigPath: this.owfCommonService.getMapConfigPath(),
+          mapConfigPath: this.commonService.getMapConfigPath(),
           windowID: windowID
         }
 
@@ -1699,8 +1699,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    let fullGapminderPath = this.owfCommonService.buildPath(IM.Path.rP, [resourcePath]);
-    this.owfCommonService.setGapminderConfigPath(fullGapminderPath);
+    let fullGapminderPath = this.commonService.buildPath(IM.Path.rP, [resourcePath]);
+    this.commonService.setGapminderConfigPath(fullGapminderPath);
     
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
@@ -1780,7 +1780,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    let fullResourcePath = this.owfCommonService.buildPath(IM.Path.rP, [resourcePath]);
+    let fullResourcePath = this.commonService.buildPath(IM.Path.rP, [resourcePath]);
 
     Papa.parse(fullResourcePath, {
       delimiter: ",",
@@ -1839,7 +1839,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       featureProperties: featureProperties,
       graphTemplate: graphTemplateObject,
       graphFilePath: graphFilePath,
-      mapConfigPath: this.owfCommonService.getMapConfigPath(),
+      mapConfigPath: this.commonService.getMapConfigPath(),
       // This cool piece of code uses quite a bit of syntactic sugar. It dynamically
       // sets the saveFile based on the condition that saveFile is defined, using
       // the spread operator. More information was found here:
@@ -1877,7 +1877,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       windowID: windowID,
-      mapConfigPath: this.owfCommonService.getMapConfigPath(),
+      mapConfigPath: this.commonService.getMapConfigPath(),
       resourcePath: resourcePath,
       text: text
     }
@@ -1917,8 +1917,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.lastRefresh[geoLayer.geoLayerId] = new Date(Date.now()).toTimeString().split(" ")[0];
       // Refresh a vector layer.
       if (refreshType === IM.RefreshType.vector) {
-        this.owfCommonService.getJSONData(
-          this.owfCommonService.buildPath(IM.Path.gLGJP, [geoLayer.sourcePath])
+        this.commonService.getJSONData(
+          this.commonService.buildPath(IM.Path.gLGJP, [geoLayer.sourcePath])
         ).subscribe((geoJsonData: any) => {
 
           // Use the Map Layer Manager to remove all layers from the Leaflet layer,
@@ -1939,7 +1939,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         
         // Uses the fetch API with the given path to get the tiff file in assets
         // to create the raster layer.
-        fetch(this.owfCommonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
+        fetch(this.commonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
         .then((response: any) => response.arrayBuffer())
         .then((arrayBuffer: any) => {
           parseGeoRaster(arrayBuffer).then((georaster: any) => {
@@ -1948,7 +1948,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             if (symbol && symbol.properties.classificationFile) {
               this.categorizedLayerColors[geoLayer.geoLayerId] = [];
 
-              Papa.parse(this.owfCommonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+              Papa.parse(this.commonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
                 delimiter: ",",
                 download: true,
                 comments: "#",
@@ -2021,7 +2021,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
 
         var imageLayer = L.imageOverlay(
-          this.owfCommonService.buildPath(IM.Path.iP, [geoLayer.sourcePath]),
+          this.commonService.buildPath(IM.Path.iP, [geoLayer.sourcePath]),
           MapUtil.parseImageBounds(geoLayerView.properties.imageBounds),
           {
             opacity: MapUtil.verify(symbol.properties.opacity, IM.Style.opacity)
@@ -2052,7 +2052,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     // Since a new Leaflet map is created, it needs to be reinitialized.
     this.mapInitialized = false;
-    // Reset the mapConfigLayerOrder variable in the owfCommonService, which contains
+    // Reset the mapConfigLayerOrder variable in the commonService, which contains
     // the list of ordered geoLayerView geoLayerId's for ordering the layers on the
     // map. If it isn't reset, the array will keep being appended to.
     this.mapLayerManager.resetMapLayerManagerVariables();
@@ -2117,7 +2117,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   private setDefaultBackgroundLayer(): void {
 
-    let defaultName: string = this.owfCommonService.getDefaultBackgroundLayer();
+    let defaultName: string = this.commonService.getDefaultBackgroundLayer();
     this.currentBackgroundLayer = defaultName;
 
     // Callback executed when canvas was found.

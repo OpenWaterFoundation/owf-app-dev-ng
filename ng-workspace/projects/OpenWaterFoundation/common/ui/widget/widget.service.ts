@@ -12,11 +12,30 @@ import * as IM             from '@OpenWaterFoundation/common/services';
 export class WidgetService {
 
   private testObs$: BehaviorSubject<string> = new BehaviorSubject('No basin selected.');
+  private selectedItem$: BehaviorSubject<any> = new BehaviorSubject('No basin selected.');
 
 
   constructor() {}
 
+
+  public getSelectedItem(): Observable<any> {
+    return this.selectedItem$.asObservable();
+  }
+
+  public updateSelectedItem(item: any): void {
+    this.selectedItem$.next(item);
+  }
   
+
+
+
+
+
+
+
+
+
+
   public getTestObs(): Observable<string> {
     return this.testObs$.asObservable();
   }

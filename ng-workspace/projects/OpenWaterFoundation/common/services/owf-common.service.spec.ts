@@ -6,22 +6,22 @@ import { GRAPH_TEMPLATE }         from './owf-common-test-data';
 import { OwfCommonService }       from './owf-common.service';
 
 describe('OwfCommonService', () => {
-  let owfCommonService: OwfCommonService,
+  let commonService: OwfCommonService,
       httpTestingController: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ]
     });
-    owfCommonService = TestBed.inject(OwfCommonService);
+    commonService = TestBed.inject(OwfCommonService);
     httpTestingController = TestBed.inject(HttpTestingController);
   });
 
   describe('when performing asynchronous methods', () => {
     it('should GET JSON data into an object', () => {
-      expect(owfCommonService).toBeTruthy();
+      expect(commonService).toBeTruthy();
 
-      owfCommonService.getJSONData('assets/app/data-maps/data-ts/streamflow-graph-template.json')
+      commonService.getJSONData('assets/app/data-maps/data-ts/streamflow-graph-template.json')
       .subscribe((data: any) => {
         expect(data).toBeTruthy('No data returned');
 

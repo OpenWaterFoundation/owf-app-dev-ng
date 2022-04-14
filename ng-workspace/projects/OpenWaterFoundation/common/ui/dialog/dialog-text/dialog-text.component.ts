@@ -46,7 +46,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    * created this Dialog.
    */
   constructor(public dialogRef: MatDialogRef<DialogTextComponent>,
-              private owfCommonService: OwfCommonService,
+              private commonService: OwfCommonService,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
     this.windowID = dataObject.data.windowID;
@@ -65,7 +65,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    * Called once on Component initialization, right after the constructor.
    */
   ngOnInit(): void {
-    this.owfCommonService.setMapConfigPath(this.mapConfigPath);
+    this.commonService.setMapConfigPath(this.mapConfigPath);
 
     var splitPath = this.fileName.split('/');
     this.fileName = splitPath[splitPath.length - 1];
@@ -95,7 +95,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    */
   public saveText(): void {
     var data = new Blob([this.text], { type: 'text/plain;charset=utf-8' });
-    FileSaver.saveAs(data, this.owfCommonService.formatSaveFileName(this.fileName, IM.SaveFileType.text));
+    FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.fileName, IM.SaveFileType.text));
   }
 
 }

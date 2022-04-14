@@ -15,9 +15,9 @@
         (keyup)="userInput($event, 'feature')">
         <mat-option *cdkVirtualFor="let feature of filteredFeatures"
         (click)="updateItem(feature)"
-        [value]="feature.properties.abbrev"
+        [value]="getFeaturePropValue(feature)"
         [style.height.px]="48">
-          {{feature.properties.abbrev}}
+          {{getFeaturePropValue(feature)}}
         </mat-option>
       </cdk-virtual-scroll-viewport>
     </mat-select>

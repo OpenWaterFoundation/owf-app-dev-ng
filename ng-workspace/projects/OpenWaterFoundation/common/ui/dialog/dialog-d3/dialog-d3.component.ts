@@ -31,7 +31,7 @@ export class DialogD3Component implements OnInit {
 
 
   constructor(public dialogRef: MatDialogRef<DialogD3Component>,
-              private owfCommonService: OwfCommonService,
+              private commonService: OwfCommonService,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
     this.d3Prop = dataObject.data.d3Prop;
     this.geoLayer = dataObject.data.geoLayer;
@@ -47,7 +47,7 @@ export class DialogD3Component implements OnInit {
 
       case IM.D3Chart.tree:
         if (this.d3Prop.dataPath.toUpperCase().endsWith('.JSON')) {
-          this.owfCommonService.getJSONData(this.owfCommonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getJSONData(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             var data = this.renameKeys(data);
             // Create the tree and root hierarchy node given the provided
@@ -64,7 +64,7 @@ export class DialogD3Component implements OnInit {
           });
 
         } else if (this.d3Prop.dataPath.toUpperCase().endsWith('.CSV')) {
-          this.owfCommonService.getPlainText(this.owfCommonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getPlainText(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             // Read in CSV file.
             var table = d3.csvParse(data);
@@ -92,7 +92,7 @@ export class DialogD3Component implements OnInit {
       case IM.D3Chart.treemap:
         // Create the root hierarchy node with data from a JSON config file.
         if (this.d3Prop.dataPath.toUpperCase().endsWith('.JSON')) {
-          this.owfCommonService.getJSONData(this.owfCommonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getJSONData(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             var data = this.renameKeys(data);
             // Create the treemap and root hierarchy node given the provided
@@ -111,7 +111,7 @@ export class DialogD3Component implements OnInit {
         }
         // Create the root hierarchy node with data from a CSV config file.
         else if (this.d3Prop.dataPath.toUpperCase().endsWith('.CSV')) {
-          this.owfCommonService.getPlainText(this.owfCommonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getPlainText(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             var table = d3.csvParse(data);
             this.replaceWithValue(table);

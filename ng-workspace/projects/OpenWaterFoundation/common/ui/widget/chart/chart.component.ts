@@ -2,33 +2,25 @@ import { Component,
           Input,
           OnDestroy, 
           OnInit}                 from '@angular/core';
-import { MatDialog,
-          MatDialogConfig,
-          MatDialogRef }          from '@angular/material/dialog';
 
-import { catchError,
-          forkJoin,
+import { forkJoin,
           Observable, 
-          of, 
           Subscription }          from 'rxjs';
 
 import { OwfCommonService }       from '@OpenWaterFoundation/common/services';
 import * as IM                    from '@OpenWaterFoundation/common/services';
 
-import { DialogTSTableComponent } from '@OpenWaterFoundation/common/ui/dialog';
-
 import { MonthTS,
           TS,
           YearTS }                from '@OpenWaterFoundation/common/ts';
-import { DataUnits }              from '@OpenWaterFoundation/common/util/io';
-import { WindowManager,
-          WindowType }            from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapUtil }                from '@OpenWaterFoundation/common/leaflet';
 import { DatastoreManager }       from '@OpenWaterFoundation/common/util/datastore';
 import { ChartService }           from './chart.service';
+import { WidgetService }          from '../widget.service';
 // I believe that if this type of 'import' is used, the package needs to be added
 // to the angular.json scripts array.
 declare var Plotly: any;
+
 
 @Component({
   selector: 'widget-chart',
@@ -46,7 +38,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   * StateMod file is given. */
   public badFile = false;
   /** The object with the necessary chart data for displaying a Plotly chart. */
-  @Input() chartData: any;
+  @Input() chartWidget: IM.ChartWidget;
   /** A string containing the name to be passed to the TSTableComponent's first
   * column name: DATE or DATE / TIME. */
   public dateTimeColumnName: string;
@@ -57,20 +49,20 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** The graph template object retrieved from the popup configuration file property
   * resourcePath. */
   public graphTemplate: IM.GraphTemplate;
-  /** The name of the download file for the dialog-tstable component. */
-  private downloadFileName: string;
+
+  public graphTemplatePrime: IM.GraphTemplate;
   /** The object containing all of the layer's feature properties. */
   public featureProperties: any;
-  /** Set to false so the Material progress bar never shows up.*/
-  public isLoading = false;
+  /**
+   * 
+   */
+  public initialResultsSub$: Subscription;
   /** Boolean for helping dialog-tstable component determine what kind of file needs
   * downloading. */
   public isTSFile: boolean;
   /** A string representing the documentation retrieved from the txt, md, or html
   * file to be displayed for a layer. */
   public mainTitleString: string;
-
-  public totalGraphsToMake: number;
   /** The array of TS objects that was originally read in using the StateMod or DateValue
   * Java converted code. Used as a reference in the dialog-tstable component for
   * downloading to the user's local machine. */
@@ -78,164 +70,29 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** The string representing the TSID before the first tilde (~) in the graph template
   * object. Used to help create a unique graph ID. */
   public TSIDLocation: string;
-
-  public TSOrder: number[] = [];
   /** An array containing the value header names after the initial DATE / TIME
   * header. To be passed to dialog-tstable for downloading files. */
   public valueColumns: string[] = [];
-  /** The windowManager instance, which creates, maintains, and removes multiple
-  * open dialogs in an application. */
-  public windowManager: WindowManager = WindowManager.getInstance();
 
 
   /**
   * @constructor for the DialogTSGraph Component.
-  * @param owfCommonService A reference to the top level service OwfCommonService.
-  * @param dialog 
+  * @param commonService A reference to the top level service OwfCommonService.
   */
-  constructor(private owfCommonService: OwfCommonService,
+  constructor(private commonService: OwfCommonService,
     private chartService: ChartService,
-    private dialog: MatDialog) { }
+    private widgetService: WidgetService) { }
 
 
   /**
-  * Creates the attributeTable array of objects to be passed to the dialog-tstable
-  * component for displaying a data table.
-  * @param x_axisLabels The array of x-axis labels from the graph being created
-  * to show in the data table.
-  * @param axisObject The axisObject contains either the chartJS or plotly created
-  * data array.
-  * @param units The units being used on the graph to be shown as a column.
-  */
-  private addToAttributeTable(x_axisLabels: string[], axisObject: any, TSAlias: string,
-    units: string, TSIndex: number, datePrecision?: number): void {
-    // Retrieve the output precision from the DataUnits array if it exists, and if not default to 2
-    var outputPrecision = this.determineOutputPrecision(units);
-    // For the first column header name, have it be DATE if the datePrecision is week, month or year,
-    // or DATE / TIME if day, hour, minute, etc..
-    var column1Name = (datePrecision > 30) ? 'DATE' : 'DATE / TIME';
-    this.dateTimeColumnName = column1Name;
-    // If the first time series, create the Date / Time column, and the data column for the time series
-    if (TSIndex === 0) {
-      // Create the column name for the current time series' units, including units if it exists, and skipping it otherwise
-      var displayedUnits = units ? TSAlias + ' (' + units + ')' : TSAlias;
-      this.valueColumns.push(displayedUnits);
-
-      if (axisObject.csv_y_axisData) {
-        for (let i = 0; i < x_axisLabels.length; i++) {
-          // Push the object into the attributeTable
-          this.attributeTable.push({
-            [column1Name]: x_axisLabels[i],
-            // Ternary operator determining if the value is NaN. The data table will show nothing if that's the case
-            [displayedUnits]: isNaN(axisObject.csv_y_axisData[i]) ? '' : axisObject.csv_y_axisData[i].toFixed(outputPrecision)
-          });
-        }
-      }
-      // If a plotly graph was created, use the plotly created data array
-      else if (axisObject.plotly_yAxisData) {
-        for (let i = 0; i < x_axisLabels.length; i++) {
-          // Push the object into the attributeTable
-          this.attributeTable.push({
-            [column1Name]: x_axisLabels[i],
-            // Ternary operator determining if the value is NaN. The data table will show nothing if that's the case
-            [displayedUnits]: isNaN(axisObject.plotly_yAxisData[i]) ? '' : axisObject.plotly_yAxisData[i].toFixed(outputPrecision)
-          });
-        }
-      }
-      // If a chartJS graph was created, use the chartJS created data array
-      else {
-        for (let i = 0; i < x_axisLabels.length; i++) {
-          // Push the object into the attributeTable
-          this.attributeTable.push({
-            [column1Name]: x_axisLabels[i],
-            // Ternary operator determining if the value is NaN. The data table will show nothing if that's the case
-            [displayedUnits]: isNaN(axisObject.chartJS_yAxisData[i]) ? '' : axisObject.chartJS_yAxisData[i].toFixed(outputPrecision)
-          });
-        }
-      }
-    }
-    // If the second or more time series, just add the data column for it
-    else {
-      // Create the column name for the current time series' units
-      var displayedUnits = units ? TSAlias + ' (' + units + ')' : TSAlias;
-      this.valueColumns.push(displayedUnits);
-      var foundIndex: number;
-
-      if (axisObject.csv_y_axisData) {
-        for (let i = 0; i < this.attributeTable.length; i++) {
-          foundIndex = x_axisLabels.findIndex(element => element === this.attributeTable[i][column1Name]);
-          if (foundIndex !== -1) {
-            this.attributeTable[i][displayedUnits] = isNaN(axisObject.csv_y_axisData[foundIndex]) ? '' : axisObject.csv_y_axisData[foundIndex].toFixed(outputPrecision);
-            continue;
-          } else {
-            this.attributeTable[i][displayedUnits] = '';
-            continue;
-          }
-        }
-
-        var start_counter = 0;
-        var end_counter = 1;
-        for (let i = 0; i < x_axisLabels.length; i++) {
-          if (x_axisLabels[i] < this.attributeTable[start_counter][column1Name]) {
-            this.attributeTable.splice(start_counter, 0, {
-              [column1Name]: x_axisLabels[i],
-              [displayedUnits]: isNaN(axisObject.csv_y_axisData[i]) ? '' : axisObject.csv_y_axisData[i].toFixed(outputPrecision)
-            })
-            start_counter++;
-
-          } else if (x_axisLabels[i] > this.attributeTable[this.attributeTable.length - end_counter][column1Name]) {
-            this.attributeTable.push({
-              [column1Name]: x_axisLabels[i],
-              [displayedUnits]: isNaN(axisObject.csv_y_axisData[i]) ? '' : axisObject.csv_y_axisData[i].toFixed(outputPrecision)
-            })
-            end_counter++;
-          }
-        }
-      }
-      // If a plotly graph was created, use the plotly created data array
-      else if (axisObject.plotly_yAxisData) {
-        for (let i = 0; i < this.attributeTable.length; i++) {
-          foundIndex = x_axisLabels.findIndex(element => element === this.attributeTable[i][column1Name]);
-          if (foundIndex !== -1) {
-            this.attributeTable[i][displayedUnits] =
-              isNaN(axisObject.plotly_yAxisData[foundIndex]) ? '' : axisObject.plotly_yAxisData[foundIndex].toFixed(outputPrecision);
-            continue;
-          } else {
-            this.attributeTable[i][displayedUnits] = '';
-            continue;
-          }
-        }
-
-        var start_counter = 0;
-        var end_counter = 1;
-        for (let i = 0; i < x_axisLabels.length; i++) {
-          if (x_axisLabels[i] < this.attributeTable[start_counter][column1Name]) {
-            this.attributeTable.splice(start_counter, 0, {
-              [column1Name]: x_axisLabels[i],
-              [displayedUnits]: isNaN(axisObject.plotly_yAxisData[i]) ? '' : axisObject.plotly_yAxisData[i].toFixed(outputPrecision)
-            })
-            start_counter++;
-
-          } else if (x_axisLabels[i] > this.attributeTable[this.attributeTable.length - end_counter][column1Name]) {
-            this.attributeTable.push({
-              [column1Name]: x_axisLabels[i],
-              [displayedUnits]: isNaN(axisObject.plotly_yAxisData[i]) ? '' : axisObject.plotly_yAxisData[i].toFixed(outputPrecision)
-            })
-            end_counter++;
-          }
-        }
-      }
-      // If a chartJS graph was created, use the chartJS created data array
-      else {
-        for (let i = 0; i < x_axisLabels.length; i++) {
-          // Ternary operator determining if the value is NaN. The data table will show nothing if that's the case
-          this.attributeTable[i][displayedUnits] =
-            isNaN(axisObject.chartJS_yAxisData[i]) ? '' : axisObject.chartJS_yAxisData[i].toFixed(outputPrecision);
-        }
-      }
-    }
-    this.isLoading = false;
-  }
+   * 
+   * @param graphTemplate 
+   */
+  // private cloneGraphTemplate(graphTemplate: IM.GraphTemplate): IM.GraphTemplate {
+  //   return {
+  //     product: {...graphTemplate.product}
+  //   }
+  // }
 
   /**
   * Takes a Papa Parse result object and creates a PopulateGraph instance
@@ -470,56 +327,40 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Go through each dataUnit in the @var dataUnits array that was created when
-  * it was read in from the app configuration file in the nav-bar component and
-  * set in the app-service.
-  * @return The output precision from the dataUnit.
-  * @param units String representing the units being displayed in the TSGraph.
-  */
-  private determineOutputPrecision(units: string): number {
-    var dataUnits: DataUnits[] = this.owfCommonService.getDataUnitArray();
-
-    if (dataUnits && dataUnits.length > 0) {
-      for (let dataUnit of dataUnits) {
-        if (dataUnit.getAbbreviation().toUpperCase() === units.toUpperCase() ||
-          dataUnit.getLongName().toUpperCase() === units.toUpperCase()) {
-          return dataUnit.getOutputPrecision();
-        }
-      }
-    }
-    // Return a default precision of 2.
-    return 2;
-  }
-
-  private handleError<T> (path: string, type?: string, id?: string, result?: T) {
-    return (error: any): Observable<T> => {
-      return of(result as T);
-    }}
-
-  /**
    * Initializes this components class variables and performs other necessary actions
    * to set up and display a chart.
    */
   private initChartVariables(): void {
 
-    this.featureProperties = this.chartData.featureProperties;
-    this.downloadFileName = this.chartData.downloadFileName ? this.chartData.downloadFileName : undefined;
-    this.graphTemplate = this.chartData.graphTemplate;
-    // Replace the ${properties} in the graphTemplate object from the graph
-    // template file.
-    MapUtil.replaceProperties(this.graphTemplate, this.featureProperties);
-    // Set the class variable TSIDLocation to the first dataGraph object from the
-    // graphTemplate object. This is used as a unique identifier for the Plotly
-    // graph <div> id attribute.
-    this.TSIDLocation = this.owfCommonService.parseTSID(
-      this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
+    var featureAndGraphTemplate: Observable<any>[] = [];
 
-    // Set the mainTitleString to be used by the map template file to display as
-    // the TSID location (for now).
-    this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
+    for (let initFile of [this.chartWidget.dataPath, this.chartWidget.graphTemplatePath]) {
+      featureAndGraphTemplate.push(
+        this.commonService.getJSONData(this.commonService.buildPath(IM.Path.dbP, [initFile]))
+      );
+    }
 
-    // Reset the BehaviorSubject array with PopulateGraph objects. Very important.
-    this.chartService.resetPopulateGraph();
+    this.initialResultsSub$ = forkJoin(featureAndGraphTemplate).subscribe((initResults: any[]) => {
+
+      this.featureProperties = initResults[0];
+      this.graphTemplate = initResults[1];
+      // this.graphTemplatePrime = this.cloneGraphTemplate(this.graphTemplate);
+
+      // Replace the ${properties} in the graphTemplate object from the graph
+      // template file.
+      MapUtil.replaceProperties(this.graphTemplate, this.featureProperties);
+      // Set the class variable TSIDLocation to the first dataGraph object from the
+      // graphTemplate object. This is used as a unique identifier for the Plotly
+      // graph <div> id attribute.
+      this.TSIDLocation = this.commonService.parseTSID(
+        this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
+
+      // Set the mainTitleString to be used by the map template file to display as
+      // the TSID location (for now).
+      this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
+
+      this.obtainAndCreateAllGraphs();
+    });
   }
 
   /**
@@ -528,7 +369,11 @@ export class ChartComponent implements OnInit, OnDestroy {
   */
   ngOnInit(): void {
     this.initChartVariables();
-    this.obtainAndCreateAllGraphs();
+
+    // Is only called when the selected item is updated from the Selector Widget.
+    this.widgetService.getSelectedItem().subscribe((feature: any) => {
+      this.updateChartVariables(feature);
+    });
   }
 
   /**
@@ -537,6 +382,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   */
   public ngOnDestroy(): void {
     this.allResultsSub$.unsubscribe();
+    this.initialResultsSub$.unsubscribe();
   }
 
   /**
@@ -552,7 +398,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     // Iterate over all graphData objects in the graph template file.
     graphData.forEach((graphData) => {
-      var dataObservable = this.dsManager.getDatastoreData(this.owfCommonService, graphData.properties.TSID);
+      var dataObservable = this.dsManager.getDatastoreData(this.commonService, graphData.properties.TSID);
       allDataObservables.push(dataObservable);
     });
 
@@ -566,7 +412,7 @@ export class ChartComponent implements OnInit, OnDestroy {
           return;
         }
 
-        var TSID = this.owfCommonService.parseTSID(graphData[i].properties.TSID);
+        var TSID = this.commonService.parseTSID(graphData[i].properties.TSID);
         var datastore = this.dsManager.getDatastore(TSID.datastore);
 
         switch(datastore.type) {
@@ -585,46 +431,37 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Creates and opens the DialogTSTableComponent dialog container showing the time
-  * series table for the selected feature on the Leaflet map.
-  */
-  public openTSTableDialog(): void {
-    // Used for testing large data tables
-    // for (let i = 0; i < 7; i++) {
-    //   this.attributeTable = this.attributeTable.concat(this.attributeTable);
-    // }
+   * 
+   * @param feature 
+   * @returns 
+   */
+  private updateChartVariables(feature: any): void {
 
-    var windowID = '-dialog-tsTable';
-    if (this.windowManager.windowExists(windowID)) {
+    if (feature === 'No basin selected.') {
       return;
     }
 
-    // Create and use a MatDialogConfig object to pass to the DialogTSGraphComponent
-    // for the graph that will be shown.
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = {
-      attributeTable: this.attributeTable,
-      dateTimeColumnName: this.dateTimeColumnName,
-      downloadFileName: this.downloadFileName ? this.downloadFileName : undefined,
-      featureProperties: this.featureProperties,
-      isTSFile: this.isTSFile,
-      TSArrayRef: this.TSArrayOGResultRef,
-      windowID: windowID,
-      valueColumns: this.valueColumns
-    }
-    const dialogRef: MatDialogRef<DialogTSTableComponent, any> = this.dialog.open(DialogTSTableComponent, {
-      data: dialogConfig,
-      hasBackdrop: false,
-      panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
-      height: "700px",
-      width: "650px",
-      minWidth: "450px",
-      minHeight: "300px",
-      maxHeight: "90vh",
-      maxWidth: "90vw"
-    });
-    this.windowManager.addWindow(windowID, WindowType.TABLE);
-    
+    this.featureProperties = feature;
+    // this.graphTemplate = this.chartWidget.graphTemplate;
+    console.log('before:', this.featureProperties);
+    console.log('before:', this.graphTemplate);
+    // // Replace the ${properties} in the graphTemplate object from the graph
+    // // template file.
+    MapUtil.replaceProperties(this.graphTemplate, this.featureProperties);
+
+    console.log('after:', this.featureProperties);
+    console.log('after:', this.graphTemplate);
+    // // Set the class variable TSIDLocation to the first dataGraph object from the
+    // // graphTemplate object. This is used as a unique identifier for the Plotly
+    // // graph <div> id attribute.
+    // this.TSIDLocation = this.commonService.parseTSID(
+    //   this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
+
+    // // Set the mainTitleString to be used by the map template file to display as
+    // // the TSID location (for now).
+    // this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
+
+    // this.obtainAndCreateAllGraphs();
   }
 
 }

@@ -20,7 +20,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class StateModTS {
 
 
-  constructor(private owfCommonService: OwfCommonService) { }
+  constructor(private commonService: OwfCommonService) { }
 
 
   /**
@@ -52,7 +52,7 @@ export class StateModTS {
     var intervalUnknown = -999; // Return if can't figure out interval
     var interval = intervalUnknown;
 
-    return this.owfCommonService.getPlainText(filename, 'stateModPath')
+    return this.commonService.getPlainText(filename, 'stateModPath')
     .pipe(
       map((stateModFile: any) => {
 

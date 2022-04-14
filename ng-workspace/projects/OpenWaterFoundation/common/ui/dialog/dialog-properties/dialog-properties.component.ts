@@ -61,11 +61,11 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
   /**
    * 
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
-   * @param owfCommonService The reference to the app service, for sending data between components and higher scoped map variables.
+   * @param commonService The reference to the app service, for sending data between components and higher scoped map variables.
    * @param dataObject The object containing data passed from the Component that created this Dialog.
    */
   constructor(private dialogService: DialogService,
-              public owfCommonService: OwfCommonService,
+              public commonService: OwfCommonService,
               public dialogRef: MatDialogRef<DialogPropertiesComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
@@ -169,7 +169,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
         for (let prop of this.geoLayer[property]) {
           markdownString += '| ' + property + ' | ' +
 
-          (this.owfCommonService.isURL(prop) ? '[Link] (' + prop + ')' : prop) +
+          (this.commonService.isURL(prop) ? '[Link] (' + prop + ')' : prop) +
                             ' |\n';
         }
       } else if (typeof this.geoLayer[property] === 'object') {
@@ -177,20 +177,20 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
         for (let prop in this.geoLayer[property]) {
           markdownString += '| ' + prop + ' | ' +
 
-          (this.owfCommonService.isURL(this.geoLayer[property][prop]) ? '[Link] (' + this.geoLayer[property][prop] + ')' : this.geoLayer[property][prop]) +
+          (this.commonService.isURL(this.geoLayer[property][prop]) ? '[Link] (' + this.geoLayer[property][prop] + ')' : this.geoLayer[property][prop]) +
                             ' |\n';
         }
       } else if (typeof this.geoLayer[property] === 'string') {
         markdownString += '| ' + property + ' | ' +
         
-        (this.owfCommonService.isURL(this.geoLayer[property]) ? '[Link] (' + this.geoLayer[property] + ')' : this.geoLayer[property]) +
+        (this.commonService.isURL(this.geoLayer[property]) ? '[Link] (' + this.geoLayer[property] + ')' : this.geoLayer[property]) +
                           ' |\n';
       }
     }
     
 
-    var fullPath: string = this.owfCommonService.buildPath(IM.Path.gLGJP, [this.geoLayer.sourcePath]);
-    var formattedPath = this.owfCommonService.condensePath(fullPath, 'link');
+    var fullPath: string = this.commonService.buildPath(IM.Path.gLGJP, [this.geoLayer.sourcePath]);
+    var formattedPath = this.commonService.condensePath(fullPath, 'link');
 
     markdownString += '\n## Download Layer ##\n\n' +
     'The source layer file can be downloaded from: [' + formattedPath + '] (' + fullPath + ')\n\n' +
@@ -204,7 +204,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
    * The initial function called in this component. Called once, after ngOnChanges().
    */
   ngOnInit(): void {
-    this.owfCommonService.setMapConfigPath(this.mapConfigPath);
+    this.commonService.setMapConfigPath(this.mapConfigPath);
     this.formatLayerProperties();
 
     var markdownString = this.buildMarkdownString();

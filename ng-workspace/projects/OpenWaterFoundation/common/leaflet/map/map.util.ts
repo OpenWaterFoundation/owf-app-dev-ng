@@ -1113,7 +1113,7 @@ export class MapUtil {
         if (splitArr.length === 1) {
           prop = propertyString.split(':')[0];
         } else {
-          let throwaway = propertyString.split(':')[0];
+          let featureAttribute = propertyString.split(':')[0];
           prop = propertyString.split(':')[1];
         }
 
@@ -1217,13 +1217,13 @@ export class MapUtil {
   /**
    * This is a recursive function that goes through an object and replaces any value in
    * it that contains the ${property} notation with the actual property needed.
-   * @param templateObject The object that will have its property notation expanded
+   * @param graphTemplate The object that will have its property notation expanded
    * @param featureProperties The properties in the selected feature on the map layer.
    */
-  public static replaceProperties(templateObject: Object, featureProperties: Object): Object {
+  public static replaceProperties(graphTemplate: Object, featureProperties: Object): Object {
 
-    for (var key in templateObject) {
-      var value = templateObject[key];
+    for (var key in graphTemplate) {
+      var value = graphTemplate[key];
       if (typeof value === 'object') {
         this.replaceProperties(value, featureProperties);
       } else {
@@ -1231,15 +1231,15 @@ export class MapUtil {
           let formattedValue = this.obtainPropertiesFromLine(value, featureProperties, key);
 
           try {
-            templateObject[key] = formattedValue;
+            graphTemplate[key] = formattedValue;
           } catch (e) {
-            templateObject[key] = value;
+            graphTemplate[key] = value;
           }
         }
       }
     }
-    if (templateObject['product'] || templateObject['id'])
-      return templateObject;
+    if (graphTemplate['product'] || graphTemplate['id'])
+      return graphTemplate;
   }
 
   /**

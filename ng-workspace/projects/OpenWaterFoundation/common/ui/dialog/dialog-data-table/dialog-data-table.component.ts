@@ -128,12 +128,12 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
 
   /**
    * @constructor Constructs the Dialog Data Table.
-   * @param owfCommonService The reference to the OwfCommonService injected object.
+   * @param commonService The reference to the OwfCommonService injected object.
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
    * @param dataObject The object containing data passed from the Component that created this Dialog.
    */
   constructor(private dialogService: DialogService,
-              public owfCommonService: OwfCommonService,
+              public commonService: OwfCommonService,
               public dialog: MatDialog,
               public dialogRef: MatDialogRef<DialogDataTableComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
@@ -240,7 +240,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     var encodedAddress = filterAddress.replace(/ /g, '+').replace(/,/g, '%2c');
     // TODO: jpkeahey 2021.04.14 - This is using an OWF employee API key necessary for the query. What to do?
     var addressQuery = 'https://api.geocod.io/v1.6/geocode?q=' + encodedAddress + '&api_key=e794ffb42737727f9904673702993bd96707bf6';
-    this.owfCommonService.getJSONData(addressQuery).subscribe((resultJSON: any) => {
+    this.commonService.getJSONData(addressQuery).subscribe((resultJSON: any) => {
       if (resultJSON.results[0] === undefined) {
         this.addressLat = -1;
         this.addressLng = -1;
@@ -595,7 +595,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     }
 
     var data = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
-    FileSaver.saveAs(data, this.owfCommonService.formatSaveFileName(this.geoLayer.geoLayerId, IM.SaveFileType.dataTable));
+    FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.geoLayer.geoLayerId, IM.SaveFileType.dataTable));
   }
   
   /**

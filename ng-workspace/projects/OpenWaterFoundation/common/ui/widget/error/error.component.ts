@@ -31,10 +31,10 @@ export class ErrorComponent {
 
   /**
    * @constructor The Error widget component constructor.
-   * @param owfCommonService The injected Common library service.
+   * @param commonService The injected Common library service.
    * @param widgetService The inject local Widget service.
    */
-  constructor(private owfCommonService: OwfCommonService) {}
+  constructor(private commonService: OwfCommonService) {}
 
 
   /**
