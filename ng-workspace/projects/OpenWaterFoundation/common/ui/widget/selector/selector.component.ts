@@ -36,7 +36,7 @@ export class SelectorComponent {
   /**
    * 
    */
-  @Input() selectorWidget: any;
+  @Input() selectorWidget: IM.SelectorWidget;
   /**
    * 
    */
@@ -68,7 +68,7 @@ export class SelectorComponent {
   getFeaturePropValue(feature: any): string {
     var props: IM.ParsedProp;
 
-    props = this.commonService.obtainPropertiesFromLine(this.selectorWidget.optionName, feature);
+    props = this.commonService.obtainPropertiesFromLine(this.selectorWidget.displayName, feature);
     this.allFoundProps = props.foundProps;
     return props.line;
   }

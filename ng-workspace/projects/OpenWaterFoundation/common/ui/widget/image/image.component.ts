@@ -13,14 +13,16 @@ import * as IM              from '@OpenWaterFoundation/common/services';
 export class ImageComponent {
 
   /** The attribute provided as an attribute to this component when created, e.g.
-   *   <widget-image [dataPath]="path/to/image.png"></widget-image> */
-  @Input() dataPath: string;
-
+   *   <widget-image [imageWidget]="path/to/image.png"></widget-image> */
+  @Input() imageWidget: IM.ImageWidget;
+  /** The string representing the type of error that occurred while building this
+    * widget. Used by the error widget. */
   errorType: string;
   /** The path to the image file after it has been built with the OWF service to
    * deal with either an absolute or relative path provided. */
   fullDataPath: string;
-
+  /** Set to true if no path is given or a bad path is provided in the dashboard
+    * configuration file. */
   widgetError: boolean;
 
 
@@ -36,12 +38,12 @@ export class ImageComponent {
    */
   ngOnInit(): void {
 
-    if (!this.dataPath) {
+    if (!this.imageWidget.imagePath) {
       this.widgetError = true;
-      this.errorType = 'no dataPath';
+      this.errorType = 'no imagePath';
       return;
     }
-    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.dataPath]);
+    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.imageWidget.imagePath]);
   }
 
   

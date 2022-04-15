@@ -15,12 +15,11 @@ import * as IM              from '@OpenWaterFoundation/common/services';
 })
 export class TextComponent implements OnDestroy{
 
-  /** For BehaviorSubject testing. It works! */
-  // testData: Observable<string>;
   /** The attribute provided as an attribute to this component when created, e.g.
    *   <widget-text [dataPath]="path/to/text.md"></widget-text> */
-  @Input() dataPath: string;
-
+  @Input() textWidget: IM.TextWidget;
+  /** The string representing the type of error that occurred while building this
+   * widget. Used by the error widget. */
   errorType: string;
   /** The path to the text file after it has been built with the OWF service to
    * deal with either an absolute or relative path provided. */
@@ -54,12 +53,12 @@ export class TextComponent implements OnDestroy{
     // BehaviorSubject testing. It works!
     // this.testData = this.widgetService.getTestObs();
 
-    if (!this.dataPath) {
+    if (!this.textWidget.textPath) {
       this.widgetError = true;
-      this.errorType = 'no dataPath';
+      this.errorType = 'no textPath';
       return;
     }
-    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.dataPath]);
+    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.textWidget.textPath]);
 
     // Markdown file.
     if (this.fullDataPath.endsWith('.md')) {

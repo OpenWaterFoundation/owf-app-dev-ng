@@ -12,7 +12,7 @@ import * as IM             from '@OpenWaterFoundation/common/services';
 export class WidgetService {
 
   private testObs$: BehaviorSubject<string> = new BehaviorSubject('No basin selected.');
-  private selectedItem$: BehaviorSubject<any> = new BehaviorSubject('No basin selected.');
+  private selectedItem$: BehaviorSubject<any> = new BehaviorSubject('No item selected.');
 
 
   constructor() {}

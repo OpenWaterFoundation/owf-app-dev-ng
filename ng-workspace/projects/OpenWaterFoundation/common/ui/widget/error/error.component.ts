@@ -32,7 +32,6 @@ export class ErrorComponent {
   /**
    * @constructor The Error widget component constructor.
    * @param commonService The injected Common library service.
-   * @param widgetService The inject local Widget service.
    */
   constructor(private commonService: OwfCommonService) {}
 
@@ -42,7 +41,7 @@ export class ErrorComponent {
    */
   imageError(): void {
     switch(this.errorType) {
-      case 'no dataPath': this.noDataPath(); break;
+      case 'no imagePath': this.noDataPath('imagePath'); break;
       case 'unsupported file': this.unsupportedFile(); break;
     }
   }
@@ -61,10 +60,10 @@ export class ErrorComponent {
   /**
    * Universal error message for any widget not given a `dataPath` property.
    */
-  noDataPath(): void {
-    console.error('No "dataPath" property found for the "' + this.errorWidgetName +
-    '" Widget. Confirm the "dataPath" property of this ' + this.errorWidgetName +
-    ' widget has been provided and is correct.');
+  noDataPath(dataPathName: string): void {
+    console.error("No '" + dataPathName + "' property found for the " + this.errorWidgetName +
+    " Widget. Confirm the '" + dataPathName + "' property of this " + this.errorWidgetName +
+    " widget has been provided and is correct.");
   }
 
   /**
@@ -72,7 +71,7 @@ export class ErrorComponent {
    */
   textError(): void {
     switch(this.errorType) {
-      case 'no dataPath': this.noDataPath(); break;
+      case 'no textPath': this.noDataPath('textPath'); break;
       case 'unsupported file': this.unsupportedFile(); break;
     }
   }

@@ -14,11 +14,11 @@
       </div>
 
       <div *ngIf="widget.type === 'image'" class="widget-container">
-        <widget-image [dataPath]="widget.dataPath"></widget-image>
+        <widget-image [imageWidget]="widget"></widget-image>
       </div>
 
       <div *ngIf="widget.type === 'map'" class="widget-container">
-        <common-map [map-config]="widget.dataPath"></common-map>
+        <common-map [map-config]="widget.mapConfigPath"></common-map>
       </div>
 
       <div *ngIf="widget.type === 'selector'" class="widget-container">
@@ -30,7 +30,7 @@
       </div>
 
       <div *ngIf="widget.type === 'textHTML' || widget.type === 'textMarkdown'" class="widget-container">
-        <widget-text [dataPath]="widget.dataPath"></widget-text>
+        <widget-text [textWidget]="widget"></widget-text>
       </div>
       
     </mat-grid-tile>

@@ -7,9 +7,10 @@ import { forkJoin,
           Observable, 
           Subscription }          from 'rxjs';
 
+import structuredClone            from '@ungap/structured-clone';
+
 import { OwfCommonService }       from '@OpenWaterFoundation/common/services';
 import * as IM                    from '@OpenWaterFoundation/common/services';
-
 import { MonthTS,
           TS,
           YearTS }                from '@OpenWaterFoundation/common/ts';
@@ -83,16 +84,6 @@ export class ChartComponent implements OnInit, OnDestroy {
     private chartService: ChartService,
     private widgetService: WidgetService) { }
 
-
-  /**
-   * 
-   * @param graphTemplate 
-   */
-  // private cloneGraphTemplate(graphTemplate: IM.GraphTemplate): IM.GraphTemplate {
-  //   return {
-  //     product: {...graphTemplate.product}
-  //   }
-  // }
 
   /**
   * Takes a Papa Parse result object and creates a PopulateGraph instance
@@ -343,8 +334,9 @@ export class ChartComponent implements OnInit, OnDestroy {
     this.initialResultsSub$ = forkJoin(featureAndGraphTemplate).subscribe((initResults: any[]) => {
 
       this.featureProperties = initResults[0];
-      this.graphTemplate = initResults[1];
-      // this.graphTemplatePrime = this.cloneGraphTemplate(this.graphTemplate);
+      this.graphTemplatePrime = initResults[1];
+      // Create a clone of the original graph template file.
+      this.graphTemplate = structuredClone(this.graphTemplatePrime);
 
       // Replace the ${properties} in the graphTemplate object from the graph
       // template file.
@@ -368,6 +360,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   * a CSV or StateMod file is to be read for graph creation.
   */
   ngOnInit(): void {
+
     this.initChartVariables();
 
     // Is only called when the selected item is updated from the Selector Widget.
@@ -437,31 +430,28 @@ export class ChartComponent implements OnInit, OnDestroy {
    */
   private updateChartVariables(feature: any): void {
 
-    if (feature === 'No basin selected.') {
+    if (feature === 'No item selected.') {
       return;
     }
 
     this.featureProperties = feature;
-    // this.graphTemplate = this.chartWidget.graphTemplate;
-    console.log('before:', this.featureProperties);
-    console.log('before:', this.graphTemplate);
-    // // Replace the ${properties} in the graphTemplate object from the graph
-    // // template file.
+    this.graphTemplate = structuredClone(this.graphTemplatePrime);
+
+    // Replace the ${properties} in the graphTemplate object from the graph
+    // template file.
     MapUtil.replaceProperties(this.graphTemplate, this.featureProperties);
 
-    console.log('after:', this.featureProperties);
-    console.log('after:', this.graphTemplate);
-    // // Set the class variable TSIDLocation to the first dataGraph object from the
-    // // graphTemplate object. This is used as a unique identifier for the Plotly
-    // // graph <div> id attribute.
-    // this.TSIDLocation = this.commonService.parseTSID(
-    //   this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
+    // Set the class variable TSIDLocation to the first dataGraph object from the
+    // graphTemplate object. This is used as a unique identifier for the Plotly
+    // graph <div> id attribute.
+    this.TSIDLocation = this.commonService.parseTSID(
+      this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
 
-    // // Set the mainTitleString to be used by the map template file to display as
-    // // the TSID location (for now).
-    // this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
+    // Set the mainTitleString to be used by the map template file to display as
+    // the TSID location (for now).
+    this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
 
-    // this.obtainAndCreateAllGraphs();
+    this.obtainAndCreateAllGraphs();
   }
 
 }

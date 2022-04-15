@@ -561,6 +561,28 @@ export interface ChartWidget extends DashboardWidget {
   graphTemplatePath: string;
 }
 
+export interface ImageWidget extends DashboardWidget {
+  imagePath: string;
+}
+
+export interface MapWidget extends DashboardWidget {
+  mapConfigPath: string;
+}
+
+export interface SelectorWidget extends DashboardWidget {
+  dataPath: string;
+  dataFormat: string;
+  displayName: string;
+}
+
+export interface StatusIndicatorWidget extends DashboardWidget {
+}
+
+export interface TextWidget extends DashboardWidget {
+  textPath: string;
+  graphTemplatePath: string;
+}
+
 /////////////////////////////// Time Series \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
