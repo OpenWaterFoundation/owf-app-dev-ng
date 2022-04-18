@@ -11,13 +11,13 @@ import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 // the app as much as before.
 export class JustificationPipe implements PipeTransform {
 
-  constructor(private owfCommonService: OwfCommonService) { }
+  constructor(private commonService: OwfCommonService) { }
 
   transform(value: unknown, ...args: unknown[]): unknown {
     if (args[0]) {
-       return this.owfCommonService.isURL(value);
+       return this.commonService.isURL(value);
     } else {
-      if (this.owfCommonService.isURL(value)) {
+      if (this.commonService.isURL(value)) {
         return 'url';
       } else if (isNaN(Number(value))) {
         return 'left';

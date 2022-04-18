@@ -1,5 +1,5 @@
 import { Injectable }      from '@angular/core';
-import { HttpClient }      from '@angular/common/http';
+import { HttpClient, HttpErrorResponse }      from '@angular/common/http';
 import { MapLayerManager } from '@OpenWaterFoundation/common/ui/layer-manager';
 
 import { catchError }      from 'rxjs/operators';
@@ -291,7 +291,7 @@ export class OwfCommonService {
       } else {
         // At this point the saveFileName is the value of the saveFile property from the popup config file. None of its
         // ${property} notation has been converted, so the obtainPropertiesFromLine function is called to do so.
-        saveFileName = this.obtainPropertiesFromLine(saveFileName, featureProperties);
+        saveFileName = this.obtainPropertiesFromLine(saveFileName, featureProperties).line;
         return saveFileName;
       }
 
@@ -419,32 +419,6 @@ export class OwfCommonService {
    */
   public getChartTemplateObject(): Object {
     return this.chartTemplateObject;
-  }
-
-  /**
-   * 
-   * @param graphData The graph template object read in from the graph template
-   * JSON file.
-   * 
-   * @returns An object with at least the path to the chart data file. Will also
-   * return the TSID location if the getLocation param is given.
-   */
-  public getChartTSIDLocation(graphData: IM.GraphData): { path: string, location?: string } {
-
-    var filePath: string;
-    // Depending on whether it's a full TSID used in the graph template file, determine
-    // what the file path of the StateMod file is. (TSIDLocation~/path/to/filename.stm OR
-    // TSIDLocation~StateMod~/path/to/filename.stm)
-    if (graphData.properties.TSID.split('~').length === 2) {
-      filePath = graphData.properties.TSID.split('~')[1];
-    } else if (graphData.properties.TSID.split('~').length === 3) {
-      filePath = graphData.properties.TSID.split('~')[2];
-    }
-
-    return {
-      path: filePath,
-      location: graphData.properties.TSID.split('~')[0]
-    }
   }
 
   /**
@@ -1052,22 +1026,22 @@ export class OwfCommonService {
 
       switch(type) {
         case IM.Path.fMCP:
-          console.error('Confirm the app configuration property \'mapProject\' with id \'' + id + '\' is the correct path');
+          console.error("Confirm the app configuration property 'mapProject' with id '" + id + "' is the correct path");
           break;
         case IM.Path.gLGJP:
-          console.error('Confirm the map configuration property \'sourcePath\' is the correct path');
+          console.error("Confirm the map configuration property 'sourcePath' is the correct path");
           break;
         case IM.Path.eCP:
-          console.error('Confirm the map configuration EventHandler property \'eventConfigPath\' is the correct path');
+          console.error("Confirm the map configuration EventHandler property 'eventConfigPath' is the correct path");
           break;
         case IM.Path.aCP:
-          console.error('No app-config.json detected in ' + this.appPath + '. Confirm app-config.json exists in ' + this.appPath);
+          console.error("No app-config.json detected in " + this.appPath + ". Confirm app-config.json exists in " + this.appPath);
           break;
         case IM.Path.cPage:
-          console.error('Confirm the app configuration property \'markdownFilepath\' with id \'' + id + '\' is the correct path');
+          console.error("Confirm the app configuration property 'markdownFilepath' with id '" + id + "' is the correct path");
           break;
         case IM.Path.rP:
-          console.error('Confirm the popup configuration file property \'resourcePath\' is the correct path');
+          console.error("Confirm the popup configuration file property 'resourcePath' is the correct path");
           break;
       }
       // TODO: jpkeahey 2020.07.22 - Don't show a map error no matter what. I'll probably want to in some cases.
@@ -1075,7 +1049,7 @@ export class OwfCommonService {
       // Let the app keep running by returning an empty result. Because each service
       // method returns a different kind of Observable result, this function takes a
       // type parameter so it can return the safe value as the type that the application expects.
-      return of(result as T);
+      return of(error);
     };
   }
 
@@ -1119,7 +1093,7 @@ export class OwfCommonService {
    * yet, look for the '${' start that we need and build the property, adding it
    * to the propertyArray when we've detected the end of the property. Find each
    * one in the value until the value line is done.
-   * @param line 
+   * @param line The string to search through.
    * @param featureProperties The object containing the feature's key and value
    * pair properties.
    * @param key Optional parameter to provide a better console warning by logging
@@ -1128,8 +1102,9 @@ export class OwfCommonService {
    * @returns The entire line read in, with all ${property} notation converted correctly
    * by replacing all ${} properties with the correct string.
    */
-  public obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any, labelProp?: boolean): string {
+  public obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any, labelProp?: boolean): IM.ParsedProp {
 
+    var allFoundProps: string[] = [];
     var propertyString = '';
     var currentIndex = 0;
     var formattedLine = '';
@@ -1159,6 +1134,7 @@ export class OwfCommonService {
         } else {
           let throwaway = propertyString.split(':')[0];
           prop = propertyString.split(':')[1];
+          allFoundProps.push(prop);
         }
         
         featureValue = featureProperties[prop];
@@ -1212,16 +1188,43 @@ export class OwfCommonService {
         formattedLine += featureValue;
         propertyString = '';
       }
-      // The first conditional was not met, so the current and next letters of the line are not '${'. Double check to make sure
-      // the current letter exists, 
+      // The first conditional was not met, so the current and next letters of the
+      // line are not '${'. Double check to make sure the current letter exists.
       if (line[currentIndex] !== undefined) {
         formattedLine += line[currentIndex];
         currentIndex++;
       }
     }
-    // The while loop is finished; the entire line has been iterated over, and the variable formattedLine has been rewritten
-    // to replace all the ${property} notation with the correct feature value
-    return formattedLine;
+    // The while loop is finished; the entire line has been iterated over, and the
+    // variable formattedLine has been rewritten to replace all the ${property}
+    // notation with the correct feature value. 
+    return { foundProps: allFoundProps, line: formattedLine };
+  }
+
+  /**
+   * Parses a full TSID string into its smaller components.
+   * @param fullTSID The full TSID string to parse.
+   * @returns An object with at least the TSIDLocation and datastore, and the path
+   * to the datastore file if given.
+   */
+   public parseTSID(fullTSID: string): IM.TSID {
+
+    // Depending on whether it's a full TSID used in the graph template file, determine
+    // what the file path of the StateMod file is. (TSIDLocation~/path/to/filename.stm OR
+    // TSIDLocation~StateMod~/path/to/filename.stm)
+    if (fullTSID.split('~').length === 2) {
+      return {
+        location: fullTSID.split('~')[0],
+        datastore: fullTSID.split('~')[1],
+        path: null
+      }
+    } else if (fullTSID.split('~').length === 3) {
+      return {
+        location: fullTSID.split('~')[0],
+        datastore: fullTSID.split('~')[1],
+        path: fullTSID.split('~')[2]
+      }
+    }
   }
 
   /**

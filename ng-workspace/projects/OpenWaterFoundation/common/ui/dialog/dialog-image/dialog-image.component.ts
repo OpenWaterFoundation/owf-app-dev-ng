@@ -50,7 +50,7 @@ export class DialogImageComponent implements OnInit {
    * 
    */
   ngOnInit(): void {
-    // this.owfCommonService.setMapConfigPath(this.mapConfigPath);
+    // this.commonService.setMapConfigPath(this.mapConfigPath);
     // First split by '/', and grab the last element, which is the file.
     // Immediately split the file name by '.' and grab the first element: the file name.
     this.imageName = this.imagePath.split('/')[this.imagePath.split('/').length - 1].split('.')[0];

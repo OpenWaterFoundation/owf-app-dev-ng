@@ -20,7 +20,7 @@ export class Data {
 	public dimensions: any;
 	public parseDate: any;
 
-	constructor(configProps: any, public owfCommonService: OwfCommonService) {
+	constructor(configProps: any, public commonService: OwfCommonService) {
 		this.configProps = configProps;
 		this.variables = configProps.VariableNames;
 		this.csv;
@@ -45,7 +45,7 @@ export class Data {
 		var _this = this;
 		//ajax call to get annotation data from annotationsURL specified in Config file
 		$.ajax({
-			url: _this.owfCommonService.buildPath(IM.Path.gP, [_this.configProps.AnnotationsFileName]),
+			url: _this.commonService.buildPath(IM.Path.gP, [_this.configProps.AnnotationsFileName]),
 			async: false,
 			dataType: 'json',
 			error: function(error) {

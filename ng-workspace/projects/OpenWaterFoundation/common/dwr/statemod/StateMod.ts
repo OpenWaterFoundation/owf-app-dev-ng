@@ -1,113 +1,67 @@
-// import { Component } from '@angular/core';
+import { TS }                from '@OpenWaterFoundation/common/ts';
+import { DateTime }          from '@OpenWaterFoundation/common/util/time';
+import { StringUtil }        from '@OpenWaterFoundation/common/util/string';
+import { TimeInterval }      from '@OpenWaterFoundation/common/util/time';
+import { TimeUtil }          from '@OpenWaterFoundation/common/util/time';
+import { MonthTS }           from '@OpenWaterFoundation/common/ts';
+import { TSIdent }           from '@OpenWaterFoundation/common/ts';
+import { TSUtil }            from '@OpenWaterFoundation/common/ts';
+import { YearType }          from '@OpenWaterFoundation/common/util/time';
 
-import { TS }               from '@OpenWaterFoundation/common/ts';
-import { DateTime }         from '@OpenWaterFoundation/common/util/time';
-import { StringUtil }       from '@OpenWaterFoundation/common/util/string';
-import { TimeInterval }     from '@OpenWaterFoundation/common/util/time';
-import { TimeUtil }         from '@OpenWaterFoundation/common/util/time';
-import { MonthTS }          from '@OpenWaterFoundation/common/ts';
-import { TSIdent }          from '@OpenWaterFoundation/common/ts';
-import { TSUtil }           from '@OpenWaterFoundation/common/ts';
-import { YearType }         from '@OpenWaterFoundation/common/util/time';
+import { Observable,
+          of }               from 'rxjs';
+import { catchError,
+          map }              from 'rxjs/operators';
+
+import { OwfCommonService }  from '@OpenWaterFoundation/common/services';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
-import { Observable }       from 'rxjs';
-import { map }              from 'rxjs/operators';
+export class StateModTS {
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 
-// @Component({
-//   selector: 'lib-statemod',
-//   templateUrl: '',
-//   styleUrls: []
-// })
-export class StateMod_TS {
-
-  constructor(private owfCommonService: OwfCommonService) {
-  }
+  constructor(private commonService: OwfCommonService) { }
 
 
   /**
-  Read a time series from a StateMod format file.  The TSID string is specified
-  in addition to the path to the file.  It is expected that a TSID in the file
-  matches the TSID (and the path to the file, if included in the TSID would not
-  properly allow the TSID to be specified).  This method can be used with newer
-  code where the I/O path is separate from the TSID that is used to identify the time series.
-  The IOUtil.getPathUsingWorkingDir() method is applied to the filename.
-  @return a pointer to a newly-allocated time series if successful, a NULL pointer if not.
-  @param tsident_string The full identifier for the time series to read.
-  @param filename The name of a file to read
-  (in which case the tsident_string must match one of the TSID strings in the file).
-  @param date1 Starting date to initialize period (null to read the entire time series).
-  @param date2 Ending date to initialize period (null to read the entire time series).
-  @param units Units to convert to.
-  @param read_data Indicates whether data should be read (false=no, true=yes).
-  */
-  // When this function is called, it takes the below arguments (which I'll worry)
-  // about later, and tries to read a StateMod file
-  // TODO: This just let's me know where this all starts from
+   * Read a time series from a StateMod format file.  The TSID string is specified
+   * in addition to the path to the file.  It is expected that a TSID in the file
+   * matches the TSID (and the path to the file, if included in the TSID would not
+   * properly allow the TSID to be specified).  This method can be used with newer
+   * code where the I/O path is separate from the TSID that is used to identify
+   * the time series.The IOUtil.getPathUsingWorkingDir() method is applied to the
+   * filename.
+   * @param tsident_string The full identifier for the time series to read.
+   * @param filename The name of a file to read (in which case the tsident_string
+   * must match one of the TSID strings in the file).
+   * @param date1 Starting date to initialize period (null to read the entire time series).
+   * @param date2 Ending date to initialize period (null to read the entire time series).
+   * @param units Units to convert to.
+   * @param read_data Indicates whether data should be read (false=no, true=yes).
+   * @returns A TS object as an observable.
+   */
   public readTimeSeries(tsident_string: string, filename: string, date1?: any, date2?: any,
-                                                units?: string, read_data?: boolean): Observable<TS> {
-    let ts = null;
+    units?: string, read_data?: boolean): Observable<TS> {
     
-    // let routine = "StateMod_TS.readTimeSeries";
+    let ts = null;
 
     if (filename == null) {
       throw new Error("Requesting StateMod file with null filename.");
     }
-    // let input_name: string = filename;
-    // let full_fname: string = IOUtil.getPathUsingWorkingDir(filename);
-    // if (!IOUtil.fileReadable(full_fname)) {
-    //   Message.printWarning(2, routine, "Unable to determine file for \"" + filename + "\"");
-    //   return ts;
-    // }
-    // BufferedReader in = null;
     var data_interval = TimeInterval.MONTH;
-    // let message = null, routine = "StateMod_TS.getFileDataInterval";
-    // BufferedReader ifp = null;
-    // var ifp;
-    // var iline = null;
     var intervalUnknown = -999; // Return if can't figure out interval
     var interval = intervalUnknown;
-    // let full_filename = IOUtil.getPathUsingWorkingDir ( filename );
-    // try {
-    //   // ifp = 
-    // }
-    // catch ( e ) {
-    //   // message = "Unable to open file \"" + filename + "\" to determine data interval.";
-    //   // Message.printWarning ( 2, routine, message );
-    //   return intervalUnknown;
-    // }
-    return this.owfCommonService.getPlainText(filename, 'stateModPath').pipe(map((stateModFile: any) => {
-      let stateModArray = stateModFile.split('\n');
 
-      // if ( filename.toUpperCase().endsWith("XOP") ) {
-      //     // The *.xop file will have "Time Step:   Monthly"
-      //     while ( true ) {
-      //           iline = ifp.readLine();
-      //           if ( iline == null ) {
-      //               break;
-      //           }
-      //           if ( iline.startsWith("#") && iline.toUpperCase().indexOf("TIME STEP:") > 0 ) {
-      //               let parts = iline.split(":");
-      //               if ( parts.length > 1 ) {
-      //                   if ( parts[1].trim().equalsIgnoreCase("Monthly") ) {
-      //                       interval = TimeInterval.MONTH;
-      //                       break;
-      //                   }
-      //                   else if ( parts[1].trim().equalsIgnoreCase("Daily") ) {
-      //                       interval = TimeInterval.DAY;
-      //                       break;
-      //                   }
-      //               }
-      //           }
-      //     }
-      // }
-      // else {
+    return this.commonService.getPlainText(filename, 'stateModPath')
+    .pipe(
+      map((stateModFile: any) => {
+
+        let stateModArray = stateModFile.split('\n');
+
         var header: boolean = true;
         // Skip while a comment or blank line...
         for  ( let line of stateModArray ) {
-          if ( line == null ) {
+          if ( line === null ) {
             throw new Error ( "end of file" );
           }
           line = line.trim();
@@ -128,33 +82,32 @@ export class StateMod_TS {
             interval = TimeInterval.MONTH;
           }
         }
-      // }
+
         data_interval = interval;
         
-      // Determine the interval of the file and create a time series that matches...      
-      ts = TSUtil.newTimeSeries(tsident_string, true);
+        // Determine the interval of the file and create a time series that matches...      
+        ts = TSUtil.newTimeSeries(tsident_string, true);
 
-      if (ts == null) {
-        console.error("Unable to create time series for \"" + tsident_string + "\"");
+        if (ts == null) {
+          console.error("Unable to create time series for \"" + tsident_string + "\"");
+          return ts;
+        }
+        ts.setIdentifierString(tsident_string);
+
+        let tslist: TS[] = this.readTimeSeriesList(ts, stateModArray, data_interval, date1, date2, units, read_data);
+        
+        // Get out the first time series because sometimes a new one is created, for example with XOP
+        if ((tslist != null) && tslist.length > 0) {
+          ts = tslist[0];
+        }
+        ts.getIdentifier().setInputType("StateMod");
+        ts.setInputName(filename);
+        // Already in the low-level code
+        ts.getIdentifier().setInputName(filename);       
         return ts;
-      }
-      ts.setIdentifierString(tsident_string);
-         
-      // // The specific time series is modified...
-      // // SAM 2007-03-01 Evaluate logic
-      let tslist: TS[] = this.readTimeSeriesList(ts, stateModArray, data_interval, date1, date2, units, read_data);
-      
-      // Get out the first time series because sometimes a new one is created, for example with XOP
-      if ((tslist != null) && tslist.length > 0) {
-        ts = tslist[0];
-      }
-      ts.getIdentifier().setInputType("StateMod");
-      ts.setInputName(filename);
-      // Already in the low-level code
-      //ts.addToGenesis ( "Read time series from \"" + full_fname + "\"" );
-      ts.getIdentifier().setInputName(filename);       
-      return ts;
-    }));
+      }),
+      catchError(() => of({ error: "An error has occurred." }))
+    );
   }
 
   /**
@@ -194,7 +147,7 @@ export class StateMod_TS {
 
     var chval: string,
         line: string = ""
-        // routine: string = "StateMod_TS.readTimeSeriesList";
+        // routine: string = "StateModTS.readTimeSeriesList";
 
     var v: any[] = [];
     var date: any = null;

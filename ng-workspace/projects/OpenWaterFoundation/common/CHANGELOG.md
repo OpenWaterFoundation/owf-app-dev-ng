@@ -10,17 +10,19 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
-# 3.2.0 #
+# 3.2.0 (dev) #
 
 ### Features / Enhancements ###
 
 * Created the Dashboard entry point for taking in a dashboard configuration file
 and displaying widgets. The following widgets were implemented:
-  * `Error` - Only created on dashboard config error.
-  * `Chart` - Displays a JavaScript Plotly chart in the widget.
+  * `Error` - Only created on dashboard config error. Users cannot explicitly create
+  in the dashboard configuration file.
+  * `Chart` - Displays a JavaScript Plotly chart in the widget. Is connected to the
+  Selector Widget if it exists.
   * `Image` - Displays a single image.
-  * `Selector` - **WIP** Select and choose an item in a list and possibly
-  update other widgets.
+  * `Selector` - **WIP** Select and choose an item in a list. Can be paired with
+  the `Chart` widget to update charts.
   * `Status Indicator` **WIP** Displays a title and main data point with
   any changes, an icon that represents good, warning, & bad situations,
   and a link if a failure is detected.

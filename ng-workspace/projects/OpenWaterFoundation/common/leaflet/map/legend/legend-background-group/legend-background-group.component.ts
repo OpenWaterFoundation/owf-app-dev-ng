@@ -23,9 +23,9 @@ export class LegendBackgroundGroupComponent implements AfterViewInit {
 
   /**
    * 
-   * @param owfCommonService The reference to the injected Common library.
+   * @param commonService The reference to the injected Common library.
    */
-  constructor(public owfCommonService: OwfCommonService) {}
+  constructor(public commonService: OwfCommonService) {}
 
   /**
    * Called right after the constructor.

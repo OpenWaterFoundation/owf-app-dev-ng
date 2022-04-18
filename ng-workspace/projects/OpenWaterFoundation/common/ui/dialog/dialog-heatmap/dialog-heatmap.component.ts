@@ -13,7 +13,7 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
-import { StateMod_TS }      from '@OpenWaterFoundation/common/dwr/statemod';
+import { StateModTS }      from '@OpenWaterFoundation/common/dwr/statemod';
 import { DateValueTS,
           DayTS,
           MonthTS,
@@ -60,7 +60,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
 
   constructor(public dialogRef: MatDialogRef<DialogHeatmapComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any,
-              private owfCommonService: OwfCommonService) {
+              private commonService: OwfCommonService) {
 
     this.geoLayer = dataObject.data.geoLayer;
     this.graphTemplateObject = dataObject.data.graphTemplateObject;
@@ -216,8 +216,8 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
     var TSIDLocation: string;
 
     switch (dataPath) {
-      case IM.Path.sMP: TSObject = new StateMod_TS(this.owfCommonService); break;
-      case IM.Path.dVP: TSObject = new DateValueTS(this.owfCommonService); break;
+      case IM.Path.sMP: TSObject = new StateModTS(this.commonService); break;
+      case IM.Path.dVP: TSObject = new DateValueTS(this.commonService); break;
     }
 
     for (let data of this.graphTemplateObject['product']['subProducts'][0]['data']) {
@@ -231,7 +231,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
         filePath = data.properties.TSID.split('~')[2];
       }
       // Don't subscribe yet!  
-      dataArray.push(TSObject.readTimeSeries(TSIDLocation, this.owfCommonService.buildPath(dataPath, [filePath]),
+      dataArray.push(TSObject.readTimeSeries(TSIDLocation, this.commonService.buildPath(dataPath, [filePath]),
       null,
       null,
       null,

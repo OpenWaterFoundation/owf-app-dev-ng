@@ -40,10 +40,10 @@ export class OwfCommonComponent implements OnInit {
   /**
    * 
    * @param dialog 
-   * @param owfCommonService 
+   * @param commonService 
    */
   constructor(public dialog: MatDialog,
-              private owfCommonService: OwfCommonService) { }
+              private commonService: OwfCommonService) { }
 
 
   ngOnInit(): void {
@@ -60,7 +60,7 @@ export class OwfCommonComponent implements OnInit {
       return;
     }
 
-    this.owfCommonService.getJSONData(this.owfCommonService.buildPath(
+    this.commonService.getJSONData(this.commonService.buildPath(
     IM.Path.d3P, ['/data-maps/data-ts/d3-treemap-config.json']))
     .subscribe((d3Config: IM.D3Prop) => {
       d3Config.chartType = IM.D3Chart.treemap;
@@ -129,7 +129,7 @@ export class OwfCommonComponent implements OnInit {
       return;
     }
 
-    this.owfCommonService.getJSONData('assets/app/map-layers/municipal-boundaries.geojson')
+    this.commonService.getJSONData('assets/app/map-layers/municipal-boundaries.geojson')
     .subscribe((allFeatures: any) => {
 
       var geoLayerId = 'geoLayerId', geoLayerViewName = 'geoLayerViewName';
@@ -173,7 +173,7 @@ export class OwfCommonComponent implements OnInit {
     // Set the type of display the Mat Dialog will show
     markdown = true;
 
-    this.owfCommonService.getPlainText(docPath)
+    this.commonService.getPlainText(docPath)
     .pipe(take(1))
     .subscribe((doc: any) => {
 
@@ -217,7 +217,7 @@ export class OwfCommonComponent implements OnInit {
     // Set the type of display the Mat Dialog will show
     text = true;
 
-    this.owfCommonService.getPlainText(docPath)
+    this.commonService.getPlainText(docPath)
     .pipe(take(1))
     .subscribe((doc: any) => {
 
@@ -261,7 +261,7 @@ export class OwfCommonComponent implements OnInit {
     // Set the type of display the Mat Dialog will show
     html = true;
 
-    this.owfCommonService.getPlainText(docPath)
+    this.commonService.getPlainText(docPath)
     .pipe(take(1))
     .subscribe((doc: any) => {
 
@@ -304,7 +304,7 @@ export class OwfCommonComponent implements OnInit {
       geoLayerId: 'geoLayerId',
       name: 'Gapminder Test'
     }
-    this.owfCommonService.setGapminderConfigPath('assets/app/data-maps/data-viz/viz-config/viz-config.json');
+    this.commonService.setGapminderConfigPath('assets/app/data-maps/data-viz/viz-config/viz-config.json');
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
@@ -331,7 +331,7 @@ export class OwfCommonComponent implements OnInit {
    */
   public openHeatmapExampleDialog(): void {
     // streamflow-graph-template.json
-    this.owfCommonService.getJSONData('assets/app/data-maps/data-ts/streamflow-graph-template.json')
+    this.commonService.getJSONData('assets/app/data-maps/data-ts/streamflow-graph-template.json')
     .subscribe((graphTemplateObject: any) => {
 
       const dialogConfig = new MatDialogConfig();
@@ -410,7 +410,7 @@ export class OwfCommonComponent implements OnInit {
       relativePath: "Text/"
     }
 
-    this.owfCommonService.getPlainText("assets/app/Text/text-files/0300911.H2.xdd").subscribe((text: any) => {
+    this.commonService.getPlainText("assets/app/Text/text-files/0300911.H2.xdd").subscribe((text: any) => {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.data = {
         windowID: windowID,

@@ -90,7 +90,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param dialogRef 
    * @param dataObject 
    */
-  constructor(public owfCommonService: OwfCommonService,
+  constructor(public commonService: OwfCommonService,
               public dialog: MatDialog,
               public dialogRef: MatDialogRef<DialogGapminderComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
@@ -133,7 +133,7 @@ export class DialogGapminderComponent implements OnInit {
     this.variables = this.properties.VariableNames;
     // Object that encapsulates all the data needed for Gapminder, also parses through
     // csv data read in and convert to JSON for Gapminder.
-    this.data = new Data(this.properties, this.owfCommonService);
+    this.data = new Data(this.properties, this.commonService);
     // Object holding JSON data for gapminder.
     this.json = this.data.json;
     // Object holding dimensions from data.
@@ -1506,7 +1506,7 @@ export class DialogGapminderComponent implements OnInit {
 
       jQuery("#DatasetChoices").html(date + " <span class='caret'></span>");
 
-      data = new Data(this.properties, _this.owfCommonService);
+      data = new Data(this.properties, _this.commonService);
       this.json = data.json;
       this.dimensions = data.dimensions;
 
@@ -2218,8 +2218,8 @@ export class DialogGapminderComponent implements OnInit {
         dialogConfig.data = {
           allFeatures: result.data,
           geoLayer: this.geoLayer,
-          geoMapName: this.owfCommonService.getGeoMapName(),
-          mapConfigPath: this.owfCommonService.getMapConfigPath(),
+          geoMapName: this.commonService.getGeoMapName(),
+          mapConfigPath: this.commonService.getMapConfigPath(),
           windowID: windowID
         }
         const dialogRef: MatDialogRef<DialogDataTableLightComponent, any> = this.dialog.open(DialogDataTableLightComponent, {
@@ -2261,7 +2261,7 @@ export class DialogGapminderComponent implements OnInit {
     else if (docPath.includes('.md')) markdown = true;
     else if (docPath.includes('.html')) html = true;
 
-    this.owfCommonService.getPlainText(this.owfCommonService.buildPath(IM.Path.gP, [docPath]), IM.Path.dP)
+    this.commonService.getPlainText(this.commonService.buildPath(IM.Path.gP, [docPath]), IM.Path.dP)
       .pipe(take(1))
       .subscribe((doc: any) => {
 
@@ -2272,10 +2272,10 @@ export class DialogGapminderComponent implements OnInit {
           docText: text,
           docMarkdown: markdown,
           docHtml: html,
-          fullMarkdownPath: this.owfCommonService.getFullMarkdownPath(),
+          fullMarkdownPath: this.commonService.getFullMarkdownPath(),
           geoId: this.geoLayer.geoLayerId,
           geoName: this.geoLayer.name,
-          mapConfigPath: this.owfCommonService.getMapConfigPath(),
+          mapConfigPath: this.commonService.getMapConfigPath(),
           windowID: windowID
         }
 
@@ -2511,7 +2511,7 @@ export class DialogGapminderComponent implements OnInit {
    * 
    */
   public setGapminderDetails(): void {
-    if (this.owfCommonService.getGapminderConfigPath() === '') {
+    if (this.commonService.getGapminderConfigPath() === '') {
       
     }
   }

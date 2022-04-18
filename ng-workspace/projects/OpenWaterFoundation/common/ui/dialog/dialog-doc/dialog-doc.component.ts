@@ -60,7 +60,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   public windowManager: WindowManager = WindowManager.getInstance();
   
 
-  constructor(public owfCommonService: OwfCommonService,
+  constructor(public commonService: OwfCommonService,
               public dialogRef: MatDialogRef<DialogDocComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
@@ -85,8 +85,8 @@ export class DialogDocComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     if (this.mapConfigPath && this.fullMarkdownPath) {
-      this.owfCommonService.setMapConfigPath(this.mapConfigPath);
-      this.owfCommonService.setFullMarkdownPath(this.fullMarkdownPath);
+      this.commonService.setMapConfigPath(this.mapConfigPath);
+      this.commonService.setFullMarkdownPath(this.fullMarkdownPath);
     }
 
     if (this.docMarkdown) {
@@ -94,7 +94,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
       // If it does, we want users to be able to set the path to the image relative
       // to the markdown folder being displayed, so they don't have to be burdened
       // with putting a possibly extra long path.
-      var sanitizedDoc = this.owfCommonService.sanitizeDoc(this.doc, IM.Path.mP);
+      var sanitizedDoc = this.commonService.sanitizeDoc(this.doc, IM.Path.mP);
 
       setTimeout(() => {
         this.showdownHTML = sanitizedDoc;

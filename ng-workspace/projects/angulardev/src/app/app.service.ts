@@ -10,7 +10,7 @@ import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 })
 export class AppService {
 
-  constructor(private http: HttpClient, private owfCommonService: OwfCommonService) { }
+  constructor(private http: HttpClient, private commonService: OwfCommonService) { }
 
 
   /**
@@ -47,11 +47,11 @@ export class AppService {
   public async loadConfigFiles() {
     // App Configuration. firstValueFrom has replaced: await (...).toPromise().
     const appData = await firstValueFrom(this.http.get('assets/app/app-config.json'));
-    this.owfCommonService.setAppConfig(appData);
+    this.commonService.setAppConfig(appData);
 
     // Map Configuration
     // const mapData = await this.http.get('assets/app/map-config.json').toPromise();
-    // this.owfCommonService.setMapConfig(mapData);
+    // this.commonService.setMapConfig(mapData);
   }
 
   /**

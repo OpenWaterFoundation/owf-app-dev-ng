@@ -1,7 +1,5 @@
 import { Component,
-          EventEmitter,
           Input,
-          Output, 
           ViewChild }               from '@angular/core';
 
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
@@ -18,47 +16,97 @@ import { WidgetService }            from '../widget.service';
 })
 export class SelectorComponent {
 
+  /**
+   * 
+   */
   allFeatures: any[];
+  /**
+   * 
+   */
+  allFoundProps: string[];
   /** The reference to the virtual scroll viewport in the template file by using
    * the @ViewChild decorator. The change detector looks for the first element or
    * directive matching the selector in the view DOM, and if it changes, the property
    * is updated. */
   @ViewChild(CdkVirtualScrollViewport, { static: false }) cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
-
-  @Input() dataPath: string;
-
+  /**
+   * 
+   */
+  dataType: IM.DataType;
+  /**
+   * 
+   */
+  @Input() selectorWidget: IM.SelectorWidget;
+  /**
+   * 
+   */
   filteredFeatures: any[];
-
-  @Output() testEmit = new EventEmitter<any>();
 
 
   /**
    * 
-   * @param owfCommonService The injected Common library service.
+   * @param commonService The injected Common library service.
    */
-  constructor(private owfCommonService: OwfCommonService,
+  constructor(private commonService: OwfCommonService,
     private widgetService: WidgetService) {}
 
 
+  // private determineDataType(executeFn: (...args: any[]) => any): any {
+  //   switch(this.dataType) {
+  //     case IM.DataType.CDSSWebService: return executeFn();
+  //     case IM.DataType.geoJson: return executeFn();
+  //   }
+  // }
+
   /**
-   * Called when mat-option is clicked from the Date Mat Form Field. It sends data back to the Map component
-   * with the date so the map and necessary Leaflet controls can be updated.
-   * @param feature The date a user has selected.
+   * 
+   * @param feature 
+   * @returns 
    */
-  updateItem(feature: any): void {
-    console.log(feature);
+  // TODO: jpkeahey 2022.04.14 - This is being called hundreds of times in seconds due to it being
+  // a function call using data binding in the template file. Using a 
+  getFeaturePropValue(feature: any): string {
+    var props: IM.ParsedProp;
+
+    props = this.commonService.obtainPropertiesFromLine(this.selectorWidget.displayName, feature);
+    this.allFoundProps = props.foundProps;
+    return props.line;
+  }
+
+  /**
+   * 
+   * @param features 
+   * @returns 
+   */
+  private getAllProperties(features: any[]): any[] {
+    var featureProperties: any[] = [];
+
+    features.forEach((feature: any) => {
+      featureProperties.push(feature.properties);
+    });
+
+    return featureProperties;
   }
 
   /**
    * Called right after the constructor.
    */
   ngOnInit(): void {
-    this.owfCommonService.getJSONData(this.owfCommonService.buildPath(IM.Path.dbP, [this.dataPath]))
-    .subscribe((geoJson: any) => {
-      console.log(geoJson);
-      this.allFeatures = geoJson.features;
+    this.commonService.getJSONData(this.commonService.buildPath(IM.Path.dbP, [this.selectorWidget.dataPath]))
+    .subscribe((data: any) => {
+
+      // geoJson.
+      if (data.features) {
+        this.allFeatures = this.getAllProperties(data.features);
+      }
+      // CDSS Web Services.
+      else if (data.ResultList) {
+        this.allFeatures = data.ResultList;
+      }
+      
       this.filteredFeatures = this.allFeatures;
-    })
+
+    });
   }
 
   /**
@@ -70,6 +118,28 @@ export class SelectorComponent {
     if ($event) {
       this.cdkVirtualScrollViewPort.scrollToIndex(0);
       this.cdkVirtualScrollViewPort.checkViewportSize();
+    }
+  }
+
+  /**
+   * 
+   * @param feature 
+   * @param filter 
+   * @returns 
+   */
+  private searchAllFoundProps(feature: any, filter: string): string {
+
+    for (let prop of this.allFoundProps) {
+
+      if (feature[prop] === null) {
+        continue;
+      }
+
+      if (feature[prop].toLowerCase().includes(filter) === false) {
+        continue;
+      } else {
+        return feature[prop].toLowerCase().includes(filter);
+      }
     }
   }
 
@@ -88,18 +158,23 @@ export class SelectorComponent {
 
     if (key.toLowerCase() === 'backspace') {
       return this.allFeatures.filter((feature: any) => {
-        return feature.properties.abbrev.toLowerCase().includes(filter);
+        return this.searchAllFoundProps(feature, filter);
       });
     } else {
       return this.filteredFeatures.filter((feature: any) => {
-        return feature.properties.abbrev.toLowerCase().includes(filter);
+        return this.searchAllFoundProps(feature, filter);
       });
     }
   }
 
-  sendData(data: string): void {
-    console.log(data);
-    // this.widgetService.setTestObs(data);
+  /**
+   * Called when mat-option is clicked from the Date Mat Form Field. It sends the
+   * selected data to the widgetService BehaviorSubject, which will update any other
+   * widgets that are subscribed to it.
+   * @param item The item a user has selected.
+   */
+  updateItem(item: any): void {
+    this.widgetService.updateSelectedItem(item);
   }
 
   /**
@@ -114,3 +189,5 @@ export class SelectorComponent {
   }
 
 }
+
+type executeFunc<TArgs extends any[], TResult> = (...args: TArgs) => TResult;

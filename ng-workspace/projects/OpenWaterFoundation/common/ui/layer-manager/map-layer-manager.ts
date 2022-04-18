@@ -9,6 +9,7 @@ import * as $ from 'jquery';
  */
 // @dynamic
 export class MapLayerManager {
+  
   /** The instance of this MapLayerManager object. */
   private static instance: MapLayerManager;
   /** String array containing the geoLayerId of the reverse order each layer should
@@ -21,12 +22,16 @@ export class MapLayerManager {
   private layerViewGroups: {} = {};
 
 
-  /** A private constructor is declared so any instance of the class cannot be created elsewhere, getInstance must be called. */
+  /**
+   * A private constructor is declared so any instance of the class cannot be created
+   * elsewhere, getInstance must be called.
+   */
   private constructor() { }
 
 
   /**
-   * Only one instance of this MapLayerManager can be used at one time, making it a singleton Class.
+   * Only one instance of this MapLayerManager can be used at one time, making it
+   * a singleton class.
    */
   public static getInstance(): MapLayerManager {
     if (!MapLayerManager.instance) { MapLayerManager.instance = new MapLayerManager(); }

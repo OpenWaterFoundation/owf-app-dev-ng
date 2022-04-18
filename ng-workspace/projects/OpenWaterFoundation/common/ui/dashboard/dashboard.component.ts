@@ -25,202 +25,14 @@ export class DashboardComponent implements OnDestroy {
    */
   dashboardConfigPathSub$: Subscription;
 
-  chartObject = {
-    downloadFileName: '${featureAttribute:wdid}-diversions.csv',
-    featureProperties: {
-      division: 1,
-      waterDistrict: 3,
-      county: "LARIMER",
-      stationName: "LARIMER COUNTY DITCH",
-      dataSourceAbbrev: "NWSDR",
-      dataSource: "Cooperative SDR Program of CDWR & NCWCD",
-      waterSource: "CACHE LA POUDRE RIVER",
-      gnisId: "00205018",
-      streamMile: 53.32,
-      abbrev: "LACDITCO",
-      usgsStationId: "",
-      stationStatus: "Active",
-      stationType: "Diversion Structure",
-      structureType: "Ditch",
-      measDateTime: "2020-06-02T13:00:00.0000000-06:00",
-      parameter: "DISCHRG",
-      stage: null,
-      measValue: 348.21,
-      units: "CFS",
-      flagA: "",
-      flagB: "U",
-      latitude: 40.656563,
-      longitude: -105.185363,
-      wdid: "0300911",
-      moreInformation: "https://dwr.state.co.us/Tools/Stations/LACDITCO",
-      stationPorStart: "2015-11-06T00:00:00.0000000-07:00",
-      stationPorEnd: "2020-06-02T00:00:00.0000000-06:00",
-      thirdParty: "False",
-      timeTest: 1645465265000
-    },
-    graphTemplate: {
-      product : {
-        properties : {
-          CurrentDateTime : "None",
-          CurrentDateTimeColor : "Green",
-          Enabled : "True",
-          LayoutNumberOfCols : "1",
-          LayoutNumberOfRows : "1",
-          LayoutType : "Grid",
-          MainTitleFontName : "Arial",
-          MainTitleFontSize : "20",
-          MainTitleFontStyle : "Plain",
-          MainTitleString : "${featureAttribute:abbrev} - ${featureAttribute:wdid} Streamflow & Diversion",
-          OutputFile : "C:\\temp\\tmp.jpg",
-          ProductID : "Product1",
-          ProductName : "",
-          ProductType : "Graph",
-          ShowDrawingAreaOutline : "False",
-          SubTitleFontName : "Arial",
-          SubTitleFontSize : "10",
-          SubTitleFontStyle : "Plain",
-          SubTitleString : "",
-          TotalHeight : "400",
-          TotalWidth : "600"
-        },
-        subProducts : [ {
-          properties : {
-            AnnotationProvider : "",
-            BottomXAxisLabelFontName : "Arial",
-            BottomXAxisLabelFontSize : "10",
-            BottomXAxisLabelFontStyle : "Plain",
-            BottomXAxisMajorGridColor : "None",
-            BottomXAxisMinorGridColor : "None",
-            BottomXAxisTitleFontName : "Arial",
-            BottomXAxisTitleFontSize : "12",
-            BottomXAxisTitleFontStyle : "Plain",
-            BottomXAxisTitleString : "",
-            DataLabelFontName : "Arial",
-            DataLabelFontSize : "10",
-            DataLabelFontStyle : "Plain",
-            DataLabelFormat : "",
-            DataLabelPosition : "Right",
-            Enabled : "True",
-            GraphType : "Line",
-            LayoutYPercent : "",
-            LeftYAxisDirection : "Normal",
-            LeftYAxisIgnoreUnits : "false",
-            LeftYAxisLabelFontName : "Arial",
-            LeftYAxisLabelFontSize : "10",
-            LeftYAxisLabelFontStyle : "Plain",
-            LeftYAxisLabelPrecision : "1",
-            LeftYAxisLegendPosition : "BottomLeft",
-            LeftYAxisMajorGridColor : "lightgray",
-            LeftYAxisMajorTickColor : "None",
-            LeftYAxisMax : "Auto",
-            LeftYAxisMin : "Auto",
-            LeftYAxisMinorGridColor : "None",
-            LeftYAxisTitleFontName : "Arial",
-            LeftYAxisTitleFontSize : "12",
-            LeftYAxisTitleFontStyle : "Plain",
-            LeftYAxisTitlePosition : "LeftOfAxis",
-            LeftYAxisTitleRotation : "270",
-            LeftYAxisTitleString : "ACFT",
-            LeftYAxisType : "Linear",
-            LeftYAxisUnits : "ACFT",
-            LegendFontName : "Arial",
-            LegendFontSize : "10",
-            LegendFontStyle : "Plain",
-            LegendFormat : "Auto",
-            LegendPosition : "BottomLeft",
-            MainTitleFontName : "Arial",
-            MainTitleFontSize : "20",
-            MainTitleFontStyle : "Plain",
-            MainTitleString : "",
-            RightYAxisDirection : "Normal",
-            RightYAxisGraphType : "None",
-            RightYAxisIgnoreUnits : "false",
-            RightYAxisLabelFontName : "Arial",
-            RightYAxisLabelFontSize : "10",
-            RightYAxisLabelFontStyle : "Plain",
-            RightYAxisLabelPrecision : "2",
-            RightYAxisLegendPosition : "BottomRight",
-            RightYAxisMajorGridColor : "None",
-            RightYAxisMajorTickColor : "None",
-            RightYAxisMax : "Auto",
-            RightYAxisMin : "Auto",
-            RightYAxisMinorGridColor : "None",
-            RightYAxisTitleFontName : "Arial",
-            RightYAxisTitleFontSize : "12",
-            RightYAxisTitleFontStyle : "Plain",
-            RightYAxisTitlePosition : "None",
-            RightYAxisTitleRotation : "0",
-            RightYAxisTitleString : "",
-            RightYAxisType : "Linear",
-            RightYAxisUnits : "",
-            SelectedTimeSeriesLineWidth : "x2",
-            SubTitleFontName : "Arial",
-            SubTitleFontSize : "10",
-            SubTitleFontStyle : "Plain",
-            SubTitleString : "",
-            TopXAxisLabelFontName : "Arial",
-            TopXAxisLabelFontSize : "10",
-            TopXAxisLabelFontStyle : "Plain",
-            TopXAxisTitleFontName : "Arial",
-            TopXAxisTitleFontSize : "12",
-            TopXAxisTitleFontStyle : "Plain",
-            ZoomEnabled : "True",
-            ZoomGroup : "1"
-          },
-          data : [
-            {
-              properties : {
-                Color : "MidnightBlue",
-                DataLabelFormat : "",
-                DataLabelPosition : "Right",
-                Enabled : "True",
-                FlaggedDataSymbolStyle : "None",
-                GraphType : "Line",
-                LegendFormat : "Auto",
-                LineStyle : "Solid",
-                LineWidth : "1",
-                SymbolSize : "0",
-                SymbolStyle : "None",
-                TSAlias : "Streamflow",
-                TSID : "${featureAttribute:wdid}.StateMod.Streamflow.Month~StateMod~/data-ts/${featureAttribute:wdid}.StateMod.Streamflow.Month.stm",
-                XAxis : "Bottom",
-                YAxis : "Left"
-              }
-            },
-            {
-              properties : {
-                Color : "DodgerBlue",
-                DataLabelFormat : "",
-                DataLabelPosition : "Right",
-                Enabled : "True",
-                FlaggedDataSymbolStyle : "None",
-                GraphType : "Line",
-                LegendFormat : "Auto",
-                LineStyle : "Solid",
-                LineWidth : "1",
-                SymbolSize : "0",
-                SymbolStyle : "None",
-                TSAlias : "DivTotal",
-                TSID : "${featureAttribute:wdid}.DWR.DivTotal.Month~StateMod~/data-ts/${featureAttribute:wdid}.DWR.DivTotal.Month.csv",
-                XAxis : "Bottom",
-                YAxis : "Left"
-              }
-            }
-          ],
-          annotations : [ ]
-        } ]
-      }
-    }
-  };
-
 
   /**
    * 
-   * @param owfCommonService The injected Common library service.
+   * @param commonService The injected Common library service.
    * @param route The injected ActivatedRoute for determining the correct URL and
    * Dashboard to be displayed.
    */
-  constructor(private owfCommonService: OwfCommonService,
+  constructor(private commonService: OwfCommonService,
               private route: ActivatedRoute) {}
 
 
@@ -229,10 +41,10 @@ export class DashboardComponent implements OnDestroy {
    */
   ngOnInit(): void {
     var id = this.route.snapshot.paramMap.get('id');
-    var dashboardConfigPath = this.owfCommonService.getDashboardConfigPathFromId(id);
+    var dashboardConfigPath = this.commonService.getDashboardConfigPathFromId(id);
 
-    this.dashboardConfigPathSub$ = this.owfCommonService
-    .getJSONData(this.owfCommonService.getAppPath() + dashboardConfigPath)
+    this.dashboardConfigPathSub$ = this.commonService
+    .getJSONData(this.commonService.getAppPath() + dashboardConfigPath)
     .subscribe((dashboardConfig: IM.DashboardConf) => {
       this.dashboardConf = dashboardConfig;
     });

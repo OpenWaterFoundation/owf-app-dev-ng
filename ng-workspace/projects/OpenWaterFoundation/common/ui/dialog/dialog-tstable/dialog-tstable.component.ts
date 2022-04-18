@@ -57,11 +57,11 @@ export class DialogTSTableComponent implements OnInit, OnDestroy {
   /**
    * 
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
-   * @param owfCommonService The reference to the app service, for sending data between components and higher scoped map variables.
+   * @param commonService The reference to the app service, for sending data between components and higher scoped map variables.
    * @param dataObject The object containing data passed from the Component that created this Dialog.
    */
   constructor(public dialogRef: MatDialogRef<DialogTSTableComponent>,
-              public owfCommonService: OwfCommonService,
+              public commonService: OwfCommonService,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
     this.attributeTable = new TableVirtualScrollDataSource(dataObject.data.attributeTable);
@@ -119,7 +119,7 @@ export class DialogTSTableComponent implements OnInit, OnDestroy {
       );
       var data = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
       // Send the download file name to format it correctly, along with the SaveFileType enum
-      FileSaver.saveAs(data, this.owfCommonService.formatSaveFileName(this.downloadFileName, IM.SaveFileType.tstable, this.featureProperties));
+      FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.downloadFileName, IM.SaveFileType.tstable, this.featureProperties));
     }
     // If the file read in was a CSV file, create the correct string for downloading the file again. This is similar
     // to regular data table dialog download
@@ -166,7 +166,7 @@ export class DialogTSTableComponent implements OnInit, OnDestroy {
 
       var data = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
       // Send the download file name to format, along with the SaveFileType enum
-      FileSaver.saveAs(data, this.owfCommonService.formatSaveFileName(this.downloadFileName, IM.SaveFileType.tstable));
+      FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.downloadFileName, IM.SaveFileType.tstable));
     }
     
   }

@@ -3,8 +3,6 @@ import { Injectable }  from "@angular/core";
 import { DateTime }    from '@OpenWaterFoundation/common/util/time';
 import * as IM         from '@OpenWaterFoundation/common/services';
 
-import { ChartModule } from './chart.module';
-
 import { add,
           format,
           isEqual,
@@ -21,35 +19,11 @@ import { BehaviorSubject,
 })
 export class ChartService {
 
-  public allGraphObjectsSource: BehaviorSubject<IM.PopulateGraph[]> = new BehaviorSubject([]);
-
 
   constructor() {}
 
 
   /************************* CHART WIDGET COMPONENT *************************/
-
-  /**
-   * 
-   */
-  public get allGraphObjects(): Observable<IM.PopulateGraph[]> {
-    return this.allGraphObjectsSource.asObservable();
-  }
-
-  /**
-   * 
-   * @param popGraph 
-   */
-  public addPopulateGraph(popGraph: IM.PopulateGraph): void {
-    this.allGraphObjectsSource.next([...this.allGraphObjectsSource.value, popGraph]);
-  }
-
-  /**
-   * 
-   */
-  public resetPopulateGraph(): void {
-    this.allGraphObjectsSource.next([]);
-  }
 
   /*************************** D3 DIALOG COMPONENT ***************************/
 

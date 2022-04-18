@@ -16,7 +16,7 @@ import { OwfCommonService }   from '@OpenWaterFoundation/common/services';
 export class DateValueTS {
 
 
-  constructor(private owfCommonService: OwfCommonService) { }
+  constructor(private commonService: OwfCommonService) { }
 
 
   /**
@@ -125,7 +125,7 @@ export class DateValueTS {
     // TODO - clean this up, perhaps by moving the time series creation
     // into the readTimeSeriesList() method rather than doing it here.
 
-    return this.owfCommonService.getPlainText(filename, 'dateValuePath').pipe(map((dateValueFile: any) => {
+    return this.commonService.getPlainText(filename, 'dateValuePath').pipe(map((dateValueFile: any) => {
       let dateValueArray = dateValueFile.split('\n');
 
 
