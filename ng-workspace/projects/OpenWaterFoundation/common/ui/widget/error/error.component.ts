@@ -37,6 +37,25 @@ export class ErrorComponent {
 
 
   /**
+   * 
+   */
+  chartSelectorNoPath(): void {
+    console.error("Required path 'chartFeaturePath' or 'graphTemplatePath' not given " +
+    "to either the Chart or Selector Widget objects.");
+    console.error("More information can be found at the Dashboard Chart & Selector " +
+    "Widget user documentation (link to be added).");
+  }
+
+  /**
+   * Determine what Chart widget error occurred.
+   */
+  chartError(): void {
+    switch(this.errorType) {
+      case 'ChartSelector no path': this.chartSelectorNoPath();
+    }
+  }
+
+  /**
    * Determine what Image widget error occurred.
    */
   imageError(): void {
@@ -54,6 +73,7 @@ export class ErrorComponent {
     switch(this.errorWidgetName) {
       case IM.Widget.img: this.imageError(); break;
       case IM.Widget.text: this.textError(); break;
+      case IM.Widget.cht: this.chartError(); break;
     }
   }
 

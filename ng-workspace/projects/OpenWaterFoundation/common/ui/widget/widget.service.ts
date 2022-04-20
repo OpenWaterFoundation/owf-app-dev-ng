@@ -11,36 +11,65 @@ import * as IM             from '@OpenWaterFoundation/common/services';
 })
 export class WidgetService {
 
-  private testObs$: BehaviorSubject<string> = new BehaviorSubject('No basin selected.');
-  private selectedItem$: BehaviorSubject<any> = new BehaviorSubject('No item selected.');
+  /**
+   * 
+   */
+  private selectedItem$: BehaviorSubject<IM.ChartSelectorComm> = new BehaviorSubject({noItemSelected: true});
+  /**
+   * 
+   */
+  private chartError$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  /**
+   * 
+   */
+  private chartSelectorError$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
 
   constructor() {}
 
 
-  public getSelectedItem(): Observable<any> {
+  /**
+   * 
+   * @returns 
+   */
+  getSelectedItem(): Observable<any> {
     return this.selectedItem$.asObservable();
   }
 
-  public updateSelectedItem(item: any): void {
-    this.selectedItem$.next(item);
+  /**
+   * 
+   * @param comm 
+   */
+  updateSelectedItem(comm: IM.ChartSelectorComm): void {
+    this.selectedItem$.next(comm);
+  }
+
+  /**
+   * 
+   */
+   get isChartError(): Observable<boolean> {
+    return this.chartError$.asObservable();
+  }
+
+  /**
+   * 
+   */
+  set setChartError(error: boolean) {
+    this.chartError$.next(error);
   }
   
-
-
-
-
-
-
-
-
-
-
-  public getTestObs(): Observable<string> {
-    return this.testObs$.asObservable();
+  /**
+   * 
+   */
+  get isChartSelectorError(): Observable<boolean> {
+    return this.chartSelectorError$.asObservable();
   }
 
-  public setTestObs(data: string): void {
-    this.testObs$.next(data);
+  /**
+   * 
+   */
+  set setChartSelectorError(error: boolean) {
+    this.chartSelectorError$.next(error);
   }
+
 }

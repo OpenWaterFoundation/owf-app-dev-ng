@@ -4,7 +4,7 @@
 </div>
 
 <!-- Image does not exist. -->
-<div *ngIf="widgetError" class="no-image-container">
+<div *ngIf="widgetError === true" class="no-image-container">
   <widget-error [errorType]="errorType" [name]="'Image'"></widget-error>
 </div>
 

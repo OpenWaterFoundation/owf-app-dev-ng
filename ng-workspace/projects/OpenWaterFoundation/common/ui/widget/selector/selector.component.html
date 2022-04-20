@@ -1,26 +1,38 @@
-<div class="selector-center">
+<div *ngIf="!(isFullError$ | async); then showSelector else error"></div>
 
-  <mat-form-field class="select-form" appearance="fill">
-    <mat-label>Choose Item</mat-label>
-    <mat-select name="item-selection"
-    (openedChange)="openSelectChange($event)">
-      <cdk-virtual-scroll-viewport [itemSize]="48"
-      [minBufferPx]="540"
-      [maxBufferPx]="540"
-      [style.width.px]="311"
-      [style.height.px]="240">
-        <input matInput
-        class="search-input"
-        placeholder="Search items..."
-        (keyup)="userInput($event, 'feature')">
-        <mat-option *cdkVirtualFor="let feature of filteredFeatures"
-        (click)="updateItem(feature)"
-        [value]="getFeaturePropValue(feature)"
-        [style.height.px]="48">
-          {{getFeaturePropValue(feature)}}
-        </mat-option>
-      </cdk-virtual-scroll-viewport>
-    </mat-select>
-  </mat-form-field>
+<ng-template #showSelector>
+  <div class="selector-center">
 
-</div>
+    <mat-form-field class="select-form" appearance="fill">
+      <mat-label>Choose Item</mat-label>
+      <mat-select name="item-selection"
+      (openedChange)="openSelectChange($event)">
+        <cdk-virtual-scroll-viewport [itemSize]="48"
+        [minBufferPx]="540"
+        [maxBufferPx]="540"
+        [style.width.px]="311"
+        [style.height.px]="240">
+  
+          <!-- (keydown) - https://github.com/angular/components/issues/10684#issuecomment-408124213 -->
+          <input matInput
+          class="search-input"
+          placeholder="Search items (case insensitive)..."
+          (keydown)="$event.stopPropagation()"
+          (keyup)="userInput($event, 'feature')">
+  
+          <mat-option *cdkVirtualFor="let feature of filteredFeatures"
+          (click)="updateItem(feature)"
+          [value]="getFeaturePropValue(feature)"
+          [style.height.px]="48">
+            {{getFeaturePropValue(feature)}}
+          </mat-option>
+        </cdk-virtual-scroll-viewport>
+      </mat-select>
+    </mat-form-field>
+  
+  </div>
+</ng-template>
+
+<ng-template #error>
+  <widget-error errorType="chartSelectorError" [name]="'Selector'"></widget-error>
+</ng-template>

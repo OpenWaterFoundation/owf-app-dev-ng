@@ -1,13 +1,8 @@
-<div *ngIf="TSIDLocation" class="showGraph">
+<div *ngIf="TSIDLocation" [hidden]="(isChartSelectorError$ | async) || (isChartError$ | async)" class="showGraph">
   <div [attr.id]="TSIDLocation" style="height: 100%;"></div>
 </div>
 
-<div *ngIf="badFile" class="bad-file">
-  <pre><br><br>
-    There was problem with the file path given<br>
-    The data file given must be in the one of the following formats:<br><br>
-    xxxx.csv<br>
-    xxxx.stm<br>
-    xxxx.dv<br>
-  </pre>
+<!-- Error occurred. -->
+<div *ngIf="(isChartSelectorError$ | async) || (isChartError$ | async)" class="no-image-container">
+  <widget-error [errorType]="widgetErrorType" [name]="'Chart'"></widget-error>
 </div>

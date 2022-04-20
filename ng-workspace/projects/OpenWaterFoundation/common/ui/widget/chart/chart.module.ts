@@ -4,6 +4,7 @@ import { CommonModule }      from '@angular/common';
 import { MatTooltipModule }  from '@angular/material/tooltip';
 
 import { ChartComponent }    from './chart.component';
+import { ErrorModule }       from '../error/error.module';
 
 
 @NgModule({
@@ -16,7 +17,9 @@ import { ChartComponent }    from './chart.component';
   imports: [
     CommonModule,
 
-    MatTooltipModule
+    MatTooltipModule,
+
+    ErrorModule
   ]
 })
 export class ChartModule { }

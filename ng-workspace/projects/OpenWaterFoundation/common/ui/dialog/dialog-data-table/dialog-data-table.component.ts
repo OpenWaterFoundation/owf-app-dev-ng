@@ -181,6 +181,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
       this.prevSearch = filterValue;
       this.attributeTable.filter = filterValue.trim().toUpperCase();
       this.matchedRows = this.attributeTable.data.length;
+      
       if (this.selectedLayer) {
         layerItem.removeAllSelectedLayers(this.mainMap);
         this.selectedLayer = undefined;

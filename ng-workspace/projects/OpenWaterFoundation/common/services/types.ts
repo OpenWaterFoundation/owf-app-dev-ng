@@ -104,6 +104,7 @@ export enum Style {
 
 /** Each implemented Widget Type. */
 export enum Widget {
+  cht = 'Chart',
   err = 'Error',
   img = 'Image',
   sel = 'Selector',
@@ -515,7 +516,7 @@ export interface PopulateGraph {
   yAxesLabelString: string;
 }
 
-//////////////////////////////// DASHBOARD \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+///////////////////////////// DASHBOARD CONFIG \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /** Main Dashboard configuration object. */
 export interface DashboardConf {
@@ -538,6 +539,14 @@ export interface DashboardLayout {
   gutterSize?: string;
 }
 
+/** Styling for the MatGridTile in the Dashboard Component. */
+export interface WidgetTileStyle {
+  backgroundColor?: string;
+  textColor?: string;
+}
+
+//////////////////////////// DASHBOARD WIDGETS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 /** Dashboard widget object. */
 export interface DashboardWidget {
   type: string;
@@ -548,16 +557,8 @@ export interface DashboardWidget {
   style?: WidgetTileStyle;
 }
 
-/** Styling for the MatGridTile in the Dashboard Component. */
-export interface WidgetTileStyle {
-  backgroundColor?: string;
-  textColor?: string;
-}
-
-///////////////////////////////// Widgets \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
 export interface ChartWidget extends DashboardWidget {
-  dataPath: string;
+  chartFeaturePath: string;
   graphTemplatePath: string;
 }
 
@@ -573,6 +574,8 @@ export interface SelectorWidget extends DashboardWidget {
   dataPath: string;
   dataFormat: string;
   displayName: string;
+  graphTemplatePath?: string;
+  skipDataLines?: number;
 }
 
 export interface StatusIndicatorWidget extends DashboardWidget {
@@ -602,6 +605,20 @@ export interface TSID {
 
 /////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+/**
+ * Communicator object for passing necessary data from the Selector Widget to
+ * the Chart Widget.
+ */
+export interface ChartSelectorComm {
+  graphTemplate?: GraphTemplate;
+  noGraphTemplatePath?: boolean;
+  noItemSelected?: boolean;
+  selectedItem?: any;
+}
+
+/**
+ * 
+ */
 export interface ParsedProp {
   foundProps: string[];
   line: string;

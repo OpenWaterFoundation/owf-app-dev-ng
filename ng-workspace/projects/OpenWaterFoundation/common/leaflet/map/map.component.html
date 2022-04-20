@@ -48,7 +48,7 @@
           <div *ngIf="mapConfig">
             <div *ngIf="geoMapDocPath" class="geoMap-doc-button">
               <button class="btn geoMap-info-circle"
-                (click)="openDocDialog(geoMapDocPath, geoMapId, geoMapName)"
+                (click)="openDocDialog(geoMapDocPath, mapConfig.geoMaps[0].geoMapId, geoMapName)"
                 matTooltip="Click to view map documentation" [matTooltipShowDelay]="750">
                 <i class="fa fa-info-circle fa-lg"></i>
               </button>

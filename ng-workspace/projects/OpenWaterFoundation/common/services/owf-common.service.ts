@@ -1021,7 +1021,7 @@ export class OwfCommonService {
 
       if (type) {
         console.error('[' + type + '] error. There might have been a problem with the ' +
-        type + ' path. Confirm the path is correct in the configuration file.');
+        type + ' path or URL. Confirm it is correct in the configuration file or exists on the server.');
       }
 
       switch(type) {

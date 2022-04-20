@@ -44,12 +44,15 @@ export class DelimitedDatastore {
         comments: "#",
         skipEmptyLines: true,
         header: true,
-        complete: (result: any, file: any) => {
+        complete: (result: Papa.ParseResult<any>) => {
           subscriber.next(result);
+          subscriber.complete();
+        },
+        error: (error: Papa.ParseError) => {
+          subscriber.next({ error: "An error has occurred." });
           subscriber.complete();
         }
       });
     });
-    
   }
 }

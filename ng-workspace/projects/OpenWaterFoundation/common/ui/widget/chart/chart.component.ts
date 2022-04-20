@@ -34,46 +34,52 @@ export class ChartComponent implements OnInit, OnDestroy {
    * leaks.*/
   private allResultsSub$: Subscription;
   /** The array of objects to pass to the tstable component for data table creation. */
-  public attributeTable: any[] = [];
-  /** This variable lets the template file know if neither a CSV, DateValue, or
-  * StateMod file is given. */
-  public badFile = false;
+  attributeTable: any[] = [];
+  /** Set to true if an error occurred in this widget somewhere, but a check in another
+   * widget can be performed. */
+  private chartWarning = false;
   /** The object with the necessary chart data for displaying a Plotly chart. */
   @Input() chartWidget: IM.ChartWidget;
   /** A string containing the name to be passed to the TSTableComponent's first
   * column name: DATE or DATE / TIME. */
-  public dateTimeColumnName: string;
-  /**
-   * 
-   */
+  dateTimeColumnName: string;
+  /** Datastore manager to determine what datastore should be used to retrieve information
+   * from. Can find built-in and user provided datastores. */
   private dsManager: DatastoreManager = DatastoreManager.getInstance();
   /** The graph template object retrieved from the popup configuration file property
   * resourcePath. */
-  public graphTemplate: IM.GraphTemplate;
-
-  public graphTemplatePrime: IM.GraphTemplate;
+  graphTemplate: IM.GraphTemplate;
+  /** The original unparsed graph template file. */
+  graphTemplatePrime: IM.GraphTemplate;
   /** The object containing all of the layer's feature properties. */
-  public featureProperties: any;
+  featureProperties: any;
+  /** Subscription for the initial files to read if provided in the Chart Widget. */
+  initialResultsSub$: Subscription;
   /**
    * 
    */
-  public initialResultsSub$: Subscription;
+  isChartError$: Observable<boolean>;
+  /** Observable representing the ChartSelectorError BehaviorSubject from the
+   * widgetService. Used by the template to show an error widget. */
+  isChartSelectorError$: Observable<boolean>;
   /** Boolean for helping dialog-tstable component determine what kind of file needs
   * downloading. */
-  public isTSFile: boolean;
+  isTSFile: boolean;
   /** A string representing the documentation retrieved from the txt, md, or html
   * file to be displayed for a layer. */
-  public mainTitleString: string;
+  mainTitleString: string;
   /** The array of TS objects that was originally read in using the StateMod or DateValue
   * Java converted code. Used as a reference in the dialog-tstable component for
   * downloading to the user's local machine. */
-  public TSArrayOGResultRef: TS[];
+  TSArrayOGResultRef: TS[];
   /** The string representing the TSID before the first tilde (~) in the graph template
   * object. Used to help create a unique graph ID. */
-  public TSIDLocation: string;
+  TSIDLocation: string;
   /** An array containing the value header names after the initial DATE / TIME
   * header. To be passed to dialog-tstable for downloading files. */
-  public valueColumns: string[] = [];
+  valueColumns: string[] = [];
+  /** String describing what kind of error occurred. */
+  widgetErrorType: string;
 
 
   /**
@@ -84,6 +90,23 @@ export class ChartComponent implements OnInit, OnDestroy {
     private chartService: ChartService,
     private widgetService: WidgetService) { }
 
+
+  /**
+   * Checks the properties of the given chart object and determines what action
+   * to take.
+   */
+  private checkWidgetObject(): void {
+
+    if (!this.chartWidget.chartFeaturePath || !this.chartWidget.graphTemplatePath) {
+      console.log('No chartFeaturePath and/or graphTemplatePath property given for ' +
+      'the Chart Widget in the Dashboard config file.');
+      console.log('Assuming the necessary properties were given to the Selector Widget.');
+      this.chartWarning = true;
+      return;
+    }
+
+    this.initChartVariables();
+  }
 
   /**
   * Takes a Papa Parse result object and creates a PopulateGraph instance
@@ -180,8 +203,11 @@ export class ChartComponent implements OnInit, OnDestroy {
         type);
     }
 
-    var start = timeSeries.getDate1().getYear() + "-" + this.chartService.zeroPad(timeSeries.getDate1().getMonth(), 2);
-    var end = timeSeries.getDate2().getYear() + "-" + this.chartService.zeroPad(timeSeries.getDate2().getMonth(), 2);
+    var start = timeSeries.getDate1().getYear() + "-" +
+    this.chartService.zeroPad(timeSeries.getDate1().getMonth(), 2);
+
+    var end = timeSeries.getDate2().getYear() + "-" +
+    this.chartService.zeroPad(timeSeries.getDate2().getMonth(), 2);
 
     var axisObject = this.chartService.setAxisObject(timeSeries, XAxisLabels, type);
     // Populate the rest of the properties from the graph config file. This uses
@@ -325,7 +351,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     var featureAndGraphTemplate: Observable<any>[] = [];
 
-    for (let initFile of [this.chartWidget.dataPath, this.chartWidget.graphTemplatePath]) {
+    for (let initFile of [this.chartWidget.chartFeaturePath, this.chartWidget.graphTemplatePath]) {
       featureAndGraphTemplate.push(
         this.commonService.getJSONData(this.commonService.buildPath(IM.Path.dbP, [initFile]))
       );
@@ -361,11 +387,14 @@ export class ChartComponent implements OnInit, OnDestroy {
   */
   ngOnInit(): void {
 
-    this.initChartVariables();
+    this.isChartSelectorError$ = this.widgetService.isChartSelectorError;
+    this.isChartError$ = this.widgetService.isChartError;
+
+    this.checkWidgetObject();
 
     // Is only called when the selected item is updated from the Selector Widget.
-    this.widgetService.getSelectedItem().subscribe((feature: any) => {
-      this.updateChartVariables(feature);
+    this.widgetService.getSelectedItem().subscribe((comm: any) => {
+      this.updateChartVariables(comm);
     });
   }
 
@@ -373,7 +402,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   * Called once, before the instance is destroyed. Unsubscribes from all subscriptions
   * to prevent memory leaks.
   */
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.allResultsSub$.unsubscribe();
     this.initialResultsSub$.unsubscribe();
   }
@@ -384,6 +413,7 @@ export class ChartComponent implements OnInit, OnDestroy {
    */
   private obtainAndCreateAllGraphs(): void {
 
+    var chartError = false;
     var allDataObservables: Observable<any>[] = [];
     var allGraphObjects: IM.PopulateGraph[] = [];
     // The array of all graphData objects in the graph template file.
@@ -401,7 +431,9 @@ export class ChartComponent implements OnInit, OnDestroy {
 
         // Check for any errors.
         if (result.error) {
-          console.error('This graph object has errored and will not be shown on the Chart.');
+          console.error('Graph object in position ' + (i + 1) + ' from the data array ' +
+          'has errored and will not be shown on the Chart.');
+          chartError = true;
           return;
         }
 
@@ -419,22 +451,42 @@ export class ChartComponent implements OnInit, OnDestroy {
         }
       });
 
+      if (chartError === true) {
+        this.widgetService.setChartError = true;
+        return;
+      } else {
+        this.widgetService.setChartError = false;
+      }
+
       this.createPlotlyGraph(allGraphObjects);
     });
   }
 
   /**
-   * 
-   * @param feature 
-   * @returns 
+   * Called when an item has been selected from this widget's dropdown list. Uses
+   * an object with the new data so it can be used to update the drawn chart.
+   * @param comm The ChartSelector communicator object passed by the BehaviorSubject
+   * when it has been updated.
    */
-  private updateChartVariables(feature: any): void {
+  private updateChartVariables(comm: IM.ChartSelectorComm): void {
 
-    if (feature === 'No item selected.') {
+    if (comm.noItemSelected) {
       return;
     }
 
-    this.featureProperties = feature;
+    if (comm.graphTemplate && this.graphTemplatePrime === undefined) {
+      this.graphTemplatePrime = comm.graphTemplate;
+    } else if (comm.noGraphTemplatePath) {
+      var selectorWarning = true;
+      // Check if the Chart Widget also was not given a graphTemplatePath property
+      // (full error), and if so, create an error widget.
+      if (this.chartWarning === true && selectorWarning === true) {
+        this.widgetErrorType = 'ChartSelector no path';
+        this.widgetService.setChartSelectorError = true;
+      }
+      return;
+    }
+    this.featureProperties = comm.selectedItem;
     this.graphTemplate = structuredClone(this.graphTemplatePrime);
 
     // Replace the ${properties} in the graphTemplate object from the graph

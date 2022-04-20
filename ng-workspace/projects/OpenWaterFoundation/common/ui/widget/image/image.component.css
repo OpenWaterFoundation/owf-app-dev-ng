@@ -8,6 +8,8 @@
   justify-content: center;
 }
 
+/* Container that displays the red exclamation mark to denote a widget error in
+the dashboard. */
 .no-image-container {
   height: 100%;
   width: 100%;

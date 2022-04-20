@@ -1,6 +1,17 @@
 /* CLASSES */
 
-/*  */
+
+/* Container that displays the red exclamation mark to denote a widget error in
+the dashboard. */
+.no-image-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container around the Plotly chart. */
 .showGraph {
   height: 100%;
 }
