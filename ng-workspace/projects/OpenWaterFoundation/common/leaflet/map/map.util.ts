@@ -1079,9 +1079,10 @@ export class MapUtil {
    * While the end of the value string from the graph template file hasn't ended yet, look for the '${' start
    * that we need and build the property, adding it to the propertyArray when we've detected the end of the
    * property. Find each one in the value until the value line is done.
-   * @param key In order to provide a better console warning, we bring the key from replaceProperties()
-   * @param value The line being read from the graph template file that contains the ${ } property.
+   * @param line The string being parsed.
    * @param featureProperties The object containing the feature's key and value pair properties.
+   * @param key In order to provide a better console warning, use the key from replaceProperties().
+   * @param labelProp 
    * @returns the entire line read in, with all ${property} notation converted to the correct  
    */
   public static obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any, labelProp?: boolean): string {
