@@ -1573,14 +1573,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       else if (this.mapConfigStandalonePath) {
         this.initMapSettings('map', this.mapConfigStandalonePath);
       } else {
-        // TODO: jpkeahey 2020.05.13 - This shows how the map config path isn't
-        // set on a hard refresh because of async issues. Fix has been found and
-        // now just needs to be implemented. Follow the APP_INITIALIZER token found
-        // in the SNODAS app to read all static files before the app initializes,
-        // therefore all info will have already been received.
-        // setTimeout(() => {
-          this.initMapSettings();
-        // }, 500);
+        this.initMapSettings();
       }
     });
   }

@@ -37,28 +37,19 @@ export class ErrorComponent {
 
 
   /**
-   * 
-   */
-  chartSelectorNoPath(): void {
-    console.error("Required path 'chartFeaturePath' or 'graphTemplatePath' not given " +
-    "to either the Chart or Selector Widget objects.");
-    console.error("More information can be found at the Dashboard Chart & Selector " +
-    "Widget user documentation (link to be added).");
-  }
-
-  /**
    * Determine what Chart widget error occurred.
    */
-  chartError(): void {
+   private chartError(): void {
     switch(this.errorType) {
-      case 'ChartSelector no path': this.chartSelectorNoPath();
+      case 'no chartFeaturePath': this.noDataPath('chartFeaturePath'); break;
+      case 'no graphTemplatePath': this.noDataPath('graphTemplatePath'); break;
     }
   }
 
   /**
    * Determine what Image widget error occurred.
    */
-  imageError(): void {
+   private imageError(): void {
     switch(this.errorType) {
       case 'no imagePath': this.noDataPath('imagePath'); break;
       case 'unsupported file': this.unsupportedFile(); break;
@@ -80,16 +71,18 @@ export class ErrorComponent {
   /**
    * Universal error message for any widget not given a `dataPath` property.
    */
-  noDataPath(dataPathName: string): void {
+   private noDataPath(dataPathName: string): void {
     console.error("No '" + dataPathName + "' property found for the " + this.errorWidgetName +
     " Widget. Confirm the '" + dataPathName + "' property of this " + this.errorWidgetName +
     " widget has been provided and is correct.");
+    console.error("More information can be found at the Dashboard Chart Widget user " +
+    "documentation (https://github.com/OpenWaterFoundation/owf-app-infomapper-ng-doc-user/blob/master/mkdocs-project/docs/appendix-adding-a-dashboard/widget-chart.md).");
   }
 
   /**
    * Determine what Text widget error occurred.
    */
-  textError(): void {
+   private textError(): void {
     switch(this.errorType) {
       case 'no textPath': this.noDataPath('textPath'); break;
       case 'unsupported file': this.unsupportedFile(); break;
@@ -100,7 +93,7 @@ export class ErrorComponent {
    * Error message if an unsupported file is provided in the dashboard configuration
    * file, and lists the currently supported files.
    */
-  unsupportedFile(): void {
+  private unsupportedFile(): void {
 
     var supportedFiles: string[];
 

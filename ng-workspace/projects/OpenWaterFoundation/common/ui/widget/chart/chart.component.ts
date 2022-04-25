@@ -3,7 +3,7 @@ import { Component,
           OnDestroy, 
           OnInit}                 from '@angular/core';
 
-import { forkJoin,
+import { combineLatest, combineLatestWith, forkJoin,
           Observable, 
           Subscription }          from 'rxjs';
 
@@ -35,9 +35,6 @@ export class ChartComponent implements OnInit, OnDestroy {
   private allResultsSub$: Subscription;
   /** The array of objects to pass to the tstable component for data table creation. */
   attributeTable: any[] = [];
-  /** Set to true if an error occurred in this widget somewhere, but a check in another
-   * widget can be performed. */
-  private chartWarning = false;
   /** The object with the necessary chart data for displaying a Plotly chart. */
   @Input() chartWidget: IM.ChartWidget;
   /** A string containing the name to be passed to the TSTableComponent's first
@@ -55,13 +52,9 @@ export class ChartComponent implements OnInit, OnDestroy {
   featureProperties: any;
   /** Subscription for the initial files to read if provided in the Chart Widget. */
   initialResultsSub$: Subscription;
-  /**
-   * 
-   */
+  /** Observable that's updated as a BehaviorSubject when a critical error creating
+   * this component occurs. */
   isChartError$: Observable<boolean>;
-  /** Observable representing the ChartSelectorError BehaviorSubject from the
-   * widgetService. Used by the template to show an error widget. */
-  isChartSelectorError$: Observable<boolean>;
   /** Boolean for helping dialog-tstable component determine what kind of file needs
   * downloading. */
   isTSFile: boolean;
@@ -97,11 +90,13 @@ export class ChartComponent implements OnInit, OnDestroy {
    */
   private checkWidgetObject(): void {
 
-    if (!this.chartWidget.chartFeaturePath || !this.chartWidget.graphTemplatePath) {
-      console.log('No chartFeaturePath and/or graphTemplatePath property given for ' +
-      'the Chart Widget in the Dashboard config file.');
-      console.log('Assuming the necessary properties were given to the Selector Widget.');
-      this.chartWarning = true;
+    if (!this.chartWidget.chartFeaturePath) {
+      this.widgetErrorType = 'no chartFeaturePath';
+      this.widgetService.setChartError = true;
+      return;
+    } else if (!this.chartWidget.graphTemplatePath) {
+      this.widgetErrorType = 'no graphTemplatePath';
+      this.widgetService.setChartError = true;
       return;
     }
 
@@ -387,15 +382,31 @@ export class ChartComponent implements OnInit, OnDestroy {
   */
   ngOnInit(): void {
 
-    this.isChartSelectorError$ = this.widgetService.isChartSelectorError;
     this.isChartError$ = this.widgetService.isChartError;
 
     this.checkWidgetObject();
 
     // Is only called when the selected item is updated from the Selector Widget.
-    this.widgetService.getSelectedItem().subscribe((comm: any) => {
-      this.updateChartVariables(comm);
+
+    const chartObs$ = forkJoin([
+      this.widgetService.getSelectedItem(),
+      this.isChartError$
+    ]);
+
+    chartObs$.subscribe((something: any) => {
+      console.log(something);
     });
+    
+    // this.widgetService.getSelectedItem().subscribe((comm: any) => {
+
+    //   this.isChartError$.subscribe((isError: boolean) => {
+    //     if (isError === true) {
+    //       return;
+    //     } else if (isError === false) {
+    //       this.updateChartVariables(comm);
+    //     }
+    //   });
+    // });
   }
 
   /**
@@ -474,18 +485,6 @@ export class ChartComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (comm.graphTemplate && this.graphTemplatePrime === undefined) {
-      this.graphTemplatePrime = comm.graphTemplate;
-    } else if (comm.noGraphTemplatePath) {
-      var selectorWarning = true;
-      // Check if the Chart Widget also was not given a graphTemplatePath property
-      // (full error), and if so, create an error widget.
-      if (this.chartWarning === true && selectorWarning === true) {
-        this.widgetErrorType = 'ChartSelector no path';
-        this.widgetService.setChartSelectorError = true;
-      }
-      return;
-    }
     this.featureProperties = comm.selectedItem;
     this.graphTemplate = structuredClone(this.graphTemplatePrime);
 

@@ -1,8 +1,13 @@
-<div *ngIf="TSIDLocation" [hidden]="(isChartSelectorError$ | async) || (isChartError$ | async)" class="showGraph">
-  <div [attr.id]="TSIDLocation" style="height: 100%;"></div>
-</div>
+<div *ngIf="!(isChartError$ | async); then showChart else error"></div>
 
-<!-- Error occurred. -->
-<div *ngIf="(isChartSelectorError$ | async) || (isChartError$ | async)" class="no-image-container">
-  <widget-error [errorType]="widgetErrorType" [name]="'Chart'"></widget-error>
-</div>
+<ng-template #showChart>
+  <div *ngIf="TSIDLocation" class="showGraph">
+    <div [attr.id]="TSIDLocation" style="height: 100%;"></div>
+  </div>
+</ng-template>
+
+<ng-template #error>
+  <div class="no-image-container">
+    <widget-error [errorType]="widgetErrorType" [name]="'Chart'"></widget-error>
+  </div>
+</ng-template>

@@ -610,8 +610,6 @@ export interface TSID {
  * the Chart Widget.
  */
 export interface ChartSelectorComm {
-  graphTemplate?: GraphTemplate;
-  noGraphTemplatePath?: boolean;
   noItemSelected?: boolean;
   selectedItem?: any;
 }

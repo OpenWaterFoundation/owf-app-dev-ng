@@ -22,7 +22,7 @@ export class WidgetService {
   /**
    * 
    */
-  private chartSelectorError$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  private selectorError$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
 
   constructor() {}
@@ -61,15 +61,15 @@ export class WidgetService {
   /**
    * 
    */
-  get isChartSelectorError(): Observable<boolean> {
-    return this.chartSelectorError$.asObservable();
+  get isSelectorError(): Observable<boolean> {
+    return this.selectorError$.asObservable();
   }
 
   /**
    * 
    */
-  set setChartSelectorError(error: boolean) {
-    this.chartSelectorError$.next(error);
+  set setSelectorError(error: boolean) {
+    this.selectorError$.next(error);
   }
 
 }

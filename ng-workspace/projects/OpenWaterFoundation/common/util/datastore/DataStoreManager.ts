@@ -125,11 +125,17 @@ export class DatastoreManager {
   /**
    * Sets the DatastoreManager's userDatastores array with all user added Datastore
    * objects from the `app-config.json` file.
-   * @param allUserDatastores The array of all user provided datastores from the
+   * @param userDatastores The array of all user provided datastores from the
    * application configuration file.
    */
-  public setUserDatastores(allUserDatastores: IM.Datastore[]): void {
-    for (let datastore of allUserDatastores) {
+  public setUserDatastores(userDatastores: IM.Datastore[]): void {
+
+    // If no userDatastores are given, don't do anything.
+    if (!userDatastores || userDatastores.length === 0) {
+      return;
+    }
+
+    for (let datastore of userDatastores) {
       this.userDatastores.push(datastore);
     }
   }

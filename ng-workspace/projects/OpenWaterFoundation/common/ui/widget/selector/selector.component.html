@@ -1,4 +1,4 @@
-<div *ngIf="!(isFullError$ | async); then showSelector else error"></div>
+<div *ngIf="!(isSelectorError$ | async); then showSelector else error"></div>
 
 <ng-template #showSelector>
   <div class="selector-center">

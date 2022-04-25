@@ -10,6 +10,18 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.2.1 #
+
+### Bug Fixes ###
+
+* Fixed a bug that would error the application if a user datastore is not provided
+in the `app-config.json` file.
+* Fixed a bug that wouldn't read a CSV file relative to the dashboard config file.
+
+### Refactoring ###
+
+* Fixed a typo in the Text Widget documentation.
+
 # 3.2.0 (dev) #
 
 ### Features / Enhancements ###

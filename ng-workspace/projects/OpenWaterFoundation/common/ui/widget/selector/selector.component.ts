@@ -39,7 +39,7 @@ export class SelectorComponent {
   filteredFeatures: any[];
   /** Observable representing the ChartSelectorError BehaviorSubject from the
    * widgetService. Used by the template to show an error widget. */
-  isFullError$: Observable<boolean>;
+  isSelectorError$: Observable<boolean>;
 
 
   /**
@@ -49,28 +49,6 @@ export class SelectorComponent {
   constructor(private commonService: OwfCommonService,
     private widgetService: WidgetService) {}
 
-
-  /**
-   * Checks if the Selector Widget object contains the `graphTemplatePath`. If it
-   * does, use it to read in the graphTemplate object and user it in the Chart Widget
-   * component.
-   */
-  private checkWidgetObject(): void {
-
-    if (this.selectorWidget.graphTemplatePath) {
-
-      this.commonService.getJSONData(this.commonService.buildPath(IM.Path.dbP, [this.selectorWidget.graphTemplatePath]))
-      .subscribe((graphTemplate: IM.GraphTemplate) => {
-
-        this.widgetService.updateSelectedItem({
-          selectedItem: this.allFeatures[0],
-          graphTemplate: graphTemplate
-        });
-      });
-    } else {
-      this.widgetService.updateSelectedItem({ noGraphTemplatePath: true });
-    }
-  }
 
   /**
    * Parses and displays the `displayName` property using the ${property} notation
@@ -99,7 +77,6 @@ export class SelectorComponent {
     features.forEach((feature: any) => {
       featureProperties.push(feature.properties);
     });
-
     return featureProperties;
   }
 
@@ -108,7 +85,7 @@ export class SelectorComponent {
    */
   ngOnInit(): void {
 
-    this.isFullError$ = this.widgetService.isChartSelectorError;
+    this.isSelectorError$ = this.widgetService.isSelectorError;
 
     var dataFormat = this.selectorWidget.dataFormat.toLowerCase();
 
@@ -138,7 +115,7 @@ export class SelectorComponent {
    */
   retrieveCSVData(): void {
 
-    var fullDataPath = this.commonService.buildPath(IM.Path.csvPath, [this.selectorWidget.dataPath]);
+    var fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.selectorWidget.dataPath]);
 
     Papa.parse(fullDataPath, {
       delimiter: ",",
@@ -164,7 +141,6 @@ export class SelectorComponent {
         
         this.allFeatures = parsedResult;
         this.filteredFeatures = this.allFeatures;
-        this.checkWidgetObject();
       },
       error: (error: Papa.ParseError) => {
         console.error('Error!');
@@ -190,7 +166,6 @@ export class SelectorComponent {
       }
       
       this.filteredFeatures = this.allFeatures;
-      this.checkWidgetObject();
     });
   }
 
