@@ -1,8 +1,7 @@
 import { Component,
-          Input }           from '@angular/core';
+          Input } from '@angular/core';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import * as IM    from '@OpenWaterFoundation/common/services';
 
 
 @Component({
@@ -14,7 +13,7 @@ export class ErrorComponent {
 
   /** A string provided as input to this widget template tag that describes
    * what error occurred. */
-  @Input('errorType') errorType: string;
+  @Input('errorTypes') errorTypes: string[];
   /** An InfoMapper widget type to describe the widget where the error
    * took place. */
   @Input('name') errorWidgetName: IM.Widget;
@@ -31,29 +30,34 @@ export class ErrorComponent {
 
   /**
    * @constructor The Error widget component constructor.
-   * @param commonService The injected Common library service.
    */
-  constructor(private commonService: OwfCommonService) {}
+  constructor() {}
 
 
   /**
    * Determine what Chart widget error occurred.
    */
-   private chartError(): void {
-    switch(this.errorType) {
-      case 'no chartFeaturePath': this.noDataPath('chartFeaturePath'); break;
-      case 'no graphTemplatePath': this.noDataPath('graphTemplatePath'); break;
-    }
+  private chartError(): void {
+
+    this.errorTypes.forEach((errorType: string) => {
+      switch(errorType) {
+        case 'no chartFeaturePath': this.noDataPath('chartFeaturePath'); break;
+        case 'no graphTemplatePath': this.noDataPath('graphTemplatePath'); break;
+      }
+    });
   }
 
   /**
    * Determine what Image widget error occurred.
    */
-   private imageError(): void {
-    switch(this.errorType) {
-      case 'no imagePath': this.noDataPath('imagePath'); break;
-      case 'unsupported file': this.unsupportedFile(); break;
-    }
+  private imageError(): void {
+
+    this.errorTypes.forEach((errorType: string) => {
+      switch(errorType) {
+        case 'no imagePath': this.noDataPath('imagePath'); break;
+        case 'unsupported file': this.unsupportedFile(); break;
+      }
+    });
   }
 
   /**
@@ -62,31 +66,62 @@ export class ErrorComponent {
   ngOnInit(): void {
     // Determine which widget is erroring.
     switch(this.errorWidgetName) {
-      case IM.Widget.img: this.imageError(); break;
-      case IM.Widget.text: this.textError(); break;
       case IM.Widget.cht: this.chartError(); break;
+      case IM.Widget.img: this.imageError(); break;
+      case IM.Widget.sel: this.selectorError(); break;
+      case IM.Widget.txt: this.textError(); break;
     }
+
+    this.printWidgetURL();
   }
 
   /**
    * Universal error message for any widget not given a `dataPath` property.
    */
-   private noDataPath(dataPathName: string): void {
-    console.error("No '" + dataPathName + "' property found for the " + this.errorWidgetName +
-    " Widget. Confirm the '" + dataPathName + "' property of this " + this.errorWidgetName +
-    " widget has been provided and is correct.");
-    console.error("More information can be found at the Dashboard Chart Widget user " +
-    "documentation (https://github.com/OpenWaterFoundation/owf-app-infomapper-ng-doc-user/blob/master/mkdocs-project/docs/appendix-adding-a-dashboard/widget-chart.md).");
+  private noDataPath(dataPathName: string): void {
+
+    console.error("Required property '" + dataPathName + "' not found in the " +
+    this.errorWidgetName + " widget. Confirm the '" + dataPathName + "' property of this " +
+    this.errorWidgetName + " widget exists.");
+  }
+
+  /**
+   * Prints the link to the offending widget's documentation page on GitHub.
+   */
+  private printWidgetURL(): void {
+
+    var widgetDocURL = 'https://github.com/OpenWaterFoundation/owf-app-infomapper-ng-doc-user/' +
+    'blob/master/mkdocs-project/docs/appendix-adding-a-dashboard/widget-' +
+    this.errorWidgetName.toLowerCase() + '.md';
+
+    console.error("Widget documentation can be found at " + widgetDocURL + ".");
+  }
+
+  /**
+   * 
+   */
+  private selectorError(): void {
+
+    this.errorTypes.forEach((errorType: string) => {
+      switch(errorType) {
+        case 'no dataPath': this.noDataPath('dataPath'); break;
+        case 'no dataFormat': this.noDataPath('dataFormat'); break;
+        case 'no displayName': this.noDataPath('displayName'); break;
+      }
+    });
   }
 
   /**
    * Determine what Text widget error occurred.
    */
-   private textError(): void {
-    switch(this.errorType) {
-      case 'no textPath': this.noDataPath('textPath'); break;
-      case 'unsupported file': this.unsupportedFile(); break;
-    }
+  private textError(): void {
+
+    this.errorTypes.forEach((errorType: string) => {
+      switch(errorType) {
+        case 'no textPath': this.noDataPath('textPath'); break;
+        case 'unsupported file': this.unsupportedFile(); break;
+      }
+    });
   }
 
   /**
@@ -100,7 +135,7 @@ export class ErrorComponent {
     switch(this.errorWidgetName) {
       case IM.Widget.img:
         supportedFiles = this.supportedImageFiles; break;
-      case IM.Widget.text:
+      case IM.Widget.txt:
         supportedFiles = this.supportedTextFiles; break;
     }
     

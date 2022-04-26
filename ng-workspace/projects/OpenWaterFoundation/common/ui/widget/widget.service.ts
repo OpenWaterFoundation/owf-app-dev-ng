@@ -12,9 +12,9 @@ import * as IM             from '@OpenWaterFoundation/common/services';
 export class WidgetService {
 
   /**
-   * 
+   * A Chart
    */
-  private selectedItem$: BehaviorSubject<IM.ChartSelectorComm> = new BehaviorSubject({noItemSelected: true});
+  private selectedItem$: BehaviorSubject<IM.selectorComm> = new BehaviorSubject({noItemSelected: true});
   /**
    * 
    */
@@ -40,7 +40,7 @@ export class WidgetService {
    * 
    * @param comm 
    */
-  updateSelectedItem(comm: IM.ChartSelectorComm): void {
+  updateSelectedItem(comm: IM.selectorComm): void {
     this.selectedItem$.next(comm);
   }
 

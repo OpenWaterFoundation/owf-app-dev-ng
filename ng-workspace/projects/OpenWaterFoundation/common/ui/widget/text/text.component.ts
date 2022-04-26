@@ -1,8 +1,8 @@
 import { Component,
           Input, 
-          OnDestroy}           from '@angular/core';
+          OnDestroy}        from '@angular/core';
 
-import { Observable, Subscription }       from 'rxjs';
+import { Subscription }     from 'rxjs';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
@@ -20,7 +20,7 @@ export class TextComponent implements OnDestroy{
   @Input() textWidget: IM.TextWidget;
   /** The string representing the type of error that occurred while building this
    * widget. Used by the error widget. */
-  errorType: string;
+  errorTypes: string[] = [];
   /** The path to the text file after it has been built with the OWF service to
    * deal with either an absolute or relative path provided. */
   fullDataPath: string;
@@ -46,19 +46,23 @@ export class TextComponent implements OnDestroy{
   constructor(private commonService: OwfCommonService) {}
 
 
+  private checkWidgetObject(): void {
+    
+    if (!this.textWidget.textPath) {
+      this.widgetError = true;
+      this.errorTypes.push('no textPath');
+      return;
+    }
+
+    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.textWidget.textPath]);
+  }
+
   /**
    * Called right after the constructor.
    */
   ngOnInit(): void {
-    // BehaviorSubject testing. It works!
-    // this.testData = this.widgetService.getTestObs();
 
-    if (!this.textWidget.textPath) {
-      this.widgetError = true;
-      this.errorType = 'no textPath';
-      return;
-    }
-    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.textWidget.textPath]);
+    this.checkWidgetObject();
 
     // Markdown file.
     if (this.fullDataPath.endsWith('.md')) {
@@ -82,7 +86,7 @@ export class TextComponent implements OnDestroy{
     // Unsupported file.
     else {
       this.widgetError = true;
-      this.errorType = 'unsupported file';
+      this.errorTypes.push('unsupported file');
     }
   }
 

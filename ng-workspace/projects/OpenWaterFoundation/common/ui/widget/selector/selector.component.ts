@@ -40,6 +40,8 @@ export class SelectorComponent {
   /** Observable representing the ChartSelectorError BehaviorSubject from the
    * widgetService. Used by the template to show an error widget. */
   isSelectorError$: Observable<boolean>;
+  /** String describing what kind of error occurred. */
+  errorTypes: string[] = [];
 
 
   /**
@@ -49,6 +51,43 @@ export class SelectorComponent {
   constructor(private commonService: OwfCommonService,
     private widgetService: WidgetService) {}
 
+
+  /**
+   * Checks the properties of the given chart object and determines what action
+   * to take.
+   */
+  checkWidgetObject(): void {
+
+    var error = false;
+
+    if (!this.selectorWidget.dataPath) {
+      this.errorTypes.push('no dataPath');
+      error = true;
+    }
+    if (!this.selectorWidget.dataFormat) {
+      this.errorTypes.push('no dataFormat');
+      error = true;
+    }
+    if (!this.selectorWidget.displayName) {
+      this.errorTypes.push('no displayName');
+      error = true;
+    }
+
+    if (error === true) {
+      this.widgetService.setSelectorError = true;
+      return;
+    }
+
+    // The object has been verified and the initial Selector Widget code can now
+    // be executed.
+    var dataFormat = this.selectorWidget.dataFormat.toLowerCase();
+
+    if (dataFormat === 'csv') {
+      this.retrieveCSVData();
+    } else if (dataFormat === 'geojson' || dataFormat === 'json') {
+      this.retrieveJSONData();
+    }
+  }
 
   /**
    * Parses and displays the `displayName` property using the ${property} notation
@@ -84,17 +123,8 @@ export class SelectorComponent {
    * Called right after the constructor.
    */
   ngOnInit(): void {
-
     this.isSelectorError$ = this.widgetService.isSelectorError;
-
-    var dataFormat = this.selectorWidget.dataFormat.toLowerCase();
-
-    if (dataFormat === 'csv') {
-      this.retrieveCSVData();
-    } else if (dataFormat === 'geojson' || dataFormat === 'json') {
-      this.retrieveJSONData();
-    }
-
+    this.checkWidgetObject();
   }
 
   /**

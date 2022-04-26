@@ -72,7 +72,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   * header. To be passed to dialog-tstable for downloading files. */
   valueColumns: string[] = [];
   /** String describing what kind of error occurred. */
-  widgetErrorType: string;
+  errorTypes: string[] = [];
 
 
   /**
@@ -90,12 +90,20 @@ export class ChartComponent implements OnInit, OnDestroy {
    */
   private checkWidgetObject(): void {
 
+    var error = false;
+
+    // TODO jpkeahey 2022-04-26: This is not an error, but needs to try to use in
+    // the selector.
     if (!this.chartWidget.chartFeaturePath) {
-      this.widgetErrorType = 'no chartFeaturePath';
-      this.widgetService.setChartError = true;
-      return;
-    } else if (!this.chartWidget.graphTemplatePath) {
-      this.widgetErrorType = 'no graphTemplatePath';
+      this.errorTypes.push('no chartFeaturePath');
+      error = true;
+    }
+    if (!this.chartWidget.graphTemplatePath) {
+      this.errorTypes.push('no graphTemplatePath');
+      error = true;
+    }
+
+    if (error === true) {
       this.widgetService.setChartError = true;
       return;
     }
@@ -388,25 +396,25 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     // Is only called when the selected item is updated from the Selector Widget.
 
-    const chartObs$ = forkJoin([
-      this.widgetService.getSelectedItem(),
-      this.isChartError$
-    ]);
+    // const chartObs$ = forkJoin([
+    //   this.widgetService.getSelectedItem(),
+    //   this.isChartError$
+    // ]);
 
-    chartObs$.subscribe((something: any) => {
-      console.log(something);
-    });
-    
-    // this.widgetService.getSelectedItem().subscribe((comm: any) => {
-
-    //   this.isChartError$.subscribe((isError: boolean) => {
-    //     if (isError === true) {
-    //       return;
-    //     } else if (isError === false) {
-    //       this.updateChartVariables(comm);
-    //     }
-    //   });
+    // chartObs$.subscribe((something: any) => {
+    //   console.log(something);
     // });
+    
+    this.widgetService.getSelectedItem().subscribe((comm: any) => {
+
+      this.isChartError$.subscribe((isError: boolean) => {
+        if (isError === true) {
+          return;
+        } else if (isError === false) {
+          this.updateChartVariables(comm);
+        }
+      });
+    });
   }
 
   /**
@@ -479,7 +487,7 @@ export class ChartComponent implements OnInit, OnDestroy {
    * @param comm The ChartSelector communicator object passed by the BehaviorSubject
    * when it has been updated.
    */
-  private updateChartVariables(comm: IM.ChartSelectorComm): void {
+  private updateChartVariables(comm: IM.selectorComm): void {
 
     if (comm.noItemSelected) {
       return;

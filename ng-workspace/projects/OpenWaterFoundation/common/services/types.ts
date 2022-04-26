@@ -108,7 +108,7 @@ export enum Widget {
   err = 'Error',
   img = 'Image',
   sel = 'Selector',
-  text = 'Text'
+  txt = 'Text'
 }
 
 /** Enum representing the supported Window Types (Dialog Types) for the WindowManager. */
@@ -609,7 +609,7 @@ export interface TSID {
  * Communicator object for passing necessary data from the Selector Widget to
  * the Chart Widget.
  */
-export interface ChartSelectorComm {
+export interface selectorComm {
   noItemSelected?: boolean;
   selectedItem?: any;
 }
