@@ -12,6 +12,11 @@ These elements will only be added if they are applicable for the new version.
 
 # 3.2.1 #
 
+### Features / Enhancements ###
+
+* Updated & streamlined error handling for all widgets, including the building of
+the top-level dashboard itself, with more robust and helpful messages.
+
 ### Bug Fixes ###
 
 * Fixed a bug that would error the application if a user datastore is not provided

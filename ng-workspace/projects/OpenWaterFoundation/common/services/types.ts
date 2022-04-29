@@ -2,6 +2,8 @@
 // as the ability to be utilized by outside consuming applications. It helps define
 // different objects mainly related to the InfoMapper for now.
 
+import { BehaviorSubject } from "rxjs";
+
 // ENUM
 
 /** All supported Datastore types. */
@@ -104,11 +106,12 @@ export enum Style {
 
 /** Each implemented Widget Type. */
 export enum Widget {
-  cht = 'Chart',
-  err = 'Error',
-  img = 'Image',
-  sel = 'Selector',
-  txt = 'Text'
+  cht = 'chart',
+  dsh = 'dashboard',
+  err = 'error',
+  img = 'image',
+  sel = 'selector',
+  txt = 'text'
 }
 
 /** Enum representing the supported Window Types (Dialog Types) for the WindowManager. */
@@ -550,15 +553,16 @@ export interface WidgetTileStyle {
 /** Dashboard widget object. */
 export interface DashboardWidget {
   type: string;
-  name?: string;
+  name: string;
   description?: string;
   columns?: number;
   rows?: number;
+  eventHandlers?: WidgetEventHandler[];
   style?: WidgetTileStyle;
+  errorTypes?: string[];
 }
 
 export interface ChartWidget extends DashboardWidget {
-  chartFeaturePath: string;
   graphTemplatePath: string;
 }
 
@@ -575,6 +579,7 @@ export interface SelectorWidget extends DashboardWidget {
   dataFormat: string;
   displayName: string;
   graphTemplatePath?: string;
+  JSONArrayName?: string;
   skipDataLines?: number;
 }
 
@@ -584,6 +589,28 @@ export interface StatusIndicatorWidget extends DashboardWidget {
 export interface TextWidget extends DashboardWidget {
   textPath: string;
   graphTemplatePath: string;
+}
+
+export interface WidgetEvent {
+  widgetName?: string;
+}
+
+/**
+ * Communicator object for passing necessary data from the Selector Widget to
+ * the Chart Widget.
+ */
+ export interface SelectEvent extends WidgetEvent {
+  selectedItem?: any;
+}
+
+export interface WidgetEventHandler {
+  widgetName: string;
+  eventType: string;
+}
+
+export interface ListenedToWidget {
+  name: string;
+  behaviorSubject: BehaviorSubject<WidgetEvent>
 }
 
 /////////////////////////////// Time Series \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -604,15 +631,6 @@ export interface TSID {
 }
 
 /////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-/**
- * Communicator object for passing necessary data from the Selector Widget to
- * the Chart Widget.
- */
-export interface selectorComm {
-  noItemSelected?: boolean;
-  selectedItem?: any;
-}
 
 /**
  * 

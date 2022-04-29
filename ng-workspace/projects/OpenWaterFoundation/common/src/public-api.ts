@@ -15,7 +15,6 @@ export * from '@OpenWaterFoundation/common/ts-command-processor/core';
 export * from '@OpenWaterFoundation/common/ui/dashboard';
 export * from '@OpenWaterFoundation/common/ui/dialog';
 export * from '@OpenWaterFoundation/common/ui/layer-manager';
-export * from '@OpenWaterFoundation/common/ui/widget';
 export * from '@OpenWaterFoundation/common/ui/window-manager';
 
 export * from '@OpenWaterFoundation/common/util/io';

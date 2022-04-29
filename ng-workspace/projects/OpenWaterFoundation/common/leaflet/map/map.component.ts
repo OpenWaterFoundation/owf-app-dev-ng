@@ -3,11 +3,11 @@ import { AfterViewInit,
           Input,
           OnDestroy,
           ViewContainerRef,
-          ViewEncapsulation }       from '@angular/core';
-import { ActivatedRoute }           from '@angular/router';
+          ViewEncapsulation }      from '@angular/core';
+import { ActivatedRoute }          from '@angular/router';
 import { MatDialog,
           MatDialogRef,
-          MatDialogConfig }         from '@angular/material/dialog';
+          MatDialogConfig }        from '@angular/material/dialog';
 
 import { DialogD3Component,
           DialogDocComponent,
@@ -15,27 +15,27 @@ import { DialogD3Component,
           DialogGapminderComponent,
           DialogHeatmapComponent,
           DialogTextComponent,
-          DialogTSGraphComponent }  from '@OpenWaterFoundation/common/ui/dialog';
+          DialogTSGraphComponent } from '@OpenWaterFoundation/common/ui/dialog';
 
 import { forkJoin,
           timer,
           Observable,
-          Subscription }            from 'rxjs';
-import { take }                     from 'rxjs/operators';
+          Subscription }           from 'rxjs';
+import { take }                    from 'rxjs/operators';
 
-import { OwfCommonService }         from '@OpenWaterFoundation/common/services';
+import { OwfCommonService }        from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
-          MapLayerItem }            from '@OpenWaterFoundation/common/ui/layer-manager';
+          MapLayerItem }           from '@OpenWaterFoundation/common/ui/layer-manager';
 import { WindowManager,
-          WindowType }              from '@OpenWaterFoundation/common/ui/window-manager';
-import { MapUtil }                  from './map.util';
-import { MapManager }               from './map-manager';
+          WindowType }             from '@OpenWaterFoundation/common/ui/window-manager';
+import { MapUtil }                 from './map.util';
+import { MapManager }              from './map-manager';
 
-import * as IM                      from '@OpenWaterFoundation/common/services';
-import * as Papa                    from 'papaparse';
-import * as GeoRasterLayer          from 'georaster-layer-for-leaflet';
-import geoblaze                     from 'geoblaze';
-import parseGeoRaster               from 'georaster';
+import * as IM                     from '@OpenWaterFoundation/common/services';
+import * as Papa                   from 'papaparse';
+import * as GeoRasterLayer         from 'georaster-layer-for-leaflet';
+import geoblaze                    from 'geoblaze';
+import parseGeoRaster              from 'georaster';
 /** The globally used L object for Leaflet object creation and manipulation. */
 declare var L: any;
 

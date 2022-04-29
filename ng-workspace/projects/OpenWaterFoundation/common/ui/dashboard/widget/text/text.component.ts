@@ -18,7 +18,7 @@ export class TextComponent implements OnDestroy{
   /** The attribute provided as an attribute to this component when created, e.g.
    *   <widget-text [dataPath]="path/to/text.md"></widget-text> */
   @Input() textWidget: IM.TextWidget;
-  /** The string representing the type of error that occurred while building this
+  /** String array representing the type of error that occurred while building this
    * widget. Used by the error widget. */
   errorTypes: string[] = [];
   /** The path to the text file after it has been built with the OWF service to
@@ -51,6 +51,11 @@ export class TextComponent implements OnDestroy{
     if (!this.textWidget.textPath) {
       this.widgetError = true;
       this.errorTypes.push('no textPath');
+      return;
+    }
+    if (!this.textWidget.name) {
+      this.widgetError = true;
+      this.errorTypes.push('no name');
       return;
     }
 
