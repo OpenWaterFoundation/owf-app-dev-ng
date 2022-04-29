@@ -1,8 +1,8 @@
 import { Component,
           Input, 
-          OnDestroy}           from '@angular/core';
+          OnDestroy}        from '@angular/core';
 
-import { Observable, Subscription }       from 'rxjs';
+import { Subscription }     from 'rxjs';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
@@ -18,9 +18,9 @@ export class TextComponent implements OnDestroy{
   /** The attribute provided as an attribute to this component when created, e.g.
    *   <widget-text [dataPath]="path/to/text.md"></widget-text> */
   @Input() textWidget: IM.TextWidget;
-  /** The string representing the type of error that occurred while building this
+  /** String array representing the type of error that occurred while building this
    * widget. Used by the error widget. */
-  errorType: string;
+  errorTypes: string[] = [];
   /** The path to the text file after it has been built with the OWF service to
    * deal with either an absolute or relative path provided. */
   fullDataPath: string;
@@ -46,19 +46,28 @@ export class TextComponent implements OnDestroy{
   constructor(private commonService: OwfCommonService) {}
 
 
+  private checkWidgetObject(): void {
+    
+    if (!this.textWidget.textPath) {
+      this.widgetError = true;
+      this.errorTypes.push('no textPath');
+      return;
+    }
+    if (!this.textWidget.name) {
+      this.widgetError = true;
+      this.errorTypes.push('no name');
+      return;
+    }
+
+    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.textWidget.textPath]);
+  }
+
   /**
    * Called right after the constructor.
    */
   ngOnInit(): void {
-    // BehaviorSubject testing. It works!
-    // this.testData = this.widgetService.getTestObs();
 
-    if (!this.textWidget.textPath) {
-      this.widgetError = true;
-      this.errorType = 'no textPath';
-      return;
-    }
-    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.textWidget.textPath]);
+    this.checkWidgetObject();
 
     // Markdown file.
     if (this.fullDataPath.endsWith('.md')) {
@@ -82,7 +91,7 @@ export class TextComponent implements OnDestroy{
     // Unsupported file.
     else {
       this.widgetError = true;
-      this.errorType = 'unsupported file';
+      this.errorTypes.push('unsupported file');
     }
   }
 

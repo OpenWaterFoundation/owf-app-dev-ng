@@ -7,6 +7,7 @@ import { Subscription }     from 'rxjs';
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
 
+import { DashboardService } from './dashboard.service';
 
 
 @Component({
@@ -16,13 +17,9 @@ import * as IM              from '@OpenWaterFoundation/common/services';
 })
 export class DashboardComponent implements OnDestroy {
 
-  /**
-   * 
-   */
+  /** The dashboard configuration object read in from the JSON file. */
   dashboardConf: IM.DashboardConf;
-  /**
-   * 
-   */
+  /** Subscription used when reading in the dashboard configuration file. */
   dashboardConfigPathSub$: Subscription;
 
 
@@ -33,8 +30,42 @@ export class DashboardComponent implements OnDestroy {
    * Dashboard to be displayed.
    */
   constructor(private commonService: OwfCommonService,
-              private route: ActivatedRoute) {}
+    private dashboardService: DashboardService,
+    private route: ActivatedRoute) {}
 
+
+  /**
+   * Checks if the dashboard configuration was correctly made by confirming the
+   * following:
+   *   1. All widget name properties are unique.
+   *   2. All widgets contain a type property.
+   *   3. All widget types are currently supported.
+   */
+  private checkDashboardConfig(dashboardConfig: IM.DashboardConf): void {
+
+    var uniqueKeys = {};
+
+    dashboardConfig.widgets.forEach((widget: IM.DashboardWidget) => {
+
+      widget.errorTypes = [];
+
+      if (!widget.type) {
+        widget.type = 'error';
+        widget.errorTypes.push('no type');
+      } else if (this.dashboardService.isSupportedWidgetType(widget) === false) {
+        widget.type = 'error';
+        widget.errorTypes.push('unsupported type');
+      }
+
+      uniqueKeys[widget.name] = 'name';
+    });
+
+    if (dashboardConfig.widgets.length !== Object.keys(uniqueKeys).length) {
+      console.warn("Multiple widget objects from the Dashboard configuration file" +
+      "contain the same name, and can cause undesired behavior for event handling.");
+    }
+
+  }
 
   /**
    * Called right after the constructor.
@@ -46,7 +77,10 @@ export class DashboardComponent implements OnDestroy {
     this.dashboardConfigPathSub$ = this.commonService
     .getJSONData(this.commonService.getAppPath() + dashboardConfigPath)
     .subscribe((dashboardConfig: IM.DashboardConf) => {
+
+      this.checkDashboardConfig(dashboardConfig);
       this.dashboardConf = dashboardConfig;
+      this.dashboardService.createListenedToWidgets(dashboardConfig);
     });
   }
 

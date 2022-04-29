@@ -4,11 +4,12 @@ import { Component,
 
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
-import { Observable }               from 'rxjs';
+import { BehaviorSubject,
+          Observable }              from 'rxjs';
 
 import { OwfCommonService }         from '@OpenWaterFoundation/common/services';
 import * as IM                      from '@OpenWaterFoundation/common/services';
-import { WidgetService }            from '../widget.service';
+import { DashboardService }            from '../../dashboard.service';
 
 import * as Papa                    from 'papaparse';
 
@@ -31,6 +32,14 @@ export class SelectorComponent {
    * directive matching the selector in the view DOM, and if it changes, the property
    * is updated. */
   @ViewChild(CdkVirtualScrollViewport, { static: false }) cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
+  /**
+   * 
+   */
+  private dataLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject(true);
+  /**
+   * 
+   */
+  dataLoading$ = this.dataLoadingSubject.asObservable();
   /** The SelectorWidget object passed from the Dashboard Component from the dashboard
    * configuration file **widgets** array. */
   @Input() selectorWidget: IM.SelectorWidget;
@@ -39,7 +48,10 @@ export class SelectorComponent {
   filteredFeatures: any[];
   /** Observable representing the ChartSelectorError BehaviorSubject from the
    * widgetService. Used by the template to show an error widget. */
-  isFullError$: Observable<boolean>;
+  isSelectorError$: Observable<boolean>;
+  /** String array representing the type of error that occurred while building this
+   * widget. Used by the error widget. */
+  errorTypes: string[] = [];
 
 
   /**
@@ -47,28 +59,53 @@ export class SelectorComponent {
    * @param commonService The injected Common library service.
    */
   constructor(private commonService: OwfCommonService,
-    private widgetService: WidgetService) {}
+    private dashboardService: DashboardService) {}
 
 
   /**
-   * Checks if the Selector Widget object contains the `graphTemplatePath`. If it
-   * does, use it to read in the graphTemplate object and user it in the Chart Widget
-   * component.
+   * Checks the properties of the given chart object and determines what action
+   * to take.
    */
-  private checkWidgetObject(): void {
+  checkWidgetObject(): void {
 
-    if (this.selectorWidget.graphTemplatePath) {
+    var error = false;
 
-      this.commonService.getJSONData(this.commonService.buildPath(IM.Path.dbP, [this.selectorWidget.graphTemplatePath]))
-      .subscribe((graphTemplate: IM.GraphTemplate) => {
+    if (!this.selectorWidget.dataPath) {
+      this.errorTypes.push('no dataPath');
+      error = true;
+    }
+    if (!this.selectorWidget.dataFormat) {
+      this.errorTypes.push('no dataFormat');
+      error = true;
+    }
+    if (!this.selectorWidget.displayName) {
+      this.errorTypes.push('no displayName');
+      error = true;
+    }
+    if (!this.selectorWidget.name) {
+      this.errorTypes.push('no name');
+      error = true;
+    }
 
-        this.widgetService.updateSelectedItem({
-          selectedItem: this.allFeatures[0],
-          graphTemplate: graphTemplate
-        });
-      });
-    } else {
-      this.widgetService.updateSelectedItem({ noGraphTemplatePath: true });
+    if (error === true) {
+      this.dashboardService.setSelectorError = true;
+      return;
+    }
+
+    // The object has been verified and the initial Selector Widget code can now
+    // be executed.
+    var dataFormat = this.selectorWidget.dataFormat.toLowerCase();
+
+    if (dataFormat === 'csv') {
+      this.retrieveCSVData();
+    } else if (dataFormat === 'geojson' || dataFormat === 'json') {
+
+      if (!this.selectorWidget.JSONArrayName) {
+        this.errorTypes.push('no JSONArrayName');
+        this.dashboardService.setSelectorError = true;
+        return;
+      }
+      this.retrieveJSONData();
     }
   }
 
@@ -99,7 +136,6 @@ export class SelectorComponent {
     features.forEach((feature: any) => {
       featureProperties.push(feature.properties);
     });
-
     return featureProperties;
   }
 
@@ -107,17 +143,8 @@ export class SelectorComponent {
    * Called right after the constructor.
    */
   ngOnInit(): void {
-
-    this.isFullError$ = this.widgetService.isChartSelectorError;
-
-    var dataFormat = this.selectorWidget.dataFormat.toLowerCase();
-
-    if (dataFormat === 'csv') {
-      this.retrieveCSVData();
-    } else if (dataFormat === 'geojson' || dataFormat === 'json') {
-      this.retrieveJSONData();
-    }
-
+    this.isSelectorError$ = this.dashboardService.isSelectorError;
+    this.checkWidgetObject();
   }
 
   /**
@@ -138,7 +165,7 @@ export class SelectorComponent {
    */
   retrieveCSVData(): void {
 
-    var fullDataPath = this.commonService.buildPath(IM.Path.csvPath, [this.selectorWidget.dataPath]);
+    var fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.selectorWidget.dataPath]);
 
     Papa.parse(fullDataPath, {
       delimiter: ",",
@@ -164,10 +191,21 @@ export class SelectorComponent {
         
         this.allFeatures = parsedResult;
         this.filteredFeatures = this.allFeatures;
-        this.checkWidgetObject();
+
+        // Send the initial event to the Chart Widget.
+        let initialSelectEvent: IM.SelectEvent = {
+          selectedItem: this.allFeatures[0],
+          widgetName: this.selectorWidget.name
+        }
+        this.dashboardService.sendWidgetEvent(initialSelectEvent);
+        
+        this.toggleDataLoading = false;
       },
-      error: (error: Papa.ParseError) => {
-        console.error('Error!');
+      error: (error: Papa.ParseError, file: File) => {
+        this.errorTypes.push('bad csv');
+        this.toggleDataLoading = false;
+        this.dashboardService.setSelectorError = true;
+        return;
       }
     });
   }
@@ -178,19 +216,26 @@ export class SelectorComponent {
    */
   retrieveJSONData(): void {
     this.commonService.getJSONData(this.commonService.buildPath(IM.Path.dbP, [this.selectorWidget.dataPath]))
-    .subscribe((data: any) => {
+    .subscribe((JSONData: any) => {
 
       // geoJson.
-      if (data.features) {
-        this.allFeatures = this.getAllProperties(data.features);
+      if (JSONData.features) {
+        this.allFeatures = this.getAllProperties(JSONData.features);
       }
-      // CDSS Web Services.
-      else if (data.ResultList) {
-        this.allFeatures = data.ResultList;
+      // JSON with a named array.
+      else if (JSONData[this.selectorWidget.JSONArrayName]) {
+        this.allFeatures = JSONData[this.selectorWidget.JSONArrayName];
       }
       
       this.filteredFeatures = this.allFeatures;
-      this.checkWidgetObject();
+      // Send the initial event to the Chart Widget.
+      let initialSelectEvent: IM.SelectEvent = {
+        selectedItem: this.allFeatures[0],
+        widgetName: this.selectorWidget.name
+      }
+      this.dashboardService.sendWidgetEvent(initialSelectEvent);
+
+      this.toggleDataLoading = false;
     });
   }
 
@@ -243,16 +288,23 @@ export class SelectorComponent {
     }
   }
 
+  private set toggleDataLoading(loaded: boolean) {
+    this.dataLoadingSubject.next(loaded);
+  }
+
   /**
    * Called when mat-option is clicked from the Date Mat Form Field. It sends the
    * selected data to the widgetService BehaviorSubject, which will update any other
    * widgets that are subscribed to it.
    * @param item The feature item object that's been selected.
    */
-  updateItem(item: any): void {
-    this.widgetService.updateSelectedItem({
-      selectedItem: item
-    });
+  updateSelectedItem(item: any): void {
+    var widgetEvent: IM.SelectEvent = {
+      selectedItem: item,
+      widgetName: this.selectorWidget.name
+    };
+
+    this.dashboardService.sendWidgetEvent(widgetEvent);
   }
 
   /**

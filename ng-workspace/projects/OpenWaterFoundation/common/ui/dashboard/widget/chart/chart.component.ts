@@ -17,7 +17,7 @@ import { MonthTS,
 import { MapUtil }                from '@OpenWaterFoundation/common/leaflet';
 import { DatastoreManager }       from '@OpenWaterFoundation/common/util/datastore';
 import { ChartService }           from './chart.service';
-import { WidgetService }          from '../widget.service';
+import { DashboardService }          from '../../dashboard.service';
 // I believe that if this type of 'import' is used, the package needs to be added
 // to the angular.json scripts array.
 declare var Plotly: any;
@@ -35,14 +35,14 @@ export class ChartComponent implements OnInit, OnDestroy {
   private allResultsSub$: Subscription;
   /** The array of objects to pass to the tstable component for data table creation. */
   attributeTable: any[] = [];
-  /** Set to true if an error occurred in this widget somewhere, but a check in another
-   * widget can be performed. */
-  private chartWarning = false;
   /** The object with the necessary chart data for displaying a Plotly chart. */
   @Input() chartWidget: IM.ChartWidget;
   /** A string containing the name to be passed to the TSTableComponent's first
   * column name: DATE or DATE / TIME. */
   dateTimeColumnName: string;
+  /** String array representing the type of error that occurred while building this
+   * widget. Used by the error widget. */
+   errorTypes: string[] = [];
   /** Datastore manager to determine what datastore should be used to retrieve information
    * from. Can find built-in and user provided datastores. */
   private dsManager: DatastoreManager = DatastoreManager.getInstance();
@@ -55,13 +55,9 @@ export class ChartComponent implements OnInit, OnDestroy {
   featureProperties: any;
   /** Subscription for the initial files to read if provided in the Chart Widget. */
   initialResultsSub$: Subscription;
-  /**
-   * 
-   */
+  /** Observable that's updated as a BehaviorSubject when a critical error creating
+   * this component occurs. */
   isChartError$: Observable<boolean>;
-  /** Observable representing the ChartSelectorError BehaviorSubject from the
-   * widgetService. Used by the template to show an error widget. */
-  isChartSelectorError$: Observable<boolean>;
   /** Boolean for helping dialog-tstable component determine what kind of file needs
   * downloading. */
   isTSFile: boolean;
@@ -75,11 +71,13 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** The string representing the TSID before the first tilde (~) in the graph template
   * object. Used to help create a unique graph ID. */
   TSIDLocation: string;
+  /**
+   * 
+   */
+  private updateResultsSub$: Subscription;
   /** An array containing the value header names after the initial DATE / TIME
   * header. To be passed to dialog-tstable for downloading files. */
   valueColumns: string[] = [];
-  /** String describing what kind of error occurred. */
-  widgetErrorType: string;
 
 
   /**
@@ -88,7 +86,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   */
   constructor(private commonService: OwfCommonService,
     private chartService: ChartService,
-    private widgetService: WidgetService) { }
+    private dashboardService: DashboardService) { }
 
 
   /**
@@ -97,15 +95,27 @@ export class ChartComponent implements OnInit, OnDestroy {
    */
   private checkWidgetObject(): void {
 
-    if (!this.chartWidget.chartFeaturePath || !this.chartWidget.graphTemplatePath) {
-      console.log('No chartFeaturePath and/or graphTemplatePath property given for ' +
-      'the Chart Widget in the Dashboard config file.');
-      console.log('Assuming the necessary properties were given to the Selector Widget.');
-      this.chartWarning = true;
+    var error = false;
+
+    if (!this.chartWidget.graphTemplatePath) {
+      this.errorTypes.push('no graphTemplatePath');
+      error = true;
+    }
+    if (!this.chartWidget.name) {
+      this.errorTypes.push('no name');
+      error = true;
+    }
+
+    if (error === true) {
+      this.dashboardService.setChartError = true;
       return;
     }
 
-    this.initChartVariables();
+    // Determine if the Chart widget has a SelectEvent. If not, the initialization
+    // of the Chart widget can be performed.
+    if (this.chartService.hasSelectEvent(this.chartWidget) === false) {
+      this.initChartVariables();
+    }
   }
 
   /**
@@ -349,35 +359,28 @@ export class ChartComponent implements OnInit, OnDestroy {
    */
   private initChartVariables(): void {
 
-    var featureAndGraphTemplate: Observable<any>[] = [];
+    this.initialResultsSub$ = this.commonService.getJSONData(
+      this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
+    ).subscribe({
 
-    for (let initFile of [this.chartWidget.chartFeaturePath, this.chartWidget.graphTemplatePath]) {
-      featureAndGraphTemplate.push(
-        this.commonService.getJSONData(this.commonService.buildPath(IM.Path.dbP, [initFile]))
-      );
-    }
+      next: (graphTemplate: IM.GraphTemplate) => {
 
-    this.initialResultsSub$ = forkJoin(featureAndGraphTemplate).subscribe((initResults: any[]) => {
-
-      this.featureProperties = initResults[0];
-      this.graphTemplatePrime = initResults[1];
-      // Create a clone of the original graph template file.
-      this.graphTemplate = structuredClone(this.graphTemplatePrime);
-
-      // Replace the ${properties} in the graphTemplate object from the graph
-      // template file.
-      MapUtil.replaceProperties(this.graphTemplate, this.featureProperties);
-      // Set the class variable TSIDLocation to the first dataGraph object from the
-      // graphTemplate object. This is used as a unique identifier for the Plotly
-      // graph <div> id attribute.
-      this.TSIDLocation = this.commonService.parseTSID(
-        this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
-
-      // Set the mainTitleString to be used by the map template file to display as
-      // the TSID location (for now).
-      this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
-
-      this.obtainAndCreateAllGraphs();
+        this.graphTemplatePrime = graphTemplate;
+        // Create a clone of the original graph template file.
+        this.graphTemplate = structuredClone(this.graphTemplatePrime);
+        
+        // Set the class variable TSIDLocation to the first dataGraph object from the
+        // graphTemplate object. This is used as a unique identifier for the Plotly
+        // graph <div> id attribute.
+        this.TSIDLocation = this.commonService.parseTSID(
+          this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
+  
+        // Set the mainTitleString to be used by the map template file to display as
+        // the TSID location (for now).
+        this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
+  
+        this.obtainAndCreateAllGraphs();
+      }
     });
   }
 
@@ -387,24 +390,50 @@ export class ChartComponent implements OnInit, OnDestroy {
   */
   ngOnInit(): void {
 
-    this.isChartSelectorError$ = this.widgetService.isChartSelectorError;
-    this.isChartError$ = this.widgetService.isChartError;
+    this.isChartError$ = this.dashboardService.isChartError;
 
     this.checkWidgetObject();
 
-    // Is only called when the selected item is updated from the Selector Widget.
-    this.widgetService.getSelectedItem().subscribe((comm: any) => {
-      this.updateChartVariables(comm);
+    // TODO jpkeahey 2022-04-27: This might need to be in a for loop for multiple
+    // Event objects in the eventHandlers.
+    this.dashboardService.getWidgetEvent(this.chartWidget).subscribe((selectEvent: IM.SelectEvent) => {
+
+      // Check if the initial selectEvent was passed.
+      if (selectEvent === null) {
+        return;
+      }
+
+      // If graphTemplatePrime hasn't been set yet, read it in and set it here.
+      if (!this.graphTemplatePrime) {
+        this.updateResultsSub$ = this.commonService.getJSONData(
+          this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
+        ).subscribe({
+          next: (graphTemplate: IM.GraphTemplate) => {
+            this.graphTemplatePrime = graphTemplate;
+            // Update the chart with the new feature object data.
+            this.updateChartVariables(selectEvent);
+          }
+        });
+      } else {
+        // Update the chart with the new feature object data.
+        this.updateChartVariables(selectEvent);
+      }
     });
   }
 
   /**
-  * Called once, before the instance is destroyed. Unsubscribes from all subscriptions
-  * to prevent memory leaks.
+  * Called once, before the instance is destroyed. Unsubscribes from all defined
+  * subscriptions to prevent memory leaks.
   */
   ngOnDestroy(): void {
     this.allResultsSub$.unsubscribe();
-    this.initialResultsSub$.unsubscribe();
+    
+    if (this.initialResultsSub$) {
+      this.initialResultsSub$.unsubscribe()
+    }
+    if (this.updateResultsSub$) {
+      this.updateResultsSub$.unsubscribe();
+    }
   }
 
   /**
@@ -452,10 +481,10 @@ export class ChartComponent implements OnInit, OnDestroy {
       });
 
       if (chartError === true) {
-        this.widgetService.setChartError = true;
+        this.dashboardService.setChartError = true;
         return;
       } else {
-        this.widgetService.setChartError = false;
+        this.dashboardService.setChartError = false;
       }
 
       this.createPlotlyGraph(allGraphObjects);
@@ -465,28 +494,12 @@ export class ChartComponent implements OnInit, OnDestroy {
   /**
    * Called when an item has been selected from this widget's dropdown list. Uses
    * an object with the new data so it can be used to update the drawn chart.
-   * @param comm The ChartSelector communicator object passed by the BehaviorSubject
+   * @param selectEvent The ChartSelector communicator object passed by the BehaviorSubject
    * when it has been updated.
    */
-  private updateChartVariables(comm: IM.ChartSelectorComm): void {
+  private updateChartVariables(selectEvent: IM.SelectEvent): void {
 
-    if (comm.noItemSelected) {
-      return;
-    }
-
-    if (comm.graphTemplate && this.graphTemplatePrime === undefined) {
-      this.graphTemplatePrime = comm.graphTemplate;
-    } else if (comm.noGraphTemplatePath) {
-      var selectorWarning = true;
-      // Check if the Chart Widget also was not given a graphTemplatePath property
-      // (full error), and if so, create an error widget.
-      if (this.chartWarning === true && selectorWarning === true) {
-        this.widgetErrorType = 'ChartSelector no path';
-        this.widgetService.setChartSelectorError = true;
-      }
-      return;
-    }
-    this.featureProperties = comm.selectedItem;
+    this.featureProperties = selectEvent.selectedItem;
     this.graphTemplate = structuredClone(this.graphTemplatePrime);
 
     // Replace the ${properties} in the graphTemplate object from the graph
@@ -497,7 +510,8 @@ export class ChartComponent implements OnInit, OnDestroy {
     // graphTemplate object. This is used as a unique identifier for the Plotly
     // graph <div> id attribute.
     this.TSIDLocation = this.commonService.parseTSID(
-      this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
+      this.graphTemplate.product.subProducts[0].data[0].properties.TSID
+    ).location;
 
     // Set the mainTitleString to be used by the map template file to display as
     // the TSID location (for now).

@@ -13,6 +13,14 @@
         <widget-chart [chartWidget]="widget"></widget-chart>
       </div>
 
+      <div *ngIf="widget.type === 'diagnostics'" class="widget-container">
+        <widget-diagnostics></widget-diagnostics>
+      </div>
+
+      <div *ngIf="widget.type === 'error'" class="error-widget-comp-container">
+        <widget-error [errorTypes]="widget.errorTypes" [name]="'dashboard'"></widget-error>
+      </div>
+
       <div *ngIf="widget.type === 'image'" class="widget-container">
         <widget-image [imageWidget]="widget"></widget-image>
       </div>

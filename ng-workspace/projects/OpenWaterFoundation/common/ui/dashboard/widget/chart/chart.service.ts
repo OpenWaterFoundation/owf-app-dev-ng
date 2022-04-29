@@ -209,6 +209,25 @@ export class ChartService {
   }
 
   /**
+   * 
+   * @param widget 
+   * @returns 
+   */
+  hasSelectEvent(widget: IM.DashboardWidget): boolean {
+
+    if (!widget.eventHandlers) {
+      return false;
+    }
+    
+    for (let widgetEvent of widget.eventHandlers) {
+      if (widgetEvent.eventType.toLowerCase() === 'selectevent') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * @returns An array of the data values to display on the y Axis of the time series
    * graph being created.
    * @param timeSeries The current time series to use to extract the y axis data

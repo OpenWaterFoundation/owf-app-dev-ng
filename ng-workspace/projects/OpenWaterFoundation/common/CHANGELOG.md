@@ -10,7 +10,34 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
-# 3.2.0 (dev) #
+# 3.3.0 #
+
+### Features / Enhancements ###
+
+* Updated & streamlined error handling for all widgets, including the building of
+the top-level dashboard itself, with more robust and helpful DevTools messages.
+* Added the `JSONArrayName` property for a Selector Widget.
+* Added the ability to add eventHandlers to widgets that want to listen to other
+widgets. This is done in the Dashboard configuration file.
+* Specifically started with the `SelectEvent`, so a Chart widget can see when
+something has been selected from the Selector widget, and update the data to show
+another chart.
+
+### Bug Fixes ###
+
+* Fixed a bug that would error the application if a user datastore is not provided
+in the `app-config.json` file.
+* Fixed a bug that wouldn't read a CSV file relative to the dashboard config file.
+* Changed how the Chart widget deals with initialization and updating if listening
+to a Selector widget.
+
+### Refactoring ###
+
+* Fixed a typo in the Text Widget documentation.
+* Removed the `chartFeaturePath` property from a Chart widget. The Chart widget
+will now just use a hard-coded graph template file, with now ${} properties.
+
+# 3.2.0 #
 
 ### Features / Enhancements ###
 

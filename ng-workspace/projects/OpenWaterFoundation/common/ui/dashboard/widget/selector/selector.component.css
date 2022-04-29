@@ -21,6 +21,10 @@
   color: #9DB66B !important;
 }
 
+.progress-bar {
+  align-self: flex-end;
+}
+
 /* The main mat-form-field to be shown in the widget. */
 .select-form {
   padding: 0px;
