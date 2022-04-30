@@ -10,6 +10,12 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.3.1 #
+
+### Bug Fixes ###
+
+* Fixed a bug 
+
 # 3.3.0 #
 
 ### Features / Enhancements ###

@@ -41,7 +41,8 @@ export class DashboardService {
     'map',
     'selector',
     'statusIndicator',
-    'text'
+    'textMarkdown',
+    'textHTML'
   ];
 
 
