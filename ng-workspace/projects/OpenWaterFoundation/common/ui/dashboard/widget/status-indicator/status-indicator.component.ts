@@ -12,6 +12,9 @@ import * as IM              from '@OpenWaterFoundation/common/services';
 })
 export class StatusIndicatorComponent {
   
+  average: string;
+  
+  allFeatures: any[] = [];
   /** Displays a red down caret icon in the widget if set to true. */
   changeDecBad: boolean;
   /** Displays a green down caret icon in the widget if set to true. */
@@ -20,13 +23,15 @@ export class StatusIndicatorComponent {
   changeIncBad: boolean;
   /** Displays a green up caret icon in the widget if set to true. */
   changeIncGood: boolean;
+
+  difference: string;
   /** Displays a red X icon in the widget if set to true. */
   failureIndicator: boolean;
   /** Displays a green check icon in the widget if set to true. */
   passingIndicator: boolean;
   /** The title of this widget from the widget's `title` property in the dashboard
    * configuration file. */
-  @Input() title: string;
+  @Input('statusIndicatorWidget') statusIndicatorWidget: IM.StatusIndicatorWidget;
   /** Displays a yellow exclamation icon in the widget if set to true. */
   warningIndicator: boolean;
   /**
@@ -48,6 +53,24 @@ export class StatusIndicatorComponent {
   ngOnInit(): void {
     // HARD CODE the displaying 'main' and 'change' indicator icons for now.
     this.passingIndicator = true; this.changeDecBad = true;
+
+    this.commonService.getJSONData(
+      this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath])
+    ).subscribe((data: any) => {
+      
+      this.allFeatures = data.ResultList;
+
+      var measValueAverage = 0;
+
+      for (let feature of this.allFeatures) {
+        measValueAverage += feature.measValue;
+      }
+
+      this.average = (measValueAverage / this.allFeatures.length).toFixed(2);
+
+      this.difference = (Math.abs(Number(this.average) - this.statusIndicatorWidget.referenceValue)).toFixed(2);
+
+    });
   }
 
   

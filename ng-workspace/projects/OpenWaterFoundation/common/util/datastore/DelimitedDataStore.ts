@@ -14,6 +14,12 @@ export class DelimitedDatastore {
   constructor() {}
 
 
+  /**
+   * 
+   * @param rootUrl 
+   * @param path 
+   * @returns 
+   */
   private static convertPath(rootUrl: string, path: string): string {
 
     if (rootUrl.endsWith('/') && path.startsWith('/')) {
@@ -27,6 +33,13 @@ export class DelimitedDatastore {
     return;
   }
 
+  /**
+   * 
+   * @param service 
+   * @param datastore 
+   * @param fullTSID 
+   * @returns 
+   */
   static readDelimitedData(service: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<any> {
 
     var convertedPath: string;

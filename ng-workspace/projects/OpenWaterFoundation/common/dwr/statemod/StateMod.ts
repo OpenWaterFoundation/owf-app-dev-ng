@@ -14,7 +14,6 @@ import { catchError,
           map }              from 'rxjs/operators';
 
 import { OwfCommonService }  from '@OpenWaterFoundation/common/services';
-import { HttpErrorResponse } from '@angular/common/http';
 
 
 export class StateModTS {

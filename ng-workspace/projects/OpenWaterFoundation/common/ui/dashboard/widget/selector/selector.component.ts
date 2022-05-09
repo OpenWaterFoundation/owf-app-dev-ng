@@ -175,11 +175,12 @@ export class SelectorComponent {
       header: false,
       complete: (result: Papa.ParseResult<any>) => {
 
-        var headers: string[] = result.data[this.selectorWidget.skipDataLines ?
-          this.selectorWidget.skipDataLines : 0];
+        var headers: string[] = result.data[
+          this.selectorWidget.skipDataLines ? this.selectorWidget.skipDataLines : 0
+        ];
 
         var lineToStart = this.selectorWidget.skipDataLines ?
-        (this.selectorWidget.skipDataLines + 1) : 0;
+        (this.selectorWidget.skipDataLines + 1) : 1;
 
         var parsedResult: any[] = [];
 
@@ -192,7 +193,7 @@ export class SelectorComponent {
           }
           parsedResult.push(parsedObject);
         }
-        
+
         this.allFeatures = parsedResult;
         this.filteredFeatures = this.allFeatures;
 

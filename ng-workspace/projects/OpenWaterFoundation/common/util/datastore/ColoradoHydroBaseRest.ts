@@ -1,13 +1,12 @@
 import { Observable }       from 'rxjs/internal/Observable';
 import { TS }               from '@OpenWaterFoundation/common/ts';
 
-import { StateModTS }       from '@OpenWaterFoundation/common/dwr/statemod';
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
 
 
 // @dynamic
-export class StateModDatastore {
+export class ColoradoHydroBaseRestDatastore {
 
 
   constructor() {}
@@ -20,6 +19,8 @@ export class StateModDatastore {
    * @returns 
    */
   private static convertPath(rootUrl: string, path: string): string {
+
+
 
     if (rootUrl.endsWith('/') && path.startsWith('/')) {
       return rootUrl + path.substring(1);
@@ -39,23 +40,12 @@ export class StateModDatastore {
    * @param fullTSID 
    * @returns 
    */
-  public static readTimeSeries(service: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
+  public static getData(service: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
 
-    var convertedPath: string;
+    console.log(datastore);
+    console.log(fullTSID);
 
-    if (datastore.rootUrl !== null) {
-      convertedPath = StateModDatastore.convertPath(datastore.rootUrl, fullTSID.path);
-    } else {
-      convertedPath = fullTSID.path
-    }
 
-    return new StateModTS(service).readTimeSeries(
-      fullTSID.location,
-      service.buildPath(IM.Path.sMP, [convertedPath]),
-      null,
-      null,
-      null,
-      true
-    );
+    return;
   }
 }

@@ -11,6 +11,17 @@
   justify-content: center;
 }
 
+/*  */
+.change-icon {
+  margin-right: 10px;
+}
+
+/*  */
+.change-icon-and-info-container {
+  display: flex;
+  justify-content: center;
+}
+
 /* If the change is bad, display red. */
 .change-icon-bad {
   color: rgb(168, 0, 0);
@@ -21,9 +32,16 @@
   color: rgb(0, 102, 0);
 }
 
-/* Sets the width of each possible change icon that can be displayed. */
-.change-icon-size {
-  width: 10%;
+/*  */
+.change-info-container {
+  display: flex;
+  width: 50%;
+}
+
+/* The element used to show what the change was from the previous time period. */
+.change-info {
+  margin: 3px 0px 0px 0px;
+  font-size: larger;
 }
 
 /* Passing font awesome icon. */
@@ -41,22 +59,18 @@
   color: rgb(247, 0, 0);
 }
 
-/* Div for the icon and changes information at the bottom of the widget. */
-.icon-and-changes-container {
-  display: flex;
-  justify-content: center;
-}
-
 /* Div for the main icon and data for the widget. */
 .icon-and-data-container {
   display: flex;
+  justify-content: center;
+  height: 55%;
 }
 
 /* Styles the main data field. */
 .indicator-data {
   width: 50%;
-  font-size: xxx-large;
-  margin: 5px 0px 0px 0px;
+  font-size: xx-large;
+  margin: 22px 0px 0px 0px;
 }
 
 /* The <div> containing each of the indicator icons. */
@@ -67,10 +81,12 @@
 /* The <div> containing all elements in the widget. */
 .status-indicator-container {
   text-align: center;
+  height: 100%;
   width: 100%;
 }
 
 /* The title for the status indicator widget. */
 .status-title {
   margin: 0;
+  height: 20%;
 }

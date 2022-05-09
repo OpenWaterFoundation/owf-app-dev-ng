@@ -61,7 +61,7 @@ export class DashboardComponent implements OnDestroy {
     });
 
     if (dashboardConfig.widgets.length !== Object.keys(uniqueKeys).length) {
-      console.warn("Multiple widget objects from the Dashboard configuration file" +
+      console.warn("Multiple widget objects from the Dashboard configuration file " +
       "contain the same name, and can cause undesired behavior for event handling.");
     }
 

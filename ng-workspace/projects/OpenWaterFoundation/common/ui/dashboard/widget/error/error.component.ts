@@ -47,7 +47,7 @@ export class ErrorComponent {
 
     console.error('There was a issue with getting the CSV file from the' +
     this.errorWidgetName + 'widget.');
-    console.log('If it was a 500 error, refresh the page to resolve.');
+    console.error('If it was a 500 error, refresh the page to resolve.');
   }
 
   /**
@@ -82,8 +82,6 @@ export class ErrorComponent {
    * Called right after the constructor.
    */
   ngOnInit(): void {
-    console.log(this.errorWidgetName);
-    console.log(this.errorTypes);
     // Determine which widget is erroring.
     switch(this.errorWidgetName) {
       case IM.Widget.cht: this.chartError(); break;

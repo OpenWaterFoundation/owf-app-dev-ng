@@ -460,8 +460,9 @@ export class ChartComponent implements OnInit, OnDestroy {
 
         // Check for any errors.
         if (result.error) {
-          console.error('Graph object in position ' + (i + 1) + ' from the data array ' +
-          'has errored and will not be shown on the Chart.');
+          console.error('Graph Template file: Graph object in position ' + (i + 1) +
+          ' from the data array has errored. If this chart object does not have an ' +
+          'eventHandler, ${} properties are not allowed in the path to the data.');
           chartError = true;
           return;
         }

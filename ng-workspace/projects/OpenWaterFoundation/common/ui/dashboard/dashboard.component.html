@@ -34,7 +34,7 @@
       </div>
 
       <div *ngIf="widget.type === 'statusIndicator'" class="widget-container">
-        <widget-status-indicator [title]="widget.title"></widget-status-indicator>
+        <widget-status-indicator [statusIndicatorWidget]="widget"></widget-status-indicator>
       </div>
 
       <div *ngIf="widget.type === 'textHTML' || widget.type === 'textMarkdown'" class="widget-container">

@@ -13,6 +13,12 @@ export class DateValueDatastore {
   constructor() {}
 
 
+  /**
+   * 
+   * @param rootUrl 
+   * @param path 
+   * @returns 
+   */
   private static convertPath(rootUrl: string, path: string): string {
 
     if (rootUrl.endsWith('/') && path.startsWith('/')) {
@@ -26,6 +32,13 @@ export class DateValueDatastore {
     return;
   }
 
+  /**
+   * 
+   * @param service 
+   * @param datastore 
+   * @param fullTSID 
+   * @returns 
+   */
   public static readTimeSeries(service: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
 
     var convertedPath: string;

@@ -10,6 +10,7 @@ import { BehaviorSubject } from "rxjs";
 export enum DatastoreType {
   delimited = 'owf.datastore.delimited',
   dateValue = 'owf.datastore.datevalue',
+  json = 'owf.datastore.json',
   stateMod = 'owf.datastore.statemod'
 }
 
@@ -584,6 +585,10 @@ export interface SelectorWidget extends DashboardWidget {
 }
 
 export interface StatusIndicatorWidget extends DashboardWidget {
+  title?: string;
+  dataPath?: string;
+  referenceValue?: number;
+  badRef?: string;
 }
 
 export interface TextWidget extends DashboardWidget {

@@ -1,7 +1,7 @@
 <div class="center-all-info">
   <div class="status-indicator-container">
 
-    <h4 class="status-title"><u>{{title}}</u></h4>
+    <h4 class="status-title"><u>{{statusIndicatorWidget.title}}</u></h4>
   
     <div class="icon-and-data-container">
 
@@ -17,29 +17,29 @@
         <i class="fa fa-times fa-5x" aria-hidden="true"></i>
       </div>
   
-      <p class="indicator-data">42</p>
+      <p class="indicator-data">{{average}}</p>
       
     </div>
     
-    <div class="icon-and-changes-container">
-
-      <div *ngIf="changeDecBad" class="change-icon-size">
+    <div class="change-icon-and-info-container">
+        
+      <div *ngIf="changeDecBad" class="change-icon">
         <i class="fa fa-caret-down fa-2x change-icon-bad" aria-hidden="true"></i>
       </div>
 
-      <div *ngIf="changeDecGood">
+      <div *ngIf="changeDecGood" class="change-icon">
         <i class="fa fa-caret-down fa-2x change-icon-good" aria-hidden="true"></i>
       </div>
 
-      <div *ngIf="changeIncBad">
+      <div *ngIf="changeIncBad" class="change-icon">
         <i class="fa fa-caret-up fa-2x change-icon-bad" aria-hidden="true"></i>
       </div>
 
-      <div *ngIf="changeIncGood">
+      <div *ngIf="changeIncGood" class="change-icon">
         <i class="fa fa-caret-up fa-2x change-icon-good" aria-hidden="true"></i>
       </div>
-      
-      <p style="margin: 3px 0px 0px 0px; font-size: larger; width: 10%;">16</p>
+
+      <p class="change-info">{{difference}}</p>
 
     </div>
     
