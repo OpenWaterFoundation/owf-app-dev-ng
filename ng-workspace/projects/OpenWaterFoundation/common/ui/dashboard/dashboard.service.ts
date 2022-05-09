@@ -17,6 +17,8 @@ export class DashboardService {
   /** Array of ListenedToWidget objects, which contain the name of the widget that
    * is being listened to, and the BehaviorSubject attached to the widget. */
   private listenedToWidgets: IM.ListenedToWidget[] = [];
+
+  private indicatorError: BehaviorSubject<boolean> = new BehaviorSubject(false);
   /** Set to true if any error occurs in the Selector Widget. */
   private selectorError: BehaviorSubject<boolean> = new BehaviorSubject(false);
   /** The list of supported image widget files. */
@@ -165,6 +167,20 @@ export class DashboardService {
    */
   set setChartError(error: boolean) {
     this.chartError.next(error);
+  }
+
+  /**
+   * 
+   */
+  get isIndicatorError(): Observable<boolean> {
+    return this.indicatorError.asObservable();
+  }
+
+  /**
+   * 
+   */
+  set setIndicatorError(error: boolean) {
+    this.indicatorError.next(error);
   }
   
   /**

@@ -1,23 +1,24 @@
 import { Component,
           Input,
           OnDestroy, 
-          OnInit}                 from '@angular/core';
+          OnInit}           from '@angular/core';
 
-import { forkJoin,
+import { BehaviorSubject,
+          forkJoin,
           Observable, 
-          Subscription }          from 'rxjs';
+          Subscription }    from 'rxjs';
 
-import structuredClone            from '@ungap/structured-clone';
+import structuredClone      from '@ungap/structured-clone';
 
-import { OwfCommonService }       from '@OpenWaterFoundation/common/services';
-import * as IM                    from '@OpenWaterFoundation/common/services';
+import { OwfCommonService } from '@OpenWaterFoundation/common/services';
+import * as IM              from '@OpenWaterFoundation/common/services';
 import { MonthTS,
           TS,
-          YearTS }                from '@OpenWaterFoundation/common/ts';
-import { MapUtil }                from '@OpenWaterFoundation/common/leaflet';
-import { DatastoreManager }       from '@OpenWaterFoundation/common/util/datastore';
-import { ChartService }           from './chart.service';
-import { DashboardService }          from '../../dashboard.service';
+          YearTS }          from '@OpenWaterFoundation/common/ts';
+import { MapUtil }          from '@OpenWaterFoundation/common/leaflet';
+import { DatastoreManager } from '@OpenWaterFoundation/common/util/datastore';
+import { ChartService }     from './chart.service';
+import { DashboardService } from '../../dashboard.service';
 // I believe that if this type of 'import' is used, the package needs to be added
 // to the angular.json scripts array.
 declare var Plotly: any;
@@ -37,12 +38,20 @@ export class ChartComponent implements OnInit, OnDestroy {
   attributeTable: any[] = [];
   /** The object with the necessary chart data for displaying a Plotly chart. */
   @Input() chartWidget: IM.ChartWidget;
+  /**
+   * 
+   */
+  private dataLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject(true);
+   /**
+    * 
+    */
+  dataLoading$ = this.dataLoadingSubject.asObservable();
   /** A string containing the name to be passed to the TSTableComponent's first
   * column name: DATE or DATE / TIME. */
   dateTimeColumnName: string;
   /** String array representing the type of error that occurred while building this
    * widget. Used by the error widget. */
-   errorTypes: string[] = [];
+  errorTypes: string[] = [];
   /** Datastore manager to determine what datastore should be used to retrieve information
    * from. Can find built-in and user provided datastores. */
   private dsManager: DatastoreManager = DatastoreManager.getInstance();
@@ -378,6 +387,8 @@ export class ChartComponent implements OnInit, OnDestroy {
         // Set the mainTitleString to be used by the map template file to display as
         // the TSID location (for now).
         this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
+
+        this.toggleDataLoading = false;
   
         this.obtainAndCreateAllGraphs();
       }
@@ -493,6 +504,13 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * 
+   */
+   private set toggleDataLoading(loaded: boolean) {
+    this.dataLoadingSubject.next(loaded);
+  }
+
+  /**
    * Called when an item has been selected from this widget's dropdown list. Uses
    * an object with the new data so it can be used to update the drawn chart.
    * @param selectEvent The ChartSelector communicator object passed by the BehaviorSubject
@@ -517,6 +535,8 @@ export class ChartComponent implements OnInit, OnDestroy {
     // Set the mainTitleString to be used by the map template file to display as
     // the TSID location (for now).
     this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
+
+    this.toggleDataLoading = false;
 
     this.obtainAndCreateAllGraphs();
   }

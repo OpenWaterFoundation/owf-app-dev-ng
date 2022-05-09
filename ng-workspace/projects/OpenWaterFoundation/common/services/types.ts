@@ -111,6 +111,7 @@ export enum Widget {
   dsh = 'dashboard',
   err = 'error',
   img = 'image',
+  ind = 'statusIndicator',
   sel = 'selector',
   txt = 'text'
 }

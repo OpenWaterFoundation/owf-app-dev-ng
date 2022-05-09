@@ -1,48 +1,59 @@
-<div class="center-all-info">
-  <div class="status-indicator-container">
+<div *ngIf="!(isIndicatorError$ | async); then showIndicator else error"></div>
 
-    <h4 class="status-title"><u>{{statusIndicatorWidget.title}}</u></h4>
+<ng-template #showIndicator>
+  <div class="center-all-info">
+    <div class="status-indicator-container">
   
-    <div class="icon-and-data-container">
-
-      <div *ngIf="passingIndicator" class="indicator-icon">
-        <i class="fa fa-check fa-5x" aria-hidden="true"></i>
-      </div>
-
-      <div *ngIf="warningIndicator" class="indicator-icon">
-        <i class="fa fa-exclamation fa-5x" aria-hidden="true"></i>
-      </div>
-
-      <div *ngIf="failureIndicator" class="indicator-icon">
-        <i class="fa fa-times fa-5x" aria-hidden="true"></i>
-      </div>
-  
-      <p class="indicator-data">{{average}}</p>
-      
-    </div>
+      <h4 class="status-title"><u>{{statusIndicatorWidget.title}}</u></h4>
     
-    <div class="change-icon-and-info-container">
+      <div class="icon-and-data-container">
+  
+        <div *ngIf="passingIndicator" class="indicator-icon">
+          <i class="fa fa-check fa-5x" aria-hidden="true"></i>
+        </div>
+  
+        <div *ngIf="warningIndicator" class="indicator-icon">
+          <i class="fa fa-exclamation fa-5x" aria-hidden="true"></i>
+        </div>
+  
+        <div *ngIf="failureIndicator" class="indicator-icon">
+          <i class="fa fa-times fa-5x" aria-hidden="true"></i>
+        </div>
+    
+        <p class="indicator-data">{{average}}</p>
         
-      <div *ngIf="changeDecBad" class="change-icon">
-        <i class="fa fa-caret-down fa-2x change-icon-bad" aria-hidden="true"></i>
       </div>
-
-      <div *ngIf="changeDecGood" class="change-icon">
-        <i class="fa fa-caret-down fa-2x change-icon-good" aria-hidden="true"></i>
-      </div>
-
-      <div *ngIf="changeIncBad" class="change-icon">
-        <i class="fa fa-caret-up fa-2x change-icon-bad" aria-hidden="true"></i>
-      </div>
-
-      <div *ngIf="changeIncGood" class="change-icon">
-        <i class="fa fa-caret-up fa-2x change-icon-good" aria-hidden="true"></i>
-      </div>
-
-      <p class="change-info">{{difference}}</p>
-
-    </div>
-    
+      
+      <div class="change-icon-and-info-container">
+          
+        <div *ngIf="changeDecBad" class="change-icon">
+          <i class="fa fa-caret-down fa-2x change-icon-bad" aria-hidden="true"></i>
+        </div>
   
+        <div *ngIf="changeDecGood" class="change-icon">
+          <i class="fa fa-caret-down fa-2x change-icon-good" aria-hidden="true"></i>
+        </div>
+  
+        <div *ngIf="changeIncBad" class="change-icon">
+          <i class="fa fa-caret-up fa-2x change-icon-bad" aria-hidden="true"></i>
+        </div>
+  
+        <div *ngIf="changeIncGood" class="change-icon">
+          <i class="fa fa-caret-up fa-2x change-icon-good" aria-hidden="true"></i>
+        </div>
+  
+        <p class="change-info">{{difference}}</p>
+  
+      </div>
+      
+    
+    </div>
   </div>
-</div>
+  
+</ng-template>
+
+<ng-template #error>
+  <div class="no-indicator-container">
+    <widget-error [errorTypes]="errorTypes" name="statusIndicator"></widget-error>
+  </div>
+</ng-template>

@@ -3,6 +3,8 @@ import { Component,
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
+import { DashboardService } from '../../dashboard.service';
+import { Observable }       from 'rxjs';
 
 
 @Component({
@@ -25,8 +27,13 @@ export class StatusIndicatorComponent {
   changeIncGood: boolean;
 
   difference: string;
+  /** String array representing the type of error that occurred while building this
+   * widget. Used by the error widget. */
+  errorTypes: string[] = [];
   /** Displays a red X icon in the widget if set to true. */
   failureIndicator: boolean;
+
+  isIndicatorError$: Observable<boolean>;
   /** Displays a green check icon in the widget if set to true. */
   passingIndicator: boolean;
   /** The title of this widget from the widget's `title` property in the dashboard
@@ -44,13 +51,55 @@ export class StatusIndicatorComponent {
    * 
    * @param commonService The injected Common library service.
    */
-  constructor(private commonService: OwfCommonService) {}
+  constructor(private commonService: OwfCommonService,
+    private dashboardService: DashboardService) {}
 
+
+  private checkWidgetObject(): void {
+
+    var error = false;
+
+    if (!this.statusIndicatorWidget.title) {
+      this.errorTypes.push('no title');
+      error = true;
+    }
+
+    if (error === true) {
+      this.dashboardService.setIndicatorError = true;
+      return;
+    }
+
+    // Determine if the Chart widget has a SelectEvent. If not, the initialization
+    // of the Chart widget can be performed.
+    if (this.hasSelectEvent(this.statusIndicatorWidget) === false) {
+      this.initStatusIndicator();
+    }
+  }
 
   /**
-   * Called right after the constructor.
+   * 
+   * @param widget 
+   * @returns 
    */
-  ngOnInit(): void {
+  private hasSelectEvent(widget: IM.DashboardWidget): boolean {
+
+    if (!widget.eventHandlers) {
+      return false;
+    }
+    
+    for (let widgetEvent of widget.eventHandlers) {
+      if (widgetEvent.eventType.toLowerCase() === 'selectevent') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 
+   */
+  private initStatusIndicator(): void {
+
     // HARD CODE the displaying 'main' and 'change' indicator icons for now.
     this.passingIndicator = true; this.changeDecBad = true;
 
@@ -73,6 +122,19 @@ export class StatusIndicatorComponent {
     });
   }
 
-  
+  /**
+   * Called right after the constructor.
+   */
+  ngOnInit(): void {
+
+    this.isIndicatorError$ = this.dashboardService.isIndicatorError;
+
+    this.checkWidgetObject();
+
+    this.dashboardService.getWidgetEvent(this.statusIndicatorWidget).subscribe((selectEvent: IM.SelectEvent) => {
+
+      console.log(selectEvent);
+    });
+  }
 
 }

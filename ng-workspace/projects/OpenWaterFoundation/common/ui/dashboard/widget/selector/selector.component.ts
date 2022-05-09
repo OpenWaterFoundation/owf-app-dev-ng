@@ -293,6 +293,9 @@ export class SelectorComponent {
     }
   }
 
+  /**
+   * 
+   */
   private set toggleDataLoading(loaded: boolean) {
     this.dataLoadingSubject.next(loaded);
   }

@@ -4,7 +4,8 @@ import { AfterViewInit,
           OnDestroy,
           ViewContainerRef,
           ViewEncapsulation }      from '@angular/core';
-import { ActivatedRoute }          from '@angular/router';
+import { ActivatedRoute,
+          Router }          from '@angular/router';
 import { MatDialog,
           MatDialogRef,
           MatDialogConfig }        from '@angular/material/dialog';
@@ -134,8 +135,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /** The refresh subscription. Used with the rxjs timer, and unsubscribed on component
    * destruction. */
   private refreshSub$ = new Subscription();
-  /** The route subscription, unsubscribed to on component destruction. */
-  private routeSub$ = <any>Subscription;
+  /** The activatedRoute subscription, unsubscribed to on component destruction. */
+  private actRouteSub$ = <any>Subscription;
   /** Boolean showing if the URL given for a layer is currently unavailable. */
   public serverUnavailable = false;
   /** Boolean to indicate whether the sidebar has been initialized. Don't need to
@@ -156,12 +157,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param commonService A reference to the common library service.
   * @param dialog A reference to the MatDialog for creating and displaying a popup
   * dialog with a chart.
-  * @param route Used for getting the parameter 'id' passed in by the url and from
+  * @param actRoute Used for getting the parameter 'id' passed in by the url and from
   * the router.
   */
   constructor(public commonService: OwfCommonService,
               public dialog: MatDialog,
-              private route: ActivatedRoute) {
+              private actRoute: ActivatedRoute,
+              private route: Router) {
     if (window['Cypress']) window['MapComponent'] = this;
   }
 
@@ -1521,6 +1523,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * standalone map if the true boolean is provided.
    */
   private initMapSettings(standalone?: string, configPath?: string): void {
+
+    // Immediately reset both standalone paths. This will prevent unwanted behavior
+    // whether a user navigates to another page by going to an actual map or just
+    // moving from dashboard to dashboard.
+    this.appConfigStandalonePath = this.mapConfigStandalonePath = undefined;
     let fullMapConfigPath = this.commonService.getAppPath() +
     // Get AND sets the map config path and geoJson path for relative path use.
     this.commonService.getFullMapConfigPath(this.mapID, standalone, configPath);
@@ -1557,10 +1564,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     // When the parameters in the URL are changed the map will refresh and load
     // according to new configuration data.
-    this.routeSub$ = this.route.params.subscribe(() => {
-      this.resetMapVariables();
+    this.actRouteSub$ = this.actRoute.paramMap.subscribe((paramMap) => {
 
-      this.mapID = this.route.snapshot.paramMap.get('id');
+      if (!this.route.url.toLowerCase().includes('/map/') &&
+      !this.appConfigStandalonePath && !this.mapConfigStandalonePath) {
+        return;
+      }
+
+      this.resetMapVariables();
+      this.mapID = paramMap.get('id');
 
       // Standalone Map for website embedding.
       if (this.appConfigStandalonePath) {
@@ -1583,7 +1595,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   public ngOnDestroy(): void {
     // Unsubscribe from all subscriptions that occurred in the Map Component.
-    this.routeSub$.unsubscribe();
+    this.actRouteSub$.unsubscribe();
     this.forkJoinSub$.unsubscribe();
     this.refreshSub$.unsubscribe();
     this.mapConfigSub$.unsubscribe();

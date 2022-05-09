@@ -79,6 +79,18 @@ export class ErrorComponent {
   }
 
   /**
+   * Determine what Status Indicator widget error occurred.
+   */
+  private indicatorError(): void {
+
+    this.errorTypes.forEach((errorType: string) => {
+      switch(errorType) {
+        case 'no title': this.missingRequiredProp('title'); break;
+      }
+    });
+  }
+
+  /**
    * Called right after the constructor.
    */
   ngOnInit(): void {
@@ -87,6 +99,7 @@ export class ErrorComponent {
       case IM.Widget.cht: this.chartError(); break;
       case IM.Widget.dsh: this.dashboardError(); break;
       case IM.Widget.img: this.imageError(); break;
+      case IM.Widget.ind: this.indicatorError(); break;
       case IM.Widget.sel: this.selectorError(); break;
       case IM.Widget.txt: this.textError(); break;
     }
