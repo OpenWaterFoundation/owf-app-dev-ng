@@ -136,7 +136,8 @@ following steps (assuming InfoMapper is being used):
 
 ## Changelog ##
 
-See the Common library [Changelog](CHANGELOG.md).
+See the Common library
+[Changelog](https://github.com/OpenWaterFoundation/owf-app-dev-ng/blob/main/ng-workspace/projects/OpenWaterFoundation/common/CHANGELOG.md).
 
 ## Running Unit Tests
 

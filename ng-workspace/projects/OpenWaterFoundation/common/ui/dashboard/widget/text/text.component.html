@@ -5,5 +5,5 @@
 </div>
 
 <div *ngIf="widgetError === true" class="error-widget-comp-container">
-  <widget-error [errorTypes]="errorTypes" name="text"></widget-error>
+  <widget-error [errorTypes]="errorTypes" [name]="textWidget.type"></widget-error>
 </div>

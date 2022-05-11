@@ -52,6 +52,7 @@
 /* Warning font awesome icon. */
 .fa-exclamation {
   color: rgb(243, 243, 0);
+  padding-top: 8px;
 }
 
 /* Failure font awesome icon. */
@@ -76,6 +77,15 @@
 /* The <div> containing each of the indicator icons. */
 .indicator-icon {
   width: 50%;
+}
+
+/* Centers the Error widget horizontally and vertically using flex. */
+.no-indicator-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* The <div> containing all elements in the widget. */

@@ -113,7 +113,8 @@ export enum Widget {
   img = 'image',
   ind = 'statusIndicator',
   sel = 'selector',
-  txt = 'text'
+  tHL = 'textHTML',
+  tMd = 'textMarkdown'
 }
 
 /** Enum representing the supported Window Types (Dialog Types) for the WindowManager. */
@@ -588,8 +589,15 @@ export interface SelectorWidget extends DashboardWidget {
 export interface StatusIndicatorWidget extends DashboardWidget {
   title?: string;
   dataPath?: string;
+  dataFormat?: string;
+  JSONArrayName?: string;
   referenceValue?: number;
   badRef?: string;
+  // All three of these are being used for now.
+  attributeName?: string;
+  columnName?: string;
+  propertyName?: string;
+  skipDataLines?: number;
 }
 
 export interface TextWidget extends DashboardWidget {

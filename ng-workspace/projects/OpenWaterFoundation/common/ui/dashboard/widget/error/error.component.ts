@@ -86,6 +86,9 @@ export class ErrorComponent {
     this.errorTypes.forEach((errorType: string) => {
       switch(errorType) {
         case 'no title': this.missingRequiredProp('title'); break;
+        case 'no value property':
+          this.missingRequiredProp('`attributeName`, `columnName`, or `propertyName`'); break;
+        case 'unsupported data type': /** ADD FUNCTION HERE. */ break;
       }
     });
   }
@@ -101,7 +104,8 @@ export class ErrorComponent {
       case IM.Widget.img: this.imageError(); break;
       case IM.Widget.ind: this.indicatorError(); break;
       case IM.Widget.sel: this.selectorError(); break;
-      case IM.Widget.txt: this.textError(); break;
+      case IM.Widget.tMd: this.textError(); break;
+      case IM.Widget.tHL: this.textError(); break;
     }
 
     if (this.errorWidgetName !== IM.Widget.dsh) {
@@ -133,9 +137,16 @@ export class ErrorComponent {
    */
   private printWidgetURL(): void {
 
+    var errorWidgetName = this.errorWidgetName.toLowerCase();
+
+    // Make sure the errorWidgetName will work with the GitHub URL.
+    if (errorWidgetName.includes('statusindicator')) {
+      errorWidgetName = 'status-indicator';
+    }
+
     var widgetDocURL = 'https://github.com/OpenWaterFoundation/owf-app-infomapper-ng-doc-user/' +
     'blob/master/mkdocs-project/docs/appendix-adding-a-dashboard/widget-' +
-    this.errorWidgetName.toLowerCase() + '.md';
+    errorWidgetName + '.md';
 
     console.error("Widget documentation can be found at " + widgetDocURL + ".");
   }
@@ -171,6 +182,10 @@ export class ErrorComponent {
     });
   }
 
+  unsupportedDataType(): void {
+
+  }
+
   /**
    * Error message if an unsupported file is provided in the dashboard configuration
    * file, and lists the currently supported files.
@@ -182,7 +197,8 @@ export class ErrorComponent {
     switch(this.errorWidgetName) {
       case IM.Widget.img:
         supportedFiles = this.dashboardService.supportedImageFiles; break;
-      case IM.Widget.txt:
+      case IM.Widget.tMd:
+      case IM.Widget.tHL:
         supportedFiles = this.dashboardService.supportedTextFiles; break;
     }
     

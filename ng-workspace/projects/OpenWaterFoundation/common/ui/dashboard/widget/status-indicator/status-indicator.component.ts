@@ -5,6 +5,7 @@ import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
 import { DashboardService } from '../../dashboard.service';
 import { Observable }       from 'rxjs';
+import * as Papa            from 'papaparse';
 
 
 @Component({
@@ -14,8 +15,9 @@ import { Observable }       from 'rxjs';
 })
 export class StatusIndicatorComponent {
   
-  average: string;
-  
+  /**
+   * 
+   */
   allFeatures: any[] = [];
   /** Displays a red down caret icon in the widget if set to true. */
   changeDecBad: boolean;
@@ -32,8 +34,13 @@ export class StatusIndicatorComponent {
   errorTypes: string[] = [];
   /** Displays a red X icon in the widget if set to true. */
   failureIndicator: boolean;
-
+  /** Observable that's updated as a BehaviorSubject when a critical error creating
+   * this component occurs. */
   isIndicatorError$: Observable<boolean>;
+  /**
+   * 
+   */
+  mainData: string;
   /** Displays a green check icon in the widget if set to true. */
   passingIndicator: boolean;
   /** The title of this widget from the widget's `title` property in the dashboard
@@ -64,61 +71,59 @@ export class StatusIndicatorComponent {
       error = true;
     }
 
+    var dataFormat = this.statusIndicatorWidget.dataFormat.toLowerCase()
+    if (dataFormat === 'csv' || dataFormat === 'json') {
+
+      if (!this.statusIndicatorWidget.attributeName && !this.statusIndicatorWidget.columnName &&
+        !this.statusIndicatorWidget.propertyName) {
+          this.errorTypes.push('no value property');
+          error = true;
+        }
+    }
+
     if (error === true) {
       this.dashboardService.setIndicatorError = true;
       return;
     }
 
     // Determine if the Chart widget has a SelectEvent. If not, the initialization
-    // of the Chart widget can be performed.
-    if (this.hasSelectEvent(this.statusIndicatorWidget) === false) {
+    // of the Status Indicator widget can be performed.
+    if (this.dashboardService.hasSelectEvent(this.statusIndicatorWidget) === false) {
       this.initStatusIndicator();
     }
   }
 
   /**
-   * 
-   * @param widget 
-   * @returns 
-   */
-  private hasSelectEvent(widget: IM.DashboardWidget): boolean {
-
-    if (!widget.eventHandlers) {
-      return false;
-    }
-    
-    for (let widgetEvent of widget.eventHandlers) {
-      if (widgetEvent.eventType.toLowerCase() === 'selectevent') {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * 
+   * Initializes the status indicator widget by reading in the supplied data from
+   * the `dataPath` widget property and sets up variables to be shown in the widget.
    */
   private initStatusIndicator(): void {
 
     // HARD CODE the displaying 'main' and 'change' indicator icons for now.
-    this.passingIndicator = true; this.changeDecBad = true;
+    this.passingIndicator = true; this.changeIncGood = true;
 
-    this.commonService.getJSONData(
-      this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath])
-    ).subscribe((data: any) => {
-      
-      this.allFeatures = data.ResultList;
+    var dataFormat = this.statusIndicatorWidget.dataFormat.toLowerCase();
 
-      var measValueAverage = 0;
+    if (dataFormat === 'csv') {
+      this.retrieveCSVData();
+    } else if (dataFormat === 'json') {
+      this.retrieveJSONData();
+    }
+  }
 
-      for (let feature of this.allFeatures) {
-        measValueAverage += feature.measValue;
+  /**
+   * Listens to another widget and updates when something is updated in said widget.
+   */
+  private listenForEvent(): void {
+    
+    this.dashboardService.getWidgetEvent(this.statusIndicatorWidget).subscribe((selectEvent: IM.SelectEvent) => {
+
+      // Check if the initial selectEvent was passed.
+      if (selectEvent === null) {
+        return;
       }
 
-      this.average = (measValueAverage / this.allFeatures.length).toFixed(2);
-
-      this.difference = (Math.abs(Number(this.average) - this.statusIndicatorWidget.referenceValue)).toFixed(2);
-
+      console.log(selectEvent);
     });
   }
 
@@ -130,10 +135,71 @@ export class StatusIndicatorComponent {
     this.isIndicatorError$ = this.dashboardService.isIndicatorError;
 
     this.checkWidgetObject();
+    this.listenForEvent();
+  }
 
-    this.dashboardService.getWidgetEvent(this.statusIndicatorWidget).subscribe((selectEvent: IM.SelectEvent) => {
+  /**
+   * Gets CSV data from a data source and processes it so this widget can utilize it.
+   */
+  private retrieveCSVData(): void {
 
-      console.log(selectEvent);
+    var fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath]);
+
+    Papa.parse(fullDataPath, {
+      delimiter: ",",
+      download: true,
+      comments: "#",
+      skipEmptyLines: true,
+      header: false,
+      complete: (result: Papa.ParseResult<any>) => {
+
+        var dataArray = this.dashboardService.processWidgetCSVData(result.data, this.statusIndicatorWidget);
+
+        var givenProperty = this.dashboardService.getProvidedValue(this.statusIndicatorWidget);
+        this.mainData = dataArray[dataArray.length - 1][givenProperty]
+        
+        // this.toggleDataLoading = false;
+      },
+      error: (error: Papa.ParseError, file: File) => {
+        this.errorTypes.push('bad csv');
+        // this.toggleDataLoading = false;
+        this.dashboardService.setSelectorError = true;
+        return;
+      }
+    });
+  }
+
+  /**
+   * Gets JSON data from a data source and processes it so this widget can utilize it.
+   */
+  private retrieveJSONData(): void {
+
+    this.commonService.getJSONData(
+      this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath])
+    ).subscribe((data: any) => {
+
+      var dataArray: any[] = this.dashboardService.processWidgetJSONData(data, this.statusIndicatorWidget);
+
+      if (data !== null) {
+
+        var givenProperty = this.dashboardService.getProvidedValue(this.statusIndicatorWidget);
+        this.mainData = dataArray[dataArray.length - 1][givenProperty];
+      } else {
+        this.errorTypes.push('unsupported data type');
+        this.dashboardService.setIndicatorError = true;
+        return;
+      }
+
+      console.log(data);
+      
+      // this.allFeatures = data.ResultList;
+      // var measValueAverage = 0;
+      // for (let feature of this.allFeatures) {
+      //   measValueAverage += feature.measValue;
+      // }
+      // this.average = (measValueAverage / this.allFeatures.length).toFixed(2);
+      // this.difference = (Math.abs(Number(this.average) - this.statusIndicatorWidget.referenceValue)).toFixed(2);
+
     });
   }
 

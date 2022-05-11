@@ -122,7 +122,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     // Determine if the Chart widget has a SelectEvent. If not, the initialization
     // of the Chart widget can be performed.
-    if (this.chartService.hasSelectEvent(this.chartWidget) === false) {
+    if (this.dashboardService.hasSelectEvent(this.chartWidget) === false) {
       this.initChartVariables();
     }
   }
@@ -396,14 +396,11 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Initial function call when the Dialog component is created. Determines whether
-  * a CSV or StateMod file is to be read for graph creation.
-  */
-  ngOnInit(): void {
-
-    this.isChartError$ = this.dashboardService.isChartError;
-
-    this.checkWidgetObject();
+   * Listens to another widget and updates when something is updated in said widget.
+   */
+  // TODO jpkeahey 2022-05-10: Name this listenForSelectEvent? Put this function
+  // in a for loop and listen to all events?
+  private listenForEvent(): void {
 
     // TODO jpkeahey 2022-04-27: This might need to be in a for loop for multiple
     // Event objects in the eventHandlers.
@@ -430,6 +427,19 @@ export class ChartComponent implements OnInit, OnDestroy {
         this.updateChartVariables(selectEvent);
       }
     });
+  }
+
+  /**
+  * Initial function call when the Dialog component is created. Determines whether
+  * a CSV or StateMod file is to be read for graph creation.
+  */
+  ngOnInit(): void {
+
+    this.isChartError$ = this.dashboardService.isChartError;
+
+    this.checkWidgetObject();
+
+    this.listenForEvent();
   }
 
   /**

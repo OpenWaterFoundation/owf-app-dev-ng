@@ -10,11 +10,32 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.4.0 #
+
+### Bug Fixes ###
+
+* Fixed a bug that prevented user navigation from dashboard to dashboard.
+* Fixed a bug where the Map Component tried to update when a dashboard id is given
+and used in the site URL. A check is done to see if the URL id is for a map or a
+dashboard.
+
+### Refactoring ###
+
+* Some duplicate code from multiple widgets was moved into the dashboard service
+so it can be utilized by many in the future.
+
+### Features / Enhancements ###
+
+* Added more foundational Status Indicator widget code. Given certain properties,
+CSV, JSON, or GeoJSON data will be read in and the main data will now be displayed
+on the widget. By default for this release, it will always be the last data found
+in the dataset. Options to change this in the future may be added.
+
 # 3.3.1 #
 
 ### Bug Fixes ###
 
-* Fixed a bug 
+* Fixed a small CSS bug.
 
 # 3.3.0 #
 
