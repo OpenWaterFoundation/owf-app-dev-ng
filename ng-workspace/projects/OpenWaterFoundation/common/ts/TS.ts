@@ -983,7 +983,7 @@ export class TS {
   @see RTi.Util.Time.DateTime
   */
   public setDataValueTwo ( date: DateTime, val: number ): void {
-    console.error ("TS.setDataValue is " +
+    console.error ("TS.setDataValueTwo is " +
     "virtual and should be redefined in derived classes" );
   }
 
@@ -998,7 +998,7 @@ export class TS {
   @see DateTime
   */
   public setDataValueFour ( date: DateTime, val: number, data_flag: string,	duration: number ): void {
-    console.warn ( "TS.setDataValue is " +
+    console.warn ( "TS.setDataValueFour is " +
     "virtual and should be implemented in derived classes" );
   }
 

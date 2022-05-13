@@ -10,6 +10,26 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.4.1 #
+
+### Bug Fixes ###
+
+* Updated error handling for missing widget properties.
+* Fixed a bug that prevented MonthTS objects being displayed on a Chart.
+
+### Refactoring ###
+
+* Updated some TS code in multiple files so they are easier to read.
+
+### Features / Enhancements ###
+
+* Added the basic ability for the Status Indicator widget to show the change from
+the second to last entry and the last entry in the dataset. This is done by default
+for now, but properties could be added in the future for other types of differences.
+
+* Added the ability for a graph template file to use the 'Area' GraphType, which
+shades the region under a line graph to the X axis.
+
 # 3.4.0 #
 
 ### Bug Fixes ###

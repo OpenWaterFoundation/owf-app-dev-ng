@@ -33,7 +33,8 @@ export enum D3Chart {
 export enum GraphProp {
   bc = 'backgroundColor',
   cm = 'chartMode',
-  ct = 'chartType'
+  ct = 'chartType',
+  fl = 'fill'
 }
 
 /** The different operators that are covered for graduated symbols. */
@@ -512,6 +513,7 @@ export interface PopulateGraph {
   dataLabels?: string[];
   dateType?: string;
   endDate?: string;
+  fillType?: string;
   graphFileType: string;
   isCSV?: boolean;
   legendLabel: string;

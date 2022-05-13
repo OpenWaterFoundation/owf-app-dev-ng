@@ -177,7 +177,7 @@ export class SelectorComponent {
 
         this.allFeatures = this.dashboardService.processWidgetCSVData(result.data, this.selectorWidget);
         this.filteredFeatures = this.allFeatures;
-        console.log(this.allFeatures);
+
         // Send the initial event to the Chart Widget.
         let initialSelectEvent: IM.SelectEvent = {
           selectedItem: this.allFeatures[0],

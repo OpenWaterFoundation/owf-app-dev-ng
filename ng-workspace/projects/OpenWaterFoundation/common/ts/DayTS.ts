@@ -37,7 +37,7 @@ export class DayTS extends TS {
   	var date2 = new DateTime ( this._date2 );
   	var date = new DateTime ( this._date1 );
   	for ( ;	date.lessThanOrEqualTo(date2); date.addInterval(this._data_interval_base, this._data_interval_mult) ) {
-  		this.setDataValue(date, ts.getDataValue(date));
+  		this.setDataValueTwo(date, ts.getDataValue(date));
   	}
   }
 
@@ -1610,7 +1610,7 @@ export class DayTS extends TS {
   @param date Date of interest.
   @param value Data value corresponding to date.
   */
-  public setDataValue( date: DateTime, value: number ): void {
+  public setDataValueTwo( date: DateTime, value: number ): void {
     if( (date.lessThan(this._date1)) || (date.greaterThan(this._date2)) ) {
   		// if ( Message.isDebugOn ) {
   		// 	Message.printWarning( 10, "DayTS.setDataValue",

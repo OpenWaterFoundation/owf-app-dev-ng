@@ -19,6 +19,10 @@ export class StatusIndicatorComponent {
    * 
    */
   allFeatures: any[] = [];
+
+  changeDec: boolean;
+
+  changeInc: boolean;
   /** Displays a red down caret icon in the widget if set to true. */
   changeDecBad: boolean;
   /** Displays a green down caret icon in the widget if set to true. */
@@ -27,8 +31,10 @@ export class StatusIndicatorComponent {
   changeIncBad: boolean;
   /** Displays a green up caret icon in the widget if set to true. */
   changeIncGood: boolean;
-
-  difference: string;
+  /**
+   * 
+   */
+  dataChange: string;
   /** String array representing the type of error that occurred while building this
    * widget. Used by the error widget. */
   errorTypes: string[] = [];
@@ -37,9 +43,7 @@ export class StatusIndicatorComponent {
   /** Observable that's updated as a BehaviorSubject when a critical error creating
    * this component occurs. */
   isIndicatorError$: Observable<boolean>;
-  /**
-   * 
-   */
+  /** The main data to be displayed on this Status Indicator widget. */
   mainData: string;
   /** Displays a green check icon in the widget if set to true. */
   passingIndicator: boolean;
@@ -48,10 +52,6 @@ export class StatusIndicatorComponent {
   @Input('statusIndicatorWidget') statusIndicatorWidget: IM.StatusIndicatorWidget;
   /** Displays a yellow exclamation icon in the widget if set to true. */
   warningIndicator: boolean;
-  /**
-   * 
-   */
-  widgetError: boolean;
 
 
   /**
@@ -62,6 +62,10 @@ export class StatusIndicatorComponent {
     private dashboardService: DashboardService) {}
 
 
+  /**
+   * Checks the properties of the given chart object and determines what action
+   * to take.
+   */
   private checkWidgetObject(): void {
 
     var error = false;
@@ -71,14 +75,26 @@ export class StatusIndicatorComponent {
       error = true;
     }
 
-    var dataFormat = this.statusIndicatorWidget.dataFormat.toLowerCase()
-    if (dataFormat === 'csv' || dataFormat === 'json') {
+    if (!this.statusIndicatorWidget.dataPath) {
+      console.warn('The Status Indicator widget must contain a `dataPath` property. ' +
+      'In the future the `dataPath` property can be left off if this widget is listening ' +
+      'to another widget for its data.');
+      return;
+    }
 
-      if (!this.statusIndicatorWidget.attributeName && !this.statusIndicatorWidget.columnName &&
-        !this.statusIndicatorWidget.propertyName) {
-          this.errorTypes.push('no value property');
-          error = true;
-        }
+    if (!this.statusIndicatorWidget.dataFormat) {
+      this.errorTypes.push('no dataFormat');
+      error = true;
+    } else {
+      var dataFormat = this.statusIndicatorWidget.dataFormat.toLowerCase();
+      if (dataFormat === 'csv' || dataFormat === 'json') {
+  
+        if (!this.statusIndicatorWidget.attributeName && !this.statusIndicatorWidget.columnName &&
+          !this.statusIndicatorWidget.propertyName) {
+            this.errorTypes.push('no value property');
+            error = true;
+          }
+      }
     }
 
     if (error === true) {
@@ -99,8 +115,8 @@ export class StatusIndicatorComponent {
    */
   private initStatusIndicator(): void {
 
-    // HARD CODE the displaying 'main' and 'change' indicator icons for now.
-    this.passingIndicator = true; this.changeIncGood = true;
+    // HARD CODE the displaying 'main' indicator icon for now.
+    this.passingIndicator = true;
 
     var dataFormat = this.statusIndicatorWidget.dataFormat.toLowerCase();
 
@@ -156,7 +172,17 @@ export class StatusIndicatorComponent {
         var dataArray = this.dashboardService.processWidgetCSVData(result.data, this.statusIndicatorWidget);
 
         var givenProperty = this.dashboardService.getProvidedValue(this.statusIndicatorWidget);
-        this.mainData = dataArray[dataArray.length - 1][givenProperty]
+        this.mainData = dataArray[dataArray.length - 1][givenProperty];
+
+        var previousValue = dataArray[dataArray.length - 2][givenProperty];
+
+        this.dataChange = (Number(this.mainData) - Number(previousValue)).toFixed(2);
+
+        if (Number(this.mainData) >= Number(previousValue)) {
+          this.changeInc = true;
+        } else {
+          this.changeDec = true;
+        }
         
         // this.toggleDataLoading = false;
       },
@@ -184,6 +210,17 @@ export class StatusIndicatorComponent {
 
         var givenProperty = this.dashboardService.getProvidedValue(this.statusIndicatorWidget);
         this.mainData = dataArray[dataArray.length - 1][givenProperty];
+
+        var previousValue = dataArray[dataArray.length - 2][givenProperty];
+
+        this.dataChange = (Number(this.mainData) - Number(previousValue)).toFixed(2);
+
+        if (Number(this.mainData) >= Number(previousValue)) {
+          this.changeInc = true;
+        } else {
+          this.changeDec = true;
+        }
+        
       } else {
         this.errorTypes.push('unsupported data type');
         this.dashboardService.setIndicatorError = true;

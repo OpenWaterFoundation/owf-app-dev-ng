@@ -85,6 +85,7 @@ export class ErrorComponent {
 
     this.errorTypes.forEach((errorType: string) => {
       switch(errorType) {
+        case 'no dataFormat': this.missingRequiredProp('dataFormat'); break;
         case 'no title': this.missingRequiredProp('title'); break;
         case 'no value property':
           this.missingRequiredProp('`attributeName`, `columnName`, or `propertyName`'); break;

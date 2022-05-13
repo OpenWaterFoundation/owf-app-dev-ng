@@ -32,6 +32,10 @@
   color: rgb(0, 102, 0);
 }
 
+.change-icon-neutral {
+  color: black;
+}
+
 /*  */
 .change-info-container {
   display: flex;

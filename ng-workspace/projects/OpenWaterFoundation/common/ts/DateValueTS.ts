@@ -990,14 +990,14 @@ All data are reset, except for the identifier, which is assumed to have been set
         if (strings != null) {
           nstrings = strings.length;
         }
-        if (nstrings == num_expected_columns) {
+        if (nstrings === num_expected_columns) {
           // Assume that there is NO space between date and time or that time field is not used...
           date_str = String(strings[0]).trim();
           // Date + extra columns...
           first_data_column = 1 + num_extra_columns;
           req_ts_column2 = req_ts_column;
         }
-        else if (use_time && (nstrings == num_expected_columns_p1)) {
+        else if (use_time && (nstrings === num_expected_columns_p1)) {
           // Assume that there IS a space between the date and
           // time.  Concatenate together so that the DateTime.parse will work.
           date_str = String(strings[0]).trim() + " " + String(strings[1]).trim();
@@ -1021,19 +1021,19 @@ All data are reset, except for the identifier, which is assumed to have been set
         date = DateTime.parse(date_str);
         // The input line date may not have the proper resolution, so
         // set to the precision of the time series defined in the header.
-        if (data_interval_base == TimeInterval.MINUTE) {
+        if (data_interval_base === TimeInterval.MINUTE) {
           date.setPrecisionOne(DateTime.PRECISION_MINUTE);
         }
-        else if (data_interval_base == TimeInterval.HOUR) {
+        else if (data_interval_base === TimeInterval.HOUR) {
           date.setPrecisionOne(DateTime.PRECISION_HOUR);
         }
-        else if (data_interval_base == TimeInterval.DAY) {
+        else if (data_interval_base === TimeInterval.DAY) {
           date.setPrecisionOne(DateTime.PRECISION_DAY);
         }
-        else if (data_interval_base == TimeInterval.MONTH) {
+        else if (data_interval_base === TimeInterval.MONTH) {
           date.setPrecisionOne(DateTime.PRECISION_MONTH);
         }
-        else if (data_interval_base == TimeInterval.YEAR) {
+        else if (data_interval_base === TimeInterval.YEAR) {
           date.setPrecisionOne(DateTime.PRECISION_YEAR);
         }
         if (date.lessThan(date1)) {

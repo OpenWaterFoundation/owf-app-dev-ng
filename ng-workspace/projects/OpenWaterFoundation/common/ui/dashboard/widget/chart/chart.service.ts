@@ -364,7 +364,7 @@ export class ChartService {
    * Verifies that a potential property string provided to a graph config object
    * will work correctly with the JavaScript Plotly API.
    * @param property The variable obtained from the graph config file trying to
-   * be implemented as a Plotly property.
+   * be implemented as a Plotly property. Will be passed in as all lower case.
    * @param type The type of property being scrutinized.
    */
   public verifyPlotlyProp(property: string, type: IM.GraphProp): string {
@@ -372,8 +372,12 @@ export class ChartService {
     switch(type) {
       // CHART MODE.
       case IM.GraphProp.cm:
-        if (property.toUpperCase() === 'LINE') { return 'lines'; }
-        else if (property.toUpperCase() === 'POINT') { return 'markers' }
+        if (property === 'line' || property === 'area') {
+          return 'lines';
+        }
+        else if (property.toUpperCase() === 'POINT') {
+          return 'markers'
+        }
         else {
           console.warn('Unknown property "' + property.toUpperCase() +
           '" - Not Line or Point. Using default Graph Type Line');
@@ -381,9 +385,18 @@ export class ChartService {
         }
       // CHART TYPE.
       case IM.GraphProp.ct:
-        if (property.toUpperCase() === 'LINE' || property.toUpperCase() === 'POINT')
+
+        var isScatterGraphType = (
+          property === 'line' ||
+          property === 'point' ||
+          property === 'area'
+        );
+
+        if (isScatterGraphType) {
           return 'scatter';
-        else return 'scatter';
+        } else {
+          return 'scatter';
+        }
       // BACKGROUND COLOR.
       case IM.GraphProp.bc:
         // Convert C / Java '0x' notation into hex hash '#' notation.
@@ -394,6 +407,14 @@ export class ChartService {
         } else {
           console.warn('No graph property "Color" detected. Using the default graph color black');
           return 'black';
+        }
+      // FILL TYPE.
+      case IM.GraphProp.fl:
+
+        if (property === 'area') {
+          return 'tozeroy';
+        } else {
+          return undefined;
         }
     }
   }

@@ -70,9 +70,6 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** Boolean for helping dialog-tstable component determine what kind of file needs
   * downloading. */
   isTSFile: boolean;
-  /** A string representing the documentation retrieved from the txt, md, or html
-  * file to be displayed for a layer. */
-  mainTitleString: string;
   /** The array of TS objects that was originally read in using the StateMod or DateValue
   * Java converted code. Used as a reference in the dialog-tstable component for
   * downloading to the user's local machine. */
@@ -232,6 +229,9 @@ export class ChartComponent implements OnInit, OnDestroy {
     // Populate the rest of the properties from the graph config file. This uses
     // the more granular graphType for each time series.
     var chartType: string = graphData.properties.GraphType.toLowerCase();
+    if (!chartType) {
+      chartType = chartConfigProp.GraphType.toLowerCase();
+    }
     var backgroundColor: string = graphData.properties.Color;
     var TSAlias: string = graphData.properties.TSAlias;
     var units: string = timeSeries.getDataUnits();
@@ -253,6 +253,7 @@ export class ChartComponent implements OnInit, OnDestroy {
       chartType: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.ct),
       dateType: type,
       datasetData: axisObject.chartJS_yAxisData,
+      fillType: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.fl),
       plotlyDatasetData: axisObject.plotly_yAxisData,
       plotly_xAxisLabels: XAxisLabels,
       datasetBackgroundColor: this.chartService.verifyPlotlyProp(backgroundColor, IM.GraphProp.bc),
@@ -306,6 +307,11 @@ export class ChartComponent implements OnInit, OnDestroy {
         // Connects between ALL gaps
         // data.connectgaps = true;
       }
+
+      if (graphConfig.fillType) {
+        data.fill = graphConfig.fillType;
+      }
+
       data.type = graphConfig.chartType;
       data.x = graphConfig.isCSV ? graphConfig.dataLabels : graphConfig.plotly_xAxisLabels;
       data.y = graphConfig.isCSV ? graphConfig.datasetData : graphConfig.plotlyDatasetData;
@@ -318,7 +324,9 @@ export class ChartComponent implements OnInit, OnDestroy {
     // width, legend and axes options, etc.
     var layout = {
       title: {
-        text: this.mainTitleString
+        text: this.graphTemplate.product.subProducts[0].properties.MainTitleString +
+        '<br><sub>' + this.graphTemplate.product.subProducts[0].properties.SubTitleString +
+        '</sub>'
       },
       // An array of strings describing the color to display the graph as for each
       // time series.
@@ -383,10 +391,6 @@ export class ChartComponent implements OnInit, OnDestroy {
         // graph <div> id attribute.
         this.TSIDLocation = this.commonService.parseTSID(
           this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
-  
-        // Set the mainTitleString to be used by the map template file to display as
-        // the TSID location (for now).
-        this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
 
         this.toggleDataLoading = false;
   
@@ -479,6 +483,8 @@ export class ChartComponent implements OnInit, OnDestroy {
 
       allResults.forEach((result: any, i: number) => {
 
+        console.log('TS result:', result);
+
         // Check for any errors.
         if (result.error) {
           console.error('Graph Template file: Graph object in position ' + (i + 1) +
@@ -541,10 +547,6 @@ export class ChartComponent implements OnInit, OnDestroy {
     this.TSIDLocation = this.commonService.parseTSID(
       this.graphTemplate.product.subProducts[0].data[0].properties.TSID
     ).location;
-
-    // Set the mainTitleString to be used by the map template file to display as
-    // the TSID location (for now).
-    this.mainTitleString = this.graphTemplate.product.properties.MainTitleString;
 
     this.toggleDataLoading = false;
 

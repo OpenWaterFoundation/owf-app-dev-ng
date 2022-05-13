@@ -26,7 +26,7 @@
       
       <div class="change-icon-and-info-container">
           
-        <div *ngIf="changeDecBad" class="change-icon">
+        <!-- <div *ngIf="changeDecBad" class="change-icon">
           <i class="fa fa-caret-down fa-2x change-icon-bad" aria-hidden="true"></i>
         </div>
   
@@ -40,9 +40,17 @@
   
         <div *ngIf="changeIncGood" class="change-icon">
           <i class="fa fa-caret-up fa-2x change-icon-good" aria-hidden="true"></i>
+        </div> -->
+
+        <div *ngIf="changeDec" class="change-icon">
+          <i class="fa fa-caret-down fa-2x change-icon-neutral" aria-hidden="true"></i>
         </div>
   
-        <p class="change-info">{{difference}}</p>
+        <div *ngIf="changeInc" class="change-icon">
+          <i class="fa fa-caret-up fa-2x change-icon-neutral" aria-hidden="true"></i>
+        </div>
+  
+        <p class="change-info">{{dataChange}}</p>
   
       </div>
       
