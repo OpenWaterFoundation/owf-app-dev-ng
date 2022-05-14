@@ -10,6 +10,20 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.4.3 #
+
+### Features / Enhancements ###
+
+* Added some more code for reading CSV files and dealing with classification files
+given to the Status Indicator widget for styling and displaying different icons
+depending on what the data looks like.
+
+# 3.4.2 #
+
+### Features / Enhancements ###
+
+* Finished updating the foundational DayTS code and created this version for testing.
+
 # 3.4.1 #
 
 ### Bug Fixes ###

@@ -19,6 +19,13 @@ export class DashboardService {
   private listenedToWidgets: IM.ListenedToWidget[] = [];
   /** Set to true if any error occurs in the Status Indicator Widget. */
   private indicatorError: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  /** A read only object for dynamically using operators between two integers. */
+  readonly operators = {
+    '>': function (a: any, b: any) { return a > b; },
+    '>=': function (a: any, b: any) { return a >= b; },
+    '<': function (a: any, b: any) { return a < b; },
+    '<=': function (a: any, b: any) { return a <= b; }
+  }
   /** Set to true if any error occurs in the Selector Widget. */
   private selectorError: BehaviorSubject<boolean> = new BehaviorSubject(false);
   /** The list of supported image widget files. */
@@ -135,6 +142,115 @@ export class DashboardService {
       }
     }
     return false;
+  }
+
+  /**
+   * @returns An object representing what the current cell's valueMin, valueMax, and valueMin & valueMax operators. Used for
+   * deciding what operators to look between the values.
+   * @param line The valueMax property of one line from the CSV classification file for Graduated layers.
+   */
+  determineValueOperator(line: any): any {
+
+    var valueMin: any = null;
+    var valueMax: any = null;
+    var minOp: IM.Operator = null;
+    var maxOp: IM.Operator = null;
+    var minOpPresent = false;
+    var maxOpPresent = false;
+
+    // Check to see if either of them are actually positive or negative infinity.
+    if (line.valueMin.toUpperCase().includes('-INFINITY')) {
+      valueMin = Number.MIN_SAFE_INTEGER;
+      minOp = IM.Operator.gt;
+    }
+    if (line.valueMax.toUpperCase().includes('INFINITY')) {
+      valueMax = Number.MAX_SAFE_INTEGER;
+      maxOp = IM.Operator.lt;
+    }
+
+    // Contains operator
+    if (line.valueMin.includes(IM.Operator.gt)) {
+      valueMin = parseFloat(line.valueMin.replace(IM.Operator.gt, ''));
+      minOp = IM.Operator.gt;
+      minOpPresent = true;
+    }
+    if (line.valueMin.includes(IM.Operator.gtet)) {
+      valueMin = parseFloat(line.valueMin.replace(IM.Operator.gtet, ''));
+      minOp = IM.Operator.gtet;
+      minOpPresent = true;
+    }
+    if (line.valueMin.includes(IM.Operator.lt)) {
+      valueMin = parseFloat(line.valueMin.replace(IM.Operator.lt, ''));
+      minOp = IM.Operator.lt;
+      minOpPresent = true;
+    }
+    if (line.valueMin.includes(IM.Operator.ltet)) {
+      valueMin = parseFloat(line.valueMin.replace(IM.Operator.ltet, ''));
+      minOp = IM.Operator.ltet;
+      minOpPresent = true;
+    }
+
+    // Contains operator
+    if (line.valueMax.includes(IM.Operator.gt)) {
+      valueMax = parseFloat(line.valueMax.replace(IM.Operator.gt, ''));
+      maxOp = IM.Operator.gt;
+      maxOpPresent = true;
+    }
+    if (line.valueMax.includes(IM.Operator.gtet)) {
+      valueMax = parseFloat(line.valueMax.replace(IM.Operator.gtet, ''));
+      maxOp = IM.Operator.gtet;
+      maxOpPresent = true;
+    }
+    if (line.valueMax.includes(IM.Operator.lt)) {
+      valueMax = parseFloat(line.valueMax.replace(IM.Operator.lt, ''));
+      maxOp = IM.Operator.lt;
+      maxOpPresent = true;
+    }
+    if (line.valueMax.includes(IM.Operator.ltet)) {
+      valueMax = parseFloat(line.valueMax.replace(IM.Operator.ltet, ''));
+      maxOp = IM.Operator.ltet;
+      maxOpPresent = true;
+    }
+
+    // If no operator is detected in the valueMin property.
+    if (minOpPresent === false) {
+      valueMin = parseFloat(line.valueMin);
+      minOp = IM.Operator.gt;
+    }
+    // If no operator is detected in the valueMax property.
+    if (maxOpPresent === false) {
+      valueMax = parseFloat(line.valueMax);
+      maxOp = IM.Operator.ltet;
+    }
+
+    // The following two if, else if statements are done if only a number is given as valueMin and valueMax.
+    // If the line.valueMin is an integer or float.
+    // if (MapUtil.isInt(line.valueMin)) {
+    //   valueMin = parseInt(line.valueMin);
+    //   minOp = IM.Operator.gtet;
+    // } else if (MapUtil.isFloat(line.valueMin)) {
+    //   valueMin = parseFloat(line.valueMin);
+    //   minOp = IM.Operator.gt;
+    // }
+
+    // If the line.valueMax is an integer or float.
+    // if (MapUtil.isInt(line.valueMax)) {
+    //   valueMax = parseInt(line.valueMax);
+    //   maxOp = IM.Operator.ltet;
+    // } else if (MapUtil.isFloat(line.valueMax)) {
+    //   valueMax = parseFloat(line.valueMax);
+    //   maxOp = IM.Operator.ltet;
+    // }
+
+    // Each of the attributes below have been assigned; return as an object.
+    return {
+      valueMin: valueMin,
+      valueMax: valueMax,
+      minOp: minOp,
+      maxOp: maxOp,
+      level: line.level
+    }
+
   }
 
   /**

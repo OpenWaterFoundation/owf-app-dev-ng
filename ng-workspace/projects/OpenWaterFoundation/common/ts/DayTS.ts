@@ -1640,7 +1640,7 @@ export class DayTS extends TS {
   // @param duration Duration for value (ignored - assumed to be 1-day or
   // instantaneous depending on data type).
   // */
-  // public void setDataValue ( DateTime date, double value, String data_flag, int duration )
+  // setDataValue ( date: DateTime, value: number, String data_flag, int duration )
   // {	if ( (date.lessThan(_date1)) || (date.greaterThan(_date2)) ) {
   // 		if ( Message.isDebugOn ) {
   // 			Message.printWarning( 10, "DayTS.setDataValue", "Date " + date + " is outside bounds " + _date1 + " - " + _date2 );

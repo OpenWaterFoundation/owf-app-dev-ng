@@ -4,7 +4,9 @@ import { Component,
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
 import { DashboardService } from '../../dashboard.service';
-import { Observable }       from 'rxjs';
+import { forkJoin,
+          Observable,
+          Subscription }    from 'rxjs';
 import * as Papa            from 'papaparse';
 
 
@@ -19,9 +21,13 @@ export class StatusIndicatorComponent {
    * 
    */
   allFeatures: any[] = [];
-
+  /**
+   * 
+   */
   changeDec: boolean;
-
+  /**
+   * 
+   */
   changeInc: boolean;
   /** Displays a red down caret icon in the widget if set to true. */
   changeDecBad: boolean;
@@ -34,6 +40,18 @@ export class StatusIndicatorComponent {
   /**
    * 
    */
+  classificationLevels: any[] = [];
+  /**
+   * 
+   */
+  classifyFile$: Observable<any>;
+  /**
+   * 
+   */
+  CSVSub$: Subscription;
+  /**
+   * 
+   */
   dataChange: string;
   /** String array representing the type of error that occurred while building this
    * widget. Used by the error widget. */
@@ -43,15 +61,24 @@ export class StatusIndicatorComponent {
   /** Observable that's updated as a BehaviorSubject when a critical error creating
    * this component occurs. */
   isIndicatorError$: Observable<boolean>;
+
+  JSONSub$: Subscription;
   /** The main data to be displayed on this Status Indicator widget. */
   mainData: string;
+  /**
+   * 
+   */
+  mainDataSub$: Subscription;
   /** Displays a green check icon in the widget if set to true. */
   passingIndicator: boolean;
   /** The title of this widget from the widget's `title` property in the dashboard
    * configuration file. */
   @Input('statusIndicatorWidget') statusIndicatorWidget: IM.StatusIndicatorWidget;
+
+  unknownIndicator: boolean;
   /** Displays a yellow exclamation icon in the widget if set to true. */
   warningIndicator: boolean;
+  
 
 
   /**
@@ -61,6 +88,30 @@ export class StatusIndicatorComponent {
   constructor(private commonService: OwfCommonService,
     private dashboardService: DashboardService) {}
 
+
+  /**
+   * Checks if this widget was given a path to a classification file for setting
+   * the indicator icon.
+   */
+  private checkForClassificationFile(): void {
+
+    // Determine if the Chart widget has a SelectEvent. If not, the initialization
+    // of the Status Indicator widget can be performed.
+    if (this.dashboardService.hasSelectEvent(this.statusIndicatorWidget) === false) {
+      // Found a classification file.
+      if (this.statusIndicatorWidget.classificationFile) {
+
+        var fullClassificationPath = this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.classificationFile]);
+        this.classifyFile$ = this.commonService.papaParse(fullClassificationPath);
+        this.initStatusIndicator();
+      }
+      // No classification file given.
+      else {
+        this.initStatusIndicator();
+      }
+      
+    }
+  }
 
   /**
    * Checks the properties of the given chart object and determines what action
@@ -102,11 +153,7 @@ export class StatusIndicatorComponent {
       return;
     }
 
-    // Determine if the Chart widget has a SelectEvent. If not, the initialization
-    // of the Status Indicator widget can be performed.
-    if (this.dashboardService.hasSelectEvent(this.statusIndicatorWidget) === false) {
-      this.initStatusIndicator();
-    }
+    this.checkForClassificationFile();
   }
 
   /**
@@ -114,9 +161,6 @@ export class StatusIndicatorComponent {
    * the `dataPath` widget property and sets up variables to be shown in the widget.
    */
   private initStatusIndicator(): void {
-
-    // HARD CODE the displaying 'main' indicator icon for now.
-    this.passingIndicator = true;
 
     var dataFormat = this.statusIndicatorWidget.dataFormat.toLowerCase();
 
@@ -155,43 +199,105 @@ export class StatusIndicatorComponent {
   }
 
   /**
+   * Called once, before the instance is destroyed.
+   */
+  ngOnDestroy(): void {
+    // Unsubscribe from all existing subscriptions.
+    if (this.CSVSub$) {
+      this.CSVSub$.unsubscribe();
+    }
+    if (this.JSONSub$) {
+      this.JSONSub$.unsubscribe();
+    }
+  }
+
+  /**
+   * 
+   * @param classifyData 
+   * @returns 
+   */
+  private processClassifyData(classifyData: any): void {
+
+    if (classifyData.error) {
+      this.errorTypes.push('bad csv');
+      // this.toggleDataLoading = false;
+      this.dashboardService.setIndicatorError = true;
+      return;
+    }
+      
+    for (let line of classifyData) {
+      var valueObj = this.dashboardService.determineValueOperator(line);
+      this.classificationLevels.push(valueObj);
+    }
+  }
+
+  /**
+   * 
+   * @param delimitedData 
+   * @returns 
+   */
+  private processCSVData(delimitedData: any): void {
+
+    if (delimitedData.error) {
+      this.errorTypes.push('bad csv');
+      // this.toggleDataLoading = false;
+      this.dashboardService.setIndicatorError = true;
+      return;
+    }
+
+    var dataArray = this.dashboardService.processWidgetCSVData(delimitedData, this.statusIndicatorWidget);
+
+    var givenProperty = this.dashboardService.getProvidedValue(this.statusIndicatorWidget);
+    this.mainData = dataArray[dataArray.length - 1][givenProperty];
+
+    var previousValue = dataArray[dataArray.length - 2][givenProperty];
+
+    this.dataChange = (Number(this.mainData) - Number(previousValue)).toFixed(2);
+
+    if (Number(this.mainData) >= Number(previousValue)) {
+      this.changeInc = true;
+    } else {
+      this.changeDec = true;
+    }
+
+    if (this.statusIndicatorWidget.classificationFile) {
+      this.setIconFromClassification();
+    } else {
+
+    }
+    
+    // this.toggleDataLoading = false;
+  }
+
+  /**
    * Gets CSV data from a data source and processes it so this widget can utilize it.
    */
   private retrieveCSVData(): void {
 
-    var fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath]);
+    var delimitedData$: Observable<any>[] = [];
+    
+    if (this.classifyFile$) {
+      delimitedData$.push(this.classifyFile$);
+    }
 
-    Papa.parse(fullDataPath, {
-      delimiter: ",",
-      download: true,
-      comments: "#",
-      skipEmptyLines: true,
-      header: false,
-      complete: (result: Papa.ParseResult<any>) => {
+    var fullCSVDataPath = this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath]);
+    delimitedData$.push(this.commonService.papaParseNoHeader(fullCSVDataPath));
 
-        var dataArray = this.dashboardService.processWidgetCSVData(result.data, this.statusIndicatorWidget);
+    this.CSVSub$ = forkJoin(delimitedData$).subscribe((delimitedData: any[]) => {
 
-        var givenProperty = this.dashboardService.getProvidedValue(this.statusIndicatorWidget);
-        this.mainData = dataArray[dataArray.length - 1][givenProperty];
+      var classifyData: any;
+      var mainData: any;
 
-        var previousValue = dataArray[dataArray.length - 2][givenProperty];
-
-        this.dataChange = (Number(this.mainData) - Number(previousValue)).toFixed(2);
-
-        if (Number(this.mainData) >= Number(previousValue)) {
-          this.changeInc = true;
-        } else {
-          this.changeDec = true;
-        }
-        
-        // this.toggleDataLoading = false;
-      },
-      error: (error: Papa.ParseError, file: File) => {
-        this.errorTypes.push('bad csv');
-        // this.toggleDataLoading = false;
-        this.dashboardService.setSelectorError = true;
-        return;
+      if (delimitedData.length === 1) {
+        mainData = delimitedData[0].data;
+        this.processCSVData(mainData);
+      } else if (delimitedData.length === 2) {
+        classifyData = delimitedData[0].data;
+        this.processClassifyData(classifyData);
+        mainData = delimitedData[1].data;
+        this.processCSVData(mainData);
       }
+
     });
   }
 
@@ -200,13 +306,33 @@ export class StatusIndicatorComponent {
    */
   private retrieveJSONData(): void {
 
-    this.commonService.getJSONData(
-      this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath])
-    ).subscribe((data: any) => {
+    var allData$: Observable<any>[] = [];
 
-      var dataArray: any[] = this.dashboardService.processWidgetJSONData(data, this.statusIndicatorWidget);
+    if (this.classifyFile$) {
+      allData$.push(this.classifyFile$);
+    }
 
-      if (data !== null) {
+    var fullJSONDataPath = this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath]);
+    allData$.push(this.commonService.getJSONData(fullJSONDataPath));
+
+    this.JSONSub$ = forkJoin(allData$).subscribe((allData: any) => {
+
+      var classifyData: any;
+      var mainData: any;
+
+      if (allData.length === 1) {
+        mainData = allData[0];
+      } else if (allData.length === 2) {
+        classifyData = allData[0].data;
+        this.processClassifyData(classifyData);
+        mainData = allData[1];
+      }
+
+      console.log(allData);
+
+      var dataArray: any[] = this.dashboardService.processWidgetJSONData(mainData, this.statusIndicatorWidget);
+
+      if (mainData !== null) {
 
         var givenProperty = this.dashboardService.getProvidedValue(this.statusIndicatorWidget);
         this.mainData = dataArray[dataArray.length - 1][givenProperty];
@@ -220,24 +346,36 @@ export class StatusIndicatorComponent {
         } else {
           this.changeDec = true;
         }
-        
+
       } else {
         this.errorTypes.push('unsupported data type');
         this.dashboardService.setIndicatorError = true;
         return;
       }
 
-      console.log(data);
-      
-      // this.allFeatures = data.ResultList;
-      // var measValueAverage = 0;
-      // for (let feature of this.allFeatures) {
-      //   measValueAverage += feature.measValue;
-      // }
-      // this.average = (measValueAverage / this.allFeatures.length).toFixed(2);
-      // this.difference = (Math.abs(Number(this.average) - this.statusIndicatorWidget.referenceValue)).toFixed(2);
-
     });
+  }
+
+  /**
+   * Set the display icon in the indicator depending on where the mainData point
+   * falls between the given classified points.
+   */
+  private setIconFromClassification(): void {
+
+    for (let classifyLevel of this.classificationLevels) {
+      if (this.dashboardService.operators[classifyLevel.minOp](Number(this.mainData), classifyLevel.valueMin) &&
+          //                             |------operator-----||---------a----------|  |----------b----------|
+          this.dashboardService.operators[classifyLevel.maxOp](Number(this.mainData), classifyLevel.valueMax)) {
+
+        switch(classifyLevel.level.toLowerCase()) {
+          case 'black': this.unknownIndicator = true; break;
+          case 'red': this.failureIndicator = true; break;
+          case 'yellow': this.warningIndicator = true; break;
+          case 'green': this.passingIndicator = true; break;
+          default: this.unknownIndicator = true;
+        }
+      }
+    }
   }
 
 }

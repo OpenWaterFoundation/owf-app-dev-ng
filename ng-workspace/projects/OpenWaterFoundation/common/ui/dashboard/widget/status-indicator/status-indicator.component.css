@@ -59,6 +59,11 @@
   padding-top: 8px;
 }
 
+/*  */
+.fa-question {
+  color: black;
+}
+
 /* Failure font awesome icon. */
 .fa-times {
   color: rgb(247, 0, 0);

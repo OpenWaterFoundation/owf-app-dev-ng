@@ -12,7 +12,8 @@ import structuredClone      from '@ungap/structured-clone';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
-import { MonthTS,
+import { DayTS,
+          MonthTS,
           TS,
           YearTS }          from '@OpenWaterFoundation/common/ts';
 import { MapUtil }          from '@OpenWaterFoundation/common/leaflet';
@@ -202,20 +203,28 @@ export class ChartComponent implements OnInit, OnDestroy {
       this.graphTemplate.product.subProducts[0].data.length);
     // }
 
-    var XAxisLabels: string[];
+    var xAxisLabels: string[];
     var type = '';
 
-    if (timeSeries instanceof MonthTS) {
+    if (timeSeries instanceof DayTS) {
+      type = 'days';
+      xAxisLabels = this.chartService.getDates(
+        timeSeries.getDate1().toString(),
+        timeSeries.getDate2().toString(),
+        type
+      );
+    }
+    else if (timeSeries instanceof MonthTS) {
       type = 'months';
-      XAxisLabels = this.chartService.getDates(
-        timeSeries.getDate1().getYear() + "-" + this.chartService.zeroPad(timeSeries.getDate1().getMonth(), 2),
-        timeSeries.getDate2().getYear() + "-" + this.chartService.zeroPad(timeSeries.getDate2().getMonth(), 2),
+      xAxisLabels = this.chartService.getDates(
+        timeSeries.getDate1().toString(),
+        timeSeries.getDate2().toString(),
         type);
     } else if (timeSeries instanceof YearTS) {
       type = 'years';
-      XAxisLabels = this.chartService.getDates(
-        timeSeries.getDate1().getYear(),
-        timeSeries.getDate2().getYear(),
+      xAxisLabels = this.chartService.getDates(
+        timeSeries.getDate1().toString(),
+        timeSeries.getDate2().toString(),
         type);
     }
 
@@ -225,7 +234,7 @@ export class ChartComponent implements OnInit, OnDestroy {
     var end = timeSeries.getDate2().getYear() + "-" +
     this.chartService.zeroPad(timeSeries.getDate2().getMonth(), 2);
 
-    var axisObject = this.chartService.setAxisObject(timeSeries, XAxisLabels, type);
+    var axisObject = this.chartService.setAxisObject(timeSeries, xAxisLabels, type);
     // Populate the rest of the properties from the graph config file. This uses
     // the more granular graphType for each time series.
     var chartType: string = graphData.properties.GraphType.toLowerCase();
@@ -244,7 +253,7 @@ export class ChartComponent implements OnInit, OnDestroy {
       legendLabel = timeSeries.formatLegend(graphData.properties.LegendFormat);
     }
 
-    // this.addToAttributeTable(XAxisLabels, axisObject, (TSAlias !== '') ? TSAlias : legendLabel,
+    // this.addToAttributeTable(xAxisLabels, axisObject, (TSAlias !== '') ? TSAlias : legendLabel,
     //   units, i, datePrecision);
 
     // Return the PopulateGraph instance that will be passed to create the Chart.js graph.
@@ -255,7 +264,7 @@ export class ChartComponent implements OnInit, OnDestroy {
       datasetData: axisObject.chartJS_yAxisData,
       fillType: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.fl),
       plotlyDatasetData: axisObject.plotly_yAxisData,
-      plotly_xAxisLabels: XAxisLabels,
+      plotly_xAxisLabels: xAxisLabels,
       datasetBackgroundColor: this.chartService.verifyPlotlyProp(backgroundColor, IM.GraphProp.bc),
       graphFileType: 'TS',
       legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
@@ -389,6 +398,7 @@ export class ChartComponent implements OnInit, OnDestroy {
         // Set the class variable TSIDLocation to the first dataGraph object from the
         // graphTemplate object. This is used as a unique identifier for the Plotly
         // graph <div> id attribute.
+        // TODO: The TSID might not be created correctly. Maybe check in checkWidgetObject?
         this.TSIDLocation = this.commonService.parseTSID(
           this.graphTemplate.product.subProducts[0].data[0].properties.TSID).location;
 
@@ -482,8 +492,6 @@ export class ChartComponent implements OnInit, OnDestroy {
     this.allResultsSub$ = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
 
       allResults.forEach((result: any, i: number) => {
-
-        console.log('TS result:', result);
 
         // Check for any errors.
         if (result.error) {

@@ -45,8 +45,8 @@ export class ErrorComponent {
    */
   private csvError(): void {
 
-    console.error('There was a issue with getting the CSV file from the' +
-    this.errorWidgetName + 'widget.');
+    console.error('There was an issue with getting the CSV file from the ' +
+    this.errorWidgetName + ' widget.');
     console.error('If it was a 500 error, refresh the page to resolve.');
   }
 

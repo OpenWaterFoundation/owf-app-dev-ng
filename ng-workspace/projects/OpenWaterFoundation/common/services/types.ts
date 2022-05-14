@@ -599,7 +599,9 @@ export interface StatusIndicatorWidget extends DashboardWidget {
   attributeName?: string;
   columnName?: string;
   propertyName?: string;
+
   skipDataLines?: number;
+  classificationFile?: string;
 }
 
 export interface TextWidget extends DashboardWidget {

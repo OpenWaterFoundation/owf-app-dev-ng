@@ -19,6 +19,10 @@
         <div *ngIf="failureIndicator" class="indicator-icon">
           <i class="fa fa-times fa-5x" aria-hidden="true"></i>
         </div>
+
+        <div *ngIf="unknownIndicator" class="indicator-icon">
+          <i class="fa fa-question fa-5x" aria-hidden="true"></i>
+        </div>
     
         <p class="indicator-data">{{mainData}}</p>
         

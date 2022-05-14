@@ -5,9 +5,11 @@ import { MapLayerManager } from '@OpenWaterFoundation/common/ui/layer-manager';
 import { catchError }      from 'rxjs/operators';
 import { BehaviorSubject,
           Observable, 
-          of }             from 'rxjs';
+          of, 
+          Subscriber}      from 'rxjs';
 
 import * as IM             from './types';
+import * as Papa           from 'papaparse';
 
 
 @Injectable({
@@ -1199,6 +1201,50 @@ export class OwfCommonService {
     // variable formattedLine has been rewritten to replace all the ${property}
     // notation with the correct feature value. 
     return { foundProps: allFoundProps, line: formattedLine };
+  }
+
+  papaParse(fullDelimitedPath: string): Observable<any> {
+    return new Observable((subscriber: Subscriber<any>) => {
+      Papa.parse(fullDelimitedPath, {
+        delimiter: ",",
+        download: true,
+        comments: "#",
+        skipEmptyLines: true,
+        header: true,
+        complete: (result: Papa.ParseResult<any>) => {
+          subscriber.next(result);
+          subscriber.complete();
+        },
+        error: (error: Papa.ParseError) => {
+          subscriber.next({ error: "An error has occurred." });
+          subscriber.complete();
+        }
+      });
+    });
+  }
+
+  /**
+   * 
+   * @param fullDelimitedPath 
+   */
+  papaParseNoHeader(fullDelimitedPath: string): Observable<any> {
+    return new Observable((subscriber: Subscriber<any>) => {
+      Papa.parse(fullDelimitedPath, {
+        delimiter: ",",
+        download: true,
+        comments: "#",
+        skipEmptyLines: true,
+        header: false,
+        complete: (result: Papa.ParseResult<any>) => {
+          subscriber.next(result);
+          subscriber.complete();
+        },
+        error: (error: Papa.ParseError) => {
+          subscriber.next({ error: "An error has occurred." });
+          subscriber.complete();
+        }
+      });
+    });
   }
 
   /**

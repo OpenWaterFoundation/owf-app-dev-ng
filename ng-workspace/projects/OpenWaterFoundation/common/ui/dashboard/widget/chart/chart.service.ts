@@ -140,30 +140,31 @@ export class ChartService {
    */
   public getDates(startDate: any, endDate: any, interval: string): string[] {
 
-    const DAYFORMAT = 'yyyy-MM-DD',
+    const DAYFORMAT = 'yyyy-MM-dd',
     MONTHFORMAT = 'yyyy-MM',
     YEARFORMAT = 'yyyy';
 
 
     var allDates: string[] = [];
-    var currentDate: any;
+    var currentDate: Date;
+    var stopDate: Date;
 
     switch (interval) {
       case 'days':
-        currentDate = startDate;
+        currentDate = new Date(parseISO(startDate));
+        stopDate = new Date(parseISO(endDate));
 
-        let addDays = function(days: any) {
-          let date = new Date(this.valueOf());
-          date.setDate(date.getDate() + days);
-          return date;
-        };
         // Iterate over each date from start to end and push them to the dates array
         // that will be returned.
-        while (currentDate <= endDate) {
+        while (!isEqual(currentDate, stopDate)) {
           // Push an ISO 8601 formatted version of the date into the x axis array
           // that will be used for the data table.
           allDates.push(format(currentDate, DAYFORMAT));
-          currentDate = addDays.call(currentDate, 1);
+          currentDate = add(currentDate, { days: 1 });
+        }
+        // Finish adding the last month between the dates.
+        if (isEqual(currentDate, stopDate)) {
+          allDates.push(format(currentDate, DAYFORMAT));
         }
 
         return allDates;
@@ -171,7 +172,7 @@ export class ChartService {
       case 'months':
         // Only have to parse the string once here using ISO formatting.
         currentDate = new Date(parseISO(startDate));
-        var stopDate = new Date(parseISO(endDate));
+        stopDate = new Date(parseISO(endDate));
         // Iterate over each date from start to end and push them to the dates array
         // that will be returned.
         while (!isEqual(currentDate, stopDate)) {
@@ -190,7 +191,7 @@ export class ChartService {
       case 'years':        
         // Only have to parse the string once here using ISO formatting.
         currentDate = new Date(parseISO(startDate.toString()));
-        var stopDate = new Date(parseISO(endDate.toString()));
+        stopDate = new Date(parseISO(endDate.toString()));
         // Iterate over each date from start to end and push them to the dates
         // array that will be returned.
         while (!isEqual(currentDate, stopDate)) {
