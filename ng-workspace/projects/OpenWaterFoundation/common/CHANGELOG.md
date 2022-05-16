@@ -10,6 +10,36 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.4.6 #
+
+### Bug Fixes ###
+
+* Fixed a bug when using Area graphs.
+
+### Features / Enhancements ###
+
+* A `title` property can now be used in an image widget. It can be styled using the
+widget style `textColor` property.
+
+# 3.4.5 #
+
+###  Features / Enhancements ###
+
+* Added the ability to use the graph template file properties 'LineWidth', 'Area',
+and 'AreaStacked' in the plotly created graph.
+
+# 3.4.4 #
+
+### Bug Fixes ###
+
+* Fixed a bug that would leave off the last month of a DayTS object being converted
+into an object to be used by the Plotly API.
+
+### Features / Enhancements ###
+
+* Updated Chart widget error handling if a TSID is provided in a graph template file
+that cannot be used by the InfoMapper.
+
 # 3.4.3 #
 
 ### Features / Enhancements ###

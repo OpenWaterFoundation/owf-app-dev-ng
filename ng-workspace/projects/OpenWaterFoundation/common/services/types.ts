@@ -34,7 +34,9 @@ export enum GraphProp {
   bc = 'backgroundColor',
   cm = 'chartMode',
   ct = 'chartType',
-  fl = 'fill'
+  fl = 'fill',
+  lw = 'lineWidth',
+  sk = 'stacked'
 }
 
 /** The different operators that are covered for graduated symbols. */
@@ -504,7 +506,7 @@ export interface GraphDataProp {
   YAxis?: string
 }
 
-/** A general object to help in using a graphing package API. */
+/** A general object to help in using with a graphing package API. */
 export interface PopulateGraph {
   chartMode?: string;
   chartType: string;
@@ -518,9 +520,11 @@ export interface PopulateGraph {
   isCSV?: boolean;
   legendLabel: string;
   legendPosition: any;
+  lineWidth?: string;
   plotlyDatasetData?: number[];
   plotly_xAxisLabels?: any[];
   startDate?: string;
+  stackGroup?: string;
   yAxesLabelString: string;
 }
 
@@ -573,6 +577,7 @@ export interface ChartWidget extends DashboardWidget {
 
 export interface ImageWidget extends DashboardWidget {
   imagePath: string;
+  title?: string;
 }
 
 export interface MapWidget extends DashboardWidget {

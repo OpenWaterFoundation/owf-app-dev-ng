@@ -18,6 +18,8 @@ export class ErrorComponent {
   /** An InfoMapper widget type to describe the widget where the error
    * took place. */
   @Input('name') errorWidgetName: IM.Widget;
+  /** The offending widget object. */
+  @Input('widget') widget: IM.DashboardWidget;
 
 
   /**
@@ -27,12 +29,21 @@ export class ErrorComponent {
 
 
   /**
+   * A TSID with no tildes added was used in a widget.
+   */
+  badTSIDError(): void {
+    console.error('Incorrectly made TSID from the "' + this.widget.name + '" widget.' +
+    'A path is required.');
+  }
+
+  /**
    * Determine what Chart widget error occurred.
    */
   private chartError(): void {
 
     this.errorTypes.forEach((errorType: string) => {
       switch(errorType) {
+        case 'bad TSID': this.badTSIDError(); break;
         case 'no chartFeaturePath': this.missingRequiredProp('chartFeaturePath'); break;
         case 'no graphTemplatePath': this.missingRequiredProp('graphTemplatePath'); break;
         case 'no name': this.missingRequiredProp('name'); break;

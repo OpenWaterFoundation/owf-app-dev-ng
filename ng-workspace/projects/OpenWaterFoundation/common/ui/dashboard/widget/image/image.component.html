@@ -1,6 +1,20 @@
 <!-- Image exists. -->
 <div *ngIf="fullDataPath" class="image-container">
-  <img [src]="fullDataPath">
+
+  <div *ngIf="imageWidget.title" class="title-given-container">
+
+    <div class="title-container">
+      <h5 class="title" [ngStyle]="setTitleStyle()"><u>{{imageWidget.title}}</u></h5>
+    </div>
+
+    <img class="image-with-title" [src]="fullDataPath">
+  </div>
+
+  <div *ngIf="!imageWidget.title || imageWidget.title === ''"
+  class="title-not-given-container">
+    <img class="image-no-title" [src]="fullDataPath">
+  </div>
+  
 </div>
 
 <!-- Image does not exist. -->

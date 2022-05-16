@@ -59,6 +59,11 @@ export class ImageComponent {
     
   }
 
-  
+  setTitleStyle(): any {
+    // TODO: Try console here to see if it's being called many times.
+    return {
+      color: this.imageWidget.style.textColor ? this.imageWidget.style.textColor : 'black'
+    };
+  }
 
 }

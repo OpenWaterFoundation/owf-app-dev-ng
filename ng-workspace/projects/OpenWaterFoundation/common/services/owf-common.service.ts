@@ -1258,6 +1258,9 @@ export class OwfCommonService {
     // Depending on whether it's a full TSID used in the graph template file, determine
     // what the file path of the StateMod file is. (TSIDLocation~/path/to/filename.stm OR
     // TSIDLocation~StateMod~/path/to/filename.stm)
+    if (fullTSID.split('~').length === 1) {
+      return { location: null };
+    }
     if (fullTSID.split('~').length === 2) {
       return {
         location: fullTSID.split('~')[0],

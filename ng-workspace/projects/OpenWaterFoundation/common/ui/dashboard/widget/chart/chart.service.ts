@@ -7,8 +7,10 @@ import { add,
           format,
           isEqual,
           parseISO }   from 'date-fns';
-import { BehaviorSubject,
-          Observable } from "rxjs";
+import { DayTS,
+          MonthTS,
+          TS, 
+          YearTS}         from "@OpenWaterFoundation/common/ts";
 
 /** The DialogService provides helper function to all Dialog Components in the Common
  * library. Any function not directly related to a Dialog Component's core functionality
@@ -214,13 +216,10 @@ export class ChartService {
    * graph being created.
    * @param timeSeries The current time series to use to extract the y axis data
    * for the graph.
-   * @param x_axisLabels The x Axis labels created for the graph.
-   * @param type The interval type of the time series ('years', 'months', etc.).
    */
-  public setAxisObject(timeSeries: any, x_axisLabels: string[], type: string): any {
+  public setYAxisData(timeSeries: TS): any {
 
-    var chartJS_yAxisData: number[] = [];
-    var plotly_yAxisData: number[] = [];
+    var yAxisData: number[] = [];
 
     let startDate: DateTime = timeSeries.getDate1();
     let endDate: DateTime = timeSeries.getDate2();
@@ -232,62 +231,62 @@ export class ChartService {
     do {
       // Grab the value from the current Time Series that's being looked at.
       let value = timeSeries.getDataValue(iter);
-      // This object will hold both the x and y values so the ChartJS object explicitly knows what value goes with what label
-      // This is very useful for displaying multiple Time Series on one graph with different dates used for both.
-      var dataObject: any = {};
 
-      // Set the x value as the current date      
-      dataObject.x = x_axisLabels[labelIndex];
       // If it's missing, replace value with NaN and push onto the array. If not just push the value onto the array.
       if (timeSeries.isDataMissing(value)) {
-        dataObject.y = NaN;
-        plotly_yAxisData.push(NaN);
+        yAxisData.push(NaN);
       } else {
-        dataObject.y = value;
-        plotly_yAxisData.push(value);
+        yAxisData.push(value);
       }
-      chartJS_yAxisData.push(dataObject);
       // Update the interval and labelIndex now that the dataObject has been pushed onto the chartJS_yAxisData array.
       iter.addInterval(timeSeries.getDataIntervalBase(), timeSeries.getDataIntervalMult());
       labelIndex++;
+
+      // 
+      if (timeSeries instanceof DayTS) {
+        if (iter.getDay() === endDate.getDay() && iter.getMonth() === endDate.getMonth() &&
+        iter.getYear() === endDate.getYear()) {
+
+          var lastValue = timeSeries.getDataValue(iter);
+  
+          if (timeSeries.isDataMissing(lastValue)) {
+            yAxisData.push(NaN);
+          } else {
+            yAxisData.push(lastValue);
+          }
+        }
+      }
       // If the month and year are equal, the end has been reached. This will only happen once.
-      if (type === 'months') {
+      else if (timeSeries instanceof MonthTS) {
         if (iter.getMonth() === endDate.getMonth() && iter.getYear() === endDate.getYear()) {
-          dataObject = {};
           var lastValue = timeSeries.getDataValue(iter);
   
-          dataObject.x = x_axisLabels[labelIndex];
           if (timeSeries.isDataMissing(lastValue)) {
-            dataObject.y = NaN;
-            plotly_yAxisData.push(NaN);
+            yAxisData.push(NaN);
           } else {
-            dataObject.y = lastValue;
-            plotly_yAxisData.push(lastValue);
+            yAxisData.push(lastValue);
           }
-          chartJS_yAxisData.push(dataObject);
         }
       }
-      else if (type === 'years') {
+      else if (timeSeries instanceof YearTS) {
         if (iter.getYear() === endDate.getYear()) {
-          dataObject = {};
           var lastValue = timeSeries.getDataValue(iter);
   
-          dataObject.x = x_axisLabels[labelIndex];
           if (timeSeries.isDataMissing(lastValue)) {
-            dataObject.y = NaN;
-            plotly_yAxisData.push(NaN);
+            yAxisData.push(NaN);
           } else {
-            dataObject.y = lastValue;
-            plotly_yAxisData.push(lastValue);
+            yAxisData.push(lastValue);
           }
-          chartJS_yAxisData.push(dataObject);
         }
       }
 
-    } while (iter.getMonth() !== endDate.getMonth() || iter.getYear() !== endDate.getYear())
+    } while (
+      iter.getDay() !== endDate.getDay() ||
+      iter.getMonth() !== endDate.getMonth() ||
+      iter.getYear() !== endDate.getYear()
+      )
 
-    return {chartJS_yAxisData: chartJS_yAxisData,
-            plotly_yAxisData: plotly_yAxisData }
+    return yAxisData;
   }
 
   /**
@@ -371,9 +370,27 @@ export class ChartService {
   public verifyPlotlyProp(property: string, type: IM.GraphProp): string {
 
     switch(type) {
+      // BACKGROUND COLOR.
+      case IM.GraphProp.bc:
+        // Convert C / Java '0x' notation into hex hash '#' notation.
+        if (property.startsWith('0x')) {
+          return property.replace('0x', '#');
+        } else if (property !== '') {
+          return property;
+        } else {
+          console.warn('No graph property "Color" detected. Using the default graph color black');
+          return 'black';
+        }
       // CHART MODE.
       case IM.GraphProp.cm:
-        if (property === 'line' || property === 'area') {
+
+        var isScatterGraphType = (
+          property === 'line' ||
+          property === 'area' ||
+          property === 'areastacked'
+        );
+
+        if (isScatterGraphType) {
           return 'lines';
         }
         else if (property.toUpperCase() === 'POINT') {
@@ -398,25 +415,13 @@ export class ChartService {
         } else {
           return 'scatter';
         }
-      // BACKGROUND COLOR.
-      case IM.GraphProp.bc:
-        // Convert C / Java '0x' notation into hex hash '#' notation.
-        if (property.startsWith('0x')) {
-          return property.replace('0x', '#');
-        } else if (property !== '') {
-          return property;
-        } else {
-          console.warn('No graph property "Color" detected. Using the default graph color black');
-          return 'black';
-        }
+      case IM.GraphProp.lw:
+        return property ? property : '1.5';
       // FILL TYPE.
       case IM.GraphProp.fl:
-
-        if (property === 'area') {
-          return 'tozeroy';
-        } else {
-          return undefined;
-        }
+        return (property === 'area') ? 'tozeroy' : undefined;
+      case IM.GraphProp.sk:
+        return (property === 'areastacked') ? 'one' : undefined;
     }
   }
 

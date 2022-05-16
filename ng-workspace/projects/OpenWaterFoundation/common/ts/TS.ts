@@ -569,6 +569,22 @@ export class TS {
   }
 
   /**
+
+
+
+*/
+/**
+ * Return the data value for a date.
+ * @param date Date corresponding to the data value.
+ * @return The data value associated with a date.  This should be overridden in
+ * derived classes (always returns the missing data value here).
+ */
+public getDataValue( date: DateTime ): number {
+  console.warn( 3, "TS.getDataValue", "TS.getDataValue is a virtual function, redefine in derived classes" );
+	return this._missing;
+}
+
+  /**
   Return the data interval base.
   @return The data interval base (see TimeInterval.*).
   */
