@@ -10,11 +10,111 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.4.7 #
+
+### Bug Fixes ###
+
+* Fixed a bug that did not allow disabling or hiding a Dashboard menu.
+
+### Refactoring ###
+
+* Kept some code DRY.
+* Changed how MainMenu and SubMenus are made in the InfoMapper tab component.
+
+### Features / Enhancements ###
+
+* Added the ability to disable and MainMenu or SubMenu.
+
+# 3.4.6 #
+
+### Bug Fixes ###
+
+* Fixed a bug when using Area graphs.
+
+### Features / Enhancements ###
+
+* A `title` property can now be used in an image widget. It can be styled using the
+widget style `textColor` property.
+
+# 3.4.5 #
+
+###  Features / Enhancements ###
+
+* Added the ability to use the graph template file properties 'LineWidth', 'Area',
+and 'AreaStacked' in the plotly created graph.
+
+# 3.4.4 #
+
+### Bug Fixes ###
+
+* Fixed a bug that would leave off the last month of a DayTS object being converted
+into an object to be used by the Plotly API.
+
+### Features / Enhancements ###
+
+* Updated Chart widget error handling if a TSID is provided in a graph template file
+that cannot be used by the InfoMapper.
+
+# 3.4.3 #
+
+### Features / Enhancements ###
+
+* Added some more code for reading CSV files and dealing with classification files
+given to the Status Indicator widget for styling and displaying different icons
+depending on what the data looks like.
+
+# 3.4.2 #
+
+### Features / Enhancements ###
+
+* Finished updating the foundational DayTS code and created this version for testing.
+
+# 3.4.1 #
+
+### Bug Fixes ###
+
+* Updated error handling for missing widget properties.
+* Fixed a bug that prevented MonthTS objects being displayed on a Chart.
+
+### Refactoring ###
+
+* Updated some TS code in multiple files so they are easier to read.
+
+### Features / Enhancements ###
+
+* Added the basic ability for the Status Indicator widget to show the change from
+the second to last entry and the last entry in the dataset. This is done by default
+for now, but properties could be added in the future for other types of differences.
+
+* Added the ability for a graph template file to use the 'Area' GraphType, which
+shades the region under a line graph to the X axis.
+
+# 3.4.0 #
+
+### Bug Fixes ###
+
+* Fixed a bug that prevented user navigation from dashboard to dashboard.
+* Fixed a bug where the Map Component tried to update when a dashboard id is given
+and used in the site URL. A check is done to see if the URL id is for a map or a
+dashboard.
+
+### Refactoring ###
+
+* Some duplicate code from multiple widgets was moved into the dashboard service
+so it can be utilized by many in the future.
+
+### Features / Enhancements ###
+
+* Added more foundational Status Indicator widget code. Given certain properties,
+CSV, JSON, or GeoJSON data will be read in and the main data will now be displayed
+on the widget. By default for this release, it will always be the last data found
+in the dataset. Options to change this in the future may be added.
+
 # 3.3.1 #
 
 ### Bug Fixes ###
 
-* Fixed a bug 
+* Fixed a small CSS bug.
 
 # 3.3.0 #
 

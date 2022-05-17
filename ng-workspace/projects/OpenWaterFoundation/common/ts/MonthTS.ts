@@ -385,8 +385,6 @@ export class MonthTS extends TS {
     // THIS CODE NEEDS TO BE EQUIVALENT IN setDataValue...
     let row: number = date.getYear() - this._date1.getYear();
     let column: number = date.getMonth() - 1; // Zero offset!
-    
-    
 
     // ... END OF EQUIVALENT CODE.
 
@@ -395,7 +393,6 @@ export class MonthTS extends TS {
     // }
 
     // Set the dirty flag so that we know to recompute the limits if desired...
-    
 
     this._dirty = true;
     this._data[row][column] = value;

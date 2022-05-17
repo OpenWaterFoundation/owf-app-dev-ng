@@ -7,8 +7,10 @@ import { add,
           format,
           isEqual,
           parseISO }   from 'date-fns';
-import { BehaviorSubject,
-          Observable } from "rxjs";
+import { DayTS,
+          MonthTS,
+          TS, 
+          YearTS}         from "@OpenWaterFoundation/common/ts";
 
 /** The DialogService provides helper function to all Dialog Components in the Common
  * library. Any function not directly related to a Dialog Component's core functionality
@@ -140,30 +142,31 @@ export class ChartService {
    */
   public getDates(startDate: any, endDate: any, interval: string): string[] {
 
-    const DAYFORMAT = 'yyyy-MM-DD',
+    const DAYFORMAT = 'yyyy-MM-dd',
     MONTHFORMAT = 'yyyy-MM',
     YEARFORMAT = 'yyyy';
 
 
     var allDates: string[] = [];
-    var currentDate: any;
+    var currentDate: Date;
+    var stopDate: Date;
 
     switch (interval) {
       case 'days':
-        currentDate = startDate;
+        currentDate = new Date(parseISO(startDate));
+        stopDate = new Date(parseISO(endDate));
 
-        let addDays = function(days: any) {
-          let date = new Date(this.valueOf());
-          date.setDate(date.getDate() + days);
-          return date;
-        };
         // Iterate over each date from start to end and push them to the dates array
         // that will be returned.
-        while (currentDate <= endDate) {
+        while (!isEqual(currentDate, stopDate)) {
           // Push an ISO 8601 formatted version of the date into the x axis array
           // that will be used for the data table.
           allDates.push(format(currentDate, DAYFORMAT));
-          currentDate = addDays.call(currentDate, 1);
+          currentDate = add(currentDate, { days: 1 });
+        }
+        // Finish adding the last month between the dates.
+        if (isEqual(currentDate, stopDate)) {
+          allDates.push(format(currentDate, DAYFORMAT));
         }
 
         return allDates;
@@ -171,7 +174,7 @@ export class ChartService {
       case 'months':
         // Only have to parse the string once here using ISO formatting.
         currentDate = new Date(parseISO(startDate));
-        var stopDate = new Date(parseISO(endDate));
+        stopDate = new Date(parseISO(endDate));
         // Iterate over each date from start to end and push them to the dates array
         // that will be returned.
         while (!isEqual(currentDate, stopDate)) {
@@ -190,7 +193,7 @@ export class ChartService {
       case 'years':        
         // Only have to parse the string once here using ISO formatting.
         currentDate = new Date(parseISO(startDate.toString()));
-        var stopDate = new Date(parseISO(endDate.toString()));
+        stopDate = new Date(parseISO(endDate.toString()));
         // Iterate over each date from start to end and push them to the dates
         // array that will be returned.
         while (!isEqual(currentDate, stopDate)) {
@@ -209,36 +212,14 @@ export class ChartService {
   }
 
   /**
-   * 
-   * @param widget 
-   * @returns 
-   */
-  hasSelectEvent(widget: IM.DashboardWidget): boolean {
-
-    if (!widget.eventHandlers) {
-      return false;
-    }
-    
-    for (let widgetEvent of widget.eventHandlers) {
-      if (widgetEvent.eventType.toLowerCase() === 'selectevent') {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
    * @returns An array of the data values to display on the y Axis of the time series
    * graph being created.
    * @param timeSeries The current time series to use to extract the y axis data
    * for the graph.
-   * @param x_axisLabels The x Axis labels created for the graph.
-   * @param type The interval type of the time series ('years', 'months', etc.).
    */
-  public setAxisObject(timeSeries: any, x_axisLabels: string[], type: string): any {
+  public setYAxisData(timeSeries: TS): any {
 
-    var chartJS_yAxisData: number[] = [];
-    var plotly_yAxisData: number[] = [];
+    var yAxisData: number[] = [];
 
     let startDate: DateTime = timeSeries.getDate1();
     let endDate: DateTime = timeSeries.getDate2();
@@ -250,62 +231,62 @@ export class ChartService {
     do {
       // Grab the value from the current Time Series that's being looked at.
       let value = timeSeries.getDataValue(iter);
-      // This object will hold both the x and y values so the ChartJS object explicitly knows what value goes with what label
-      // This is very useful for displaying multiple Time Series on one graph with different dates used for both.
-      var dataObject: any = {};
 
-      // Set the x value as the current date      
-      dataObject.x = x_axisLabels[labelIndex];
       // If it's missing, replace value with NaN and push onto the array. If not just push the value onto the array.
       if (timeSeries.isDataMissing(value)) {
-        dataObject.y = NaN;
-        plotly_yAxisData.push(NaN);
+        yAxisData.push(NaN);
       } else {
-        dataObject.y = value;
-        plotly_yAxisData.push(value);
+        yAxisData.push(value);
       }
-      chartJS_yAxisData.push(dataObject);
       // Update the interval and labelIndex now that the dataObject has been pushed onto the chartJS_yAxisData array.
       iter.addInterval(timeSeries.getDataIntervalBase(), timeSeries.getDataIntervalMult());
       labelIndex++;
+
+      // 
+      if (timeSeries instanceof DayTS) {
+        if (iter.getDay() === endDate.getDay() && iter.getMonth() === endDate.getMonth() &&
+        iter.getYear() === endDate.getYear()) {
+
+          var lastValue = timeSeries.getDataValue(iter);
+  
+          if (timeSeries.isDataMissing(lastValue)) {
+            yAxisData.push(NaN);
+          } else {
+            yAxisData.push(lastValue);
+          }
+        }
+      }
       // If the month and year are equal, the end has been reached. This will only happen once.
-      if (type === 'months') {
+      else if (timeSeries instanceof MonthTS) {
         if (iter.getMonth() === endDate.getMonth() && iter.getYear() === endDate.getYear()) {
-          dataObject = {};
           var lastValue = timeSeries.getDataValue(iter);
   
-          dataObject.x = x_axisLabels[labelIndex];
           if (timeSeries.isDataMissing(lastValue)) {
-            dataObject.y = NaN;
-            plotly_yAxisData.push(NaN);
+            yAxisData.push(NaN);
           } else {
-            dataObject.y = lastValue;
-            plotly_yAxisData.push(lastValue);
+            yAxisData.push(lastValue);
           }
-          chartJS_yAxisData.push(dataObject);
         }
       }
-      else if (type === 'years') {
+      else if (timeSeries instanceof YearTS) {
         if (iter.getYear() === endDate.getYear()) {
-          dataObject = {};
           var lastValue = timeSeries.getDataValue(iter);
   
-          dataObject.x = x_axisLabels[labelIndex];
           if (timeSeries.isDataMissing(lastValue)) {
-            dataObject.y = NaN;
-            plotly_yAxisData.push(NaN);
+            yAxisData.push(NaN);
           } else {
-            dataObject.y = lastValue;
-            plotly_yAxisData.push(lastValue);
+            yAxisData.push(lastValue);
           }
-          chartJS_yAxisData.push(dataObject);
         }
       }
 
-    } while (iter.getMonth() !== endDate.getMonth() || iter.getYear() !== endDate.getYear())
+    } while (
+      iter.getDay() !== endDate.getDay() ||
+      iter.getMonth() !== endDate.getMonth() ||
+      iter.getYear() !== endDate.getYear()
+      )
 
-    return {chartJS_yAxisData: chartJS_yAxisData,
-            plotly_yAxisData: plotly_yAxisData }
+    return yAxisData;
   }
 
   /**
@@ -383,26 +364,12 @@ export class ChartService {
    * Verifies that a potential property string provided to a graph config object
    * will work correctly with the JavaScript Plotly API.
    * @param property The variable obtained from the graph config file trying to
-   * be implemented as a Plotly property.
+   * be implemented as a Plotly property. Will be passed in as all lower case.
    * @param type The type of property being scrutinized.
    */
   public verifyPlotlyProp(property: string, type: IM.GraphProp): string {
 
     switch(type) {
-      // CHART MODE.
-      case IM.GraphProp.cm:
-        if (property.toUpperCase() === 'LINE') { return 'lines'; }
-        else if (property.toUpperCase() === 'POINT') { return 'markers' }
-        else {
-          console.warn('Unknown property "' + property.toUpperCase() +
-          '" - Not Line or Point. Using default Graph Type Line');
-          return 'lines';
-        }
-      // CHART TYPE.
-      case IM.GraphProp.ct:
-        if (property.toUpperCase() === 'LINE' || property.toUpperCase() === 'POINT')
-          return 'scatter';
-        else return 'scatter';
       // BACKGROUND COLOR.
       case IM.GraphProp.bc:
         // Convert C / Java '0x' notation into hex hash '#' notation.
@@ -414,6 +381,47 @@ export class ChartService {
           console.warn('No graph property "Color" detected. Using the default graph color black');
           return 'black';
         }
+      // CHART MODE.
+      case IM.GraphProp.cm:
+
+        var isScatterGraphType = (
+          property === 'line' ||
+          property === 'area' ||
+          property === 'areastacked'
+        );
+
+        if (isScatterGraphType) {
+          return 'lines';
+        }
+        else if (property.toUpperCase() === 'POINT') {
+          return 'markers'
+        }
+        else {
+          console.warn('Unknown property "' + property.toUpperCase() +
+          '" - Not Line or Point. Using default Graph Type Line');
+          return 'lines';
+        }
+      // CHART TYPE.
+      case IM.GraphProp.ct:
+
+        var isScatterGraphType = (
+          property === 'line' ||
+          property === 'point' ||
+          property === 'area'
+        );
+
+        if (isScatterGraphType) {
+          return 'scatter';
+        } else {
+          return 'scatter';
+        }
+      case IM.GraphProp.lw:
+        return property ? property : '1.5';
+      // FILL TYPE.
+      case IM.GraphProp.fl:
+        return (property === 'area') ? 'tozeroy' : undefined;
+      case IM.GraphProp.sk:
+        return (property === 'areastacked') ? 'one' : undefined;
     }
   }
 

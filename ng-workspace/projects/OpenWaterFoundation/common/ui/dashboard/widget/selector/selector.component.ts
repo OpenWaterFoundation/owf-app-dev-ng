@@ -97,6 +97,7 @@ export class SelectorComponent {
     var dataFormat = this.selectorWidget.dataFormat.toLowerCase();
 
     if (dataFormat === 'csv') {
+      // The widget object has passed its inspection and can be created.
       this.retrieveCSVData();
     } else if (dataFormat === 'geojson' || dataFormat === 'json') {
 
@@ -105,6 +106,7 @@ export class SelectorComponent {
         this.dashboardService.setSelectorError = true;
         return;
       }
+      // The widget object has passed its inspection and can be created.
       this.retrieveJSONData();
     }
   }
@@ -130,7 +132,7 @@ export class SelectorComponent {
    * @returns An array of only the extracted feature objects to keep the allFeatures
    * class variable agnostic going forward.
    */
-  private getAllProperties(features: any[]): any[] {
+  getAllProperties(features: any[]): any[] {
     var featureProperties: any[] = [];
 
     features.forEach((feature: any) => {
@@ -175,25 +177,7 @@ export class SelectorComponent {
       header: false,
       complete: (result: Papa.ParseResult<any>) => {
 
-        var headers: string[] = result.data[this.selectorWidget.skipDataLines ?
-          this.selectorWidget.skipDataLines : 0];
-
-        var lineToStart = this.selectorWidget.skipDataLines ?
-        (this.selectorWidget.skipDataLines + 1) : 0;
-
-        var parsedResult: any[] = [];
-
-        for (let dataIndex = lineToStart; dataIndex < result.data.length; ++dataIndex) {
-
-          var parsedObject = {};
-
-          for (let headerIndex = 0; headerIndex < headers.length; ++headerIndex) {
-            parsedObject[headers[headerIndex]] = result.data[dataIndex][headerIndex];
-          }
-          parsedResult.push(parsedObject);
-        }
-        
-        this.allFeatures = parsedResult;
+        this.allFeatures = this.dashboardService.processWidgetCSVData(result.data, this.selectorWidget);
         this.filteredFeatures = this.allFeatures;
 
         // Send the initial event to the Chart Widget.
@@ -222,14 +206,7 @@ export class SelectorComponent {
     this.commonService.getJSONData(this.commonService.buildPath(IM.Path.dbP, [this.selectorWidget.dataPath]))
     .subscribe((JSONData: any) => {
 
-      // geoJson.
-      if (JSONData.features) {
-        this.allFeatures = this.getAllProperties(JSONData.features);
-      }
-      // JSON with a named array.
-      else if (JSONData[this.selectorWidget.JSONArrayName]) {
-        this.allFeatures = JSONData[this.selectorWidget.JSONArrayName];
-      }
+      this.allFeatures = this.dashboardService.processWidgetJSONData(JSONData, this.selectorWidget);
       
       this.filteredFeatures = this.allFeatures;
       // Send the initial event to the Chart Widget.
@@ -292,6 +269,9 @@ export class SelectorComponent {
     }
   }
 
+  /**
+   * 
+   */
   private set toggleDataLoading(loaded: boolean) {
     this.dataLoadingSubject.next(loaded);
   }

@@ -1,6 +1,6 @@
-<div *ngIf="!(isSelectorError$ | async); then prepareSelector else error"></div>
+<div *ngIf="!(isSelectorError$ | async); then loadData else error"></div>
 
-<ng-template #prepareSelector>
+<ng-template #loadData>
   <div *ngIf="dataLoading$ | async; then loading else showSelector"></div>
 </ng-template>
 

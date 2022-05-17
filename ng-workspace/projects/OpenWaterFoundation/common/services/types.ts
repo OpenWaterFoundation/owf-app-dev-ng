@@ -10,6 +10,7 @@ import { BehaviorSubject } from "rxjs";
 export enum DatastoreType {
   delimited = 'owf.datastore.delimited',
   dateValue = 'owf.datastore.datevalue',
+  json = 'owf.datastore.json',
   stateMod = 'owf.datastore.statemod'
 }
 
@@ -32,7 +33,10 @@ export enum D3Chart {
 export enum GraphProp {
   bc = 'backgroundColor',
   cm = 'chartMode',
-  ct = 'chartType'
+  ct = 'chartType',
+  fl = 'fill',
+  lw = 'lineWidth',
+  sk = 'stacked'
 }
 
 /** The different operators that are covered for graduated symbols. */
@@ -110,6 +114,7 @@ export enum Widget {
   dsh = 'dashboard',
   err = 'error',
   img = 'image',
+  ind = 'statusIndicator',
   sel = 'selector',
   txt = 'text'
 }
@@ -287,10 +292,10 @@ export interface EventHandler {
 export interface MainMenu {
   id?: string;
   name?: string;
-  align?: string;
   action?: string;
   enabled?: any;
   tooltip?: string;
+  url?: string;
   visible?: any;
   menus?: SubMenu[];
 }
@@ -304,6 +309,7 @@ export interface SubMenu {
   separatorBefore?: any;
   doubleSeparatorBefore?: any;
   tooltip?: string;
+  url?: string;
   visible?: any;
 }
 
@@ -500,7 +506,7 @@ export interface GraphDataProp {
   YAxis?: string
 }
 
-/** A general object to help in using a graphing package API. */
+/** A general object to help in using with a graphing package API. */
 export interface PopulateGraph {
   chartMode?: string;
   chartType: string;
@@ -509,13 +515,16 @@ export interface PopulateGraph {
   dataLabels?: string[];
   dateType?: string;
   endDate?: string;
+  fillType?: string;
   graphFileType: string;
   isCSV?: boolean;
   legendLabel: string;
   legendPosition: any;
+  lineWidth?: string;
   plotlyDatasetData?: number[];
   plotly_xAxisLabels?: any[];
   startDate?: string;
+  stackGroup?: string;
   yAxesLabelString: string;
 }
 
@@ -568,6 +577,7 @@ export interface ChartWidget extends DashboardWidget {
 
 export interface ImageWidget extends DashboardWidget {
   imagePath: string;
+  title?: string;
 }
 
 export interface MapWidget extends DashboardWidget {
@@ -584,11 +594,26 @@ export interface SelectorWidget extends DashboardWidget {
 }
 
 export interface StatusIndicatorWidget extends DashboardWidget {
+  title?: string;
+  dataPath?: string;
+  dataFormat?: string;
+  JSONArrayName?: string;
+  referenceValue?: number;
+  badRef?: string;
+  // All three of these are being used for now.
+  attributeName?: string;
+  columnName?: string;
+  propertyName?: string;
+
+  skipDataLines?: number;
+  classificationFile?: string;
 }
 
 export interface TextWidget extends DashboardWidget {
-  textPath: string;
+  contentType: string;
   graphTemplatePath: string;
+  textPath: string;
+  text?: string;
 }
 
 export interface WidgetEvent {

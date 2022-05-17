@@ -3,6 +3,7 @@ import { TSIdent }      from './TSIdent';
 import { TimeInterval } from '@OpenWaterFoundation/common/util/time';
 import { YearTS }       from './YearTS';
 import { MonthTS }      from './MonthTS';
+import { DayTS }        from './DayTS';
 import { TSLimits }     from './TSLimits';
 import { DateTime }     from '@OpenWaterFoundation/common/util/time';
 
@@ -225,7 +226,7 @@ export class TSUtil {
     }
     // Now interpret the results and declare the time series...
 
-      let ts = null;
+      let ts: TS = null;
       if ( intervalBase == TimeInterval.MINUTE ) {
         throw new Error('MinuteTS has not yet been implemented');
         // ts = new MinuteTS();
@@ -235,8 +236,7 @@ export class TSUtil {
         // ts = new HourTS();
       }
       else if ( intervalBase == TimeInterval.DAY ) {
-        throw new Error('DayTS has not yet been implemented');
-        // ts = new DayTS();
+        ts = new DayTS();
       }
       else if ( intervalBase == TimeInterval.MONTH ) {        
         ts = new MonthTS();

@@ -1,12 +1,13 @@
-import { Observable }         from 'rxjs/internal/Observable';
-import { of }                 from 'rxjs';
+import { Observable }                     from 'rxjs/internal/Observable';
+import { of }                             from 'rxjs';
 
-import { OwfCommonService }   from '@OpenWaterFoundation/common/services';
-import * as IM                from '@OpenWaterFoundation/common/services';
+import { OwfCommonService }               from '@OpenWaterFoundation/common/services';
+import * as IM                            from '@OpenWaterFoundation/common/services';
 
-import { DateValueDatastore } from './DateValueDatastore';
-import { DelimitedDatastore } from './DelimitedDatastore';
-import { StateModDatastore }  from './StateModDatastore';
+import { DateValueDatastore }             from './DateValueDatastore';
+import { DelimitedDatastore }             from './DelimitedDatastore';
+import { StateModDatastore }              from './StateModDatastore';
+import { ColoradoHydroBaseRestDatastore } from './ColoradoHydroBaseRest';
 
 
 /**
@@ -17,6 +18,16 @@ export class DatastoreManager {
 
   // The hard coded 'built in' Datastores for the Common library.
   private readonly builtInDatastores: IM.Datastore[] = [
+    {
+      name: "ColoradoHydroBaseRest",
+      type: "owf.datastore.json",
+      rootUrl: 'https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/',
+      aliases: [
+        'ColoradoHydroBaseRestRaw',
+        'ColoradoHydroBaseRestHour',
+        'ColoradoHydroBaseRestDay'
+      ]
+    },
     {
       name: "Delimited",
       type: "owf.datastore.delimited",
@@ -36,7 +47,9 @@ export class DatastoreManager {
       aliases: [ 'stm' ]
     }
   ];
-
+  /**
+   * 
+   */
   private userDatastores: IM.Datastore[] = [];
   /** The singleton instance of this MapLayerManager class. */
   private static instance: DatastoreManager;
@@ -71,6 +84,8 @@ export class DatastoreManager {
         return DateValueDatastore.readTimeSeries(service, datastore, fullTSID);
       case IM.DatastoreType.stateMod:
         return StateModDatastore.readTimeSeries(service, datastore, fullTSID);
+      case IM.DatastoreType.json:
+        return ColoradoHydroBaseRestDatastore.getData(service, datastore, fullTSID);
       case 'unknown':
       default:
         console.error("Unsupported datastore '" + fullTSID.datastore + "'.");

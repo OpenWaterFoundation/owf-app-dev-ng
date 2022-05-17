@@ -1137,6 +1137,7 @@ export class DateTime {
   @see #toString
   */
   public static parse ( dateString: string ): DateTime {
+
     var	length = 0;
     var c: string;	// Use to optimize code below
 
@@ -1172,7 +1173,7 @@ export class DateTime {
           // Assume that end is not a time zone (could just be the time specified after a space)
           timeZone = null;
         }
-        if ( timeZone != null ) {
+        if ( timeZone !== null ) {
           // Actually had the time zone so save some data to help with parsing
           dateStringNoTimeZone = dateString.substring(0,lastSpacePos).trim();
           lengthNoTimeZone = dateStringNoTimeZone.length;
@@ -1185,22 +1186,22 @@ export class DateTime {
     // TODO SAM 2016-05-02 need to remove some cases now previously checked for time zone now that
     // time zone is checked above.  The legacy code assumed 3-digit time zone but now longer time zone is accepted.
     var dateTime: DateTime = null;
-    if( lengthNoTimeZone == 4 ){
+    if( lengthNoTimeZone === 4 ){
       //
       // the date is YYYY 
       //
       dateTime = this.parse3( dateStringNoTimeZone, DateTime.FORMAT_YYYY, 0 );
     }
-    else if( lengthNoTimeZone == 5 ){
+    else if( lengthNoTimeZone === 5 ){
       //
       // the date is MM/DD or MM-DD or HH:mm
       // Don't allow MM/YY!!!
       //
       c = dateStringNoTimeZone.charAt ( 2 );
-      if ( c == ':' ) {
+      if ( c === ':' ) {
         dateTime = this.parse3( dateStringNoTimeZone, DateTime.FORMAT_HH_mm, 0 );
       }
-      else if ( (c == '/') || (c == '-') ) {
+      else if ( (c === '/') || (c === '-') ) {
         // The following will work for both...
         dateTime = this.parse3( dateStringNoTimeZone, DateTime.FORMAT_MM_SLASH_DD, 0 );
       }
@@ -1213,18 +1214,18 @@ export class DateTime {
       //
       // the date is M/YYYY
       //
-      if ( dateStringNoTimeZone.charAt(1) == '/') {
+      if ( dateStringNoTimeZone.charAt(1) === '/') {
         dateTime = this.parse3(" "+ dateStringNoTimeZone, DateTime.FORMAT_MM_SLASH_YYYY,0);
       }
       else {	console.warn( 2, "DateTime.parse", "Cannot get DateTime from \"" + dateString + "\"" );
         throw new Error ( "Invalid DateTime string \"" + dateString + "\"" );
       }
     }
-    else if( lengthNoTimeZone == 7 ){
+    else if( lengthNoTimeZone === 7 ){
       //
       // the date is YYYY-MM or MM/YYYY
       //
-      if( dateStringNoTimeZone.charAt(2) == '/' ) {
+      if( dateStringNoTimeZone.charAt(2) === '/' ) {
         dateTime = this.parse3( dateStringNoTimeZone, DateTime.FORMAT_MM_SLASH_YYYY, 0 );
       }
       else {
@@ -1232,13 +1233,13 @@ export class DateTime {
       }
     }
     else if ( lengthNoTimeZone == 8 ) {
-      if ( (dateStringNoTimeZone.charAt(2) == '/') && (dateStringNoTimeZone.charAt(5) == '/') ) {
+      if ( (dateStringNoTimeZone.charAt(2) === '/') && (dateStringNoTimeZone.charAt(5) === '/') ) {
         //
         // the date is MM/DD/YY
         //
         dateTime = this.parse3(dateStringNoTimeZone, DateTime.FORMAT_MM_SLASH_DD_SLASH_YY, 0 );
       }
-      else if((dateStringNoTimeZone.charAt(1) == '/') && (dateStringNoTimeZone.charAt(3) == '/') ) {
+      else if((dateStringNoTimeZone.charAt(1) === '/') && (dateStringNoTimeZone.charAt(3) === '/') ) {
         //
         // the date is M/D/YYYY
         //
@@ -1253,8 +1254,8 @@ export class DateTime {
         throw new Error ( "Invalid DateTime string \"" + dateString + "\"" );
       }
     }
-    else if ( lengthNoTimeZone == 9 ) {
-      if ( (dateStringNoTimeZone.charAt(2) == '/') && (dateStringNoTimeZone.charAt(4) == '/') ) {
+    else if ( lengthNoTimeZone === 9 ) {
+      if ( (dateStringNoTimeZone.charAt(2) === '/') && (dateStringNoTimeZone.charAt(4) === '/') ) {
         //
         // the date is MM/D/YYYY
         //
@@ -1385,7 +1386,7 @@ export class DateTime {
       timeZone = "";
     }
     // Set the time zone to what was specified in the string.
-    // If no time zone was specified then blank is used
+    // If no time zone was specified then blank is used.
     dateTime.setTimeZone(timeZone);
     return dateTime;
   }
@@ -1423,7 +1424,7 @@ export class DateTime {
     //   Message.printDebug(dl,routine, "Trying to parse string \"" + date_string + "\" using format " + format );
     // }
 
-    if ( format == DateTime.FORMAT_DD_SLASH_MM_SLASH_YYYY ) {
+    if ( format === DateTime.FORMAT_DD_SLASH_MM_SLASH_YYYY ) {
       date = new DateTime ( DateTime.PRECISION_DAY );
       is_day = true;
       // Various flavors of the format based on whether one or two
@@ -1431,13 +1432,13 @@ export class DateTime {
       if ( flag == 0 ) {
         v = StringUtil.fixedReadTwo ( date_string, "i2x1i2x1i4" );
       }
-      else if ( flag == 8 ) {
+      else if ( flag === 8 ) {
         v = StringUtil.fixedReadTwo ( date_string, "i1x1i1x1i4" );
       }
-      else if ( flag == 9 ) {
+      else if ( flag === 9 ) {
         v = StringUtil.fixedReadTwo ( date_string, "i2x1i1x1i4" );
       }
-      else if ( flag == -9 ) {
+      else if ( flag === -9 ) {
         v = StringUtil.fixedReadTwo ( date_string, "i1x1i2x1i4" );
       }
       date.__day = (Number(v[0]));
@@ -1566,13 +1567,13 @@ export class DateTime {
       date.__month = (Number(v[0]));
       date.__year = (Number(v[1]));
     }
-    else if ( format == DateTime.FORMAT_YYYY ) {
+    else if ( format === DateTime.FORMAT_YYYY ) {
       date = new DateTime ( DateTime.PRECISION_YEAR );
       is_year = true;
       v = StringUtil.fixedReadTwo ( date_string, "i4" );
       date.__year = Number(v[1]);
     }
-    else if ( format == DateTime.FORMAT_YYYY_MM ) {
+    else if ( format === DateTime.FORMAT_YYYY_MM ) {
       date = new DateTime ( DateTime.PRECISION_MONTH );
       is_month = true;
       v = StringUtil.fixedReadTwo ( date_string, "i4x1i2" );

@@ -331,7 +331,7 @@ export class StringUtil {
   public static fixedReadTwo ( string: string, format: string ) {
     // First loop through the format string and count the number of valid format specifier characters...
     var format_length: number = 0;
-    if ( format != null ) {
+    if ( format !== null ) {
       format_length = format.length
     }
     var field_count: number = 0;
@@ -432,12 +432,12 @@ export class StringUtil {
     var size: number = field_types.length;
     var string_length: number = string.length;
     var tokens: any[] = null;
-    if ( results != null ) {
+    if ( results !== null ) {
       tokens = results;
       tokens.length = 0;
     }
     else {
-      tokens = new Array<any>(size);
+      tokens = [];
     }
 
     var var1: string;

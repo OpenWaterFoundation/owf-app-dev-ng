@@ -2,7 +2,7 @@ import { Component,
           OnDestroy }       from '@angular/core';
 import { ActivatedRoute }   from '@angular/router';
 
-import { Subscription }     from 'rxjs';
+import { map, Subscription }     from 'rxjs';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
@@ -21,6 +21,8 @@ export class DashboardComponent implements OnDestroy {
   dashboardConf: IM.DashboardConf;
   /** Subscription used when reading in the dashboard configuration file. */
   dashboardConfigPathSub$: Subscription;
+
+  routeSub$: Subscription;
 
 
   /**
@@ -61,7 +63,7 @@ export class DashboardComponent implements OnDestroy {
     });
 
     if (dashboardConfig.widgets.length !== Object.keys(uniqueKeys).length) {
-      console.warn("Multiple widget objects from the Dashboard configuration file" +
+      console.warn("Multiple widget objects from the Dashboard configuration file " +
       "contain the same name, and can cause undesired behavior for event handling.");
     }
 
@@ -71,16 +73,19 @@ export class DashboardComponent implements OnDestroy {
    * Called right after the constructor.
    */
   ngOnInit(): void {
-    var id = this.route.snapshot.paramMap.get('id');
-    var dashboardConfigPath = this.commonService.getDashboardConfigPathFromId(id);
 
-    this.dashboardConfigPathSub$ = this.commonService
-    .getJSONData(this.commonService.getAppPath() + dashboardConfigPath)
-    .subscribe((dashboardConfig: IM.DashboardConf) => {
-
-      this.checkDashboardConfig(dashboardConfig);
-      this.dashboardConf = dashboardConfig;
-      this.dashboardService.createListenedToWidgets(dashboardConfig);
+    this.routeSub$ = this.route.paramMap.subscribe((paramMap) => {
+      var id = paramMap.get('id');
+      var dashboardConfigPath = this.commonService.getDashboardConfigPathFromId(id);
+  
+      this.dashboardConfigPathSub$ = this.commonService
+      .getJSONData(this.commonService.getAppPath() + dashboardConfigPath)
+      .subscribe((dashboardConfig: IM.DashboardConf) => {
+  
+        this.checkDashboardConfig(dashboardConfig);
+        this.dashboardConf = dashboardConfig;
+        this.dashboardService.createListenedToWidgets(dashboardConfig);
+      });
     });
   }
 

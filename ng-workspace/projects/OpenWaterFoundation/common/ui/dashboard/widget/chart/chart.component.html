@@ -1,4 +1,14 @@
-<div *ngIf="!(isChartError$ | async); then showChart else error"></div>
+<div *ngIf="!(isChartError$ | async); then loadData else error"></div>
+
+<ng-template #loadData>
+  <div *ngIf="dataLoading$ | async; then loading else showChart"></div>
+</ng-template>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>
 
 <ng-template #showChart>
   <div *ngIf="TSIDLocation" class="showGraph">
@@ -7,7 +17,7 @@
 </ng-template>
 
 <ng-template #error>
-  <div class="no-image-container">
-    <widget-error [errorTypes]="errorTypes" name="chart"></widget-error>
+  <div class="no-chart-container">
+    <widget-error [errorTypes]="errorTypes" [widget]="chartWidget" name="chart"></widget-error>
   </div>
 </ng-template>

@@ -569,6 +569,22 @@ export class TS {
   }
 
   /**
+
+
+
+*/
+/**
+ * Return the data value for a date.
+ * @param date Date corresponding to the data value.
+ * @return The data value associated with a date.  This should be overridden in
+ * derived classes (always returns the missing data value here).
+ */
+public getDataValue( date: DateTime ): number {
+  console.warn( 3, "TS.getDataValue", "TS.getDataValue is a virtual function, redefine in derived classes" );
+	return this._missing;
+}
+
+  /**
   Return the data interval base.
   @return The data interval base (see TimeInterval.*).
   */
@@ -983,7 +999,7 @@ export class TS {
   @see RTi.Util.Time.DateTime
   */
   public setDataValueTwo ( date: DateTime, val: number ): void {
-    console.error ("TS.setDataValue is " +
+    console.error ("TS.setDataValueTwo is " +
     "virtual and should be redefined in derived classes" );
   }
 
@@ -998,7 +1014,7 @@ export class TS {
   @see DateTime
   */
   public setDataValueFour ( date: DateTime, val: number, data_flag: string,	duration: number ): void {
-    console.warn ( "TS.setDataValue is " +
+    console.warn ( "TS.setDataValueFour is " +
     "virtual and should be implemented in derived classes" );
   }
 

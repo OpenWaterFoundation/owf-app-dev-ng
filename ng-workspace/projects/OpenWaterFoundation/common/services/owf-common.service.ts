@@ -5,9 +5,11 @@ import { MapLayerManager } from '@OpenWaterFoundation/common/ui/layer-manager';
 import { catchError }      from 'rxjs/operators';
 import { BehaviorSubject,
           Observable, 
-          of }             from 'rxjs';
+          of, 
+          Subscriber}      from 'rxjs';
 
 import * as IM             from './types';
+import * as Papa           from 'papaparse';
 
 
 @Injectable({
@@ -1202,6 +1204,34 @@ export class OwfCommonService {
   }
 
   /**
+   * Uses Papaparse to retrieve data asynchronously from a file or URL, and returns
+   * the result wrapped in an Observable.
+   * @param fullDelimitedPath The already built path to the delimited file.
+   * @param noHeader If set to true, reads in data with no headers. Default is to
+   * read the data as if it has headers.
+   * @returns The Papaparse result as an observable.
+   */
+  papaParse(fullDelimitedPath: string, noHeader?: boolean): Observable<any> {
+    return new Observable((subscriber: Subscriber<any>) => {
+      Papa.parse(fullDelimitedPath, {
+        delimiter: ",",
+        download: true,
+        comments: "#",
+        skipEmptyLines: true,
+        header: noHeader ? !noHeader : true,
+        complete: (result: Papa.ParseResult<any>) => {
+          subscriber.next(result);
+          subscriber.complete();
+        },
+        error: (error: Papa.ParseError) => {
+          subscriber.next({ error: "An error has occurred." });
+          subscriber.complete();
+        }
+      });
+    });
+  }
+
+  /**
    * Parses a full TSID string into its smaller components.
    * @param fullTSID The full TSID string to parse.
    * @returns An object with at least the TSIDLocation and datastore, and the path
@@ -1212,6 +1242,9 @@ export class OwfCommonService {
     // Depending on whether it's a full TSID used in the graph template file, determine
     // what the file path of the StateMod file is. (TSIDLocation~/path/to/filename.stm OR
     // TSIDLocation~StateMod~/path/to/filename.stm)
+    if (fullTSID.split('~').length === 1) {
+      return { location: null };
+    }
     if (fullTSID.split('~').length === 2) {
       return {
         location: fullTSID.split('~')[0],

@@ -283,7 +283,7 @@ public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boole
   @param value Value for the date.
   */
   public setDataValueTwo( date: DateTime, value: number ): void {
-    if ( date == null ) {
+    if ( date === null ) {
       return;
     }
 
@@ -310,7 +310,6 @@ public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boole
     // Set the dirty flag so that we know to recompute the limits if desired...
 
     this._dirty = true;
-
     this._data[row] = value;
   }
 

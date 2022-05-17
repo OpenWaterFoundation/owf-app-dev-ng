@@ -1,7 +1,9 @@
-import { NgModule }       from '@angular/core';
-import { CommonModule }   from '@angular/common';
+import { NgModule }                 from '@angular/core';
+import { CommonModule }             from '@angular/common';
 
-import { ErrorModule } from '../error/error.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+import { ErrorModule }              from '../error/error.module';
 import { StatusIndicatorComponent } from './status-indicator.component';
 
 
@@ -14,6 +16,8 @@ import { StatusIndicatorComponent } from './status-indicator.component';
   ],
   imports: [
     CommonModule,
+
+    MatProgressSpinnerModule,
 
     ErrorModule
   ]

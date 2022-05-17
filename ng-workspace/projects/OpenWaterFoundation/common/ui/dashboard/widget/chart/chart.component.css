@@ -1,9 +1,17 @@
 /* CLASSES */
 
+/* The top level <div> wrapper that displays using flex. */
+.loading-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
 /* Container that displays the red exclamation mark to denote a widget error in
 the dashboard. */
-.no-image-container {
+.no-chart-container {
   height: 100%;
   width: 100%;
   display: flex;

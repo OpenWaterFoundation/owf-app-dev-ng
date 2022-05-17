@@ -1,9 +1,15 @@
-<div *ngIf="isHTML" id="textHTMLDiv"></div>
+<div *ngIf="!(isTextError$ | async); then showText else error"></div>
 
-<div *ngIf="isMarkdown" id="docMarkdownDiv">
-  <showdown [value]="text" class="doc-contents-text"></showdown>
-</div>
+<ng-template #showText>
+  <div *ngIf="isHTML" id="textHTMLDiv"></div>
 
-<div *ngIf="widgetError === true" class="error-widget-comp-container">
-  <widget-error [errorTypes]="errorTypes" name="text"></widget-error>
-</div>
+  <div *ngIf="isMarkdown" id="docMarkdownDiv">
+    <showdown [value]="text" class="doc-contents-text"></showdown>
+  </div>
+</ng-template>
+
+<ng-template #error>
+  <div class="error-widget-comp-container">
+    <widget-error [errorTypes]="errorTypes" [name]="textWidget.type"></widget-error>
+  </div>
+</ng-template>

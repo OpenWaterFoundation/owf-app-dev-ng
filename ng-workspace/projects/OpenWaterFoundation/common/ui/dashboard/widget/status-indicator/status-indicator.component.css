@@ -11,19 +11,32 @@
   justify-content: center;
 }
 
-/* If the change is bad, display red. */
-.change-icon-bad {
-  color: rgb(168, 0, 0);
+/*  */
+.change-icon {
+  margin-right: 10px;
 }
 
-/* If the change is good, display green. */
-.change-icon-good {
-  color: rgb(0, 102, 0);
+/*  */
+.change-icon-and-info-container {
+  display: flex;
+  justify-content: center;
 }
 
-/* Sets the width of each possible change icon that can be displayed. */
-.change-icon-size {
-  width: 10%;
+/*  */
+.change-icon-neutral {
+  color: black;
+}
+
+/*  */
+.change-info-container {
+  display: flex;
+  width: 50%;
+}
+
+/* The element used to show what the change was from the previous time period. */
+.change-info {
+  margin: 3px 0px 0px 0px;
+  font-size: larger;
 }
 
 /* Passing font awesome icon. */
@@ -34,6 +47,12 @@
 /* Warning font awesome icon. */
 .fa-exclamation {
   color: rgb(243, 243, 0);
+  padding-top: 8px;
+}
+
+/*  */
+.fa-question {
+  color: black;
 }
 
 /* Failure font awesome icon. */
@@ -41,22 +60,18 @@
   color: rgb(247, 0, 0);
 }
 
-/* Div for the icon and changes information at the bottom of the widget. */
-.icon-and-changes-container {
-  display: flex;
-  justify-content: center;
-}
-
 /* Div for the main icon and data for the widget. */
 .icon-and-data-container {
   display: flex;
+  justify-content: center;
+  height: 55%;
 }
 
 /* Styles the main data field. */
 .indicator-data {
   width: 50%;
-  font-size: xxx-large;
-  margin: 5px 0px 0px 0px;
+  font-size: xx-large;
+  margin: 22px 0px 0px 0px;
 }
 
 /* The <div> containing each of the indicator icons. */
@@ -64,13 +79,24 @@
   width: 50%;
 }
 
+/* Centers the Error widget horizontally and vertically using flex. */
+.no-indicator-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* The <div> containing all elements in the widget. */
 .status-indicator-container {
   text-align: center;
+  height: 100%;
   width: 100%;
 }
 
 /* The title for the status indicator widget. */
 .status-title {
   margin: 0;
+  height: 20%;
 }
