@@ -121,6 +121,7 @@ export class ChartComponent implements OnInit, OnDestroy {
     // Determine if the Chart widget has a SelectEvent. If not, the initialization
     // of the Chart widget can be performed.
     if (this.dashboardService.hasSelectEvent(this.chartWidget) === false) {
+      // The widget object has passed its inspection and can be created.
       this.initChartVariables();
     }
   }
@@ -492,8 +493,9 @@ export class ChartComponent implements OnInit, OnDestroy {
   * subscriptions to prevent memory leaks.
   */
   ngOnDestroy(): void {
-    this.allResultsSub$.unsubscribe();
-    
+    if (this.allResultsSub$) {
+      this.allResultsSub$.unsubscribe();
+    }
     if (this.initialResultsSub$) {
       this.initialResultsSub$.unsubscribe()
     }

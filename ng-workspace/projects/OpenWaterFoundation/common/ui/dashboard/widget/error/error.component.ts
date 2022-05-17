@@ -116,8 +116,7 @@ export class ErrorComponent {
       case IM.Widget.img: this.imageError(); break;
       case IM.Widget.ind: this.indicatorError(); break;
       case IM.Widget.sel: this.selectorError(); break;
-      case IM.Widget.tMd: this.textError(); break;
-      case IM.Widget.tHL: this.textError(); break;
+      case IM.Widget.txt: this.textError(); break;
     }
 
     if (this.errorWidgetName !== IM.Widget.dsh) {
@@ -142,6 +141,34 @@ export class ErrorComponent {
     console.error("Property 'JSONArrayName' is required when using JSON data, " +
     "and was not found in the " + this.errorWidgetName + " widget. Add the property to the " +
     "widget object in the dashboard configuration file.");
+  }
+
+  /**
+   * Prettily prints all elements of a supported array so it's easier for a user
+   * to discern what went wrong.
+   * @param type The array of all currently supported files, types, etc.
+   * @returns A string to be displayed in an error message.
+   */
+  private prettifySupported(type: string): string {
+
+    var allTypes: string[] = [];
+
+    switch(type) {
+      case 'widgetTypes': allTypes = this.dashboardService.supportedWidgetTypes; break;
+      case 'imageFiles': allTypes = this.dashboardService.supportedImageFiles; break;
+      case 'textFiles': allTypes = this.dashboardService.supportedTextFiles; break;
+    }
+
+    var prettifiedSupported = '';
+
+    for (let i = 0; i < allTypes.length; ++i) {
+      if (i === allTypes.length - 1) {
+        prettifiedSupported += '"' + allTypes[i] + '"';
+      } else {
+        prettifiedSupported += '"' + allTypes[i] + '", ';
+      }
+    }
+    return prettifiedSupported;
   }
 
   /**
@@ -187,15 +214,12 @@ export class ErrorComponent {
 
     this.errorTypes.forEach((errorType: string) => {
       switch(errorType) {
+        case 'no contentType': this.missingRequiredProp('contentType'); break;
         case 'no textPath': this.missingRequiredProp('textPath'); break;
         case 'no name': this.missingRequiredProp('name'); break;
         case 'unsupported file': this.unsupportedFile(); break;
       }
     });
-  }
-
-  unsupportedDataType(): void {
-
   }
 
   /**
@@ -204,27 +228,30 @@ export class ErrorComponent {
    */
   private unsupportedFile(): void {
 
-    var supportedFiles: string[];
+    var fileType: string;
 
     switch(this.errorWidgetName) {
       case IM.Widget.img:
-        supportedFiles = this.dashboardService.supportedImageFiles; break;
-      case IM.Widget.tMd:
-      case IM.Widget.tHL:
-        supportedFiles = this.dashboardService.supportedTextFiles; break;
+        fileType = 'imageFiles';
+        // supportedFiles = this.dashboardService.supportedImageFiles; break;
+      case IM.Widget.txt:
+        fileType = 'textFiles';
+        // supportedFiles = this.dashboardService.supportedTextFiles; break;
     }
     
     console.error('"' + this.errorWidgetName + '" widget data files must be one ' +
-    'of the following supported types: [' + supportedFiles + ']');
+    'of the following supported types: ' + 
+    this.prettifySupported(fileType) + '.');
   }
 
   /**
    * 
    */
   private unsupportedTypes(): void {
+
     console.error('Incorrectly named Dashboard widget type.');
     console.error('Widget type must be one of the following supported ' +
-    'types: [' + this.dashboardService.supportedWidgetTypes + ']');
+    'types: ' + this.prettifySupported('widgetTypes') + '.');
   }
 
 }

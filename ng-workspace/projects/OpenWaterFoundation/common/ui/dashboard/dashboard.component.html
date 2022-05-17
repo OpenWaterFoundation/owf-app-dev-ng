@@ -37,7 +37,7 @@
         <widget-status-indicator [statusIndicatorWidget]="widget"></widget-status-indicator>
       </div>
 
-      <div *ngIf="widget.type === 'textHTML' || widget.type === 'textMarkdown'" class="widget-container">
+      <div *ngIf="widget.type === 'text'" class="widget-container">
         <widget-text [textWidget]="widget"></widget-text>
       </div>
       

@@ -97,6 +97,7 @@ export class SelectorComponent {
     var dataFormat = this.selectorWidget.dataFormat.toLowerCase();
 
     if (dataFormat === 'csv') {
+      // The widget object has passed its inspection and can be created.
       this.retrieveCSVData();
     } else if (dataFormat === 'geojson' || dataFormat === 'json') {
 
@@ -105,6 +106,7 @@ export class SelectorComponent {
         this.dashboardService.setSelectorError = true;
         return;
       }
+      // The widget object has passed its inspection and can be created.
       this.retrieveJSONData();
     }
   }

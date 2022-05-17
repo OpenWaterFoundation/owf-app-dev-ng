@@ -12,13 +12,15 @@ import * as IM         from '@OpenWaterFoundation/common/services';
 })
 export class DashboardService {
 
-  /** Set to true if any error occurs in the Chart Widget. */
+  /** Set to true if any errors occur in the Chart Widget. */
   private chartError: BehaviorSubject<boolean> = new BehaviorSubject(false);
   /** Array of ListenedToWidget objects, which contain the name of the widget that
    * is being listened to, and the BehaviorSubject attached to the widget. */
   private listenedToWidgets: IM.ListenedToWidget[] = [];
-  /** Set to true if any error occurs in the Status Indicator Widget. */
+  /** Set to true if any errors occur in the Status Indicator Widget. */
   private indicatorError: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  /** Set to true if any errors occur in the Text Indicator Widget. */
+  private textError: BehaviorSubject<boolean> = new BehaviorSubject(false);
   /** A read only object for dynamically using operators between two integers. */
   readonly operators = {
     '>': function (a: any, b: any) { return a > b; },
@@ -40,8 +42,8 @@ export class DashboardService {
   ];
   /** The list of supported text widget files. */
   private readonly SUPPORTEDTEXTFILES = [
-    'html',
-    'md'
+    'HTML',
+    'Markdown'
   ];
   /** The currently supported Widget types for the Dashboard. */
   private readonly SUPPORTEDWIDGETTYPES = [
@@ -51,8 +53,7 @@ export class DashboardService {
     'map',
     'selector',
     'statusIndicator',
-    'textMarkdown',
-    'textHTML'
+    'text'
   ];
 
 
@@ -75,7 +76,7 @@ export class DashboardService {
   }
 
   /**
-   * Observable used in the StatusIndicator Widget that's used with an async pipe
+   * Observable used in the StatusIndicator Widget with an async pipe
    * in the template file to show the widget or error content.
    */
   get isIndicatorError(): Observable<boolean> {
@@ -90,7 +91,7 @@ export class DashboardService {
   }
   
   /**
-   * Observable used in the Selector Widget that's used with an async pipe in the template
+   * Observable used in the Selector Widget with an async pipe in the template
    * file to show the widget or error content.
    */
   get isSelectorError(): Observable<boolean> {
@@ -102,6 +103,21 @@ export class DashboardService {
    */
   set setSelectorError(error: boolean) {
     this.selectorError.next(error);
+  }
+
+  /**
+   * Observable used in the Text Widget with an async pipe in the template
+   * file to show the widget or error content.
+   */
+   get isTextError(): Observable<boolean> {
+    return this.textError.asObservable();
+  }
+
+  /**
+   * Toggles the textError BehaviorSubject between true and false.
+   */
+  set setTextError(error: boolean) {
+    this.textError.next(error);
   }
 
   /**

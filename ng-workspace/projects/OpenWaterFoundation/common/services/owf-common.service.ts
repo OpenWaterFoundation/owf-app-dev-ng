@@ -1203,38 +1203,22 @@ export class OwfCommonService {
     return { foundProps: allFoundProps, line: formattedLine };
   }
 
-  papaParse(fullDelimitedPath: string): Observable<any> {
-    return new Observable((subscriber: Subscriber<any>) => {
-      Papa.parse(fullDelimitedPath, {
-        delimiter: ",",
-        download: true,
-        comments: "#",
-        skipEmptyLines: true,
-        header: true,
-        complete: (result: Papa.ParseResult<any>) => {
-          subscriber.next(result);
-          subscriber.complete();
-        },
-        error: (error: Papa.ParseError) => {
-          subscriber.next({ error: "An error has occurred." });
-          subscriber.complete();
-        }
-      });
-    });
-  }
-
   /**
-   * 
-   * @param fullDelimitedPath 
+   * Uses Papaparse to retrieve data asynchronously from a file or URL, and returns
+   * the result wrapped in an Observable.
+   * @param fullDelimitedPath The already built path to the delimited file.
+   * @param noHeader If set to true, reads in data with no headers. Default is to
+   * read the data as if it has headers.
+   * @returns The Papaparse result as an observable.
    */
-  papaParseNoHeader(fullDelimitedPath: string): Observable<any> {
+  papaParse(fullDelimitedPath: string, noHeader?: boolean): Observable<any> {
     return new Observable((subscriber: Subscriber<any>) => {
       Papa.parse(fullDelimitedPath, {
         delimiter: ",",
         download: true,
         comments: "#",
         skipEmptyLines: true,
-        header: false,
+        header: noHeader ? !noHeader : true,
         complete: (result: Papa.ParseResult<any>) => {
           subscriber.next(result);
           subscriber.complete();

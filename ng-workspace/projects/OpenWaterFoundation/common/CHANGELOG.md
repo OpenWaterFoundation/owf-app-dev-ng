@@ -10,6 +10,21 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.4.7 #
+
+### Bug Fixes ###
+
+* Fixed a bug that did not allow disabling or hiding a Dashboard menu.
+
+### Refactoring ###
+
+* Kept some code DRY.
+* Changed how MainMenu and SubMenus are made in the InfoMapper tab component.
+
+### Features / Enhancements ###
+
+* Added the ability to disable and MainMenu or SubMenu.
+
 # 3.4.6 #
 
 ### Bug Fixes ###

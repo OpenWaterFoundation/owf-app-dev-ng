@@ -7,7 +7,6 @@ import { DashboardService } from '../../dashboard.service';
 import { forkJoin,
           Observable,
           Subscription }    from 'rxjs';
-import * as Papa            from 'papaparse';
 
 
 @Component({
@@ -29,14 +28,6 @@ export class StatusIndicatorComponent {
    * 
    */
   changeInc: boolean;
-  /** Displays a red down caret icon in the widget if set to true. */
-  changeDecBad: boolean;
-  /** Displays a green down caret icon in the widget if set to true. */
-  changeDecGood: boolean;
-  /** Displays a red up caret icon in the widget if set to true. */
-  changeIncBad: boolean;
-  /** Displays a green up caret icon in the widget if set to true. */
-  changeIncGood: boolean;
   /**
    * 
    */
@@ -74,7 +65,9 @@ export class StatusIndicatorComponent {
   /** The title of this widget from the widget's `title` property in the dashboard
    * configuration file. */
   @Input('statusIndicatorWidget') statusIndicatorWidget: IM.StatusIndicatorWidget;
-
+  /**
+   * 
+   */
   unknownIndicator: boolean;
   /** Displays a yellow exclamation icon in the widget if set to true. */
   warningIndicator: boolean;
@@ -153,6 +146,7 @@ export class StatusIndicatorComponent {
       return;
     }
 
+    // The widget object has passed its inspection and can be created.
     this.checkForClassificationFile();
   }
 
@@ -281,7 +275,7 @@ export class StatusIndicatorComponent {
     }
 
     var fullCSVDataPath = this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath]);
-    delimitedData$.push(this.commonService.papaParseNoHeader(fullCSVDataPath));
+    delimitedData$.push(this.commonService.papaParse(fullCSVDataPath, true));
 
     this.CSVSub$ = forkJoin(delimitedData$).subscribe((delimitedData: any[]) => {
 

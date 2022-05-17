@@ -116,8 +116,7 @@ export enum Widget {
   img = 'image',
   ind = 'statusIndicator',
   sel = 'selector',
-  tHL = 'textHTML',
-  tMd = 'textMarkdown'
+  txt = 'text'
 }
 
 /** Enum representing the supported Window Types (Dialog Types) for the WindowManager. */
@@ -293,10 +292,10 @@ export interface EventHandler {
 export interface MainMenu {
   id?: string;
   name?: string;
-  align?: string;
   action?: string;
   enabled?: any;
   tooltip?: string;
+  url?: string;
   visible?: any;
   menus?: SubMenu[];
 }
@@ -310,6 +309,7 @@ export interface SubMenu {
   separatorBefore?: any;
   doubleSeparatorBefore?: any;
   tooltip?: string;
+  url?: string;
   visible?: any;
 }
 
@@ -610,8 +610,10 @@ export interface StatusIndicatorWidget extends DashboardWidget {
 }
 
 export interface TextWidget extends DashboardWidget {
-  textPath: string;
+  contentType: string;
   graphTemplatePath: string;
+  textPath: string;
+  text?: string;
 }
 
 export interface WidgetEvent {
