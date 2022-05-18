@@ -4,7 +4,11 @@
   <div *ngIf="imageWidget.title" class="title-given-container">
 
     <div class="title-container">
-      <h5 class="title" [ngStyle]="setTitleStyle()">{{imageWidget.title}}</h5>
+      <h5 class="title" [ngStyle]="{
+        color: imageWidget.style.textColor ? imageWidget.style.textColor : 'black'
+      }">
+        {{imageWidget.title}}
+      </h5>
     </div>
 
     <img class="image-with-title" [src]="fullDataPath">
@@ -19,5 +23,5 @@
 
 <!-- Image does not exist. -->
 <div *ngIf="widgetError === true" class="no-image-container">
-  <widget-error [errorTypes]="errorTypes" name="image"></widget-error>
+  <widget-error [errorTypes]="errorTypes" [widget]="imageWidget"></widget-error>
 </div>

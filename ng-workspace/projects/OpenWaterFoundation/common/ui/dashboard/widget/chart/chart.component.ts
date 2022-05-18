@@ -37,16 +37,15 @@ export class ChartComponent implements OnInit, OnDestroy {
   private allResultsSub$: Subscription;
   /** The array of objects to pass to the tstable component for data table creation. */
   attributeTable: any[] = [];
-  /** The object with the necessary chart data for displaying a Plotly chart. */
+  /** The attribute provided as an attribute to this component when created, e.g.
+   *   <widget-chart [chartWidget]="widget"></widget-chart> */
   @Input() chartWidget: IM.ChartWidget;
-  /**
-   * 
-   */
-  private dataLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject(true);
-   /**
-    * 
-    */
-  dataLoading$ = this.dataLoadingSubject.asObservable();
+  /** The BehaviorSubject that is set to whether this widget is currently getting
+   * data, or has finished and ready to display. */
+  private dataLoading: BehaviorSubject<boolean> = new BehaviorSubject(true);
+  /** The dataLoading BehaviorSubject as an observable so it can be 'listened' to
+   * in the template file and conditionally show HTML as needed. */
+  dataLoading$ = this.dataLoading.asObservable();
   /** A string containing the name to be passed to the TSTableComponent's first
   * column name: DATE or DATE / TIME. */
   dateTimeColumnName: string;
@@ -78,10 +77,8 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** The string representing the TSID before the first tilde (~) in the graph template
   * object. Used to help create a unique graph ID. */
   TSIDLocation: string;
-  /**
-   * 
-   */
-  private updateResultsSub$: Subscription;
+  /** Subscription for reading in a graph template file if it hasn't been retrieved yet. */
+  private updateResultsSub: Subscription;
   /** An array containing the value header names after the initial DATE / TIME
   * header. To be passed to dialog-tstable for downloading files. */
   valueColumns: string[] = [];
@@ -147,7 +144,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   * Contains at least one result array with its index in the graphTemplate data
   * array.
   */
-   private makeDelimitedPlotlyObject(delimitedData: any, graphData: IM.GraphData): IM.PopulateGraph {
+  private makeDelimitedPlotlyObject(delimitedData: any, graphData: IM.GraphData): IM.PopulateGraph {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     var templateYAxisTitle: string;
@@ -203,7 +200,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   * @param timeSeries The array of all Time Series objects retrieved asynchronously
   * from the StateMod file.
   */
-   private makeTSPlotlyObject(timeSeries: TS, graphData: IM.GraphData): IM.PopulateGraph {
+  private makeTSPlotlyObject(timeSeries: TS, graphData: IM.GraphData): IM.PopulateGraph {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     var templateYAxisTitle: string = '';
@@ -459,7 +456,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 
       // If graphTemplatePrime hasn't been set yet, read it in and set it here.
       if (!this.graphTemplatePrime) {
-        this.updateResultsSub$ = this.commonService.getJSONData(
+        this.updateResultsSub = this.commonService.getJSONData(
           this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
         ).subscribe({
           next: (graphTemplate: IM.GraphTemplate) => {
@@ -484,7 +481,6 @@ export class ChartComponent implements OnInit, OnDestroy {
     this.isChartError$ = this.dashboardService.isChartError;
 
     this.checkWidgetObject();
-
     this.listenForEvent();
   }
 
@@ -499,8 +495,8 @@ export class ChartComponent implements OnInit, OnDestroy {
     if (this.initialResultsSub$) {
       this.initialResultsSub$.unsubscribe()
     }
-    if (this.updateResultsSub$) {
-      this.updateResultsSub$.unsubscribe();
+    if (this.updateResultsSub) {
+      this.updateResultsSub.unsubscribe();
     }
   }
 
@@ -561,10 +557,10 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * 
+   * Toggles the BehaviorSubject so the widget knows when data has finished loading.
    */
-   private set toggleDataLoading(loaded: boolean) {
-    this.dataLoadingSubject.next(loaded);
+  private set toggleDataLoading(loaded: boolean) {
+    this.dataLoading.next(loaded);
   }
 
   /**

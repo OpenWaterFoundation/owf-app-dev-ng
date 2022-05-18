@@ -52,7 +52,9 @@ export class StatusIndicatorComponent {
   /** Observable that's updated as a BehaviorSubject when a critical error creating
    * this component occurs. */
   isIndicatorError$: Observable<boolean>;
-
+  /**
+   * 
+   */
   JSONSub$: Subscription;
   /** The main data to be displayed on this Status Indicator widget. */
   mainData: string;
@@ -62,8 +64,8 @@ export class StatusIndicatorComponent {
   mainDataSub$: Subscription;
   /** Displays a green check icon in the widget if set to true. */
   passingIndicator: boolean;
-  /** The title of this widget from the widget's `title` property in the dashboard
-   * configuration file. */
+  /** The attribute provided as an attribute to this component when created, e.g.
+   *   <widget-status-indicator [statusIndicatorWidget]="widget"></widget-status-indicator> */
   @Input('statusIndicatorWidget') statusIndicatorWidget: IM.StatusIndicatorWidget;
   /**
    * 

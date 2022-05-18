@@ -33,6 +33,10 @@ export class ImageComponent {
   constructor(private commonService: OwfCommonService) {}
 
 
+  /**
+   * Checks if the widget object passes initial mandatory property tests, and creates
+   * and displays an error widget if not.
+   */
   private checkWidgetObject(): void {
 
     if (!this.imageWidget.imagePath) {
@@ -55,15 +59,6 @@ export class ImageComponent {
   ngOnInit(): void {
 
     this.checkWidgetObject();
-
-    
-  }
-
-  setTitleStyle(): any {
-    // TODO: Try console here to see if it's being called many times.
-    return {
-      color: this.imageWidget.style.textColor ? this.imageWidget.style.textColor : 'black'
-    };
   }
 
 }

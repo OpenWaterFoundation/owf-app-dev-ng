@@ -23,5 +23,8 @@ export * from './widget/status-indicator/status-indicator.module';
 // TEXT Widget.
 export * from './widget/text/text.component';
 export * from './widget/text/text.module';
+// TITLE Widget.
+export * from './widget/title/title.component';
+export * from './widget/title/title.module';
 
 export * from './dashboard.service';

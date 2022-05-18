@@ -9,16 +9,16 @@
     [rowspan]="widget.rows"
     [ngStyle]="setMatGridTileStyle(widget.style)">
 
+      <div *ngIf="widget.errorTypes.length > 0" class="error-widget-comp-container">
+        <widget-error [errorTypes]="widget.errorTypes" [widget]="widget"></widget-error>
+      </div>
+
       <div *ngIf="widget.type === 'chart'" class="widget-container">
         <widget-chart [chartWidget]="widget"></widget-chart>
       </div>
 
       <div *ngIf="widget.type === 'diagnostics'" class="widget-container">
         <widget-diagnostics></widget-diagnostics>
-      </div>
-
-      <div *ngIf="widget.type === 'error'" class="error-widget-comp-container">
-        <widget-error [errorTypes]="widget.errorTypes" [name]="'dashboard'"></widget-error>
       </div>
 
       <div *ngIf="widget.type === 'image'" class="widget-container">
@@ -39,6 +39,10 @@
 
       <div *ngIf="widget.type === 'text'" class="widget-container">
         <widget-text [textWidget]="widget"></widget-text>
+      </div>
+
+      <div *ngIf="widget.type === 'title'" class="widget-container">
+        <widget-title [titleWidget]="widget"></widget-title>
       </div>
       
     </mat-grid-tile>

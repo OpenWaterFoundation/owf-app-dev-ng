@@ -17,9 +17,6 @@ import { DashboardService } from '../../dashboard.service';
 })
 export class TextComponent implements OnDestroy{
 
-  /** The attribute provided as an attribute to this component when created, e.g.
-   *   <widget-text [dataPath]="path/to/text.md"></widget-text> */
-  @Input() textWidget: IM.TextWidget;
   /** String array representing the type of error that occurred while building this
    * widget. Used by the error widget. */
   errorTypes: string[] = [];
@@ -32,14 +29,18 @@ export class TextComponent implements OnDestroy{
   /** Set to true if the provided dataPath is to a Markdown file so it can be displayed
    * in the widget. */
   isMarkdown: boolean;
+  /** Observable representing the ChartSelectorError BehaviorSubject from the
+   * widgetService. Used by the template to show an error widget. */
+  isTextError$: Observable<boolean>;
   /** The text content to be shown in either HTML or Markdown in the widget. */
   text: string;
   /** The subscription for the text retrieval. To be unsubscribed when this component
    * instance is destroyed. */
   textSub$: Subscription;
-  /** Observable representing the ChartSelectorError BehaviorSubject from the
-   * widgetService. Used by the template to show an error widget. */
-  isTextError$: Observable<boolean>;
+  /** The attribute provided as an attribute to this component when created, e.g.
+   *   <widget-text [textWidget]="widget"></widget-text> */
+  @Input() textWidget: IM.TextWidget;
+  
 
   /**
    * 

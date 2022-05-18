@@ -12,6 +12,7 @@ import { ImageModule }           from './widget/image/image.module';
 import { SelectorModule }        from './widget/selector/selector.module';
 import { StatusIndicatorModule } from './widget/status-indicator/status-indicator.module';
 import { TextModule }            from './widget/text/text.module';
+import { TitleModule }           from './widget/title/title.module';
 
 import { DashboardComponent }    from './dashboard.component';
 
@@ -36,7 +37,8 @@ import { DashboardComponent }    from './dashboard.component';
     ImageModule,
     SelectorModule,
     StatusIndicatorModule,
-    TextModule
+    TextModule,
+    TitleModule
   ]
 })
 export class DashboardModule { }

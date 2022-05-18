@@ -1,0 +1,23 @@
+<div *ngIf="!(isTitleError$ | async); then showTitle else error"></div>
+
+<ng-template #showTitle>
+  <div class="title-container">
+    <p class="title"
+    [ngStyle]="{
+      'color': titleWidget.style.textColor ? titleWidget.style.textColor : 'black',
+      'fontFamily': titleWidget.style.fontFamily ? titleWidget.style.fontFamily : 'Roboto,Helvetica Neue,sans-serif',
+      'fontSize': titleWidget.style.fontSize ? titleWidget.style.fontSize : '16px',
+      'fontStyle': titleWidget.style.fontStyle ? titleWidget.style.fontStyle : 'normal',
+      'fontWeight': titleWidget.style.fontWeight ? titleWidget.style.fontWeight : 'normal',
+      'textDecoration': titleWidget.style.textDecoration ? titleWidget.style.textDecoration : ''
+    }">
+      {{titleWidget.title}}
+    </p>
+  </div>
+</ng-template>
+
+<ng-template #error>
+  <div class="error-widget-comp-container">
+    <widget-error [errorTypes]="errorTypes" [widget]="titleWidget"></widget-error>
+  </div>
+</ng-template>

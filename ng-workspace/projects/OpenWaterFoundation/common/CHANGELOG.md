@@ -10,6 +10,21 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.5.0 #
+
+### Features / Enhancements ###
+
+* Added the Title widget. Check the InfoMapper User Documentation for more information.
+* Added more styles for a Dashboard widget. They can only be used by the Title widget
+for now. They are as follows:
+  * `fontFamily` - The type of font to use for the text in the widget.
+  * `fontSize` - The size of all font in the widget.
+  * `fontStyle` - The ability to italicize the title.
+  * `fontWeight` - The ability to use bold on the title.
+  * `textDecoration` - The ability to underline the title.
+* Enhanced the way the main dashboard component creates and displays
+error when a top level dashboard error occurs (e.g. no widget type given).
+
 # 3.4.7 #
 
 ### Bug Fixes ###
@@ -23,7 +38,7 @@ These elements will only be added if they are applicable for the new version.
 
 ### Features / Enhancements ###
 
-* Added the ability to disable and MainMenu or SubMenu.
+* Added the ability to disable MainMenu or SubMenu.
 
 # 3.4.6 #
 

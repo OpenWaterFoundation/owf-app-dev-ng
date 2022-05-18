@@ -35,13 +35,13 @@ export class SelectorComponent {
   /**
    * 
    */
-  private dataLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject(true);
+  private dataLoading: BehaviorSubject<boolean> = new BehaviorSubject(true);
   /**
    * 
    */
-  dataLoading$ = this.dataLoadingSubject.asObservable();
-  /** The SelectorWidget object passed from the Dashboard Component from the dashboard
-   * configuration file **widgets** array. */
+  dataLoading$ = this.dataLoading.asObservable();
+  /** The attribute provided as an attribute to this component when created, e.g.
+   *   <widget-selector [selectorWidget]="widget"></widget-selector> */
   @Input() selectorWidget: IM.SelectorWidget;
   /** The array of feature objects that have been filtered by a user search. To be
    * updated and reflected in the mat-select main widget dropdown. */
@@ -273,7 +273,7 @@ export class SelectorComponent {
    * 
    */
   private set toggleDataLoading(loaded: boolean) {
-    this.dataLoadingSubject.next(loaded);
+    this.dataLoading.next(loaded);
   }
 
   /**

@@ -111,12 +111,12 @@ export enum Style {
 /** Each implemented Widget Type. */
 export enum Widget {
   cht = 'chart',
-  dsh = 'dashboard',
   err = 'error',
   img = 'image',
   ind = 'statusIndicator',
   sel = 'selector',
-  txt = 'text'
+  txt = 'text',
+  ttl = 'title'
 }
 
 /** Enum representing the supported Window Types (Dialog Types) for the WindowManager. */
@@ -554,7 +554,12 @@ export interface DashboardLayout {
 /** Styling for the MatGridTile in the Dashboard Component. */
 export interface WidgetTileStyle {
   backgroundColor?: string;
+  fontFamily: string;
+  fontSize: string;
+  fontStyle?: string;
+  fontWeight?: string;
   textColor?: string;
+  textDecoration?: string;
 }
 
 //////////////////////////// DASHBOARD WIDGETS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -614,6 +619,10 @@ export interface TextWidget extends DashboardWidget {
   graphTemplatePath: string;
   textPath: string;
   text?: string;
+}
+
+export interface TitleWidget extends DashboardWidget {
+  title: string;
 }
 
 export interface WidgetEvent {

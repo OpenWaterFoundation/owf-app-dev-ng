@@ -2,7 +2,7 @@ import { Component,
           OnDestroy }       from '@angular/core';
 import { ActivatedRoute }   from '@angular/router';
 
-import { map, Subscription }     from 'rxjs';
+import { Subscription }     from 'rxjs';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
@@ -52,10 +52,8 @@ export class DashboardComponent implements OnDestroy {
       widget.errorTypes = [];
 
       if (!widget.type) {
-        widget.type = 'error';
         widget.errorTypes.push('no type');
       } else if (this.dashboardService.isSupportedWidgetType(widget) === false) {
-        widget.type = 'error';
         widget.errorTypes.push('unsupported type');
       }
 

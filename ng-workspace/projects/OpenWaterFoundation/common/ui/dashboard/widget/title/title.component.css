@@ -1,0 +1,22 @@
+/* CLASSES */
+
+/*  */
+.error-widget-comp-container {
+  height: 100%;
+  width: 100%;
+}
+
+/* The main title text of this widget. */
+.title {
+  margin: 0;
+  user-select: none;
+}
+
+/*  */
+.title-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

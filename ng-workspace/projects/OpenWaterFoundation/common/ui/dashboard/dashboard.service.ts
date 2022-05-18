@@ -21,6 +21,8 @@ export class DashboardService {
   private indicatorError: BehaviorSubject<boolean> = new BehaviorSubject(false);
   /** Set to true if any errors occur in the Text Indicator Widget. */
   private textError: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  /** Set to true if any errors occur in the Title Indicator Widget. */
+  private titleError: BehaviorSubject<boolean> = new BehaviorSubject(false);
   /** A read only object for dynamically using operators between two integers. */
   readonly operators = {
     '>': function (a: any, b: any) { return a > b; },
@@ -53,7 +55,8 @@ export class DashboardService {
     'map',
     'selector',
     'statusIndicator',
-    'text'
+    'text',
+    'title'
   ];
 
 
@@ -64,89 +67,76 @@ export class DashboardService {
    * Observable used in the Chart Widget that's used with an async pipe in the template
    * file to show the widget or error content.
    */
-   get isChartError(): Observable<boolean> {
-    return this.chartError.asObservable();
-  }
+  get isChartError(): Observable<boolean> { return this.chartError.asObservable(); }
 
   /**
    * Toggles the chartError BehaviorSubject between true and false.
    */
-  set setChartError(error: boolean) {
-    this.chartError.next(error);
-  }
+  set setChartError(error: boolean) { this.chartError.next(error); }
 
   /**
    * Observable used in the StatusIndicator Widget with an async pipe
    * in the template file to show the widget or error content.
    */
-  get isIndicatorError(): Observable<boolean> {
-    return this.indicatorError.asObservable();
-  }
+  get isIndicatorError(): Observable<boolean> { return this.indicatorError.asObservable(); }
 
   /**
    * Toggles the indicatorError BehaviorSubject between true and false.
    */
-  set setIndicatorError(error: boolean) {
-    this.indicatorError.next(error);
-  }
+  set setIndicatorError(error: boolean) { this.indicatorError.next(error); }
   
   /**
    * Observable used in the Selector Widget with an async pipe in the template
    * file to show the widget or error content.
    */
-  get isSelectorError(): Observable<boolean> {
-    return this.selectorError.asObservable();
-  }
+  get isSelectorError(): Observable<boolean> { return this.selectorError.asObservable(); }
 
   /**
    * Toggles the selectorError BehaviorSubject between true and false.
    */
-  set setSelectorError(error: boolean) {
-    this.selectorError.next(error);
-  }
+  set setSelectorError(error: boolean) { this.selectorError.next(error); }
 
   /**
    * Observable used in the Text Widget with an async pipe in the template
    * file to show the widget or error content.
    */
-   get isTextError(): Observable<boolean> {
-    return this.textError.asObservable();
-  }
+  get isTextError(): Observable<boolean> { return this.textError.asObservable(); }
 
   /**
    * Toggles the textError BehaviorSubject between true and false.
    */
-  set setTextError(error: boolean) {
-    this.textError.next(error);
-  }
+  set setTextError(error: boolean) { this.textError.next(error); }
+
+  /**
+   * Observable used in the Text Widget with an async pipe in the template
+   * file to show the widget or error content.
+   */
+   get isTitleError(): Observable<boolean> { return this.titleError.asObservable(); }
+
+   /**
+    * Toggles the textError BehaviorSubject between true and false.
+    */
+   set setTitleError(error: boolean) { this.titleError.next(error); }
 
   /**
    * Getter for all supported image files.
    */
-   get supportedImageFiles(): string[] {
-    return this.SUPPORTEDIMAGEFILES;
-  }
+  get supportedImageFiles(): string[] { return this.SUPPORTEDIMAGEFILES; }
   
   /**
    * Getter for all supported widgets that can listen to a SelectEvent.
    */
-  get supportedSelectEventWidgets(): string[] {
-    return this.SUPPORTEDSELECTEVENTWIDGETS
-  }
+  get supportedSelectEventWidgets(): string[] { return this.SUPPORTEDSELECTEVENTWIDGETS }
   
   /**
    * Getter for all supported text files.
    */
-  get supportedTextFiles(): string[] {
-    return this.SUPPORTEDTEXTFILES;
-  }
+  get supportedTextFiles(): string[] { return this.SUPPORTEDTEXTFILES; }
   
   /**
    * Getter for all supported widget types.
    */
-  get supportedWidgetTypes(): string[] {
-    return this.SUPPORTEDWIDGETTYPES;
-  }
+  get supportedWidgetTypes(): string[] { return this.SUPPORTEDWIDGETTYPES; }
 
   /**
    * Determines if a widget supports the SelectEvent type.

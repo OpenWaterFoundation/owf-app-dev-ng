@@ -15,9 +15,6 @@ export class ErrorComponent {
   /** A string provided as input to this widget template tag that describes
    * what error occurred. */
   @Input('errorTypes') errorTypes: string[];
-  /** An InfoMapper widget type to describe the widget where the error
-   * took place. */
-  @Input('name') errorWidgetName: IM.Widget;
   /** The offending widget object. */
   @Input('widget') widget: IM.DashboardWidget;
 
@@ -32,8 +29,8 @@ export class ErrorComponent {
    * A TSID with no tildes added was used in a widget.
    */
   badTSIDError(): void {
-    console.error('Incorrectly made TSID from the "' + this.widget.name + '" widget.' +
-    'A path is required.');
+    console.error('Incorrectly made TSID from the ' + this.widget.type + ' widget ' +
+    'with name "' + this.widget.name + '". A path is required.');
   }
 
   /**
@@ -43,10 +40,11 @@ export class ErrorComponent {
 
     this.errorTypes.forEach((errorType: string) => {
       switch(errorType) {
+        case 'no type': this.noRequiredProperty('type'); break;
         case 'bad TSID': this.badTSIDError(); break;
-        case 'no chartFeaturePath': this.missingRequiredProp('chartFeaturePath'); break;
-        case 'no graphTemplatePath': this.missingRequiredProp('graphTemplatePath'); break;
-        case 'no name': this.missingRequiredProp('name'); break;
+        case 'no chartFeaturePath': this.noRequiredProperty('chartFeaturePath'); break;
+        case 'no graphTemplatePath': this.noRequiredProperty('graphTemplatePath'); break;
+        case 'no name': this.noRequiredProperty('name'); break;
       }
     });
   }
@@ -57,22 +55,8 @@ export class ErrorComponent {
   private csvError(): void {
 
     console.error('There was an issue with getting the CSV file from the ' +
-    this.errorWidgetName + ' widget.');
+    this.widget.type + ' widget with name "' + this.widget.name + '".');
     console.error('If it was a 500 error, refresh the page to resolve.');
-  }
-
-  /**
-   * Determine what Dashboard error occurred. Happens when creating the dashboard,
-   * before widget code is executed.
-   */
-  private dashboardError(): void {
-
-    this.errorTypes.forEach((errorType: string) => {
-      switch(errorType) {
-        case 'no type': this.missingRequiredProp('type'); break;
-        case 'unsupported type': this.unsupportedTypes(); break;
-      }
-    });
   }
 
   /**
@@ -82,8 +66,9 @@ export class ErrorComponent {
 
     this.errorTypes.forEach((errorType: string) => {
       switch(errorType) {
-        case 'no imagePath': this.missingRequiredProp('imagePath'); break;
-        case 'no name': this.missingRequiredProp('name'); break;
+        case 'no type': this.noRequiredProperty('type'); break;
+        case 'no imagePath': this.noRequiredProperty('imagePath'); break;
+        case 'no name': this.noRequiredProperty('name'); break;
         case 'unsupported file': this.unsupportedFile(); break;
       }
     });
@@ -96,10 +81,11 @@ export class ErrorComponent {
 
     this.errorTypes.forEach((errorType: string) => {
       switch(errorType) {
-        case 'no dataFormat': this.missingRequiredProp('dataFormat'); break;
-        case 'no title': this.missingRequiredProp('title'); break;
+        case 'no type': this.noRequiredProperty('type'); break;
+        case 'no dataFormat': this.noRequiredProperty('dataFormat'); break;
+        case 'no title': this.noRequiredProperty('title'); break;
         case 'no value property':
-          this.missingRequiredProp('`attributeName`, `columnName`, or `propertyName`'); break;
+          this.noRequiredProperty('`attributeName`, `columnName`, or `propertyName`'); break;
         case 'unsupported data type': /** ADD FUNCTION HERE. */ break;
       }
     });
@@ -110,36 +96,38 @@ export class ErrorComponent {
    */
   ngOnInit(): void {
     // Determine which widget is erroring.
-    switch(this.errorWidgetName) {
+    switch(this.widget.type) {
       case IM.Widget.cht: this.chartError(); break;
-      case IM.Widget.dsh: this.dashboardError(); break;
       case IM.Widget.img: this.imageError(); break;
       case IM.Widget.ind: this.indicatorError(); break;
       case IM.Widget.sel: this.selectorError(); break;
       case IM.Widget.txt: this.textError(); break;
+      case IM.Widget.ttl: this.titleError(); break;
+      case undefined: this.noRequiredProperty('type'); break;
+      default: this.unsupportedTypes(); break;
     }
 
-    if (this.errorWidgetName !== IM.Widget.dsh) {
-      this.printWidgetURL();
-    }
+    this.printWidgetURL();
   }
 
   /**
    * Universal error message for any widget not given a some property.
    */
-  private missingRequiredProp(missingProp: string): void {
+  private noRequiredProperty(missingProp: string): void {
 
     console.error("Required property '" + missingProp + "' not found in the " +
-    this.errorWidgetName + " widget. Confirm the '" + missingProp + "' property of this " +
-    this.errorWidgetName + " widget exists.");
+    this.widget.type + " widget with name \"" + this.widget.name +
+    "\". Confirm the '" + missingProp + "' property of this " +
+    this.widget.type + " widget exists.");
   }
 
   /**
-   * 
+   * Prints an error message saying that the JSONArrayName is required.
    */
   private noJSONArrayName(): void {
     console.error("Property 'JSONArrayName' is required when using JSON data, " +
-    "and was not found in the " + this.errorWidgetName + " widget. Add the property to the " +
+    "and was not found in the " + this.widget.type + " widget with name \"" +
+    this.widget.name + "\". Add the property to the " +
     "widget object in the dashboard configuration file.");
   }
 
@@ -172,11 +160,16 @@ export class ErrorComponent {
   }
 
   /**
-   * Prints the link to the offending widget's documentation page on GitHub.
+   * Prints the link to the offending widget's documentation page on GitHub if
+   * the type exists, otherwise return.
    */
   private printWidgetURL(): void {
 
-    var errorWidgetName = this.errorWidgetName.toLowerCase();
+    if (!this.widget.type) {
+      return;
+    }
+
+    var errorWidgetName = this.widget.type.toLowerCase();
 
     // Make sure the errorWidgetName will work with the GitHub URL.
     if (errorWidgetName.includes('statusindicator')) {
@@ -197,12 +190,13 @@ export class ErrorComponent {
 
     this.errorTypes.forEach((errorType: string) => {
       switch(errorType) {
-        case 'no dataPath': this.missingRequiredProp('dataPath'); break;
-        case 'no dataFormat': this.missingRequiredProp('dataFormat'); break;
-        case 'no displayName': this.missingRequiredProp('displayName'); break;
-        case 'no name': this.missingRequiredProp('name'); break;
-        case 'no JSONArrayName': this.noJSONArrayName(); break;
         case 'bad csv': this.csvError(); break;
+        case 'no type': this.noRequiredProperty('type'); break;
+        case 'no dataPath': this.noRequiredProperty('dataPath'); break;
+        case 'no dataFormat': this.noRequiredProperty('dataFormat'); break;
+        case 'no displayName': this.noRequiredProperty('displayName'); break;
+        case 'no name': this.noRequiredProperty('name'); break;
+        case 'no JSONArrayName': this.noJSONArrayName(); break;
       }
     });
   }
@@ -214,10 +208,24 @@ export class ErrorComponent {
 
     this.errorTypes.forEach((errorType: string) => {
       switch(errorType) {
-        case 'no contentType': this.missingRequiredProp('contentType'); break;
-        case 'no textPath': this.missingRequiredProp('textPath'); break;
-        case 'no name': this.missingRequiredProp('name'); break;
+        case 'no type': this.noRequiredProperty('type'); break;
+        case 'no contentType': this.noRequiredProperty('contentType'); break;
+        case 'no textPath': this.noRequiredProperty('textPath'); break;
+        case 'no name': this.noRequiredProperty('name'); break;
         case 'unsupported file': this.unsupportedFile(); break;
+      }
+    });
+  }
+
+  /**
+   * Determine what Title widget error occurred.
+   */
+  private titleError(): void {
+    
+    this.errorTypes.forEach((errorType: string) => {
+      switch(errorType) {
+        case 'no title': this.noRequiredProperty('title'); break;
+        case 'no name': this.noRequiredProperty('name'); break;
       }
     });
   }
@@ -230,7 +238,7 @@ export class ErrorComponent {
 
     var fileType: string;
 
-    switch(this.errorWidgetName) {
+    switch(this.widget.type) {
       case IM.Widget.img:
         fileType = 'imageFiles';
         // supportedFiles = this.dashboardService.supportedImageFiles; break;
@@ -239,17 +247,20 @@ export class ErrorComponent {
         // supportedFiles = this.dashboardService.supportedTextFiles; break;
     }
     
-    console.error('"' + this.errorWidgetName + '" widget data files must be one ' +
+    console.error('Widget name "' + this.widget.name + '" is using an unsupported file.');
+    console.error('"' + this.widget.type + '" widget data files must be one ' +
     'of the following supported types: ' + 
     this.prettifySupported(fileType) + '.');
   }
 
   /**
-   * 
+   * Prettily prints a message that lists all currently supported dashboard widget
+   * types and alerts the user what was given is unsupported.
    */
   private unsupportedTypes(): void {
 
-    console.error('Incorrectly named Dashboard widget type.');
+    console.error('Dashboard widget type "' + this.widget.type + '" with name "'+
+    this.widget.name + '" is unsupported.');
     console.error('Widget type must be one of the following supported ' +
     'types: ' + this.prettifySupported('widgetTypes') + '.');
   }
