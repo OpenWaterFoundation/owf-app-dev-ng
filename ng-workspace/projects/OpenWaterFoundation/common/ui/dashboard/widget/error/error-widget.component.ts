@@ -6,11 +6,11 @@ import { DashboardService } from '../../dashboard.service';
 
 
 @Component({
-  selector: 'widget-error',
-  templateUrl: './error.component.html',
-  styleUrls: ['./error.component.css']
+  selector: 'error-widget',
+  templateUrl: './error-widget.component.html',
+  styleUrls: ['./error-widget.component.css']
 })
-export class ErrorComponent {
+export class ErrorWidgetComponent {
 
   /** A string provided as input to this widget template tag that describes
    * what error occurred. */

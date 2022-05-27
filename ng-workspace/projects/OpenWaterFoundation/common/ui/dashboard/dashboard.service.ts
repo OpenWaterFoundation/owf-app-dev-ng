@@ -12,8 +12,6 @@ import * as IM         from '@OpenWaterFoundation/common/services';
 })
 export class DashboardService {
 
-  /** Set to true if any errors occur in the Chart Widget. */
-  private chartError: BehaviorSubject<boolean> = new BehaviorSubject(false);
   /** Array of ListenedToWidget objects, which contain the name of the widget that
    * is being listened to, and the BehaviorSubject attached to the widget. */
   private listenedToWidgets: IM.ListenedToWidget[] = [];
@@ -62,17 +60,6 @@ export class DashboardService {
 
   constructor() {}
 
-
-  /**
-   * Observable used in the Chart Widget that's used with an async pipe in the template
-   * file to show the widget or error content.
-   */
-  get isChartError(): Observable<boolean> { return this.chartError.asObservable(); }
-
-  /**
-   * Toggles the chartError BehaviorSubject between true and false.
-   */
-  set setChartError(error: boolean) { this.chartError.next(error); }
 
   /**
    * Observable used in the StatusIndicator Widget with an async pipe
@@ -297,7 +284,6 @@ export class DashboardService {
    * @returns An Observable of a WidgetEvent if all checks were passed, or null. 
    */
   getWidgetEvent(widget: IM.DashboardWidget): Observable<IM.WidgetEvent> {
-
 
     if (widget.eventHandlers && this.isSupportedWidgetEvent(widget) === true) {
 

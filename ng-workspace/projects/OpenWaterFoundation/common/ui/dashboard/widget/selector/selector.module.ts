@@ -15,7 +15,7 @@ import { MatTooltipModule }         from '@angular/material/tooltip';
 import { ScrollingModule }          from '@angular/cdk/scrolling';
 
 import { SelectorComponent }        from './selector.component';
-import { ErrorModule }              from '../error/error.module';
+import { ErrorWidgetModule }        from '../error/error-widget.module';
 
 
 @NgModule({
@@ -40,7 +40,7 @@ import { ErrorModule }              from '../error/error.module';
     MatTooltipModule,
 
     ScrollingModule,
-    ErrorModule
+    ErrorWidgetModule
   ]
 })
 export class SelectorModule { }

@@ -356,34 +356,34 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
       var graph_x_axisLabels: string[];
       var data_table_x_axisLabels: string[];
-      var x_axisLabels: any;
       var type = '';
+      var xAxisLabels: any;
       
       if (timeSeries[i] instanceof MonthTS) {
         type = 'months';
-        x_axisLabels = this.dialogService.getDates(
-          timeSeries[i].getDate1().getYear() + "-" + this.dialogService.zeroPad(timeSeries[i].getDate1().getMonth(), 2),
-          timeSeries[i].getDate2().getYear() + "-" + this.dialogService.zeroPad(timeSeries[i].getDate2().getMonth(), 2),
+        xAxisLabels = this.dialogService.getDates(
+          timeSeries[i].getDate1().toString(),
+          timeSeries[i].getDate2().toString(),
           type);
       } else if (timeSeries[i] instanceof YearTS) {
         type = 'years';
-        x_axisLabels = this.dialogService.getDates(
-          timeSeries[i].getDate1().getYear(),
-          timeSeries[i].getDate2().getYear(),
+        xAxisLabels = this.dialogService.getDates(
+          timeSeries[i].getDate1().toString(),
+          timeSeries[i].getDate2().toString(),
           type);
       }
 
       // If graphDates exists, it's not a placeholder, and can populate the graph_x_axisLabels.
-      if (x_axisLabels.graphDates) {
-        graph_x_axisLabels = x_axisLabels.graphDates;
+      if (xAxisLabels.graphDates) {
+        graph_x_axisLabels = xAxisLabels;
       }
       // Populate the data_table_x_axisLabels.
-      data_table_x_axisLabels = x_axisLabels.dataTableDates
+      data_table_x_axisLabels = xAxisLabels
 
       var start = timeSeries[i].getDate1().getYear() + "-" + this.dialogService.zeroPad(timeSeries[i].getDate1().getMonth(), 2);      
       var end = timeSeries[i].getDate2().getYear() + "-" + this.dialogService.zeroPad(timeSeries[i].getDate2().getMonth(), 2);
 
-      var axisObject = this.dialogService.setAxisObject(timeSeries[i], graph_x_axisLabels, type);
+      var axisObject = this.dialogService.setYAxisObject(timeSeries[i]);
       // Populate the rest of the properties from the graph config file. This uses
       // the more granular graphType for each time series.
       var chartType: string = chartConfigData[i]['properties'].GraphType.toLowerCase();
@@ -407,7 +407,6 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
         chartMode: this.dialogService.verifyPlotlyProp(chartType, IM.GraphProp.cm),
         chartType: this.dialogService.verifyPlotlyProp(chartType, IM.GraphProp.ct),
         dateType: type,
-        datasetData: axisObject.chartJS_yAxisData,
         plotlyDatasetData: axisObject.plotly_yAxisData,
         plotly_xAxisLabels: graph_x_axisLabels,
         datasetBackgroundColor: this.dialogService.verifyPlotlyProp(backgroundColor, IM.GraphProp.bc),
@@ -599,7 +598,10 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * and remove it from the window manager.
    */
   public ngOnDestroy(): void {
-    this.forkJoinSub$.unsubscribe();
+
+    if (this.forkJoinSub$) {
+      this.forkJoinSub$.unsubscribe();
+    }
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }

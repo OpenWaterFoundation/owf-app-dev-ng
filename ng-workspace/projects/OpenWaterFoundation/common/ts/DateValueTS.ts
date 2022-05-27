@@ -277,7 +277,7 @@ All data are reset, except for the identifier, which is assumed to have been set
 
         // Now the first token is the left side and the second token is the right side...
 
-        variable = string.substring(0, equal_pos).trim();        
+        variable = string.substring(0, equal_pos).trim();
         if (equal_pos == (string.length - 1)) {
           value = "";
         }

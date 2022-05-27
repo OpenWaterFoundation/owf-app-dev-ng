@@ -2,8 +2,9 @@ import { NgModule }                 from '@angular/core';
 import { CommonModule }             from '@angular/common';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule }         from '@angular/material/tooltip';
 
-import { ErrorModule }              from '../error/error.module';
+import { ErrorWidgetModule }        from '../error/error-widget.module';
 import { StatusIndicatorComponent } from './status-indicator.component';
 
 
@@ -18,8 +19,9 @@ import { StatusIndicatorComponent } from './status-indicator.component';
     CommonModule,
 
     MatProgressSpinnerModule,
+    MatTooltipModule,
 
-    ErrorModule
+    ErrorWidgetModule
   ]
 })
 export class StatusIndicatorModule { }

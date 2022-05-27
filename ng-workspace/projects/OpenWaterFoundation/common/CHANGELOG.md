@@ -10,6 +10,13 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.5.1 or 3.6.0 #
+
+### Features / Enhancements ###
+
+ * Added `titleTooltip`, `indicatorValueTooltip`, and `referenceValueTooltip` to
+the Status Indicator dashboard widget. Each will show the tooltip above the element.
+
 # 3.5.0 #
 
 ### Features / Enhancements ###

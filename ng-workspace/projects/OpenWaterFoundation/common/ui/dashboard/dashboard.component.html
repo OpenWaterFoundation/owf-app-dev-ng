@@ -10,11 +10,11 @@
     [ngStyle]="setMatGridTileStyle(widget.style)">
 
       <div *ngIf="widget.errorTypes.length > 0" class="error-widget-comp-container">
-        <widget-error [errorTypes]="widget.errorTypes" [widget]="widget"></widget-error>
+        <error-widget [errorTypes]="widget.errorTypes" [widget]="widget"></error-widget>
       </div>
 
       <div *ngIf="widget.type === 'chart'" class="widget-container">
-        <widget-chart [chartWidget]="widget"></widget-chart>
+        <chart-widget [chartWidget]="widget"></chart-widget>
       </div>
 
       <div *ngIf="widget.type === 'diagnostics'" class="widget-container">

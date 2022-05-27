@@ -1,10 +1,10 @@
-import { NgModule }       from '@angular/core';
-import { CommonModule }   from '@angular/common';
+import { NgModule }          from '@angular/core';
+import { CommonModule }      from '@angular/common';
 
-import { ShowdownModule } from 'ngx-showdown';
+import { ShowdownModule }    from 'ngx-showdown';
 
-import { ErrorModule }    from '../error/error.module';
-import { TitleComponent }  from './title.component';
+import { ErrorWidgetModule } from '../error/error-widget.module';
+import { TitleComponent }    from './title.component';
 
 
 @NgModule({
@@ -28,7 +28,7 @@ import { TitleComponent }  from './title.component';
       tables: true
     }),
 
-    ErrorModule
+    ErrorWidgetModule
   ],
   providers: [
   ]

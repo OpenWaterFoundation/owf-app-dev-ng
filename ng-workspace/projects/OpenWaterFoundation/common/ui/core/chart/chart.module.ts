@@ -5,7 +5,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule }         from '@angular/material/tooltip';
 
 import { ChartComponent }           from './chart.component';
-import { ErrorModule }              from '../error/error.module';
 
 
 @NgModule({
@@ -19,9 +18,7 @@ import { ErrorModule }              from '../error/error.module';
     CommonModule,
 
     MatProgressSpinnerModule,
-    MatTooltipModule,
-
-    ErrorModule
+    MatTooltipModule
   ]
 })
 export class ChartModule { }

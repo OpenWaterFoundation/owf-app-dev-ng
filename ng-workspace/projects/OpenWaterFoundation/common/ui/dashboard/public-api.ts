@@ -3,14 +3,14 @@ export * from './dashboard.module';
 export * from './dashboard.component';
 
 // CHART Widget.
-export * from './widget/chart/chart.component';
-export * from './widget/chart/chart.module';
+export * from './widget/chart/chart-widget.component';
+export * from './widget/chart/chart-widget.module';
 // DIAGNOSTICS Module.
 export * from './widget/diagnostics/diagnostics.component';
 export * from './widget/diagnostics/diagnostics.module';
 // ERROR Widget.
-export * from './widget/error/error.component';
-export * from './widget/error/error.module';
+export * from './widget/error/error-widget.component';
+export * from './widget/error/error-widget.module';
 // IMAGE Widget.
 export * from './widget/image/image.component';
 export * from './widget/image/image.module';

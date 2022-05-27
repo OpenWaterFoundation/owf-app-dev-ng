@@ -6,6 +6,14 @@ import { BehaviorSubject } from "rxjs";
 
 // ENUM
 
+/** The different ways a Chart can be displayed in the InfoMapper. */
+export enum ChartDisplayType {
+  dlg = 'dialog',
+  emd = 'embed',
+  ful = 'full',
+  wid = 'widget'
+}
+
 /** All supported Datastore types. */
 export enum DatastoreType {
   delimited = 'owf.datastore.delimited',
@@ -612,6 +620,9 @@ export interface StatusIndicatorWidget extends DashboardWidget {
 
   skipDataLines?: number;
   classificationFile?: string;
+  titleTooltip?: string;
+  indicatorValueTooltip?: string;
+  referenceValueTooltip?: string;
 }
 
 export interface TextWidget extends DashboardWidget {

@@ -1,11 +1,11 @@
 import { Component,
           Input,
-          OnDestroy, 
-          OnInit}           from '@angular/core';
+          OnDestroy,
+          OnInit }          from '@angular/core';
 
 import { BehaviorSubject,
           forkJoin,
-          Observable, 
+          Observable,
           Subscription }    from 'rxjs';
 
 import structuredClone      from '@ungap/structured-clone';
@@ -19,41 +19,42 @@ import { DayTS,
 import { MapUtil }          from '@OpenWaterFoundation/common/leaflet';
 import { DatastoreManager } from '@OpenWaterFoundation/common/util/datastore';
 import { ChartService }     from './chart.service';
-import { DashboardService } from '../../dashboard.service';
 // I believe that if this type of 'import' is used, the package needs to be added
 // to the angular.json scripts array.
 declare var Plotly: any;
 
 
 @Component({
-  selector: 'widget-chart',
+  selector: 'core-chart',
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.css']
 })
 export class ChartComponent implements OnInit, OnDestroy {
 
   /** Subscription to be unsubscribed to at component destruction to prevent memory
-   * leaks.*/
+  * leaks.*/
   private allResultsSub$: Subscription;
   /** The array of objects to pass to the tstable component for data table creation. */
   attributeTable: any[] = [];
+  /** The way this Chart component is being displayed in the InfoMapper. */
+  @Input('chartDisplayType') chartDisplayType: IM.ChartDisplayType;
   /** The attribute provided as an attribute to this component when created, e.g.
-   *   <widget-chart [chartWidget]="widget"></widget-chart> */
-  @Input() chartWidget: IM.ChartWidget;
+  *   <chart-widget [chartWidget]="widget"></chart-widget> */
+  @Input('chartWidget') chartWidget: IM.ChartWidget;
   /** The BehaviorSubject that is set to whether this widget is currently getting
-   * data, or has finished and ready to display. */
+  * data, or has finished and ready to display. */
   private dataLoading: BehaviorSubject<boolean> = new BehaviorSubject(true);
   /** The dataLoading BehaviorSubject as an observable so it can be 'listened' to
-   * in the template file and conditionally show HTML as needed. */
+  * in the template file and conditionally show HTML as needed. */
   dataLoading$ = this.dataLoading.asObservable();
   /** A string containing the name to be passed to the TSTableComponent's first
   * column name: DATE or DATE / TIME. */
   dateTimeColumnName: string;
   /** String array representing the type of error that occurred while building this
-   * widget. Used by the error widget. */
+  * widget. Used by the error widget. */
   errorTypes: string[] = [];
   /** Datastore manager to determine what datastore should be used to retrieve information
-   * from. Can find built-in and user provided datastores. */
+  * from. Can find built-in and user provided datastores. */
   private dsManager: DatastoreManager = DatastoreManager.getInstance();
   /** The graph template object retrieved from the popup configuration file property
   * resourcePath. */
@@ -65,7 +66,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** Subscription for the initial files to read if provided in the Chart Widget. */
   initialResultsSub$: Subscription;
   /** Observable that's updated as a BehaviorSubject when a critical error creating
-   * this component occurs. */
+  * this component occurs. */
   isChartError$: Observable<boolean>;
   /** Boolean for helping dialog-tstable component determine what kind of file needs
   * downloading. */
@@ -89,14 +90,13 @@ export class ChartComponent implements OnInit, OnDestroy {
   * @param commonService A reference to the top level service OwfCommonService.
   */
   constructor(private commonService: OwfCommonService,
-    private chartService: ChartService,
-    private dashboardService: DashboardService) { }
+    private chartService: ChartService) { }
 
 
   /**
-   * Checks the properties of the given chart object and determines what action
-   * to take.
-   */
+  * Checks the properties of the given chart object and determines what action
+  * to take.
+  */
   private checkWidgetObject(): void {
 
     var error = false;
@@ -111,30 +111,30 @@ export class ChartComponent implements OnInit, OnDestroy {
     }
 
     if (error === true) {
-      this.dashboardService.setChartError = true;
+      this.chartService.setChartError = true;
       return;
     }
 
     // Determine if the Chart widget has a SelectEvent. If not, the initialization
     // of the Chart widget can be performed.
-    if (this.dashboardService.hasSelectEvent(this.chartWidget) === false) {
+    if (this.chartService.hasSelectEvent(this.chartWidget) === false) {
       // The widget object has passed its inspection and can be created.
       this.initChartVariables();
     }
   }
 
   /**
-   * Set the class variable TSIDLocation to the first dataGraph object from the
-   * graphTemplate object. This is used as a unique identifier for the Plotly graph
-   * <div> id attribute.
-   */
+  * Set the class variable TSIDLocation to the first dataGraph object from the
+  * graphTemplate object. This is used as a unique identifier for the Plotly graph
+  * <div> id attribute.
+  */
   isCorrectTSID(): string | null {
 
     var tsid = this.commonService.parseTSID(
       this.graphTemplate.product.subProducts[0].data[0].properties.TSID
     ).location;
 
-    return tsid ? tsid : null ;
+    return tsid ? tsid : null;
   }
 
   /**
@@ -240,10 +240,10 @@ export class ChartComponent implements OnInit, OnDestroy {
     }
 
     var start = timeSeries.getDate1().getYear() + "-" +
-    this.chartService.zeroPad(timeSeries.getDate1().getMonth(), 2);
+      this.chartService.zeroPad(timeSeries.getDate1().getMonth(), 2);
 
     var end = timeSeries.getDate2().getYear() + "-" +
-    this.chartService.zeroPad(timeSeries.getDate2().getMonth(), 2);
+      this.chartService.zeroPad(timeSeries.getDate2().getMonth(), 2);
 
     var yAxisData = this.chartService.setYAxisData(timeSeries);
 
@@ -362,8 +362,8 @@ export class ChartComponent implements OnInit, OnDestroy {
     var layout = {
       title: {
         text: this.graphTemplate.product.subProducts[0].properties.MainTitleString +
-        '<br><sub>' + this.graphTemplate.product.subProducts[0].properties.SubTitleString +
-        '</sub>'
+          '<br><sub>' + this.graphTemplate.product.subProducts[0].properties.SubTitleString +
+          '</sub>'
       },
       // An array of strings describing the color to display the graph as for each
       // time series.
@@ -408,9 +408,9 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Initializes this components class variables and performs other necessary actions
-   * to set up and display a chart.
-   */
+  * Initializes this components class variables and performs other necessary actions
+  * to set up and display a chart.
+  */
   private initChartVariables(): void {
 
     this.initialResultsSub$ = this.commonService.getJSONData(
@@ -424,52 +424,52 @@ export class ChartComponent implements OnInit, OnDestroy {
         this.graphTemplate = structuredClone(this.graphTemplatePrime);
 
         this.toggleDataLoading = false;
-        
+
         if (this.isCorrectTSID() !== null) {
           this.TSIDLocation = this.isCorrectTSID();
         } else if (this.isCorrectTSID() === null) {
           this.errorTypes.push('bad TSID');
-          this.dashboardService.setChartError = true;
+          this.chartService.setChartError = true;
           return;
         }
-  
+
         this.obtainAndCreateAllGraphs();
       }
     });
   }
 
   /**
-   * Listens to another widget and updates when something is updated in said widget.
-   */
+  * Listens to another widget and updates when something is updated in said widget.
+  */
   // TODO jpkeahey 2022-05-10: Name this listenForSelectEvent? Put this function
   // in a for loop and listen to all events?
   private listenForEvent(): void {
 
     // TODO jpkeahey 2022-04-27: This might need to be in a for loop for multiple
     // Event objects in the eventHandlers.
-    this.dashboardService.getWidgetEvent(this.chartWidget).subscribe((selectEvent: IM.SelectEvent) => {
+    // this.dashboardService.getWidgetEvent(this.chartWidget).subscribe((selectEvent: IM.SelectEvent) => {
 
-      // Check if the initial selectEvent was passed.
-      if (selectEvent === null) {
-        return;
-      }
+    //   // Check if the initial selectEvent was passed.
+    //   if (selectEvent === null) {
+    //     return;
+    //   }
 
-      // If graphTemplatePrime hasn't been set yet, read it in and set it here.
-      if (!this.graphTemplatePrime) {
-        this.updateResultsSub = this.commonService.getJSONData(
-          this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
-        ).subscribe({
-          next: (graphTemplate: IM.GraphTemplate) => {
-            this.graphTemplatePrime = graphTemplate;
-            // Update the chart with the new feature object data.
-            this.updateChartVariables(selectEvent);
-          }
-        });
-      } else {
-        // Update the chart with the new feature object data.
-        this.updateChartVariables(selectEvent);
-      }
-    });
+    //   // If graphTemplatePrime hasn't been set yet, read it in and set it here.
+    //   if (!this.graphTemplatePrime) {
+    //     this.updateResultsSub = this.commonService.getJSONData(
+    //       this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
+    //     ).subscribe({
+    //       next: (graphTemplate: IM.GraphTemplate) => {
+    //         this.graphTemplatePrime = graphTemplate;
+    //         // Update the chart with the new feature object data.
+    //         this.updateChartVariables(selectEvent);
+    //       }
+    //     });
+    //   } else {
+    //     // Update the chart with the new feature object data.
+    //     this.updateChartVariables(selectEvent);
+    //   }
+    // });
   }
 
   /**
@@ -478,7 +478,13 @@ export class ChartComponent implements OnInit, OnDestroy {
   */
   ngOnInit(): void {
 
-    this.isChartError$ = this.dashboardService.isChartError;
+    console.log(this.chartDisplayType);
+    console.log(this.chartWidget);
+    this.toggleDataLoading = false;
+    
+    throw new Error('Stop here.');
+
+    this.isChartError$ = this.chartService.isChartError;
 
     this.checkWidgetObject();
     this.listenForEvent();
@@ -501,9 +507,9 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Use the DatastoreManager to obtain all data necessary to display on a Plotly
-   * chart.
-   */
+  * Use the DatastoreManager to obtain all data necessary to display on a Plotly
+  * chart.
+  */
   private obtainAndCreateAllGraphs(): void {
 
     var chartError = false;
@@ -525,8 +531,8 @@ export class ChartComponent implements OnInit, OnDestroy {
         // Check for any errors.
         if (result.error) {
           console.error('Graph Template file: Graph object in position ' + (i + 1) +
-          ' from the data array has errored. If this chart object does not have an ' +
-          'eventHandler, ${} properties are not allowed in the path to the data.');
+            ' from the data array has errored. If this chart object does not have an ' +
+            'eventHandler, ${} properties are not allowed in the path to the data.');
           chartError = true;
           return;
         }
@@ -534,7 +540,7 @@ export class ChartComponent implements OnInit, OnDestroy {
         var TSID = this.commonService.parseTSID(graphData[i].properties.TSID);
         var datastore = this.dsManager.getDatastore(TSID.datastore);
 
-        switch(datastore.type) {
+        switch (datastore.type) {
           case IM.DatastoreType.delimited:
             allGraphObjects.push(this.makeDelimitedPlotlyObject(result, graphData[i]));
             break;
@@ -546,10 +552,10 @@ export class ChartComponent implements OnInit, OnDestroy {
       });
 
       if (chartError === true) {
-        this.dashboardService.setChartError = true;
+        this.chartService.setChartError = true;
         return;
       } else {
-        this.dashboardService.setChartError = false;
+        this.chartService.setChartError = false;
       }
 
       this.createPlotlyGraph(allGraphObjects);
@@ -557,18 +563,18 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Toggles the BehaviorSubject so the widget knows when data has finished loading.
-   */
+  * Toggles the BehaviorSubject so the widget knows when data has finished loading.
+  */
   private set toggleDataLoading(loaded: boolean) {
     this.dataLoading.next(loaded);
   }
 
   /**
-   * Called when an item has been selected from this widget's dropdown list. Uses
-   * an object with the new data so it can be used to update the drawn chart.
-   * @param selectEvent The ChartSelector communicator object passed by the BehaviorSubject
-   * when it has been updated.
-   */
+  * Called when an item has been selected from this widget's dropdown list. Uses
+  * an object with the new data so it can be used to update the drawn chart.
+  * @param selectEvent The ChartSelector communicator object passed by the BehaviorSubject
+  * when it has been updated.
+  */
   private updateChartVariables(selectEvent: IM.SelectEvent): void {
 
     this.featureProperties = selectEvent.selectedItem;
@@ -582,12 +588,12 @@ export class ChartComponent implements OnInit, OnDestroy {
     // graphTemplate object. This is used as a unique identifier for the Plotly
     // graph <div> id attribute.
     this.toggleDataLoading = false;
-        
+
     if (this.isCorrectTSID() !== null) {
       this.TSIDLocation = this.isCorrectTSID();
     } else if (this.isCorrectTSID() === null) {
       this.errorTypes.push('bad TSID');
-      this.dashboardService.setChartError = true;
+      this.chartService.setChartError = true;
       return;
     }
 

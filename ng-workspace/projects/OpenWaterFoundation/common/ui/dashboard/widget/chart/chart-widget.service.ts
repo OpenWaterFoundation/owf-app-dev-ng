@@ -1,18 +1,16 @@
-import { Injectable }   from "@angular/core";
+import { Injectable }  from "@angular/core";
 
-import { DateTime }     from '@OpenWaterFoundation/common/util/time';
-import * as IM          from '@OpenWaterFoundation/common/services';
-
-import { DayTS,
-          MonthTS,
-          TS,
-          YearTS,
-          DateValueTS } from '@OpenWaterFoundation/common/ts';
+import { DateTime }    from '@OpenWaterFoundation/common/util/time';
+import * as IM         from '@OpenWaterFoundation/common/services';
 
 import { add,
           format,
           isEqual,
-          parseISO }    from 'date-fns';
+          parseISO }   from 'date-fns';
+import { DayTS,
+          MonthTS,
+          TS, 
+          YearTS}      from "@OpenWaterFoundation/common/ts";
 
 /** The DialogService provides helper function to all Dialog Components in the Common
  * library. Any function not directly related to a Dialog Component's core functionality
@@ -21,15 +19,18 @@ import { add,
 @Injectable({
   providedIn: 'root'
 })
-export class DialogService {
+export class ChartWidgetService {
 
 
   constructor() {}
 
-  /************************* D3 DIALOG COMPONENT *************************/
+
+  /************************* CHART WIDGET COMPONENT *************************/
+
+  /*************************** D3 DIALOG COMPONENT ***************************/
 
 
-  /************************* DATA TABLE DIALOG COMPONENT *************************/
+  /*********************** DATA TABLE DIALOG COMPONENT ***********************/
 
   /**
    * Determines the smallest zoom bound to create that displays all selected features
@@ -139,8 +140,7 @@ export class DialogService {
    * @param endDate Date to be the last index in the returned array of dates.
    * @param interval String describing the interval of how far apart each date should be.
    */
-  public getDates(startDate: any, endDate: any, interval: string): any {
-
+  public getDates(startDate: any, endDate: any, interval: string): string[] {
 
     const DAYFORMAT = 'yyyy-MM-dd',
     MONTHFORMAT = 'yyyy-MM',
@@ -191,8 +191,8 @@ export class DialogService {
 
       case 'years':        
         // Only have to parse the string once here using ISO formatting.
-        currentDate = new Date(parseISO(startDate));
-        stopDate = new Date(parseISO(endDate));
+        currentDate = new Date(parseISO(startDate.toString()));
+        stopDate = new Date(parseISO(endDate.toString()));
         // Iterate over each date from start to end and push them to the dates
         // array that will be returned.
         while (!isEqual(currentDate, stopDate)) {
@@ -216,7 +216,7 @@ export class DialogService {
    * @param timeSeries The current time series to use to extract the y axis data
    * for the graph.
    */
-  public setYAxisObject(timeSeries: any): any {
+  public setYAxisData(timeSeries: TS): any {
 
     var yAxisData: number[] = [];
 
@@ -284,8 +284,8 @@ export class DialogService {
       iter.getMonth() !== endDate.getMonth() ||
       iter.getYear() !== endDate.getYear()
       )
-    
-    return { plotly_yAxisData: yAxisData }
+
+    return yAxisData;
   }
 
   /**
@@ -363,26 +363,12 @@ export class DialogService {
    * Verifies that a potential property string provided to a graph config object
    * will work correctly with the JavaScript Plotly API.
    * @param property The variable obtained from the graph config file trying to
-   * be implemented as a Plotly property.
+   * be implemented as a Plotly property. Will be passed in as all lower case.
    * @param type The type of property being scrutinized.
    */
   public verifyPlotlyProp(property: string, type: IM.GraphProp): string {
 
     switch(type) {
-      // CHART MODE.
-      case IM.GraphProp.cm:
-        if (property.toUpperCase() === 'LINE') { return 'lines'; }
-        else if (property.toUpperCase() === 'POINT') { return 'markers' }
-        else {
-          console.warn('Unknown property "' + property.toUpperCase() +
-          '" - Not Line or Point. Using default Graph Type Line');
-          return 'lines';
-        }
-      // CHART TYPE.
-      case IM.GraphProp.ct:
-        if (property.toUpperCase() === 'LINE' || property.toUpperCase() === 'POINT')
-          return 'scatter';
-        else return 'scatter';
       // BACKGROUND COLOR.
       case IM.GraphProp.bc:
         // Convert C / Java '0x' notation into hex hash '#' notation.
@@ -394,6 +380,47 @@ export class DialogService {
           console.warn('No graph property "Color" detected. Using the default graph color black');
           return 'black';
         }
+      // CHART MODE.
+      case IM.GraphProp.cm:
+
+        var isScatterGraphType = (
+          property === 'line' ||
+          property === 'area' ||
+          property === 'areastacked'
+        );
+
+        if (isScatterGraphType) {
+          return 'lines';
+        }
+        else if (property.toUpperCase() === 'POINT') {
+          return 'markers'
+        }
+        else {
+          console.warn('Unknown property "' + property.toUpperCase() +
+          '" - Not Line or Point. Using default Graph Type Line');
+          return 'lines';
+        }
+      // CHART TYPE.
+      case IM.GraphProp.ct:
+
+        var isScatterGraphType = (
+          property === 'line' ||
+          property === 'point' ||
+          property === 'area'
+        );
+
+        if (isScatterGraphType) {
+          return 'scatter';
+        } else {
+          return 'scatter';
+        }
+      case IM.GraphProp.lw:
+        return property ? property : '1.5';
+      // FILL TYPE.
+      case IM.GraphProp.fl:
+        return (property === 'area') ? 'tozeroy' : undefined;
+      case IM.GraphProp.sk:
+        return (property === 'areastacked') ? 'one' : undefined;
     }
   }
 
