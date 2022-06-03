@@ -37,7 +37,7 @@ export class TextComponent implements OnDestroy{
   /** The subscription for the text retrieval. To be unsubscribed when this component
    * instance is destroyed. */
   textSub$: Subscription;
-  /** The attribute provided as an attribute to this component when created, e.g.
+  /** The attribute provided to this component when created, e.g.
    *   <widget-text [textWidget]="widget"></widget-text> */
   @Input() textWidget: IM.TextWidget;
   

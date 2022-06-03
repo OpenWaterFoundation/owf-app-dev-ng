@@ -11,14 +11,20 @@
 </ng-template>
 
 <ng-template #showChart>
-  <div *ngIf="TSIDLocation" class="showGraph">
-    <div [attr.id]="TSIDLocation" style="height: 100%;"></div>
+  <div *ngIf="TSIDLocation" class="showChart">
+
+    <div class="main-chart" [attr.id]="TSIDLocation"
+    [attr.data-cy]="TSIDLocation + '-plotly-tsgraph-dialog'">
+    </div>
+
   </div>
 </ng-template>
 
 <ng-template #error>
   <div class="no-chart-container">
-    <!-- <common-error [errorTypes]="errorTypes" [widget]="chartWidget"></common-error> -->
-    error
+
+    <common-error [errorLocation]="'chart'" [errorTypes]="errorTypes" [widget]="chartWidget">
+    </common-error>
+
   </div>
 </ng-template>

@@ -1,7 +1,9 @@
 import { Component,
+          EventEmitter,
           Input,
           OnDestroy,
-          OnInit }          from '@angular/core';
+          OnInit, 
+          Output}          from '@angular/core';
 
 import { BehaviorSubject,
           forkJoin,
@@ -10,13 +12,14 @@ import { BehaviorSubject,
 
 import structuredClone      from '@ungap/structured-clone';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { EventService,
+          OwfCommonService } from '@OpenWaterFoundation/common/services';
+import * as IM               from '@OpenWaterFoundation/common/services';
+import { DataUnits }         from '@OpenWaterFoundation/common/util/io';
 import { DayTS,
           MonthTS,
           TS,
           YearTS }          from '@OpenWaterFoundation/common/ts';
-import { MapUtil }          from '@OpenWaterFoundation/common/leaflet';
 import { DatastoreManager } from '@OpenWaterFoundation/common/util/datastore';
 import { ChartService }     from './chart.service';
 // I believe that if this type of 'import' is used, the package needs to be added
@@ -31,15 +34,22 @@ declare var Plotly: any;
 })
 export class ChartComponent implements OnInit, OnDestroy {
 
+  /**
+   * 
+   */
+  private attributeTable = [];
   /** Subscription to be unsubscribed to at component destruction to prevent memory
   * leaks.*/
   private allResultsSub$: Subscription;
-  /** The array of objects to pass to the tstable component for data table creation. */
-  attributeTable: any[] = [];
+  /** The attribute provided to this component when created from a dialog, e.g.
+   * <core-chart [chartDialog]="widget"></core-chart> */
+  @Input('chartDialog') chartDialog: IM.ChartDialog;
   /** The way this Chart component is being displayed in the InfoMapper. */
   @Input('chartDisplayType') chartDisplayType: IM.ChartDisplayType;
-  /** The attribute provided as an attribute to this component when created, e.g.
-  *   <chart-widget [chartWidget]="widget"></chart-widget> */
+  /** Set to true if any errors occur in the Chart Widget. */
+  private chartError: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  /** The attribute provided to this component when created from a widget, e.g.
+  * <core-chart [chartWidget]="widget"></core-chart> */
   @Input('chartWidget') chartWidget: IM.ChartWidget;
   /** The BehaviorSubject that is set to whether this widget is currently getting
   * data, or has finished and ready to display. */
@@ -47,9 +57,10 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** The dataLoading BehaviorSubject as an observable so it can be 'listened' to
   * in the template file and conditionally show HTML as needed. */
   dataLoading$ = this.dataLoading.asObservable();
-  /** A string containing the name to be passed to the TSTableComponent's first
-  * column name: DATE or DATE / TIME. */
-  dateTimeColumnName: string;
+  /**
+   * 
+   */
+  private dateTimeColumnName = '';
   /** String array representing the type of error that occurred while building this
   * widget. Used by the error widget. */
   errorTypes: string[] = [];
@@ -75,14 +86,17 @@ export class ChartComponent implements OnInit, OnDestroy {
   * Java converted code. Used as a reference in the dialog-tstable component for
   * downloading to the user's local machine. */
   TSArrayOGResultRef: TS[];
-  /** The string representing the TSID before the first tilde (~) in the graph template
-  * object. Used to help create a unique graph ID. */
+  /** Used to help create a unique graph ID. */
   TSIDLocation: string;
+  /** EventEmitter that alerts the Map component (parent) that an update has happened,
+   * and sends the basin name. */
+  @Output() updateAttributeTable = new EventEmitter<IM.AttributeTableParams>();
   /** Subscription for reading in a graph template file if it hasn't been retrieved yet. */
   private updateResultsSub: Subscription;
-  /** An array containing the value header names after the initial DATE / TIME
-  * header. To be passed to dialog-tstable for downloading files. */
-  valueColumns: string[] = [];
+  /**
+   * 
+   */
+  private valueColumns: string[] = [];
 
 
   /**
@@ -90,8 +104,149 @@ export class ChartComponent implements OnInit, OnDestroy {
   * @param commonService A reference to the top level service OwfCommonService.
   */
   constructor(private commonService: OwfCommonService,
-    private chartService: ChartService) { }
+    private chartService: ChartService,
+    private eventService: EventService) { }
 
+  /**
+   * Observable used in the Chart Widget that's used with an async pipe in the template
+   * file to show the widget or error content.
+   */
+  get isChartError(): Observable<boolean> { return this.chartError.asObservable(); }
+  /**
+    * Toggles the chartError BehaviorSubject between true and false.
+    */
+  set setChartError(error: boolean) { this.chartError.next(error); }
+  /**
+  * Toggles the BehaviorSubject so the widget knows when data has finished loading.
+  */
+  private set toggleDataLoading(loaded: boolean) {
+    this.dataLoading.next(loaded);
+  }
+
+  /**
+   * Creates the attributeTable array of objects to be passed to the dialog-tstable
+   * component for displaying in a data table.
+   * @param xAxisLabels The array of x-axis labels from the graph being created
+   * to show in the data table.
+   * @param axisObject The axisObject contains either the chartJS or plotly created
+   * data array.
+   * @param units The units being used on the graph to be shown as a column.
+   */
+  private addToAttributeTable(xAxisLabels: string[], axisObject: any, TSAlias: string, units: string, TSIndex: number, datePrecision?: number): void {
+
+    // Retrieve the output precision from the DataUnits array if it exists, and if not default to 2
+    var outputPrecision = this.determineOutputPrecision(units);
+    // For the first column header name, have it be DATE if the datePrecision is week, month or year,
+    // or DATE / TIME if day, hour, minute, etc..
+    var column1Name = (datePrecision > 30) ? 'DATE': 'DATE / TIME';
+    this.dateTimeColumnName = column1Name;
+    // If the first time series, create the Date / Time column, and the data column for the time series
+    if (TSIndex === 0) {
+      // Create the column name for the current time series' units, including units if it exists, and skipping it otherwise
+      var displayedUnits = units ? TSAlias + ' (' + units + ')' : TSAlias;
+      this.valueColumns.push(displayedUnits);
+
+      if (axisObject.csvYAxisData) {
+        for (let i = 0; i < xAxisLabels.length; i++) {
+          // Push the object into the attributeTable
+          this.attributeTable.push({
+            [column1Name]: xAxisLabels[i],
+            // Ternary operator determining if the value is NaN. The data table will show nothing if that's the case
+            [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' : axisObject.csvYAxisData[i].toFixed(outputPrecision)
+          });
+        }
+      }
+      // If a plotly graph was created, use the plotly created data array.
+      else if (axisObject.plotlyYAxisData) {
+        for (let i = 0; i < xAxisLabels.length; i++) {
+          // Push the object into the attributeTable.
+          this.attributeTable.push({
+            [column1Name]: xAxisLabels[i],
+            // Ternary operator determining if the value is NaN. The data table will show nothing if that's the case.
+            [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' : axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
+          });
+        }
+      }
+    }
+    // If the second or more time series, just add the data column for it.
+    else {
+      // Create the column name for the current time series' units.
+      var displayedUnits = units ? TSAlias + ' (' + units + ')' : TSAlias;
+      this.valueColumns.push(displayedUnits);
+      var foundIndex: number;
+
+      if (axisObject.csvYAxisData) {
+        for (let i = 0; i < this.attributeTable.length; i++) {
+          foundIndex = xAxisLabels.findIndex(element => element === this.attributeTable[i][column1Name]);
+          if (foundIndex !== -1) {
+            this.attributeTable[i][displayedUnits] = isNaN(axisObject.csvYAxisData[foundIndex]) ? '' : axisObject.csvYAxisData[foundIndex].toFixed(outputPrecision);
+            continue;
+          } else {
+            this.attributeTable[i][displayedUnits] = '';
+            continue;
+          }
+        }
+
+        var startCount = 0;
+        var endCount = 1;
+        for (let i = 0; i < xAxisLabels.length; i++) {
+          if (xAxisLabels[i] < this.attributeTable[startCount][column1Name]) {
+            this.attributeTable.splice(startCount, 0, { 
+              [column1Name]: xAxisLabels[i],
+              [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' : axisObject.csvYAxisData[i].toFixed(outputPrecision)
+            })
+            startCount++;
+
+          } else if (xAxisLabels[i] > this.attributeTable[this.attributeTable.length - endCount][column1Name]) {
+            this.attributeTable.push({
+              [column1Name]: xAxisLabels[i],
+              [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' : axisObject.csvYAxisData[i].toFixed(outputPrecision)
+            })
+            endCount++;
+          }
+        }
+      }
+      // If a plotly graph was created, use the plotly created data array
+      else if (axisObject.plotlyYAxisData) {
+        for (let i = 0; i < this.attributeTable.length; i++) {
+          foundIndex = xAxisLabels.findIndex(element => element === this.attributeTable[i][column1Name]);
+          if (foundIndex !== -1) {
+            this.attributeTable[i][displayedUnits] =
+            isNaN(axisObject.plotlyYAxisData[foundIndex]) ? '' : axisObject.plotlyYAxisData[foundIndex].toFixed(outputPrecision);
+            continue;
+          } else {
+            this.attributeTable[i][displayedUnits] = '';
+            continue;
+          }
+        }
+
+        var startCount = 0;
+        var endCount = 1;
+
+        for (let i = 0; i < xAxisLabels.length; i++) {
+          if (xAxisLabels[i] < this.attributeTable[startCount][column1Name]) {
+            this.attributeTable.splice(startCount, 0, { 
+              [column1Name]: xAxisLabels[i],
+              [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' : axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
+            })
+            startCount++;
+
+          } else if (xAxisLabels[i] > this.attributeTable[this.attributeTable.length - endCount][column1Name]) {
+            this.attributeTable.push({
+              [column1Name]: xAxisLabels[i],
+              [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' : axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
+            })
+            endCount++;
+          }
+        }
+      }
+    }
+    this.updateAttributeTable.emit({
+      attributeTable: this.attributeTable,
+      dateTimeColumnName: this.dateTimeColumnName,
+      valueColumns: this.valueColumns
+    });
+  }
 
   /**
   * Checks the properties of the given chart object and determines what action
@@ -111,30 +266,39 @@ export class ChartComponent implements OnInit, OnDestroy {
     }
 
     if (error === true) {
-      this.chartService.setChartError = true;
+      this.toggleDataLoading = false;
+      this.setChartError = true;
       return;
     }
 
     // Determine if the Chart widget has a SelectEvent. If not, the initialization
     // of the Chart widget can be performed.
-    if (this.chartService.hasSelectEvent(this.chartWidget) === false) {
+    if (this.eventService.hasSelectEvent(this.chartWidget) === false) {
       // The widget object has passed its inspection and can be created.
-      this.initChartVariables();
+      this.setupForWidget();
     }
   }
 
   /**
-  * Set the class variable TSIDLocation to the first dataGraph object from the
-  * graphTemplate object. This is used as a unique identifier for the Plotly graph
-  * <div> id attribute.
-  */
-  isCorrectTSID(): string | null {
+   * Go through each dataUnit in the @var dataUnits array that was created when
+   * it was read in from the app configuration file in the nav-bar component and
+   * set in the app-service.
+   * @return The output precision from the dataUnit.
+   * @param units String representing the units being displayed in the TSGraph.
+   */
+  private determineOutputPrecision(units: string): number {
+    var dataUnits: DataUnits[] = this.commonService.getDataUnitArray();
 
-    var tsid = this.commonService.parseTSID(
-      this.graphTemplate.product.subProducts[0].data[0].properties.TSID
-    ).location;
-
-    return tsid ? tsid : null;
+    if (dataUnits && dataUnits.length > 0) {
+      for (let dataUnit of dataUnits) {
+        if (dataUnit.getAbbreviation().toUpperCase() === units.toUpperCase() ||
+            dataUnit.getLongName().toUpperCase() === units.toUpperCase()) {
+          return dataUnit.getOutputPrecision();
+        }
+      }
+    }
+    // Return a default precision of 2.
+    return 2;
   }
 
   /**
@@ -144,7 +308,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   * Contains at least one result array with its index in the graphTemplate data
   * array.
   */
-  private makeDelimitedPlotlyObject(delimitedData: any, graphData: IM.GraphData): IM.PopulateGraph {
+  private makeDelimitedPlotlyObject(delimitedData: any, graphData: IM.GraphData, index: number): IM.PopulateGraph {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     var templateYAxisTitle: string;
@@ -157,15 +321,15 @@ export class ChartComponent implements OnInit, OnDestroy {
     // }
     // These two are the string representing the keys in the current result.
     // They will be used to populate the X & Y axes arrays.
-    let x_axis = Object.keys(delimitedData.data[0])[0];
-    let y_axis = Object.keys(delimitedData.data[0])[1];
+    let xAxis = Object.keys(delimitedData.data[0])[0];
+    let yAxis = Object.keys(delimitedData.data[0])[1];
 
     // Populate the arrays needed for the X & Y axes.
-    var x_axisLabels: string[] = [];
-    var y_axisData: number[] = [];
+    var xAxisLabels: string[] = [];
+    var yAxisData: number[] = [];
     for (let resultObj of delimitedData.data) {
-      x_axisLabels.push(resultObj[x_axis]);
-      y_axisData.push(parseFloat(resultObj[y_axis]));
+      xAxisLabels.push(resultObj[xAxis]);
+      yAxisData.push(parseFloat(resultObj[yAxis]));
     }
     // Populate various other chart properties. They will be checked for validity
     // in createPlotlyGraph().
@@ -177,15 +341,15 @@ export class ChartComponent implements OnInit, OnDestroy {
     var datePrecision: number = this.chartService.determineDatePrecision(graphData.properties.TSID);
     var legendLabel = this.chartService.formatLegendLabel(graphData.properties.TSID);
 
-    // this.addToAttributeTable(x_axisLabels, { csv_y_axisData: y_axisData },
-    //   (TSAlias !== '') ? TSAlias : legendLabel, units, i, datePrecision);
+    this.addToAttributeTable(xAxisLabels, { csvYAxisData: yAxisData },
+      (TSAlias !== '') ? TSAlias : legendLabel, units, index, datePrecision);
 
     // Return the PopulateGraph instance that will be passed to create the Plotly graph.
     return {
       chartMode: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.cm),
       chartType: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.ct),
-      dataLabels: x_axisLabels,
-      datasetData: y_axisData,
+      dataLabels: xAxisLabels,
+      datasetData: yAxisData,
       datasetBackgroundColor: backgroundColor,
       graphFileType: 'csv',
       isCSV: true,
@@ -200,7 +364,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   * @param timeSeries The array of all Time Series objects retrieved asynchronously
   * from the StateMod file.
   */
-  private makeTSPlotlyObject(timeSeries: TS, graphData: IM.GraphData): IM.PopulateGraph {
+  private makeTSPlotlyObject(timeSeries: TS, graphData: IM.GraphData, index: number): IM.PopulateGraph {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     var templateYAxisTitle: string = '';
@@ -214,30 +378,11 @@ export class ChartComponent implements OnInit, OnDestroy {
       this.graphTemplate.product.subProducts[0].data.length);
     // }
 
-    var xAxisLabels: string[];
-    var type = '';
-
-    if (timeSeries instanceof DayTS) {
-      type = 'days';
-      xAxisLabels = this.chartService.getDates(
-        timeSeries.getDate1().toString(),
-        timeSeries.getDate2().toString(),
-        type
-      );
-    }
-    else if (timeSeries instanceof MonthTS) {
-      type = 'months';
-      xAxisLabels = this.chartService.getDates(
-        timeSeries.getDate1().toString(),
-        timeSeries.getDate2().toString(),
-        type);
-    } else if (timeSeries instanceof YearTS) {
-      type = 'years';
-      xAxisLabels = this.chartService.getDates(
-        timeSeries.getDate1().toString(),
-        timeSeries.getDate2().toString(),
-        type);
-    }
+    // 
+     var xAxisLabels: string[] = this.chartService.getDates(
+      timeSeries.getDate1().toString(),
+      timeSeries.getDate2().toString(),
+      timeSeries);
 
     var start = timeSeries.getDate1().getYear() + "-" +
       this.chartService.zeroPad(timeSeries.getDate1().getMonth(), 2);
@@ -255,7 +400,7 @@ export class ChartComponent implements OnInit, OnDestroy {
     }
     var lineWidth: string = graphData.properties.LineWidth.toLowerCase();
     var backgroundColor: string = graphData.properties.Color;
-    var TSAlias: string = graphData.properties.TSAlias;
+    var TSAlias = graphData.properties.TSAlias;
     var units: string = timeSeries.getDataUnits();
     var datePrecision = timeSeries.getDataIntervalBase();
 
@@ -266,18 +411,17 @@ export class ChartComponent implements OnInit, OnDestroy {
       legendLabel = timeSeries.formatLegend(graphData.properties.LegendFormat);
     }
 
-    // this.addToAttributeTable(xAxisLabels, axisObject, (TSAlias !== '') ? TSAlias : legendLabel,
-    //   units, i, datePrecision);
+    this.addToAttributeTable(xAxisLabels, { plotlyYAxisData: yAxisData },
+      (TSAlias !== '') ? TSAlias : legendLabel, units, index, datePrecision);
 
     // Return the PopulateGraph instance that will be passed to create the Plotly graph.
     return {
       chartMode: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.cm),
       chartType: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.ct),
-      dateType: type,
       endDate: end,
       fillType: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.fl),
       plotlyDatasetData: yAxisData,
-      plotly_xAxisLabels: xAxisLabels,
+      plotlyXAxisLabels: xAxisLabels,
       datasetBackgroundColor: this.chartService.verifyPlotlyProp(backgroundColor, IM.GraphProp.bc),
       graphFileType: 'TS',
       legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
@@ -350,7 +494,7 @@ export class ChartComponent implements OnInit, OnDestroy {
       }
 
       data.type = graphConfig.chartType;
-      data.x = graphConfig.isCSV ? graphConfig.dataLabels : graphConfig.plotly_xAxisLabels;
+      data.x = graphConfig.isCSV ? graphConfig.dataLabels : graphConfig.plotlyXAxisLabels;
       data.y = graphConfig.isCSV ? graphConfig.datasetData : graphConfig.plotlyDatasetData;
 
       colorwayArray.push(graphConfig.datasetBackgroundColor);
@@ -408,37 +552,6 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Initializes this components class variables and performs other necessary actions
-  * to set up and display a chart.
-  */
-  private initChartVariables(): void {
-
-    this.initialResultsSub$ = this.commonService.getJSONData(
-      this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
-    ).subscribe({
-
-      next: (graphTemplate: IM.GraphTemplate) => {
-
-        this.graphTemplatePrime = graphTemplate;
-        // Create a clone of the original graph template file.
-        this.graphTemplate = structuredClone(this.graphTemplatePrime);
-
-        this.toggleDataLoading = false;
-
-        if (this.isCorrectTSID() !== null) {
-          this.TSIDLocation = this.isCorrectTSID();
-        } else if (this.isCorrectTSID() === null) {
-          this.errorTypes.push('bad TSID');
-          this.chartService.setChartError = true;
-          return;
-        }
-
-        this.obtainAndCreateAllGraphs();
-      }
-    });
-  }
-
-  /**
   * Listens to another widget and updates when something is updated in said widget.
   */
   // TODO jpkeahey 2022-05-10: Name this listenForSelectEvent? Put this function
@@ -447,29 +560,29 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     // TODO jpkeahey 2022-04-27: This might need to be in a for loop for multiple
     // Event objects in the eventHandlers.
-    // this.dashboardService.getWidgetEvent(this.chartWidget).subscribe((selectEvent: IM.SelectEvent) => {
+    this.eventService.getWidgetEvent(this.chartWidget).subscribe((selectEvent: IM.SelectEvent) => {
 
-    //   // Check if the initial selectEvent was passed.
-    //   if (selectEvent === null) {
-    //     return;
-    //   }
+      // Check if the initial selectEvent was passed.
+      if (selectEvent === null) {
+        return;
+      }
 
-    //   // If graphTemplatePrime hasn't been set yet, read it in and set it here.
-    //   if (!this.graphTemplatePrime) {
-    //     this.updateResultsSub = this.commonService.getJSONData(
-    //       this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
-    //     ).subscribe({
-    //       next: (graphTemplate: IM.GraphTemplate) => {
-    //         this.graphTemplatePrime = graphTemplate;
-    //         // Update the chart with the new feature object data.
-    //         this.updateChartVariables(selectEvent);
-    //       }
-    //     });
-    //   } else {
-    //     // Update the chart with the new feature object data.
-    //     this.updateChartVariables(selectEvent);
-    //   }
-    // });
+      // If graphTemplatePrime hasn't been set yet, read it in and set it here.
+      if (!this.graphTemplatePrime) {
+        this.updateResultsSub = this.commonService.getJSONData(
+          this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
+        ).subscribe({
+          next: (graphTemplate: IM.GraphTemplate) => {
+            this.graphTemplatePrime = graphTemplate;
+            // Update the chart with the new feature object data.
+            this.updateChartVariables(selectEvent);
+          }
+        });
+      } else {
+        // Update the chart with the new feature object data.
+        this.updateChartVariables(selectEvent);
+      }
+    });
   }
 
   /**
@@ -477,17 +590,24 @@ export class ChartComponent implements OnInit, OnDestroy {
   * a CSV or StateMod file is to be read for graph creation.
   */
   ngOnInit(): void {
-
-    console.log(this.chartDisplayType);
-    console.log(this.chartWidget);
-    this.toggleDataLoading = false;
     
-    throw new Error('Stop here.');
+    this.isChartError$ = this.isChartError;
 
-    this.isChartError$ = this.chartService.isChartError;
+    switch(this.chartDisplayType) {
+      case IM.ChartDisplayType.dlg:
+        this.setupForDialog();
+        break;
+      case IM.ChartDisplayType.emd: break;
+      case IM.ChartDisplayType.ful: break;
+      case IM.ChartDisplayType.wid:
+        this.checkWidgetObject();
+        if (this.eventService.hasSelectEvent(this.chartWidget) === true) {
+          this.listenForEvent();
+        }
+        break;
+    }
 
-    this.checkWidgetObject();
-    this.listenForEvent();
+    
   }
 
   /**
@@ -542,20 +662,20 @@ export class ChartComponent implements OnInit, OnDestroy {
 
         switch (datastore.type) {
           case IM.DatastoreType.delimited:
-            allGraphObjects.push(this.makeDelimitedPlotlyObject(result, graphData[i]));
+            allGraphObjects.push(this.makeDelimitedPlotlyObject(result, graphData[i], i));
             break;
           case IM.DatastoreType.dateValue:
           case IM.DatastoreType.stateMod:
-            allGraphObjects.push(this.makeTSPlotlyObject(result, graphData[i]));
+            allGraphObjects.push(this.makeTSPlotlyObject(result, graphData[i], i));
             break;
         }
       });
 
       if (chartError === true) {
-        this.chartService.setChartError = true;
+        this.setChartError = true;
         return;
       } else {
-        this.chartService.setChartError = false;
+        this.setChartError = false;
       }
 
       this.createPlotlyGraph(allGraphObjects);
@@ -563,10 +683,69 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Toggles the BehaviorSubject so the widget knows when data has finished loading.
+   * Loops through (and checks) each TSID given in a graph template and creates
+   * a unique string.
+   * @returns A unique ID to be used in the template file div that Plotly uses to
+   * render the chart on the DOM.
+   */
+  private setUniqueID(): any {
+
+    var uniqueID = '';
+
+    this.graphTemplate.product.subProducts[0].data.forEach((graphData, i) => {
+      var TSIDLocation = this.commonService.parseTSID(graphData.properties.TSID).location;
+      if (TSIDLocation === null) {
+        return null;
+      } else {
+        uniqueID += TSIDLocation + '-' + i
+      }
+    });
+
+    return uniqueID;
+  }
+
+  /**
+   * 
+   */
+  private setupForDialog(): void {
+
+    this.graphTemplate = this.chartDialog.graphTemplate;
+    this.toggleDataLoading = false;
+
+    this.TSIDLocation = this.setUniqueID();
+
+    this.obtainAndCreateAllGraphs();
+  }
+
+  /**
+  * Retrieves  and performs other necessary actions
+  * to set up and display a chart using a widget object.
   */
-  private set toggleDataLoading(loaded: boolean) {
-    this.dataLoading.next(loaded);
+  private setupForWidget(): void {
+
+    this.initialResultsSub$ = this.commonService.getJSONData(
+      this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
+    ).subscribe({
+
+      next: (graphTemplate: IM.GraphTemplate) => {
+
+        this.graphTemplatePrime = graphTemplate;
+        // Create a clone of the original graph template file.
+        this.graphTemplate = structuredClone(this.graphTemplatePrime);
+
+        this.toggleDataLoading = false;
+
+        if (this.setUniqueID() !== null) {
+          this.TSIDLocation = this.setUniqueID();
+        } else if (this.setUniqueID() === null) {
+          this.errorTypes.push('bad TSID');
+          this.setChartError = true;
+          return;
+        }
+
+        this.obtainAndCreateAllGraphs();
+      }
+    });
   }
 
   /**
@@ -582,18 +761,18 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     // Replace the ${properties} in the graphTemplate object from the graph
     // template file.
-    MapUtil.replaceProperties(this.graphTemplate, this.featureProperties);
+    this.commonService.replaceProperties(this.graphTemplate, this.featureProperties);
 
     // Set the class variable TSIDLocation to the first dataGraph object from the
     // graphTemplate object. This is used as a unique identifier for the Plotly
     // graph <div> id attribute.
     this.toggleDataLoading = false;
 
-    if (this.isCorrectTSID() !== null) {
-      this.TSIDLocation = this.isCorrectTSID();
-    } else if (this.isCorrectTSID() === null) {
+    if (this.setUniqueID() !== null) {
+      this.TSIDLocation = this.setUniqueID();
+    } else if (this.setUniqueID() === null) {
       this.errorTypes.push('bad TSID');
-      this.chartService.setChartError = true;
+      this.setChartError = true;
       return;
     }
 

@@ -12,7 +12,7 @@ import * as IM              from '@OpenWaterFoundation/common/services';
 })
 export class ImageComponent {
 
-  /** The attribute provided as an attribute to this component when created, e.g.
+  /** The attribute provided to this component when created, e.g.
    *   <widget-image [imageWidget]="path/to/image.png"></widget-image> */
   @Input() imageWidget: IM.ImageWidget;
   /** String array representing the type of error that occurred while building this

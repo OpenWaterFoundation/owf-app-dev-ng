@@ -1,8 +1,8 @@
-import { NgModule }          from '@angular/core';
-import { CommonModule }      from '@angular/common';
+import { NgModule }       from '@angular/core';
+import { CommonModule }   from '@angular/common';
 
-import { ErrorWidgetModule } from '../error/error-widget.module';
-import { ImageComponent }    from './image.component';
+import { ErrorModule }    from '@OpenWaterFoundation/common/services';
+import { ImageComponent } from './image.component';
 
 
 @NgModule({
@@ -15,7 +15,7 @@ import { ImageComponent }    from './image.component';
   imports: [
     CommonModule,
 
-    ErrorWidgetModule
+    ErrorModule
   ]
 })
 export class ImageModule { }

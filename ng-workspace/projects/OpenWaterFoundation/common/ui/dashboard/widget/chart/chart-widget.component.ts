@@ -20,7 +20,7 @@ export class ChartWidgetComponent implements OnInit, OnDestroy {
 
   /** Set to true if any errors occur in the Chart Widget. */
   private chartError: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  /** The attribute provided as an attribute to this component when created, e.g.
+  /** The attribute provided to this component when created, e.g.
    *   <chart-widget [chartWidget]="widget"></chart-widget> */
   @Input() chartWidget: IM.ChartWidget;
   /** String array representing the type of error that occurred while building this

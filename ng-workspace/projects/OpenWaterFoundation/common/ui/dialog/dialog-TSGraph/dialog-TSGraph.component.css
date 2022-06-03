@@ -13,6 +13,11 @@ h4 {
   width: 900px;
 }
 
+/*  */
+.core-chart-container {
+  height: calc(100% - 85px);
+}
+
 .header-div {
   display: inline-block;
   height: 100%;
@@ -37,10 +42,6 @@ h4 {
   position: absolute;
   top: 182px;
   left: 400px;
-}
-
-.showGraph {
-  padding: 0px 10px 0px 0px;
 }
 
 .TS-graph-components-group {

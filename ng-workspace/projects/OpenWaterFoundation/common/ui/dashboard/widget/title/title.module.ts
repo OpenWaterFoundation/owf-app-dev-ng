@@ -3,7 +3,7 @@ import { CommonModule }      from '@angular/common';
 
 import { ShowdownModule }    from 'ngx-showdown';
 
-import { ErrorWidgetModule } from '../error/error-widget.module';
+import { ErrorModule }       from '@OpenWaterFoundation/common/services';
 import { TitleComponent }    from './title.component';
 
 
@@ -28,7 +28,7 @@ import { TitleComponent }    from './title.component';
       tables: true
     }),
 
-    ErrorWidgetModule
+    ErrorModule
   ],
   providers: [
   ]

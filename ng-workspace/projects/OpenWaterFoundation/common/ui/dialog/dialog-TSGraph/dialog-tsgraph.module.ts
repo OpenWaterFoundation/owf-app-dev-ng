@@ -4,9 +4,10 @@ import { CommonModule }             from '@angular/common';
 import { DragDropModule }           from '@angular/cdk/drag-drop';
 import { MatButtonModule }          from '@angular/material/button';
 import { MatDialogModule }          from '@angular/material/dialog';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ShowdownModule }           from 'ngx-showdown';
+
+import { ChartModule }              from '@OpenWaterFoundation/common/ui/core';
 
 import { DialogTSGraphComponent }   from './dialog-TSGraph.component';
 
@@ -17,10 +18,12 @@ import { DialogTSGraphComponent }   from './dialog-TSGraph.component';
   ],
   imports: [
     CommonModule,
+
+    ChartModule,
+
     DragDropModule,
     MatButtonModule,
     MatDialogModule,
-    MatProgressSpinnerModule,
     ShowdownModule
   ],
   exports: [

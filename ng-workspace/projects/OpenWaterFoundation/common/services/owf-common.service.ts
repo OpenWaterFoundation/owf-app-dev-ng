@@ -1,6 +1,5 @@
 import { Injectable }      from '@angular/core';
 import { HttpClient }      from '@angular/common/http';
-import { MapLayerManager } from '@OpenWaterFoundation/common/ui/layer-manager';
 
 import { catchError }      from 'rxjs/operators';
 import { BehaviorSubject,
@@ -293,7 +292,7 @@ export class OwfCommonService {
       } else {
         // At this point the saveFileName is the value of the saveFile property from the popup config file. None of its
         // ${property} notation has been converted, so the obtainPropertiesFromLine function is called to do so.
-        saveFileName = this.obtainPropertiesFromLine(saveFileName, featureProperties).line;
+        saveFileName = this.obtainPropertiesFromLine(saveFileName, featureProperties);
         return saveFileName;
       }
 
@@ -1101,10 +1100,11 @@ export class OwfCommonService {
    * @param key Optional parameter to provide a better console warning by logging
    * the key.
    * @param labelProp Optional parameter
-   * @returns The entire line read in, with all ${property} notation converted correctly
-   * by replacing all ${} properties with the correct string.
+   * @returns A parsedProp object that contains:
+   * (foundProps): An array of all found properties in the line in the order they were found,
+   * and (line): The line with all ${property} notation properly converted.
    */
-  public obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any, labelProp?: boolean): IM.ParsedProp {
+  public obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any, labelProp?: boolean, countFoundProps?: boolean): any {
 
     var allFoundProps: string[] = [];
     var propertyString = '';
@@ -1199,8 +1199,13 @@ export class OwfCommonService {
     }
     // The while loop is finished; the entire line has been iterated over, and the
     // variable formattedLine has been rewritten to replace all the ${property}
-    // notation with the correct feature value. 
-    return { foundProps: allFoundProps, line: formattedLine };
+    // notation with the correct feature value.
+    if (countFoundProps === true) {
+      return { foundProps: allFoundProps, line: formattedLine };
+    } else {
+      return formattedLine;
+    }
+    
   }
 
   /**
@@ -1237,7 +1242,7 @@ export class OwfCommonService {
    * @returns An object with at least the TSIDLocation and datastore, and the path
    * to the datastore file if given.
    */
-   public parseTSID(fullTSID: string): IM.TSID {
+   public parseTSID(fullTSID: any): IM.TSID {
 
     // Depending on whether it's a full TSID used in the graph template file, determine
     // what the file path of the StateMod file is. (TSIDLocation~/path/to/filename.stm OR
@@ -1258,6 +1263,34 @@ export class OwfCommonService {
         path: fullTSID.split('~')[2]
       }
     }
+  }
+
+  /**
+   * This is a recursive function that goes through an object and replaces any value in
+   * it that contains the ${property} notation with the actual property needed.
+   * @param graphTemplate The object that will have its property notation expanded
+   * @param featureProperties The properties in the selected feature on the map layer.
+   */
+  replaceProperties(graphTemplate: Object, featureProperties: Object): Object {
+
+    for (var key in graphTemplate) {
+      var value = graphTemplate[key];
+      if (typeof value === 'object') {
+        this.replaceProperties(value, featureProperties);
+      } else {
+        if (value.includes("${")) {
+          let formattedValue = this.obtainPropertiesFromLine(value, featureProperties, key);
+
+          try {
+            graphTemplate[key] = formattedValue;
+          } catch (e) {
+            graphTemplate[key] = value;
+          }
+        }
+      }
+    }
+    if (graphTemplate['product'] || graphTemplate['id'])
+      return graphTemplate;
   }
 
   /**
@@ -1431,7 +1464,7 @@ export class OwfCommonService {
    * Iterates over each geoLayerViewGroup in the geoMap and pushes each geoLayerView's geoLayerId in the order they are given,
    * so the InfoMapper knows the order in which they should be draw on the Leaflet map.
    */
-  public setMapConfigLayerOrder(): void {
+  public getMapConfigLayerOrder(): string[] {
     var layerArray: string[] = [];
 
     for (let geoMap of this.mapConfig.geoMaps) {
@@ -1444,11 +1477,7 @@ export class OwfCommonService {
     }
     // Reverse the array here, since we'll start on the layer that should be at the bottom, bring it to the front of Leaflet map,
     // move on to the layer that should be on top of the bottom layer, bring it to the front, and so on.
-    layerArray = layerArray.reverse();
-    // Get an instance of the singleton MapLayerManager class and set the mapConfigLayerOrder variable so it can be used to order
-    // layers instead of the map service
-    let mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
-    mapLayerManager.setMapConfigLayerOrder(layerArray);
+    return layerArray.reverse();
   }
 
   /**

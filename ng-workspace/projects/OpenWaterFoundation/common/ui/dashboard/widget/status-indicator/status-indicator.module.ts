@@ -4,7 +4,7 @@ import { CommonModule }             from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule }         from '@angular/material/tooltip';
 
-import { ErrorWidgetModule }        from '../error/error-widget.module';
+import { ErrorModule }              from '@OpenWaterFoundation/common/services';
 import { StatusIndicatorComponent } from './status-indicator.component';
 
 
@@ -21,7 +21,7 @@ import { StatusIndicatorComponent } from './status-indicator.component';
     MatProgressSpinnerModule,
     MatTooltipModule,
 
-    ErrorWidgetModule
+    ErrorModule
   ]
 })
 export class StatusIndicatorModule { }

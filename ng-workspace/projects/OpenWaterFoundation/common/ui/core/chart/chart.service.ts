@@ -11,8 +11,6 @@ import { DayTS,
           MonthTS,
           TS,
           YearTS}          from "@OpenWaterFoundation/common/ts";
-import { BehaviorSubject,
-          Observable }     from "rxjs";
 
 /** The DialogService provides helper function to all Dialog Components in the Common
  * library. Any function not directly related to a Dialog Component's core functionality
@@ -23,31 +21,18 @@ import { BehaviorSubject,
 })
 export class ChartService {
 
-  /** Set to true if any errors occur in the Chart Widget. */
-  private chartError: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor() {}
 
 
   /**
-   * Observable used in the Chart Widget that's used with an async pipe in the template
-   * file to show the widget or error content.
-   */
-  get isChartError(): Observable<boolean> { return this.chartError.asObservable(); }
-
-   /**
-    * Toggles the chartError BehaviorSubject between true and false.
-    */
-  set setChartError(error: boolean) { this.chartError.next(error); }
-
-  /**
    * This basic function returns a datePrecision number to be used when creating
    * attribute table cell value precision.
-   * @param TSID The entire TSID value from the graph config json file.
+   * @param fullTSID The entire TSID value from the graph config json file.
    */
-  public determineDatePrecision(TSID: string): number {
-    if (TSID.toUpperCase().includes('YEAR') || TSID.toUpperCase().includes('MONTH') ||
-        TSID.toUpperCase().includes('WEEK') || TSID.toUpperCase().includes('DAY')) {
+  public determineDatePrecision(fullTSID: any): number {
+    if (fullTSID.toUpperCase().includes('YEAR') || fullTSID.toUpperCase().includes('MONTH') ||
+    fullTSID.toUpperCase().includes('WEEK') || fullTSID.toUpperCase().includes('DAY')) {
           return 100;
     } else return 10;
   }
@@ -55,16 +40,16 @@ export class ChartService {
   /**
    * Formats the `TSID` data object property to be displayed as the graph's legend
    * label. This is only shown if the `TSAlias` property is an empty string.
-   * @param TSID The TSID string from the graph template object JSON file.
+   * @param fullTSID The TSID string from the graph template object JSON file.
    */
-  public formatLegendLabel(TSID: string): string {
+  public formatLegendLabel(fullTSID: any): string {
     var legendLabel: string;
     // Determine what the legend label will be for both this time series graph and
     // the data table, depending on what the full TSID is.
-    if (TSID.split('~').length === 2) {
-      legendLabel = TSID.split("~")[1];
-    } else if (TSID.split('~').length === 3) {
-      legendLabel = TSID.split("~")[2];
+    if (fullTSID.split('~').length === 2) {
+      legendLabel = fullTSID.split("~")[1];
+    } else if (fullTSID.split('~').length === 3) {
+      legendLabel = fullTSID.split("~")[2];
     }
     // Format the file name by removing any preceding file paths and extensions.
     return legendLabel.substring(legendLabel.lastIndexOf('/') + 1, legendLabel.lastIndexOf('.'));
@@ -72,99 +57,45 @@ export class ChartService {
 
   /**
    * Returns an array of dates between the start and end dates, either per day or
-   * month. Skeleton code obtained from https://gist.github.com/miguelmota/7905510
+   * month. Skeleton code obtained from https://gist.github.com/miguelmota/7905510.
    * @param startDate Date to be the first index in the returned array of dates.
    * @param endDate Date to be the last index in the returned array of dates.
-   * @param interval String describing the interval of how far apart each date should be.
+   * @param timeSeries 
    */
-  public getDates(startDate: any, endDate: any, interval: string): string[] {
-
-    const DAYFORMAT = 'yyyy-MM-dd',
-    MONTHFORMAT = 'yyyy-MM',
-    YEARFORMAT = 'yyyy';
+  public getDates(startDate: any, endDate: any, timeSeries: TS): string[] {
 
     var allDates: string[] = [];
-    var currentDate: Date;
-    var stopDate: Date;
+    var interval = '';
+    var tsFormat = '';
 
-    switch (interval) {
-      case 'days':
-        currentDate = new Date(parseISO(startDate));
-        stopDate = new Date(parseISO(endDate));
+    var currentDate = new Date(parseISO(startDate));
+    var stopDate = new Date(parseISO(endDate));
 
-        // Iterate over each date from start to end and push them to the dates array
-        // that will be returned.
-        while (!isEqual(currentDate, stopDate)) {
-          // Push an ISO 8601 formatted version of the date into the x axis array
-          // that will be used for the data table.
-          allDates.push(format(currentDate, DAYFORMAT));
-          currentDate = add(currentDate, { days: 1 });
-        }
-        // Finish adding the last month between the dates.
-        if (isEqual(currentDate, stopDate)) {
-          allDates.push(format(currentDate, DAYFORMAT));
-        }
-
-        return allDates;
-
-      case 'months':
-        // Only have to parse the string once here using ISO formatting.
-        currentDate = new Date(parseISO(startDate));
-        stopDate = new Date(parseISO(endDate));
-        // Iterate over each date from start to end and push them to the dates array
-        // that will be returned.
-        while (!isEqual(currentDate, stopDate)) {
-          // Push an ISO 8601 formatted version of the date into the x axis array
-          // that will be used for the data table.
-          allDates.push(format(currentDate, MONTHFORMAT));
-          currentDate = add(currentDate, { months: 1 });
-        }
-        // Finish adding the last month between the dates.
-        if (isEqual(currentDate, stopDate)) {
-          allDates.push(format(currentDate, MONTHFORMAT));
-        }
-
-        return allDates;
-
-      case 'years':        
-        // Only have to parse the string once here using ISO formatting.
-        currentDate = new Date(parseISO(startDate.toString()));
-        stopDate = new Date(parseISO(endDate.toString()));
-        // Iterate over each date from start to end and push them to the dates
-        // array that will be returned.
-        while (!isEqual(currentDate, stopDate)) {
-          // Push an ISO 8601 formatted version of the date into the x axis array
-          // that will be used for the data table.
-          allDates.push(format(currentDate, YEARFORMAT));
-          currentDate = add(currentDate, { years: 1 });
-        }
-        // Finish adding the last year between the dates.
-        if (isEqual(currentDate, stopDate)) {
-          allDates.push(format(currentDate, YEARFORMAT));
-        }
-
-        return allDates;      
+    if (timeSeries instanceof DayTS) {
+      interval = 'days';
+      tsFormat = 'yyyy-MM-dd';
+    } else if (timeSeries instanceof MonthTS) {
+      interval = 'months';
+      tsFormat = 'yyyy-MM';
+    } else if (timeSeries instanceof YearTS) {
+      interval = 'years';
+      tsFormat = 'yyyy';
     }
-  }
 
-  /**
-   * Determines whether a widget's eventHandler object wants to listen to a SelectEvent.
-   * @param widget The widget object whose eventHandlers are checked.
-   * @returns True if the widget eventHandler object's eventType is SelectEvent,
-   * and false otherwise.
-   */
-  hasSelectEvent(widget: IM.DashboardWidget): boolean {
-
-    if (!widget.eventHandlers) {
-      return false;
+    // Iterate over each date from start to end and push them to the dates array
+    // that will be returned.
+    while (!isEqual(currentDate, stopDate)) {
+      // Push an ISO 8601 formatted version of the date into the x axis array
+      // that will be used for the data table.
+      allDates.push(format(currentDate, tsFormat));
+      currentDate = add(currentDate, { [interval]: 1 });
     }
-    
-    for (let widgetEvent of widget.eventHandlers) {
-      if (widgetEvent.eventType.toLowerCase() === 'selectevent') {
-        return true;
-      }
+    // Finish adding the last month between the dates.
+    if (isEqual(currentDate, stopDate)) {
+      allDates.push(format(currentDate, tsFormat));
     }
-    return false;
+    console.log('allDates:', allDates);
+    return allDates;
   }
 
   /**

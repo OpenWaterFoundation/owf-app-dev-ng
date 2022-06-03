@@ -2,9 +2,9 @@ import { NgModule }                 from '@angular/core';
 import { CommonModule }             from '@angular/common';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule }         from '@angular/material/tooltip';
 
 import { ChartComponent }           from './chart.component';
+import { ErrorModule }              from '@OpenWaterFoundation/common/services';
 
 
 @NgModule({
@@ -17,8 +17,9 @@ import { ChartComponent }           from './chart.component';
   imports: [
     CommonModule,
 
-    MatProgressSpinnerModule,
-    MatTooltipModule
+    ErrorModule,
+
+    MatProgressSpinnerModule
   ]
 })
 export class ChartModule { }

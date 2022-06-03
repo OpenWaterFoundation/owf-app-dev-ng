@@ -4,7 +4,8 @@ import { ActivatedRoute }   from '@angular/router';
 
 import { Subscription }     from 'rxjs';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
+import { EventService,
+          OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
 
 import { DashboardService } from './dashboard.service';
@@ -33,6 +34,7 @@ export class DashboardComponent implements OnDestroy {
    */
   constructor(private commonService: OwfCommonService,
     private dashboardService: DashboardService,
+    private eventService: EventService,
     private route: ActivatedRoute) {}
 
 
@@ -82,7 +84,7 @@ export class DashboardComponent implements OnDestroy {
   
         this.checkDashboardConfig(dashboardConfig);
         this.dashboardConf = dashboardConfig;
-        this.dashboardService.createListenedToWidgets(dashboardConfig);
+        this.eventService.createListenedToWidgets(dashboardConfig);
       });
     });
   }
