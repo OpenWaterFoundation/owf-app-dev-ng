@@ -1,7 +1,7 @@
 import { NgModule }       from '@angular/core';
 import { CommonModule }   from '@angular/common';
 
-import { ErrorModule }    from '../error/error.module';
+import { ErrorModule }    from '@OpenWaterFoundation/common/services';
 import { ImageComponent } from './image.component';
 
 

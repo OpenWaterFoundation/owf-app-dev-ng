@@ -5,9 +5,8 @@ import { MatGridListModule }     from '@angular/material/grid-list';
 
 import { MapModule }             from '@OpenWaterFoundation/common/leaflet';
 
-import { ChartModule }           from './widget/chart/chart.module';
+import { ChartWidgetModule }     from './widget/chart/chart-widget.module';
 import { DiagnosticsModule }     from './widget/diagnostics/diagnostics.module';
-import { ErrorModule }           from './widget/error/error.module';
 import { ImageModule }           from './widget/image/image.module';
 import { SelectorModule }        from './widget/selector/selector.module';
 import { StatusIndicatorModule } from './widget/status-indicator/status-indicator.module';
@@ -15,6 +14,7 @@ import { TextModule }            from './widget/text/text.module';
 import { TitleModule }           from './widget/title/title.module';
 
 import { DashboardComponent }    from './dashboard.component';
+import { ErrorModule }           from '@OpenWaterFoundation/common/services';
 
 
 @NgModule({
@@ -31,9 +31,10 @@ import { DashboardComponent }    from './dashboard.component';
 
     MapModule,
 
-    ChartModule,
-    DiagnosticsModule,
     ErrorModule,
+
+    ChartWidgetModule,
+    DiagnosticsModule,
     ImageModule,
     SelectorModule,
     StatusIndicatorModule,

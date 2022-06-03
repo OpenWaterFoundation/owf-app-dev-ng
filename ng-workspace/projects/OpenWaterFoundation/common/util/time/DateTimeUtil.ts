@@ -1571,7 +1571,7 @@ export class DateTime {
       date = new DateTime ( DateTime.PRECISION_YEAR );
       is_year = true;
       v = StringUtil.fixedReadTwo ( date_string, "i4" );
-      date.__year = Number(v[1]);
+      date.__year = Number(v[0]);
     }
     else if ( format === DateTime.FORMAT_YYYY_MM ) {
       date = new DateTime ( DateTime.PRECISION_MONTH );

@@ -116,10 +116,10 @@ public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boole
       return 1;
     }
     
-    this._data = new Array<number>(nyears);
+    this._data = [];
 
     if ( this._has_data_flags ) {
-      this._dataFlags = new Array<string>(nyears);
+      this._dataFlags = [];
     }
 
     for ( let iYear = 0; iYear < nyears; iYear++ ) {
@@ -130,7 +130,6 @@ public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boole
     }
 
     // Calculate the data size...
-
     var datasize = YearTS.calculateDataSize(this._date1, this._date2, this._data_interval_mult);
     this.setDataSize ( datasize );
 

@@ -9,6 +9,11 @@
   justify-content: center;
 }
 
+/* The div that Plotly uses to display the chart in. */
+.main-chart {
+  height: 100%;
+}
+
 /* Container that displays the red exclamation mark to denote a widget error in
 the dashboard. */
 .no-chart-container {
@@ -20,6 +25,6 @@ the dashboard. */
 }
 
 /* Container around the Plotly chart. */
-.showGraph {
+.showChart {
   height: 100%;
 }

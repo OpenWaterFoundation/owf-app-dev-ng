@@ -14,8 +14,8 @@ import { MatTooltipModule }         from '@angular/material/tooltip';
 
 import { ScrollingModule }          from '@angular/cdk/scrolling';
 
+import { ErrorModule }              from '@OpenWaterFoundation/common/services';
 import { SelectorComponent }        from './selector.component';
-import { ErrorModule }              from '../error/error.module';
 
 
 @NgModule({

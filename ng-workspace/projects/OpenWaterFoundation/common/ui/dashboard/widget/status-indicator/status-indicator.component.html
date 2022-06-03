@@ -4,7 +4,11 @@
   <div class="center-all-info">
     <div class="status-indicator-container">
   
-      <h4 class="status-title">{{statusIndicatorWidget.title}}</h4>
+      <h4 class="status-title"
+      [matTooltip]="statusIndicatorWidget.titleTooltip"
+      matTooltipPosition="above">
+        {{statusIndicatorWidget.title}}
+      </h4>
     
       <div class="icon-and-data-container">
   
@@ -24,7 +28,11 @@
           <i class="fa fa-question fa-5x" aria-hidden="true"></i>
         </div>
     
-        <p class="indicator-data">{{mainData}}</p>
+        <p class="indicator-data"
+        [matTooltip]="statusIndicatorWidget.indicatorValueTooltip"
+        matTooltipPosition="above">
+          {{mainData}}
+        </p>
         
       </div>
       
@@ -38,7 +46,11 @@
           <i class="fa fa-caret-up fa-2x change-icon-neutral" aria-hidden="true"></i>
         </div>
   
-        <p class="change-info">{{dataChange}}</p>
+        <p class="change-info"
+        [matTooltip]="statusIndicatorWidget.referenceValueTooltip"
+        matTooltipPosition="above">
+          {{dataChange}}
+        </p>
   
       </div>
       
@@ -50,6 +62,6 @@
 
 <ng-template #error>
   <div class="no-indicator-container">
-    <widget-error [errorTypes]="errorTypes" [widget]="statusIndicatorWidget"></widget-error>
+    <common-error errorLocation="widget" [errorTypes]="errorTypes" [widget]="statusIndicatorWidget"></common-error>
   </div>
 </ng-template>

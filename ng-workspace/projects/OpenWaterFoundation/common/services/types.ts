@@ -1,10 +1,17 @@
-// The interfaces and enums below are typed for use throughout the common library, as well
-// as the ability to be utilized by outside consuming applications. It helps define
-// different objects mainly related to the InfoMapper for now.
+// The interfaces and enums below are typed for use throughout the common library
+// as well as the ability to be utilized by outside consuming applications.
 
 import { BehaviorSubject } from "rxjs";
 
 // ENUM
+
+/** The different ways a Chart can be displayed in the InfoMapper. */
+export enum ChartDisplayType {
+  dlg = 'dialog',
+  emd = 'embed',
+  ful = 'full',
+  wid = 'widget'
+}
 
 /** All supported Datastore types. */
 export enum DatastoreType {
@@ -500,8 +507,8 @@ export interface GraphDataProp {
   LineWidth?: string,
   SymbolSize?: string,
   SymbolStyle?: string,
-  TSAlias?: string,
-  TSID?: string,
+  TSAlias?: any,
+  TSID?: any,
   XAxis?: string,
   YAxis?: string
 }
@@ -513,7 +520,6 @@ export interface PopulateGraph {
   datasetBackgroundColor?: string;
   datasetData?: number[];
   dataLabels?: string[];
-  dateType?: string;
   endDate?: string;
   fillType?: string;
   graphFileType: string;
@@ -522,7 +528,7 @@ export interface PopulateGraph {
   legendPosition: any;
   lineWidth?: string;
   plotlyDatasetData?: number[];
-  plotly_xAxisLabels?: any[];
+  plotlyXAxisLabels?: any[];
   startDate?: string;
   stackGroup?: string;
   yAxesLabelString: string;
@@ -612,6 +618,9 @@ export interface StatusIndicatorWidget extends DashboardWidget {
 
   skipDataLines?: number;
   classificationFile?: string;
+  titleTooltip?: string;
+  indicatorValueTooltip?: string;
+  referenceValueTooltip?: string;
 }
 
 export interface TextWidget extends DashboardWidget {
@@ -649,7 +658,9 @@ export interface ListenedToWidget {
 
 /////////////////////////////// Time Series \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-
+/**
+ * 
+ */
 export interface Datastore {
   name: string,
   type: string,
@@ -657,7 +668,7 @@ export interface Datastore {
   aliases?: string[]
 }
 
-/** An object representing a parsed full TSID string. */
+/** A parsed full TSID string. */
 export interface TSID {
   location?: string;
   datastore?: string;
@@ -667,8 +678,24 @@ export interface TSID {
 /////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /**
+ * Passed from the Chart component with the necessary data for creating and displaying
+ * an attribute table.
+ */
+export interface AttributeTableParams {
+  attributeTable: any[];
+  dateTimeColumnName: string;
+  valueColumns: string[];
+}
+
+/**
  * 
  */
+export interface ChartDialog {
+  graphTemplate: GraphTemplate;
+}
+
+/** Can be returned from the obtainPropertiesFromLine() method. Used for searching
+ * through all found ${} properties in a string. */
 export interface ParsedProp {
   foundProps: string[];
   line: string;

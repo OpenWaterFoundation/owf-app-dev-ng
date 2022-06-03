@@ -51,7 +51,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
   public geoLayer: any;
   /** The object read from the JSON file from TSTool. Gives properties and metadata
    * for the graph. */
-  public graphTemplateObject: any;
+  public graphTemplate: IM.GraphTemplate;
   /** A string representing the button ID of the button clicked to open this dialog. */
   public windowID: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
@@ -63,7 +63,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
               private commonService: OwfCommonService) {
 
     this.geoLayer = dataObject.data.geoLayer;
-    this.graphTemplateObject = dataObject.data.graphTemplateObject;
+    this.graphTemplate = dataObject.data.graphTemplateObject;
     this.graphFilePath = dataObject.data.graphFilePath;
     this.windowID = dataObject.data.windowID;
   }
@@ -220,15 +220,17 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
       case IM.Path.dVP: TSObject = new DateValueTS(this.commonService); break;
     }
 
-    for (let data of this.graphTemplateObject['product']['subProducts'][0]['data']) {
+    for (let data of this.graphTemplate.product.subProducts[0].data) {
+
+      var fullTSID = data.properties.TSID;
       // Obtain the TSID location for the readTimeSeries method.
-      TSIDLocation = data.properties.TSID.split('~')[0];
+      TSIDLocation = fullTSID.split('~')[0];
       // If a full TSID used in the graph template file, determine the file path of the StateMod
       // file. (TSIDLocation~/path/to/filename.stm OR TSIDLocation~StateMod~/path/to/filename.stm)
-      if (data.properties.TSID.split('~').length === 2) {
-        filePath = data.properties.TSID.split('~')[1];
-      } else if (data.properties.TSID.split('~').length === 3) {
-        filePath = data.properties.TSID.split('~')[2];
+      if (fullTSID.split('~').length === 2) {
+        filePath = fullTSID.split('~')[1];
+      } else if (fullTSID.split('~').length === 3) {
+        filePath = fullTSID.split('~')[2];
       }
       // Don't subscribe yet!  
       dataArray.push(TSObject.readTimeSeries(TSIDLocation, this.commonService.buildPath(dataPath, [filePath]),

@@ -23,5 +23,5 @@
 
 <!-- Image does not exist. -->
 <div *ngIf="widgetError === true" class="no-image-container">
-  <widget-error [errorTypes]="errorTypes" [widget]="imageWidget"></widget-error>
+  <common-error errorLocation="widget" [errorTypes]="errorTypes" [widget]="imageWidget"></common-error>
 </div>

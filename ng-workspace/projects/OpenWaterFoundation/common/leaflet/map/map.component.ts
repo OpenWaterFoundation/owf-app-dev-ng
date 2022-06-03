@@ -5,7 +5,7 @@ import { AfterViewInit,
           ViewContainerRef,
           ViewEncapsulation }      from '@angular/core';
 import { ActivatedRoute,
-          Router }          from '@angular/router';
+          Router }                 from '@angular/router';
 import { MatDialog,
           MatDialogRef,
           MatDialogConfig }        from '@angular/material/dialog';
@@ -288,7 +288,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     for (let line of results) {
       // Replace all user-defined ${property} notation in the label with the correct 
       if (line.label) {
-        line.label = MapUtil.obtainPropertiesFromLine(line.label, line, geoLayerId, true);
+        line.label = this.commonService.obtainPropertiesFromLine(line.label, line, geoLayerId, true);
       }
       lineArr.push(line);
     }
@@ -1044,7 +1044,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 // Since the popup template file is not replacing
                                 // any ${properties}, replace the ${property} for
                                 // the resourcePath only.
-                                var resourcePath = MapUtil.obtainPropertiesFromLine(resourcePathArray[i], featureProperties);
+                                var resourcePath = _this.commonService.obtainPropertiesFromLine(resourcePathArray[i], featureProperties);
                                 let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePath]);
                                 // Add this window ID to the windowManager so a
                                 // user can't open it more than once.
@@ -1063,26 +1063,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 _this.windowManager.addWindow(windowID, WindowType.TSGRAPH);
 
                                 _this.commonService.getJSONData(fullResourcePath, IM.Path.rP, _this.mapID)
-                                  .subscribe((graphTemplateObject: Object) => {
+                                  .subscribe((graphTemplateObject: IM.GraphTemplate) => {
                                     // Replaces all ${} property notations with
                                     // the correct feature in the TSTool graph
                                     // template object
-                                    MapUtil.replaceProperties(graphTemplateObject, featureProperties);
+                                    _this.commonService.replaceProperties(graphTemplateObject, featureProperties);
 
-                                    if (graphTemplateObject['product']['subProducts'][0]['data'][0]['properties'].TSID) {
-                                      let TSID: string = graphTemplateObject['product']['subProducts'][0]['data'][0]['properties'].TSID;
+                                    if (graphTemplateObject.product.subProducts[0].data[0].properties.TSID) {
+                                      let fullTSID: any = graphTemplateObject.product.subProducts[0].data[0].properties.TSID;
                                       // Split on the ~ and set the actual file
                                       // path we want to use so our dialog-content
                                       // component can determine what kind of file
                                       // was given.
-                                      TSIDLocation = TSID.split('~')[0];
+                                      TSIDLocation = fullTSID.split('~')[0];
                                       // If the TSID has one tilde (~), set the
                                       // path using the correct index compared to
                                       // if the TSID contains two tildes.
-                                      if (TSID.split('~').length === 2) {
-                                        graphFilePath = TSID.split("~")[1];
-                                      } else if (TSID.split('~').length === 3) {
-                                        graphFilePath = TSID.split("~")[2];
+                                      if (fullTSID.split('~').length === 2) {
+                                        graphFilePath = fullTSID.split("~")[1];
+                                      } else if (fullTSID.split('~').length === 3) {
+                                        graphFilePath = fullTSID.split("~")[2];
                                       }
                                     } else console.error('The TSID has not been set in the graph template file');
 
@@ -1094,24 +1094,24 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                               else if (actionArray[i].toUpperCase() === 'DISPLAYHEATMAP') {
                                 let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
 
-                                _this.commonService.getJSONData(fullResourcePath).subscribe((graphTemplateObject: any) => {
+                                _this.commonService.getJSONData(fullResourcePath).subscribe((graphTemplateObject: IM.GraphTemplate) => {
                                   // Replaces all ${} property notations with the
                                   // correct feature in the TSTool graph template object.
-                                  MapUtil.replaceProperties(graphTemplateObject, featureProperties);
+                                  _this.commonService.replaceProperties(graphTemplateObject, featureProperties);
 
                                   if (graphTemplateObject['product']['subProducts'][0]['data'][0]['properties'].TSID) {
-                                    let TSID: string = graphTemplateObject['product']['subProducts'][0]['data'][0]['properties'].TSID;
+                                    let fullTSID: any = graphTemplateObject['product']['subProducts'][0]['data'][0]['properties'].TSID;
                                     // Split on the ~ and set the actual file path
                                     // we want to use so our dialog-content component
                                     // can determine what kind of file was given.
-                                    TSIDLocation = TSID.split('~')[0];
+                                    TSIDLocation = fullTSID.split('~')[0];
                                     // If the TSID has one tilde (~), set the path
                                     // using the correct index compared to if
                                     // the TSID contains two tildes.
-                                    if (TSID.split('~').length === 2) {
-                                      graphFilePath = TSID.split("~")[1];
-                                    } else if (TSID.split('~').length === 3) {
-                                      graphFilePath = TSID.split("~")[2];
+                                    if (fullTSID.split('~').length === 2) {
+                                      graphFilePath = fullTSID.split("~")[1];
+                                    } else if (fullTSID.split('~').length === 3) {
+                                      graphFilePath = fullTSID.split("~")[2];
                                     }
                                   } else console.error('The TSID has not been set in the graph template file');
                                   _this.openHeatmapDialog(geoLayer, graphTemplateObject, graphFilePath);
@@ -1541,8 +1541,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.commonService.setMapConfig(mapConfig);
       this.commonService.setMapConfigTest(mapConfig);
       // Once the mapConfig object is retrieved and set, set the order in which
-      // they should be displayed.
-      this.commonService.setMapConfigLayerOrder();
+      // each layer should be displayed. Get an instance of the singleton MapLayerManager
+      // class and set the mapConfigLayerOrder variable so it can be used to order
+      // layers instead of the map service
+      let mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
+      mapLayerManager.setMapConfigLayerOrder(this.commonService.getMapConfigLayerOrder());
       // Add components to the sidebar.
       this.addLayerToSidebar(mapConfig);
       // Create the map.
@@ -1733,7 +1736,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * 
    * @param geoLayer The geoLayer object from the map configuration file.
    */
-  private openHeatmapDialog(geoLayer: any, graphTemplateFile: string, graphFilePath: string): void {
+  private openHeatmapDialog(geoLayer: any, graphTemplateFile: IM.GraphTemplate, graphFilePath: string): void {
 
     var windowID = geoLayer.geoLayerId + '-dialog-heatmap';
     if (this.windowManager.windowExists(windowID)) {

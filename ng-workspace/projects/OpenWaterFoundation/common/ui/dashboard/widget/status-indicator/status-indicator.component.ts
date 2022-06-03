@@ -1,7 +1,8 @@
 import { Component,
           Input }           from '@angular/core';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
+import { EventService,
+          OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
 import { DashboardService } from '../../dashboard.service';
 import { forkJoin,
@@ -64,7 +65,7 @@ export class StatusIndicatorComponent {
   mainDataSub$: Subscription;
   /** Displays a green check icon in the widget if set to true. */
   passingIndicator: boolean;
-  /** The attribute provided as an attribute to this component when created, e.g.
+  /** The attribute provided to this component when created, e.g.
    *   <widget-status-indicator [statusIndicatorWidget]="widget"></widget-status-indicator> */
   @Input('statusIndicatorWidget') statusIndicatorWidget: IM.StatusIndicatorWidget;
   /**
@@ -81,6 +82,7 @@ export class StatusIndicatorComponent {
    * @param commonService The injected Common library service.
    */
   constructor(private commonService: OwfCommonService,
+    private eventService: EventService,
     private dashboardService: DashboardService) {}
 
 
@@ -172,7 +174,7 @@ export class StatusIndicatorComponent {
    */
   private listenForEvent(): void {
     
-    this.dashboardService.getWidgetEvent(this.statusIndicatorWidget).subscribe((selectEvent: IM.SelectEvent) => {
+    this.eventService.getWidgetEvent(this.statusIndicatorWidget).subscribe((selectEvent: IM.SelectEvent) => {
 
       // Check if the initial selectEvent was passed.
       if (selectEvent === null) {

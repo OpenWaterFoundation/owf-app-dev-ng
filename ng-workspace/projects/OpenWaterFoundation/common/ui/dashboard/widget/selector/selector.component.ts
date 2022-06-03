@@ -7,9 +7,10 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { BehaviorSubject,
           Observable }              from 'rxjs';
 
-import { OwfCommonService }         from '@OpenWaterFoundation/common/services';
+import { EventService,
+          OwfCommonService }        from '@OpenWaterFoundation/common/services';
 import * as IM                      from '@OpenWaterFoundation/common/services';
-import { DashboardService }            from '../../dashboard.service';
+import { DashboardService }         from '../../dashboard.service';
 
 import * as Papa                    from 'papaparse';
 
@@ -40,7 +41,7 @@ export class SelectorComponent {
    * 
    */
   dataLoading$ = this.dataLoading.asObservable();
-  /** The attribute provided as an attribute to this component when created, e.g.
+  /** The attribute provided to this component when created, e.g.
    *   <widget-selector [selectorWidget]="widget"></widget-selector> */
   @Input() selectorWidget: IM.SelectorWidget;
   /** The array of feature objects that have been filtered by a user search. To be
@@ -59,7 +60,8 @@ export class SelectorComponent {
    * @param commonService The injected Common library service.
    */
   constructor(private commonService: OwfCommonService,
-    private dashboardService: DashboardService) {}
+    private dashboardService: DashboardService,
+    private eventService: EventService) {}
 
 
   /**
@@ -122,7 +124,7 @@ export class SelectorComponent {
   getFeaturePropValue(feature: any): string {
     var props: IM.ParsedProp;
 
-    props = this.commonService.obtainPropertiesFromLine(this.selectorWidget.displayName, feature);
+    props = this.commonService.obtainPropertiesFromLine(this.selectorWidget.displayName, feature, null, null, true);
     this.allFoundProps = props.foundProps;
     return props.line;
   }
@@ -185,7 +187,7 @@ export class SelectorComponent {
           selectedItem: this.allFeatures[0],
           widgetName: this.selectorWidget.name
         }
-        this.dashboardService.sendWidgetEvent(initialSelectEvent);
+        this.eventService.sendWidgetEvent(initialSelectEvent);
         
         this.toggleDataLoading = false;
       },
@@ -214,7 +216,7 @@ export class SelectorComponent {
         selectedItem: this.allFeatures[0],
         widgetName: this.selectorWidget.name
       }
-      this.dashboardService.sendWidgetEvent(initialSelectEvent);
+      this.eventService.sendWidgetEvent(initialSelectEvent);
 
       this.toggleDataLoading = false;
     });
@@ -288,7 +290,7 @@ export class SelectorComponent {
       widgetName: this.selectorWidget.name
     };
 
-    this.dashboardService.sendWidgetEvent(widgetEvent);
+    this.eventService.sendWidgetEvent(widgetEvent);
   }
 
   /**

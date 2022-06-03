@@ -36,7 +36,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   public geoName: string;
   /** Used as a path resolver and contains the path to the map configuration that
    * is using this TSGraphComponent. To be set in the app service for relative paths. */
-   public mapConfigPath: string;
+  public mapConfigPath: string;
   /** The Showdown config option object. Overrides an app `app.module.ts` config 
    * option object. */
   public showdownOptions = {
