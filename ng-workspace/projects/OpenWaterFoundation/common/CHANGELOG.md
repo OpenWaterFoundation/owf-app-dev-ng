@@ -10,12 +10,21 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
-# 3.5.1 or 3.6.0 #
+# 3.6.0 #
+
+### Refactoring ###
+
+* Moved the Chart code out of the dialog and widget components into its own Chart
+component to be used by other components.
+* Removed the error widget component, moved it to the `services/` entry point as
+`error` component, and updated all widgets to utilize and show it.
+* Greatly streamlined and cleaned up the code used by the Chart component for readability.
 
 ### Features / Enhancements ###
 
- * Added `titleTooltip`, `indicatorValueTooltip`, and `referenceValueTooltip` to
+* Added `titleTooltip`, `indicatorValueTooltip`, and `referenceValueTooltip` to
 the Status Indicator dashboard widget. Each will show the tooltip above the element.
+* Added more unit testing (Common package) and fixed some Cypress e2e testing (InfoMapper).
 
 # 3.5.0 #
 

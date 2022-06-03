@@ -84,7 +84,7 @@ describe('DialogService', () => {
 
         // 1988 to 2021 in years.
         var yearTS: YearTS = new YearTS();
-        expect(chartService.getDates(1988, 2021, yearTS)).toEqual(
+        expect(chartService.getDates('1988', '2021', yearTS)).toEqual(
           [
             '1988', '1989', '1990', '1991', '1992', '1993', '1994', '1995', '1996',
             '1997', '1998', '1999', '2000', '2001', '2002', '2003', '2004', '2005',

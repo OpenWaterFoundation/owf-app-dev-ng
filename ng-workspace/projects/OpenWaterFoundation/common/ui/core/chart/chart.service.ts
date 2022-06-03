@@ -94,7 +94,7 @@ export class ChartService {
     if (isEqual(currentDate, stopDate)) {
       allDates.push(format(currentDate, tsFormat));
     }
-    console.log('allDates:', allDates);
+
     return allDates;
   }
 
