@@ -7,7 +7,7 @@ import * as IM                            from '@OpenWaterFoundation/common/serv
 import { DateValueDatastore }             from './DateValueDatastore';
 import { DelimitedDatastore }             from './DelimitedDatastore';
 import { StateModDatastore }              from './StateModDatastore';
-import { ColoradoHydroBaseRestDatastore } from './ColoradoHydroBaseRest';
+import { ColoradoHydroBaseRestDatastore } from './ColoradoHydroBaseRestDatastore';
 
 
 /**
@@ -94,14 +94,14 @@ export class DatastoreManager {
   }
 
   /**
-   * Looks through the list of built in Datastore names & aliases, then user Datastore
+   * Looks through the list of built-in Datastore names & aliases, then user Datastore
    * names & aliases in that order, and checks if the provided string matches them.
    * @param datastoreStr The datastore string from the full TSID.
    * @returns A string of the DatastoreType.
    */
   public getDatastore(datastoreStr: string): IM.Datastore {
 
-    // First try checking each datastore's name property.
+    // First try checking each built-in datastore's name property.
     for (let datastore of this.builtInDatastores) {
       if (datastore.name.toUpperCase() === datastoreStr.toUpperCase()) {
         return datastore;
@@ -116,7 +116,7 @@ export class DatastoreManager {
       }
     }
 
-    // Iterate over user added datastores.
+    // If not found yet, iterate over user added datastore names and aliases.
     for (let userDatastore of this.userDatastores) {
       if (userDatastore.name.toUpperCase() === datastoreStr.toUpperCase()) {
         return userDatastore;
@@ -129,7 +129,7 @@ export class DatastoreManager {
         }
       }
     }
-
+    // Return unknown if not found.
     return {
       name: 'unknown',
       type: 'unknown',

@@ -63,7 +63,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
               private commonService: OwfCommonService) {
 
     this.geoLayer = dataObject.data.geoLayer;
-    this.graphTemplate = dataObject.data.graphTemplateObject;
+    this.graphTemplate = dataObject.data.graphTemplate;
     this.graphFilePath = dataObject.data.graphFilePath;
     this.windowID = dataObject.data.windowID;
   }
@@ -132,8 +132,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
     } else if (resultsArray[0] instanceof DayTS) {
       
     }
-    // console.log(yAxisLabels);
-    // console.log(dataPoints);
+    
     var data = [heatmapDataObj];
     // This code pen uses observers and the Plotly resize function to determine
     // how to resize the graph on parent resize: https://codepen.io/antoinerg/pen/KjXbEo
@@ -188,7 +187,9 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    * Called once, before the instance is destroyed.
    */
   ngOnDestroy(): void {
-    this.forkJoinSub$.unsubscribe();
+    if (this.forkJoinSub$) {
+      this.forkJoinSub$.unsubscribe();
+    } 
   }
 
   /**

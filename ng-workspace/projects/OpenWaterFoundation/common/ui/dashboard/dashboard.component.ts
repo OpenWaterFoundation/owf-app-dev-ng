@@ -93,7 +93,9 @@ export class DashboardComponent implements OnDestroy {
    * Called once, before the instance is destroyed.
    */
   ngOnDestroy(): void {
-    this.dashboardConfigPathSub$.unsubscribe();
+    if (this.dashboardConfigPathSub$) {
+      this.dashboardConfigPathSub$.unsubscribe();
+    }
   }
 
   /**
