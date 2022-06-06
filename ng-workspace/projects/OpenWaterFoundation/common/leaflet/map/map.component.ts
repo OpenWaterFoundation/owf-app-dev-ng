@@ -83,8 +83,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * this component's destruction. */
   private forkJoinSub$ = <any>Subscription;
   /** An object of Style-like objects containing:
-   * key  : geoLayerId
-   * value: object with style properties
+   *     key  : geoLayerId
+   *     value: object with style properties
    * For displaying a graduated symbol in the Leaflet legend. */
   public graduatedLayerColors = {};
   /** Global value to access container ref in order to add and remove sidebar info
@@ -106,9 +106,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public legendSymbolsViewContainerRef: ViewContainerRef;
   /** The reference for the Leaflet map. */
   public mainMap: any;
-  /**
-   * 
-   */
+  /** Template input property used by consuming applications or websites for passing
+   * the path to the app configuration file. */
   @Input('map-config') mapConfigStandalonePath: string;
   /** The map configuration subscription, unsubscribed to on component destruction. */
   private mapConfigSub$ = <any>Subscription;
@@ -466,7 +465,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           // Obtain the event handler information from the geoLayerView for use
           // in creating this Leaflet layer.
           let eventHandlers: IM.EventHandler[] = this.commonService.getGeoLayerViewEventHandler(geoLayer.geoLayerId);
-
           var asyncData: Observable<any>[] = [];
 
           // // Displays a web feature service from Esri. 
@@ -1063,14 +1061,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 _this.windowManager.addWindow(windowID, WindowType.TSGRAPH);
 
                                 _this.commonService.getJSONData(fullResourcePath, IM.Path.rP, _this.mapID)
-                                  .subscribe((graphTemplateObject: IM.GraphTemplate) => {
+                                  .subscribe((graphTemplate: IM.GraphTemplate) => {
                                     // Replaces all ${} property notations with
                                     // the correct feature in the TSTool graph
                                     // template object
-                                    _this.commonService.replaceProperties(graphTemplateObject, featureProperties);
+                                    _this.commonService.replaceProperties(graphTemplate, featureProperties);
 
-                                    if (graphTemplateObject.product.subProducts[0].data[0].properties.TSID) {
-                                      let fullTSID: any = graphTemplateObject.product.subProducts[0].data[0].properties.TSID;
+                                    if (graphTemplate.product.subProducts[0].data[0].properties.TSID) {
+                                      let fullTSID: any = graphTemplate.product.subProducts[0].data[0].properties.TSID;
                                       // Split on the ~ and set the actual file
                                       // path we want to use so our dialog-content
                                       // component can determine what kind of file
@@ -1086,7 +1084,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                       }
                                     } else console.error('The TSID has not been set in the graph template file');
 
-                                    _this.openTSGraphDialog(graphTemplateObject, graphFilePath, TSIDLocation, chartPackageArray[i],
+                                    _this.openTSGraphDialog(graphTemplate, graphFilePath, TSIDLocation, chartPackageArray[i],
                                       featureProperties, downloadFileNameArray[i] ? downloadFileNameArray[i] : null, windowID);
                                   });
                               }
@@ -1094,13 +1092,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                               else if (actionArray[i].toUpperCase() === 'DISPLAYHEATMAP') {
                                 let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
 
-                                _this.commonService.getJSONData(fullResourcePath).subscribe((graphTemplateObject: IM.GraphTemplate) => {
+                                _this.commonService.getJSONData(fullResourcePath).subscribe((graphTemplate: IM.GraphTemplate) => {
                                   // Replaces all ${} property notations with the
                                   // correct feature in the TSTool graph template object.
-                                  _this.commonService.replaceProperties(graphTemplateObject, featureProperties);
+                                  _this.commonService.replaceProperties(graphTemplate, featureProperties);
 
-                                  if (graphTemplateObject['product']['subProducts'][0]['data'][0]['properties'].TSID) {
-                                    let fullTSID: any = graphTemplateObject['product']['subProducts'][0]['data'][0]['properties'].TSID;
+                                  if (graphTemplate.product.subProducts[0].data[0].properties.TSID) {
+                                    let fullTSID: any = graphTemplate.product.subProducts[0].data[0].properties.TSID;
                                     // Split on the ~ and set the actual file path
                                     // we want to use so our dialog-content component
                                     // can determine what kind of file was given.
@@ -1114,7 +1112,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                       graphFilePath = fullTSID.split("~")[2];
                                     }
                                   } else console.error('The TSID has not been set in the graph template file');
-                                  _this.openHeatmapDialog(geoLayer, graphTemplateObject, graphFilePath);
+                                  _this.openHeatmapDialog(geoLayer, graphTemplate, graphFilePath);
                                 });
                                 
                               } else if (actionArray[i].toUpperCase() === 'DISPLAYD3VIZ') {
@@ -1598,10 +1596,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   public ngOnDestroy(): void {
     // Unsubscribe from all subscriptions that occurred in the Map Component.
-    this.actRouteSub$.unsubscribe();
-    this.forkJoinSub$.unsubscribe();
-    this.refreshSub$.unsubscribe();
-    this.mapConfigSub$.unsubscribe();
+    if (this.actRouteSub$) {
+      this.actRouteSub$.unsubscribe();
+    }
+    if (this.forkJoinSub$) {
+      this.forkJoinSub$.unsubscribe();
+    }
+    if (this.refreshSub$) {
+      this.refreshSub$.unsubscribe();
+    }
+    if (this.mapConfigSub$) {
+      this.mapConfigSub$.unsubscribe();
+    }
     // If a popup is open on the map and a Content Page button is clicked on, then
     // this Map Component will be destroyed. Instead of resetting the map variables,
     // close the popup before the map is destroyed.
@@ -1736,7 +1742,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * 
    * @param geoLayer The geoLayer object from the map configuration file.
    */
-  private openHeatmapDialog(geoLayer: any, graphTemplateFile: IM.GraphTemplate, graphFilePath: string): void {
+  private openHeatmapDialog(geoLayer: any, graphTemplate: IM.GraphTemplate, graphFilePath: string): void {
 
     var windowID = geoLayer.geoLayerId + '-dialog-heatmap';
     if (this.windowManager.windowExists(windowID)) {
@@ -1747,7 +1753,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     dialogConfig.data = {
       geoLayer: geoLayer,
       graphFilePath: graphFilePath,
-      graphTemplateObject: graphTemplateFile,
+      graphTemplate: graphTemplate,
       windowID: windowID
     }
     const dialogRef: MatDialogRef<DialogHeatmapComponent, any> = this.dialog.open(DialogHeatmapComponent, {
@@ -1773,7 +1779,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /**
   * Gets data asynchronously for creating and opening a Material Dialog that displays
   * an Image Gallery. 
-  * @param dialog The reference to the MatDialog object.
   * @param geoLayer The geoLayer object from the map configuration file.
   * @param feature The feature object containing this feature's properties and values.
   * @param featureIndex A number representing the index of the image clicked on.
@@ -1831,11 +1836,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   /**
   * Creates the Dialog object to show the graph in and passes the info needed for it.
-  * @param dialog The dialog object needed to create the Dialog popup
-  * @param graphTemplateObject The template config object of the current graph being shown
+  * @param graphTemplate The template config object of the current graph being shown
   * @param graphFilePath The file path to the current graph that needs to be read
   */
-  private openTSGraphDialog(graphTemplateObject: any, graphFilePath: string, TSIDLocation: string,
+  private openTSGraphDialog(graphTemplate: IM.GraphTemplate, graphFilePath: string, TSIDLocation: string,
     chartPackage: string, featureProperties: any, downloadFileName?: string, windowID?: string): void {
 
     // Create a MatDialogConfig object to pass to the DialogTSGraphComponent for
@@ -1845,7 +1849,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       windowID: windowID,
       chartPackage: chartPackage,
       featureProperties: featureProperties,
-      graphTemplate: graphTemplateObject,
+      graphTemplate: graphTemplate,
       graphFilePath: graphFilePath,
       mapConfigPath: this.commonService.getMapConfigPath(),
       // This cool piece of code uses quite a bit of syntactic sugar. It dynamically
@@ -1872,7 +1876,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /**
   * Creates a Dialog object to show a plain text file and passes the info needed
   * for it.
-  * @param dialog The dialog object needed to create the Dialog popup.
   * @param text The text retrieved from the text file to display in the Dialog Content
   * .popup
   * @param resourcePath The path to the text file so the file name can be extracted

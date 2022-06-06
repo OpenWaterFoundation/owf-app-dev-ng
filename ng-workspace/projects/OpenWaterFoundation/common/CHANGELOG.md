@@ -10,6 +10,23 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.6.1 #
+
+### Bug Fixes ###
+
+* Fixed a bug that was preventing chart widget from updating with new data.
+
+### Refactoring ###
+
+* Changed the dashboard's widget default background color from `gray` to `lightgrey`
+for better contrast between widget text and background.
+
+### Features / Enhancements ###
+
+* Added active menu styling (InfoMapper).
+* Updated Cypress from version `9.5.1` to `9.7.0`. Version 10 is out, but is still
+in its infancy, and the developers are still ironing out some issues.
+
 # 3.6.0 #
 
 ### Refactoring ###

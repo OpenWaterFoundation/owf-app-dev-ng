@@ -103,9 +103,11 @@ export class DashboardService {
   get supportedWidgetTypes(): string[] { return this.SUPPORTEDWIDGETTYPES; }
 
   /**
-   * @returns An object representing what the current cell's valueMin, valueMax, and valueMin & valueMax operators. Used for
-   * deciding what operators to look between the values.
-   * @param line The valueMax property of one line from the CSV classification file for Graduated layers.
+   * @returns An object representing what the current cell's valueMin, valueMax,
+   * and valueMin & valueMax operators are. Used for deciding what operators to
+   * look between the values.
+   * @param line The valueMax property of one line from the CSV classification
+   * file for Graduated layers.
    */
   determineValueOperator(line: any): any {
 

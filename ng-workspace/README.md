@@ -61,9 +61,10 @@ need to be updated only when updating Angular using `npx`.
 | **@types/papaparse** | Type definitions for `papaparse`. |  | `5.2.5` |
 | **@types/select2** | Type definitions for `select2`. |  | `4.0.54` |
 | **@types/showdown** | Type definitions for `showdown`. |  | `1.9.3` |
+| **@ungap/structured-clone** | An environment agnostic serializer and deserializer with recursion ability and types beyond JSON from the HTML standard. Used for creating actual copies of objects. |  | `0.3.4` |
 | **bootstrap**<br>**POSSIBLE DELETION** | Front-end framework. Might be used for a font-family somewhere. |  | `4.6.0` |
 | **clusterize.js**<br>**POSSIBLE DELETION** | Tiny vanilla JS plugin to display large data sets easily. Possibly used by the Gapminder Component. |  | `0.18.1` |
-| **cypress** | Front-end testing tool. Used for performing end-to-end tests |  | `9.4.1` |
+| **cypress** | Front-end testing tool. Used for performing end-to-end tests |  | `9.7.0` |
 | **d3** | JavaScript library for visualizing data using web standards. Used by the Gapminder Component to display the Trendalyzer (previously known as Gapminder) visualization software. |  | `7.0.3` |
 | **date-fns** | Manipulates the JavaScript dates object in a browser & Node.js. Used in the MapUtil & DateTimeUtil classes and Dialog Service. |  | `2.28.0` |
 | **file-saver** | Saves a CSV file on a local computer. Used by the Data Table, Data Table Light, Text, and TSTable Dialogs to display a `Download` button. |  | `2.0.5` |
@@ -87,7 +88,8 @@ need to be updated only when updating Angular using `npx`.
 | **material-design-icons** | Material design icons are the official icon set from Google that are designed under the material design guidelines. Used by the Data Table & Map Components. (`<mat-icon>`) |  | `3.0.1` |
 | **ng-packagr** | Library to compile and package Angular libraries in Angular Package Format. (APF) |  | `13.1.3` |
 | **ng-select2** | An Angular 13 wrapped component of jquery `select2` that supports two-way data-binding. Used by the Gapminder Component. |  | `1.4.1` |
-| **ng-table-virtual-scroll** | An Angular Directive, which allows the use of virtual scrolling in mat-table. Used by the Data Table, Data Table Light, and TSTable Dialog Components. |  | `1.3.5` |
+| **ng-table-virtual-scroll** | An Angular Directive, which allows the use of virtual scrolling in mat-table. Used by the Data Table, Data Table Light, and TSTable Dialog Components. |  | `1.4.0` |
+| **ngx-cookie** | Cookie service converted from Angular js to Angular 2+. |  | `5.0.2` |
 | **ngx-gallery-9**<br>**DELETION RECOMMENDED** | Angular image gallery plugin Based on NgxGallery, compatible with Angular 9+. Used by the Gallery Dialog. Might be abandoned. |  | `1.0.6` |
 | **ngx-showdown** | An Angular integration for Showdown (`showdown`). Might be abandoned. |  | `6.0.0` |
 | **papaparse** | In-browser CSV (or delimited text) parser for JavaScript. Used by the Map, Gallery Dialog, Gapminder Dialog, & TSGraph Dialog Components, and the Map Util & Data Class classes. |  | `5.3.0` |

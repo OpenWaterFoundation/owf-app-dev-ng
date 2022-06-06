@@ -15,10 +15,10 @@ export class DelimitedDatastore {
 
 
   /**
-   * 
-   * @param rootUrl 
-   * @param path 
-   * @returns 
+   * @param rootUrl The rootURL from the datastore object.
+   * @param path The path from the TSID string.
+   * @returns The converted path with the rootURL and TSID path property correctly
+   * combined.
    */
   private static convertPath(rootUrl: string, path: string): string {
 
@@ -34,24 +34,24 @@ export class DelimitedDatastore {
   }
 
   /**
-   * 
-   * @param service 
-   * @param datastore 
-   * @param fullTSID 
-   * @returns 
+   * Uses Papaparse to read in delimited data into an object.
+   * @param commonService The top level Common library service for utility methods. 
+   * @param datastore The Datastore object from the Datastore manager.
+   * @param fullTSID TSID object that has been parsed from a full TSID string.
+   * @returns The delimited data from the datastore as an observable.
    */
-  static readDelimitedData(service: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<any> {
+  static readDelimitedData(commonService: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<any> {
 
     var convertedPath: string;
 
-    if (datastore.rootUrl !== null) {
+    if (datastore.rootUrl !== null && !commonService.isURL(fullTSID.path)) {
       convertedPath = DelimitedDatastore.convertPath(datastore.rootUrl, fullTSID.path);
     } else {
       convertedPath = fullTSID.path
     }
 
     return new Observable((subscriber: Subscriber<any>) => {
-      Papa.parse(service.buildPath(IM.Path.csvPath, [convertedPath]), {
+      Papa.parse(commonService.buildPath(IM.Path.csvPath, [convertedPath]), {
         delimiter: ",",
         download: true,
         comments: "#",

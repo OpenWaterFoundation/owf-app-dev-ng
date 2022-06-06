@@ -14,10 +14,10 @@ export class StateModDatastore {
 
 
   /**
-   * 
-   * @param rootUrl 
-   * @param path 
-   * @returns 
+   * @param rootUrl The rootURL from the datastore object.
+   * @param path The path from the TSID string.
+   * @returns The converted path with the rootURL and TSID path property correctly
+   * combined.
    */
   private static convertPath(rootUrl: string, path: string): string {
 
@@ -33,25 +33,26 @@ export class StateModDatastore {
   }
 
   /**
-   * 
-   * @param service 
-   * @param datastore 
-   * @param fullTSID 
-   * @returns 
+   * Sets up and calls the DateValueTS class's readTimeSeries() method to read in
+   * and create a TS object.
+   * @param commonService The top level Common library service for utility methods.
+   * @param datastore The Datastore object from the Datastore manager.
+   * @param fullTSID TSID object that has been parsed from a full TSID string.
+   * @returns The StateMod data as an observable of type TS.
    */
-  public static readTimeSeries(service: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
+  public static readTimeSeries(commonService: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
 
     var convertedPath: string;
 
-    if (datastore.rootUrl !== null) {
+    if (datastore.rootUrl !== null && !commonService.isURL(fullTSID.path)) {
       convertedPath = StateModDatastore.convertPath(datastore.rootUrl, fullTSID.path);
     } else {
       convertedPath = fullTSID.path
     }
 
-    return new StateModTS(service).readTimeSeries(
+    return new StateModTS(commonService).readTimeSeries(
       fullTSID.location,
-      service.buildPath(IM.Path.sMP, [convertedPath]),
+      commonService.buildPath(IM.Path.sMP, [convertedPath]),
       null,
       null,
       null,

@@ -7,29 +7,16 @@ import { MatDialog,
           MatDialogRef,
           MAT_DIALOG_DATA }       from '@angular/material/dialog';
 
-import { forkJoin,
-          Observable, 
-          Subscription }          from 'rxjs';
+import { Subscription }           from 'rxjs';
 
 import { DialogTSTableComponent } from '../dialog-tstable/dialog-tstable.component';
 
-import { StateModTS }            from '@OpenWaterFoundation/common/dwr/statemod';
-import { MonthTS,
-          TS,
-          YearTS,
-          DateValueTS }           from '@OpenWaterFoundation/common/ts';
-import { DataUnits }              from '@OpenWaterFoundation/common/util/io';
+import { TS }                     from '@OpenWaterFoundation/common/ts';
 import { OwfCommonService }       from '@OpenWaterFoundation/common/services';
 import * as IM                    from '@OpenWaterFoundation/common/services';
-import { DialogService }          from '../dialog.service';
 import { WindowManager,
           WindowType }            from '@OpenWaterFoundation/common/ui/window-manager';
 
-import * as Papa                  from 'papaparse';
-
-// I believe that if this type of 'import' is used, the package needs to be added
-// to the angular.json scripts array.
-declare var Plotly: any;
 
 @Component({
   selector: 'dialog-TSGraph',
@@ -46,9 +33,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   /** This variable lets the template file know if neither a CSV, DateValue, or
    * StateMod file is given. */
   public badFile = false;
-  /**
-   * 
-   */
+  /** Object that is sent down to the Chart component for displaying. */
   chartDialog: IM.ChartDialog;
   /** A string representing the chartPackage property given (or not) from a popup
    * configuration file. */
@@ -97,15 +82,14 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
   /**
    * @constructor for the DialogTSGraph Component.
-   * @param commonService A reference to the top level service OwfCommonService.
-   * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
-   * @param dialogService A reference to the map service, for sending data.
-   * @param data The incoming templateGraph object containing data about from the graph template file.
+   * @param commonService Reference to the top level service OwfCommonService.
+   * @param dialog Reference to the service that creates Mat dialogs.
+   * @param dialogRef Reference to this DialogTSGraphComponent.
+   * @param dataObject The incoming templateGraph object containing data about from the graph template file.
    */
-  constructor(private dialogService: DialogService,
-              public commonService: OwfCommonService,
-              public dialog: MatDialog,
-              public dialogRef: MatDialogRef<DialogTSGraphComponent>,
+  constructor(private commonService: OwfCommonService,
+              private dialog: MatDialog,
+              private dialogRef: MatDialogRef<DialogTSGraphComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
     this.windowID = dataObject.data.windowID;
@@ -149,7 +133,6 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * and remove it from the window manager.
    */
   public ngOnDestroy(): void {
-
     if (this.forkJoinSub$) {
       this.forkJoinSub$.unsubscribe();
     }
