@@ -83,8 +83,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * this component's destruction. */
   private forkJoinSub$ = <any>Subscription;
   /** An object of Style-like objects containing:
-   * key  : geoLayerId
-   * value: object with style properties
+   *     key  : geoLayerId
+   *     value: object with style properties
    * For displaying a graduated symbol in the Leaflet legend. */
   public graduatedLayerColors = {};
   /** Global value to access container ref in order to add and remove sidebar info
@@ -106,9 +106,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public legendSymbolsViewContainerRef: ViewContainerRef;
   /** The reference for the Leaflet map. */
   public mainMap: any;
-  /**
-   * 
-   */
+  /** Template input property used by consuming applications or websites for passing
+   * the path to the app configuration file. */
   @Input('map-config') mapConfigStandalonePath: string;
   /** The map configuration subscription, unsubscribed to on component destruction. */
   private mapConfigSub$ = <any>Subscription;

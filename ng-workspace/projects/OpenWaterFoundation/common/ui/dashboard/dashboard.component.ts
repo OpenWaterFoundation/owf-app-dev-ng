@@ -108,7 +108,7 @@ export class DashboardComponent implements OnDestroy {
     // If no style object is provided, return the default object.
     if (!style) {
       return {
-        backgroundColor: 'gray'
+        backgroundColor: 'lightgrey'
       }
     }
 
@@ -131,7 +131,7 @@ export class DashboardComponent implements OnDestroy {
     // The property does not exist, so return a default value.
     else {
       switch (style) {
-        case IM.Style.backgroundColor: return 'gray';
+        case IM.Style.backgroundColor: return 'lightgrey';
         case IM.Style.color: return 'black';
       }
     }

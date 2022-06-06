@@ -210,9 +210,13 @@ export class StatusIndicatorComponent {
   }
 
   /**
-   * 
-   * @param classifyData 
-   * @returns 
+   * Checks if an error occurred from Papaparse, then iterates over each line from
+   * the classification file and creates the necessary array of objects used for
+   * classification.
+   * @param classifyData The object returned from Papaparsing the classification
+   * CSV file.
+   * @returns An array of each line read in with its min and max Values,
+   * operators, and the level the line is classified as.
    */
   private processClassifyData(classifyData: any): void {
 
@@ -230,9 +234,9 @@ export class StatusIndicatorComponent {
   }
 
   /**
-   * 
-   * @param delimitedData 
-   * @returns 
+   * Sets the necessary class variables used for displaying in this Status Indicator
+   * widget.
+   * @param delimitedData The object returned from Papaparsing.
    */
   private processCSVData(delimitedData: any): void {
 

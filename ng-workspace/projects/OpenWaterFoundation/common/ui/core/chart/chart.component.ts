@@ -241,11 +241,41 @@ export class ChartComponent implements OnInit, OnDestroy {
         }
       }
     }
+    // Send the AttributeTableParams object to the Dialog component.
     this.updateAttributeTable.emit({
       attributeTable: this.attributeTable,
       dateTimeColumnName: this.dateTimeColumnName,
       valueColumns: this.valueColumns
     });
+  }
+
+  /**
+   * Build and return an object with the graph's main title and sub titles if provided,
+   * and empty strings if not.
+   */
+  private buildTitleText(): { mainTitle: string, subTitle: string } {
+
+    var mainTitle = '';
+    var subTitle = '';
+
+    // Check for main title string.
+    if (this.graphTemplate.product.subProducts[0].properties.MainTitleString !== '') {
+      mainTitle = this.graphTemplate.product.subProducts[0].properties.MainTitleString;
+    } else if (this.graphTemplate.product.properties.MainTitleString !== '') {
+      mainTitle = this.graphTemplate.product.properties.MainTitleString;
+    }
+
+    // Check for sub title string.
+    if (this.graphTemplate.product.subProducts[0].properties.SubTitleString !== '') {
+      subTitle = this.graphTemplate.product.subProducts[0].properties.SubTitleString;
+    } else if (this.graphTemplate.product.properties.SubTitleString !== '') {
+      subTitle = this.graphTemplate.product.properties.SubTitleString;
+    }
+
+    return {
+      mainTitle: mainTitle,
+      subTitle: subTitle
+    }
   }
 
   /**
@@ -277,6 +307,125 @@ export class ChartComponent implements OnInit, OnDestroy {
       // The widget object has passed its inspection and can be created.
       this.setupForWidget();
     }
+  }
+
+  /**
+  * Sets up and plots the plotly graph with the given data. Can display multiple
+  * graph objects on one graph.
+  * @param totalGraphConfig An array of PopulateGraph typed objects that contain all time
+  * series data planned to be shown on the plotly graph.
+  */
+  private createPlotlyGraph(totalGraphConfig: IM.PopulateGraph[]): void {
+
+    // The final data array of objects that is given to Plotly.react to create the graph.
+    var finalData: { x: number[], y: number[], type: string }[] = [];
+    // The data object being pushed onto the finalData array.
+    var data: any;
+    // The array containing the colors of each graph being displayed, in the order
+    // in which they appear.
+    var colorwayArray: string[] = [];
+    // Plotly wants each graph object in the reverse order to draw each graph on
+    // the chart in the correct order.
+    if (this.graphTemplate.product.subProducts[0].properties.GraphType.toLowerCase() === 'areastacked') {
+      totalGraphConfig.reverse();
+    }
+
+    // Iterate over the config array and add the necessary configuration data into
+    // the data object that will be added to the finalData array. The finalData array
+    // is what's given as the second argument to Plotly.react.
+    for (let graphConfig of totalGraphConfig) {
+      data = {};
+
+      data.name = graphConfig.legendLabel;
+
+      data.mode = graphConfig.chartMode;
+      // data.connectgaps = true;
+
+      if (data.mode === 'lines+markers') {
+        data.line = {
+          width: 1
+        };
+        data.marker = {
+          size: 4
+        };
+      } else if (data.mode === 'lines') {
+        data.line = {
+          width: Number(graphConfig.lineWidth)
+        }
+        // Connects between ALL gaps
+        // data.connectgaps = true;
+      }
+      // else if (data.mode === 'markers') {
+      //   data.marker = {
+      //     size: 
+      //   }
+      // }
+
+      if (graphConfig.fillType) {
+        data.fill = graphConfig.fillType;
+      }
+
+      if (graphConfig.stackGroup) {
+        data.stackgroup = graphConfig.stackGroup
+      }
+
+      data.type = graphConfig.chartType;
+      data.x = graphConfig.isCSV ? graphConfig.dataLabels : graphConfig.plotlyXAxisLabels;
+      data.y = graphConfig.isCSV ? graphConfig.datasetData : graphConfig.plotlyDatasetData;
+
+      colorwayArray.push(graphConfig.datasetBackgroundColor);
+      finalData.push(data);
+    }
+
+    var title = this.buildTitleText();
+
+    // Builds the layout object that will be given as the third argument to the
+    // Plotly.plot() function. Creates the graph layout such as graph height and
+    // width, legend and axes options, etc.
+    var layout = {
+      title: {
+        text: title.mainTitle + '<br><sub>' + title.subTitle + '</sub>'
+      },
+      // An array of strings describing the color to display the graph as for each
+      // time series.
+      colorway: colorwayArray,
+      autosize: true,
+      // Create the legend inside the graph and display it in the upper right.
+      legend: {
+        bordercolor: '#c2c1c1',
+        borderwidth: 1,
+        // Positioning the legend on the x-y axes
+        x: totalGraphConfig[0].legendPosition.x,
+        y: totalGraphConfig[0].legendPosition.y
+      },
+      showlegend: true,
+      // width: 900,
+      xaxis: {
+        // Maximum amount of ticks on the x-axis
+        nticks: 8,
+        tickangle: 0
+      },
+      yaxis: {
+        // 'r' removes the k from the thousands place for numbers larger than 10,000. 
+        // This formatting is taken from d3 formatting:
+        // https://github.com/d3/d3-format/blob/main/README.md#locale_format
+        tickformat: 'r',
+        title: totalGraphConfig[0].yAxesLabelString,
+        // Keeps the y-axis at a fixed range, so when the user zooms, an x-axis zoom takes place
+        fixedrange: true
+      }
+    };
+
+    // The fourth and last argument in the Plotly.plot() function, this object contains
+    // the graph configuration options
+    var plotlyConfig = {
+      responsive: true,
+      scrollZoom: true
+    };
+    // Plots the plotly graph with the given <div> id (TSIDLocation), data array, layout
+    // and configuration objects organize and maintain multiple opened dialogs in
+    // the future. (https://plotly.com/javascript/plotlyjs-function-reference/#plotlyreact)
+    Plotly.react(this.TSIDLocation, finalData, layout, plotlyConfig);
   }
 
   /**
@@ -360,6 +509,40 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
+  * Listens to another widget and updates when something is updated in said widget.
+  */
+  // TODO jpkeahey 2022-05-10: Name this listenForSelectEvent? Put this function
+  // in a for loop and listen to all events?
+  private listenForEvent(): void {
+
+    // TODO jpkeahey 2022-04-27: This might need to be in a for loop for multiple
+    // Event objects in the eventHandlers.
+    this.eventService.getWidgetEvent(this.chartWidget).subscribe((selectEvent: IM.SelectEvent) => {
+
+      // Check if the initial selectEvent was passed.
+      if (selectEvent === null) {
+        return;
+      }
+
+      // If graphTemplatePrime hasn't been set yet, read it in and set it here.
+      if (!this.graphTemplatePrime) {
+        this.updateResultsSub = this.commonService.getJSONData(
+          this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
+        ).subscribe({
+          next: (graphTemplate: IM.GraphTemplate) => {
+            this.graphTemplatePrime = graphTemplate;
+            // Update the chart with the new feature object data.
+            this.updateChartVariables(selectEvent);
+          }
+        });
+      } else {
+        // Update the chart with the new feature object data.
+        this.updateChartVariables(selectEvent);
+      }
+    });
+  }
+
+  /**
   * Sets up properties and creates the configuration object to be used by Plotly.
   * @param timeSeries The array of all Time Series objects retrieved asynchronously
   * from the StateMod file.
@@ -431,158 +614,6 @@ export class ChartComponent implements OnInit, OnDestroy {
       startDate: start,
       yAxesLabelString: templateYAxisTitle
     }
-  }
-
-  /**
-  * Sets up and plots the plotly graph with the given data. Can display multiple
-  * graph objects on one graph.
-  * @param totalGraphConfig An array of PopulateGraph typed objects that contain all time
-  * series data planned to be shown on the plotly graph.
-  */
-  private createPlotlyGraph(totalGraphConfig: IM.PopulateGraph[]): void {
-
-    // The final data array of objects that is given to Plotly.react to create the graph.
-    var finalData: { x: number[], y: number[], type: string }[] = [];
-    // The data object being pushed onto the finalData array.
-    var data: any;
-    // The array containing the colors of each graph being displayed, in the order
-    // in which they appear.
-    var colorwayArray: string[] = [];
-    // Plotly wants each graph object in the reverse order to draw each graph on
-    // the chart in the correct order.
-    if (this.graphTemplate.product.subProducts[0].properties.GraphType.toLowerCase() === 'areastacked') {
-      totalGraphConfig.reverse();
-    }
-
-    // Iterate over the config array and add the necessary configuration data into
-    // the data object that will be added to the finalData array. The finalData array
-    // is what's given as the second argument to Plotly.react.
-    for (let graphConfig of totalGraphConfig) {
-      data = {};
-
-      data.name = graphConfig.legendLabel;
-
-      data.mode = graphConfig.chartMode;
-      // data.connectgaps = true;
-
-      if (data.mode === 'lines+markers') {
-        data.line = {
-          width: 1
-        };
-        data.marker = {
-          size: 4
-        };
-      } else if (data.mode === 'lines') {
-        data.line = {
-          width: Number(graphConfig.lineWidth)
-        }
-        // Connects between ALL gaps
-        // data.connectgaps = true;
-      }
-      // else if (data.mode === 'markers') {
-      //   data.marker = {
-      //     size: 
-      //   }
-      // }
-
-      if (graphConfig.fillType) {
-        data.fill = graphConfig.fillType;
-      }
-
-      if (graphConfig.stackGroup) {
-        data.stackgroup = graphConfig.stackGroup
-      }
-
-      data.type = graphConfig.chartType;
-      data.x = graphConfig.isCSV ? graphConfig.dataLabels : graphConfig.plotlyXAxisLabels;
-      data.y = graphConfig.isCSV ? graphConfig.datasetData : graphConfig.plotlyDatasetData;
-
-      colorwayArray.push(graphConfig.datasetBackgroundColor);
-      finalData.push(data);
-    }
-    // Builds the layout object that will be given as the third argument to the
-    // Plotly.plot() function. Creates the graph layout such as graph height and
-    // width, legend and axes options, etc.
-    var layout = {
-      title: {
-        text: this.graphTemplate.product.subProducts[0].properties.MainTitleString +
-          '<br><sub>' + this.graphTemplate.product.subProducts[0].properties.SubTitleString +
-          '</sub>'
-      },
-      // An array of strings describing the color to display the graph as for each
-      // time series.
-      colorway: colorwayArray,
-      autosize: true,
-      // Create the legend inside the graph and display it in the upper right.
-      legend: {
-        bordercolor: '#c2c1c1',
-        borderwidth: 1,
-        // Positioning the legend on the x-y axes
-        x: totalGraphConfig[0].legendPosition.x,
-        y: totalGraphConfig[0].legendPosition.y
-      },
-      showlegend: true,
-      // width: 900,
-      xaxis: {
-        // Maximum amount of ticks on the x-axis
-        nticks: 8,
-        tickangle: 0
-      },
-      yaxis: {
-        // 'r' removes the k from the thousands place for numbers larger than 10,000. 
-        // This formatting is taken from d3 formatting:
-        // https://github.com/d3/d3-format/blob/main/README.md#locale_format
-        tickformat: 'r',
-        title: totalGraphConfig[0].yAxesLabelString,
-        // Keeps the y-axis at a fixed range, so when the user zooms, an x-axis zoom takes place
-        fixedrange: true
-      }
-    };
-
-    // The fourth and last argument in the Plotly.plot() function, this object contains
-    // the graph configuration options
-    var plotlyConfig = {
-      responsive: true,
-      scrollZoom: true
-    };
-    // Plots the plotly graph with the given <div> id (TSIDLocation), data array, layout
-    // and configuration objects organize and maintain multiple opened dialogs in
-    // the future. (https://plotly.com/javascript/plotlyjs-function-reference/#plotlyreact)
-    Plotly.react(this.TSIDLocation, finalData, layout, plotlyConfig);
-  }
-
-  /**
-  * Listens to another widget and updates when something is updated in said widget.
-  */
-  // TODO jpkeahey 2022-05-10: Name this listenForSelectEvent? Put this function
-  // in a for loop and listen to all events?
-  private listenForEvent(): void {
-
-    // TODO jpkeahey 2022-04-27: This might need to be in a for loop for multiple
-    // Event objects in the eventHandlers.
-    this.eventService.getWidgetEvent(this.chartWidget).subscribe((selectEvent: IM.SelectEvent) => {
-
-      // Check if the initial selectEvent was passed.
-      if (selectEvent === null) {
-        return;
-      }
-
-      // If graphTemplatePrime hasn't been set yet, read it in and set it here.
-      if (!this.graphTemplatePrime) {
-        this.updateResultsSub = this.commonService.getJSONData(
-          this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
-        ).subscribe({
-          next: (graphTemplate: IM.GraphTemplate) => {
-            this.graphTemplatePrime = graphTemplate;
-            // Update the chart with the new feature object data.
-            this.updateChartVariables(selectEvent);
-          }
-        });
-      } else {
-        // Update the chart with the new feature object data.
-        this.updateChartVariables(selectEvent);
-      }
-    });
   }
 
   /**
