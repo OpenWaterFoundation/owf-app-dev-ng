@@ -1762,15 +1762,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
       height: "750px",
       width: "910px",
-      // minHeight: "425px",
-      // minWidth: "675px",
-      // maxHeight: "70vh",
-      // maxWidth: "80vw"
-      // Keeping static for now.
-      minHeight: "750px",
-      minWidth: "910px",
-      maxHeight: "750px",
-      maxWidth: "910px"
+      minHeight: "425px",
+      minWidth: "675px",
+      maxHeight: "70vh",
+      maxWidth: "95vw"
     });
 
     this.windowManager.addWindow(windowID, WindowType.HEAT);
@@ -1824,8 +1819,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           width: "910px",
           minHeight: "450px",
           minWidth: "650px",
-          maxHeight: "700px",
-          maxWidth: "1000px"
+          maxHeight: "70vh",
+          maxWidth: "95vw"
         });
 
         this.windowManager.addWindow(windowID, WindowType.GAL);
@@ -1865,10 +1860,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
       height: "700px",
       width: "910px",
-      minHeight: "700px",
-      minWidth: "910px",
-      maxHeight: "700px",
-      maxWidth: "910px"
+      minHeight: "400px",
+      minWidth: "610px",
+      maxHeight: "70vh",
+      maxWidth: "95vw"
     });
 
   }

@@ -64,11 +64,3 @@ the displayed text */
 .image-components-group button {
   margin-top: 6px;
 }
-
-.upper-close-button {
-  background-color: #c2c1c1;
-  height: 100%;
-  width: 80px;
-  float: right;
-  outline: none;
-}

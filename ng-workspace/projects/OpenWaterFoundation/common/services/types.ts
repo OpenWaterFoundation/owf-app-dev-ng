@@ -525,13 +525,11 @@ export interface PopulateGraph {
   graphFileType: string;
   isCSV?: boolean;
   legendLabel: string;
-  legendPosition: any;
   lineWidth?: string;
   plotlyDatasetData?: number[];
   plotlyXAxisLabels?: any[];
   startDate?: string;
   stackGroup?: string;
-  yAxesLabelString: string;
 }
 
 ///////////////////////////// DASHBOARD CONFIG \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -684,6 +682,8 @@ export interface TSID {
 export interface AttributeTableParams {
   attributeTable: any[];
   dateTimeColumnName: string;
+  isTSFile: boolean;
+  TSArrayRef: any[];
   valueColumns: string[];
 }
 

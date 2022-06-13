@@ -30,9 +30,6 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   /** Object that will be assigned by data passed up from the Chart component, and
    * used to create a TSTable dialog. */
   attributeTableParams: IM.AttributeTableParams;
-  /** This variable lets the template file know if neither a CSV, DateValue, or
-   * StateMod file is given. */
-  public badFile = false;
   /** Object that is sent down to the Chart component for displaying. */
   chartDialog: IM.ChartDialog;
   /** A string representing the chartPackage property given (or not) from a popup
@@ -43,7 +40,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   public dateTimeColumnName: string;
   /** The graph template object retrieved from the popup configuration file property
    * resourcePath. */
-  public graphTemplateObject: any;
+  public graphTemplate: any;
   /** The name of the download file for the dialog-tstable component. */
   private downloadFileName: string;
   /** The object containing all of the layer's feature properties. */
@@ -54,9 +51,6 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   /** The absolute or relative path to the data file used to populate the graph
    * being created. */
   public graphFilePath: string;
-  /** Boolean for helping dialog-tstable component determine what kind of file needs
-   * downloading. */
-  public isTSFile: boolean;
   /** A string representing the documentation retrieved from the txt, md, or html
    * file to be displayed for a layer. */
   public mainTitleString: string;
@@ -96,7 +90,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     this.featureProperties = dataObject.data.featureProperties;
     this.chartPackage = dataObject.data.chartPackage;
     this.downloadFileName = dataObject.data.downloadFileName ? dataObject.data.downloadFileName : undefined;
-    this.graphTemplateObject = dataObject.data.graphTemplate;
+    this.graphTemplate = dataObject.data.graphTemplate;
     this.graphFilePath = dataObject.data.graphFilePath;
     this.mapConfigPath = dataObject.data.mapConfigPath;
     this.TSIDLocation = dataObject.data.TSIDLocation;
@@ -111,11 +105,12 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   */
   ngOnInit(): void {
     this.commonService.setMapConfigPath(this.mapConfigPath);
-    this.commonService.setChartTemplateObject(this.graphTemplateObject);
+    this.commonService.setChartTemplateObject(this.graphTemplate);
     this.commonService.setGraphFilePath(this.graphFilePath);
     this.commonService.setTSIDLocation(this.TSIDLocation);
-
-    this.chartDialog = { graphTemplate: this.graphTemplateObject };
+    // Assign the graphTemplate to the chartDialog object's graphTemplate property
+    // so it can be used in the Chart component.
+    this.chartDialog = { graphTemplate: this.graphTemplate };
   }
 
   /**
@@ -154,7 +149,6 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     if (this.windowManager.windowExists(windowID)) {
       return;
     }
-
     // Create and use a MatDialogConfig object to pass to the DialogTSGraphComponent
     // for the graph that will be shown.
     const dialogConfig = new MatDialogConfig();
@@ -163,8 +157,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
       dateTimeColumnName: this.attributeTableParams.dateTimeColumnName,
       downloadFileName: this.downloadFileName ? this.downloadFileName : undefined,
       featureProperties: this.featureProperties,
-      isTSFile: this.isTSFile,
-      TSArrayRef: this.TSArrayOGResultRef,
+      isTSFile: this.attributeTableParams.isTSFile,
+      TSArrayRef: this.attributeTableParams.TSArrayRef,
       windowID: windowID,
       valueColumns: this.attributeTableParams.valueColumns
     }

@@ -280,21 +280,22 @@ export class OwfCommonService {
 
     switch (saveFileType) {
       case IM.SaveFileType.tstable:
-      // The filename is undefined OR the filename has undefined somewhere in it's name
-      if (!saveFileName) {
-        return 'timeseries.csv';
-      }
-      // Sometimes undefined can be added to the file name string earlier on if there's an issue
-      else if (saveFileName.toUpperCase().includes('UNDEFINED')) {
-        console.warn(warning);
-        console.warn('Defaulting to file name and extension "timeseries.csv"')
-        return 'timeseries.csv';
-      } else {
-        // At this point the saveFileName is the value of the saveFile property from the popup config file. None of its
-        // ${property} notation has been converted, so the obtainPropertiesFromLine function is called to do so.
-        saveFileName = this.obtainPropertiesFromLine(saveFileName, featureProperties);
-        return saveFileName;
-      }
+        // The filename is undefined.
+        if (!saveFileName) {
+          return 'timeseries.csv';
+        }
+        // Sometimes undefined can be added to the file name string earlier on if
+        // there's an issue.
+        else if (saveFileName.toUpperCase().includes('UNDEFINED')) {
+          console.warn(warning);
+          console.warn('Defaulting to file name and extension "timeseries.csv"')
+          return 'timeseries.csv';
+        } else {
+          // At this point the saveFileName is the value of the saveFile property from the popup config file. None of its
+          // ${property} notation has been converted, so the obtainPropertiesFromLine function is called to do so.
+          saveFileName = this.obtainPropertiesFromLine(saveFileName, featureProperties);
+          return saveFileName;
+        }
 
       case IM.SaveFileType.text:
         if (saveFileName.toUpperCase().includes('UNDEFINED')) {

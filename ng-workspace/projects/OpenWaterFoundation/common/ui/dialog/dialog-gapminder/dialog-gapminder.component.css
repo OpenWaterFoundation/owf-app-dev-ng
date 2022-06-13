@@ -276,12 +276,3 @@ data is being shown in the Dialog. */
   color: rgb(85, 85, 85);
   width: 100%;
 }
-
-/* Dialog upper right close button. */
-.upper-close-button {
-  background-color: #c2c1c1;
-  height: 100%;
-  width: 80px;
-  float: right;
-  outline: none;
-}

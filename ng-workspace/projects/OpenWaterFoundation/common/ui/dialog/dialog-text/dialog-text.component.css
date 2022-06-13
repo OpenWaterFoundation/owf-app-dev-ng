@@ -54,11 +54,3 @@ the displayed text */
   margin: 0px 0px 0px 20px;
   background-color: #c2c1c1;
 }
-
-.upper-close-button {
-  background-color: #c2c1c1;
-  height: 100%;
-  width: 80px;
-  float: right;
-  outline: none;
-}

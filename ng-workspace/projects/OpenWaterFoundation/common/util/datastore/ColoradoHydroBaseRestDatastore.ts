@@ -18,19 +18,15 @@ export class ColoradoHydroBaseRestDatastore {
    * @param path 
    * @returns 
    */
-  private static convertPath(rootUrl: string, path: string): string {
+  private static convertPath(service: OwfCommonService, rootUrl: string, path: string): string {
 
+    // service.obtainPropertiesFromLine(path, something);
 
-
-    if (rootUrl.endsWith('/') && path.startsWith('/')) {
+    if (path.startsWith('/')) {
       return rootUrl + path.substring(1);
-    } else if (!rootUrl.endsWith('/') && path.startsWith('/') ||
-    rootUrl.endsWith('/') && !path.startsWith('/')) {
+    } else {
       return rootUrl + path;
-    } else if (!rootUrl.endsWith('/') && !path.startsWith('/')) {
-      return rootUrl + '/' + path;
     }
-    return;
   }
 
   /**
@@ -42,10 +38,13 @@ export class ColoradoHydroBaseRestDatastore {
    */
   public static getData(service: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
 
-    console.log(datastore);
-    console.log(fullTSID);
+    var fullURL = ColoradoHydroBaseRestDatastore.convertPath(service, datastore.rootUrl, fullTSID.path);
 
+    console.log('datastore:', datastore);
+    console.log('fullTSID:', fullTSID);
+    console.log('fullURL:', fullURL);
 
+    throw new Error('Not really an error.');
     return;
   }
 }

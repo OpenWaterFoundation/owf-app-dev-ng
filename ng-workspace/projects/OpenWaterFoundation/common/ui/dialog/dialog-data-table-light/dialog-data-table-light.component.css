@@ -218,14 +218,6 @@ will hide the rest of a long string in a fixed-layout table, and won't wrap, cre
   background-color: #c2c1c1;
 }
 
-.upper-close-button {
-  background-color: #c2c1c1;
-  height: 100%;
-  width: 80px;
-  float: right;
-  outline: none;
-}
-
 /*  */
 .wrapper {
   height: calc(100% - 55px);

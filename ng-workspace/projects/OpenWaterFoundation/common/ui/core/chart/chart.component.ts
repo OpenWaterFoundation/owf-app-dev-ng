@@ -3,25 +3,22 @@ import { Component,
           Input,
           OnDestroy,
           OnInit, 
-          Output}          from '@angular/core';
+          Output}            from '@angular/core';
 
 import { BehaviorSubject,
           forkJoin,
           Observable,
-          Subscription }    from 'rxjs';
+          Subscription }     from 'rxjs';
 
-import structuredClone      from '@ungap/structured-clone';
+import structuredClone       from '@ungap/structured-clone';
 
 import { EventService,
           OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM               from '@OpenWaterFoundation/common/services';
 import { DataUnits }         from '@OpenWaterFoundation/common/util/io';
-import { DayTS,
-          MonthTS,
-          TS,
-          YearTS }          from '@OpenWaterFoundation/common/ts';
-import { DatastoreManager } from '@OpenWaterFoundation/common/util/datastore';
-import { ChartService }     from './chart.service';
+import { TS }                from '@OpenWaterFoundation/common/ts';
+import { DatastoreManager }  from '@OpenWaterFoundation/common/util/datastore';
+import { ChartService }      from './chart.service';
 // I believe that if this type of 'import' is used, the package needs to be added
 // to the angular.json scripts array.
 declare var Plotly: any;
@@ -79,8 +76,8 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** Observable that's updated as a BehaviorSubject when a critical error creating
   * this component occurs. */
   isChartError$: Observable<boolean>;
-  /** Boolean for helping dialog-tstable component determine what kind of file needs
-  * downloading. */
+  /** Boolean for the dialog-tstable component to determine what kind of file needs
+  * to be downloaded. */
   isTSFile: boolean;
   /** The array of TS objects that was originally read in using the StateMod or DateValue
   * Java converted code. Used as a reference in the dialog-tstable component for
@@ -245,37 +242,94 @@ export class ChartComponent implements OnInit, OnDestroy {
     this.updateAttributeTable.emit({
       attributeTable: this.attributeTable,
       dateTimeColumnName: this.dateTimeColumnName,
+      isTSFile: this.isTSFile,
+      TSArrayRef: this.TSArrayOGResultRef,
       valueColumns: this.valueColumns
     });
   }
 
   /**
-   * Build and return an object with the graph's main title and sub titles if provided,
-   * and empty strings if not.
+   * Build and return an object with the graph's title, sub titles, and styling
+   * for both if provided.
    */
-  private buildTitleText(): { mainTitle: string, subTitle: string } {
+  private buildGraphPropTitleText(): { text: string, font: {} } {
 
-    var mainTitle = '';
-    var subTitle = '';
+    var mainTitleString = '';
+    var mainTitleFontName = '';
+    var mainTitleFontSize = '';
+    var mainTitleFontStyle = '';
+    var subTitleString = '';
+    var subTitleFontStyle = '';
 
     // Check for main title string.
     if (this.graphTemplate.product.subProducts[0].properties.MainTitleString !== '') {
-      mainTitle = this.graphTemplate.product.subProducts[0].properties.MainTitleString;
+      mainTitleString = this.graphTemplate.product.subProducts[0].properties.MainTitleString;
     } else if (this.graphTemplate.product.properties.MainTitleString !== '') {
-      mainTitle = this.graphTemplate.product.properties.MainTitleString;
+      mainTitleString = this.graphTemplate.product.properties.MainTitleString;
     }
-
+    // Check for the main title font name/family.
+    if (this.graphTemplate.product.subProducts[0].properties.MainTitleFontName !== '') {
+      mainTitleFontName = this.graphTemplate.product.subProducts[0].properties.MainTitleFontName;
+    } else if (this.graphTemplate.product.properties.MainTitleFontName !== '') {
+      mainTitleFontName = this.graphTemplate.product.properties.MainTitleFontName;
+    }
+    // Check for the main title font size.
+    if (this.graphTemplate.product.subProducts[0].properties.MainTitleFontSize !== '') {
+      mainTitleFontSize = this.graphTemplate.product.subProducts[0].properties.MainTitleFontSize;
+    } else if (this.graphTemplate.product.properties.MainTitleFontSize !== '') {
+      mainTitleFontSize = this.graphTemplate.product.properties.MainTitleFontSize;
+    }
+    // Check the main title font style.
+    if (this.graphTemplate.product.subProducts[0].properties.MainTitleFontStyle !== '') {
+      mainTitleFontStyle = this.graphTemplate.product.subProducts[0].properties.MainTitleFontStyle;
+    } else if (this.graphTemplate.product.properties.MainTitleFontStyle !== '') {
+      mainTitleFontStyle = this.graphTemplate.product.properties.MainTitleFontStyle;
+    }
     // Check for sub title string.
     if (this.graphTemplate.product.subProducts[0].properties.SubTitleString !== '') {
-      subTitle = this.graphTemplate.product.subProducts[0].properties.SubTitleString;
+      subTitleString = this.graphTemplate.product.subProducts[0].properties.SubTitleString;
     } else if (this.graphTemplate.product.properties.SubTitleString !== '') {
-      subTitle = this.graphTemplate.product.properties.SubTitleString;
+      subTitleString = this.graphTemplate.product.properties.SubTitleString;
+    }
+    // Check the sub title font style.
+    if (this.graphTemplate.product.subProducts[0].properties.SubTitleFontStyle !== '') {
+      subTitleFontStyle = this.graphTemplate.product.subProducts[0].properties.SubTitleFontStyle;
+    } else if (this.graphTemplate.product.properties.SubTitleFontStyle !== '') {
+      subTitleFontStyle = this.graphTemplate.product.properties.SubTitleFontStyle;
     }
 
+    mainTitleString = this.checkTitleStyle(mainTitleString, mainTitleFontStyle);
+    subTitleString = this.checkTitleStyle(subTitleString, subTitleFontStyle)
+
     return {
-      mainTitle: mainTitle,
-      subTitle: subTitle
+      text: mainTitleString + '<br><sub>' + subTitleString + '</sub>',
+      font: {
+        family: mainTitleFontName,
+        size: +mainTitleFontSize
+      }
     }
+  }
+
+  /**
+   * Surrounds the 
+   * @param titleString The main or sub title string to use.
+   * @param titleFontStyle The type of style to be used on the title string. Default
+   * is plain.
+   * @returns The title string to be used by Plotly.
+   */
+  private checkTitleStyle(titleString: string, titleFontStyle: string): string {
+    
+    switch(titleFontStyle.toUpperCase()) {
+      case 'PLAIN':
+        return titleString;
+      case 'PLAINITALIC':
+        return '<i>' + titleString + '</i>';
+      case 'BOLD':
+        return '<b>' + titleString + '</b>';
+      case 'BOLDITALIC':
+        return '<b><i>' + titleString + '</i></b>';
+    }
+    return titleString;
   }
 
   /**
@@ -350,7 +404,7 @@ export class ChartComponent implements OnInit, OnDestroy {
         };
       } else if (data.mode === 'lines') {
         data.line = {
-          width: Number(graphConfig.lineWidth)
+          width: +graphConfig.lineWidth
         }
         // Connects between ALL gaps
         // data.connectgaps = true;
@@ -377,31 +431,26 @@ export class ChartComponent implements OnInit, OnDestroy {
       finalData.push(data);
     }
 
-    var title = this.buildTitleText();
-
-    // Builds the layout object that will be given as the third argument to the
-    // Plotly.plot() function. Creates the graph layout such as graph height and
-    // width, legend and axes options, etc.
+    // Builds the layout object that will be provided for creating the Plotly graph.
     var layout = {
-      title: {
-        text: title.mainTitle + '<br><sub>' + title.subTitle + '</sub>'
-      },
+      title: this.buildGraphPropTitleText(),
       // An array of strings describing the color to display the graph as for each
       // time series.
       colorway: colorwayArray,
       autosize: true,
+      showlegend: this.plotlyShowLegend(),
       // Create the legend inside the graph and display it in the upper right.
       legend: {
         bordercolor: '#c2c1c1',
         borderwidth: 1,
-        // Positioning the legend on the x-y axes
-        x: totalGraphConfig[0].legendPosition.x,
-        y: totalGraphConfig[0].legendPosition.y
+        // Positioning the legend on the x-y axes.
+        x: this.plotlyLegendPositionX(),
+        y: this.plotlyLegendPositionY(),
+        orientation: this.plotlyLegendOrientation(),
+        xanchor: this.plotlyLegendXAnchor()
       },
-      showlegend: true,
-      // width: 900,
       xaxis: {
-        // Maximum amount of ticks on the x-axis
+        // Maximum amount of ticks on the x-axis.
         nticks: 8,
         tickangle: 0
       },
@@ -410,13 +459,14 @@ export class ChartComponent implements OnInit, OnDestroy {
         // This formatting is taken from d3 formatting:
         // https://github.com/d3/d3-format/blob/main/README.md#locale_format
         tickformat: 'r',
-        title: totalGraphConfig[0].yAxesLabelString,
-        // Keeps the y-axis at a fixed range, so when the user zooms, an x-axis zoom takes place
+        title: this.graphTemplate.product.subProducts[0].properties.LeftYAxisTitleString,
+        // Keeps the y-axis at a fixed range, so when the user zooms, an x-axis
+        // zoom takes place.
         fixedrange: true
       }
     };
 
-    // The fourth and last argument in the Plotly.plot() function, this object contains
+    // The fourth and last argument in the Plotly.react() function, this object contains
     // the graph configuration options
     var plotlyConfig = {
       responsive: true,
@@ -425,8 +475,21 @@ export class ChartComponent implements OnInit, OnDestroy {
     // Plots the plotly graph with the given <div> id (TSIDLocation), data array, layout
     // and configuration objects organize and maintain multiple opened dialogs in
     // the future. (https://plotly.com/javascript/plotlyjs-function-reference/#plotlyreact)
-    Plotly.react(this.TSIDLocation, finalData, layout, plotlyConfig);
+    Plotly.react(this.TSIDLocation, finalData, layout, plotlyConfig).then((gd: any) => {
+      resizeObserver.observe(gd);
+    });
+    // https://github.com/plotly/plotly.js/issues/3984
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        // Check if the observer's size is still around, and only resize if it
+        // is. Otherwise an error will be thrown for resizing an empty element.
+        if (entry.contentRect.width > 0 && entry.contentRect.height > 0) {
+          Plotly.Plots.resize(entry.target);
+        }
+      }
+    });
   }
+
 
   /**
    * Go through each dataUnit in the @var dataUnits array that was created when
@@ -460,14 +523,6 @@ export class ChartComponent implements OnInit, OnDestroy {
   private makeDelimitedPlotlyObject(delimitedData: any, graphData: IM.GraphData, index: number): IM.PopulateGraph {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
-    var templateYAxisTitle: string;
-    var legendPosition: any;
-
-    // Set properties that won't need to be set more than once.
-    // if (i === 0) {
-    templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
-    legendPosition = this.chartService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition);
-    // }
     // These two are the string representing the keys in the current result.
     // They will be used to populate the X & Y axes arrays.
     let xAxis = Object.keys(delimitedData.data[0])[0];
@@ -502,9 +557,7 @@ export class ChartComponent implements OnInit, OnDestroy {
       datasetBackgroundColor: backgroundColor,
       graphFileType: 'csv',
       isCSV: true,
-      legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
-      legendPosition: legendPosition,
-      yAxesLabelString: templateYAxisTitle
+      legendLabel: (TSAlias !== '') ? TSAlias : legendLabel
     }
   }
 
@@ -550,17 +603,6 @@ export class ChartComponent implements OnInit, OnDestroy {
   private makeTSPlotlyObject(timeSeries: TS, graphData: IM.GraphData, index: number): IM.PopulateGraph {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
-    var templateYAxisTitle: string = '';
-    var legendPosition: any;
-
-    // Set up the parts of the graph object that won't need to be set more than once.
-    // TODO: Think about moving this up a method.
-    // if (i === 0) {
-    templateYAxisTitle = chartConfigProp.LeftYAxisTitleString;
-    legendPosition = this.chartService.setPlotlyLegendPosition(chartConfigProp.LeftYAxisLegendPosition,
-      this.graphTemplate.product.subProducts[0].data.length);
-    // }
-
     // 
      var xAxisLabels: string[] = this.chartService.getDates(
       timeSeries.getDate1().toString(),
@@ -608,11 +650,9 @@ export class ChartComponent implements OnInit, OnDestroy {
       datasetBackgroundColor: this.chartService.verifyPlotlyProp(backgroundColor, IM.GraphProp.bc),
       graphFileType: 'TS',
       legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
-      legendPosition: legendPosition,
       lineWidth: this.chartService.verifyPlotlyProp(lineWidth, IM.GraphProp.lw),
       stackGroup: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.sk),
-      startDate: start,
-      yAxesLabelString: templateYAxisTitle
+      startDate: start
     }
   }
 
@@ -677,6 +717,8 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     this.allResultsSub$ = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
 
+      this.TSArrayOGResultRef = allResults;
+
       allResults.forEach((result: any, i: number) => {
 
         // Check for any errors.
@@ -697,6 +739,7 @@ export class ChartComponent implements OnInit, OnDestroy {
             break;
           case IM.DatastoreType.dateValue:
           case IM.DatastoreType.stateMod:
+            this.isTSFile = true;
             allGraphObjects.push(this.makeTSPlotlyObject(result, graphData[i], i));
             break;
         }
@@ -711,6 +754,123 @@ export class ChartComponent implements OnInit, OnDestroy {
 
       this.createPlotlyGraph(allGraphObjects);
     });
+  }
+
+  /**
+   * Set the legend orientation to display each 'trace' horizontally if on the bottom
+   * of the graph. Otherwise, use the default vertical list.
+   * @returns 'h' for horizontal or 'v' for vertical display.
+   */
+  private plotlyLegendOrientation(): string {
+
+    var legendPositionUpper = this.graphTemplate.product.subProducts[0].properties.LegendPosition.toUpperCase();
+
+    if (legendPositionUpper.includes('BOTTOM')) {
+      return 'h';
+    } else {
+      return 'v';
+    }
+  }
+
+  /**
+   * @returns A number indicating where on the Plotly graph X axis the legend should
+   * be positioned.
+   */
+  private plotlyLegendPositionX(): number {
+    var legendPosition = this.graphTemplate.product.subProducts[0].properties.LegendPosition.toUpperCase();
+
+    if (legendPosition === 'NONE') {
+      return;
+    }
+
+    switch(legendPosition) {
+      case 'BOTTOM':
+      case 'BOTTOMLEFT':
+      case 'BOTTOMRIGHT':
+        return 0;
+      case 'INSIDELOWERLEFT':
+      case 'INSIDEUPPERLEFT':
+        return 0;
+      case 'INSIDELOWERRIGHT':
+      case 'INSIDEUPPERRIGHT':
+        return 1;
+      case 'LEFT':
+      case 'UPPERLEFT':
+        return -0.3;
+      case 'RIGHT':
+      case 'UPPERRIGHT':
+        return 1;
+    }
+
+    return;
+  }
+
+  /**
+   * @returns A number indicating where on the Plotly graph Y axis the legend should
+   * be positioned.
+   */
+  private plotlyLegendPositionY(): number {
+    var legendPosition = this.graphTemplate.product.subProducts[0].properties.LegendPosition.toUpperCase();
+
+    if (legendPosition === 'NONE') {
+      return;
+    }
+
+    switch(legendPosition) {
+      case 'BOTTOM':
+      case 'BOTTOMLEFT':
+      case 'BOTTOMRIGHT':
+        return -0.15;
+      case 'INSIDELOWERLEFT':
+      case 'INSIDELOWERRIGHT':
+        return 0.05;
+      case 'INSIDEUPPERLEFT':
+      case 'INSIDEUPPERRIGHT':
+        return 1;
+      case 'LEFT':
+      case 'RIGHT':
+        return 0.5;
+      case 'UPPERLEFT':
+      case 'UPPERRIGHT':
+        return 1;
+    }
+
+    return;
+  }
+
+  /**
+   * Tells a Plotly graph where to anchor the legend: left or right. Left is the
+   * default.
+   */
+  plotlyLegendXAnchor(): string {
+    var legendPosition = this.graphTemplate.product.subProducts[0].properties.LegendPosition.toUpperCase();
+
+    if (legendPosition === 'NONE') {
+      return;
+    }
+
+    switch(legendPosition) {
+      case 'INSIDELOWERLEFT':      
+      case 'INSIDEUPPERLEFT':
+        return 'left';
+      case 'INSIDELOWERRIGHT':
+      case 'INSIDEUPPERRIGHT':
+        return 'right';
+    }
+    return 'left';
+  }
+
+  /**
+   * @returns A boolean of whether to show (true) or hide (false) the Plotly graph legend.
+   */
+  plotlyShowLegend(): boolean {
+    var legendPosition = this.graphTemplate.product.subProducts[0].properties.LegendPosition.toUpperCase();
+
+    if (legendPosition === 'NONE') {
+      return false;
+    }
+
+    return true;
   }
 
   /**

@@ -21,12 +21,8 @@ export class DatastoreManager {
     {
       name: "ColoradoHydroBaseRest",
       type: "owf.datastore.json",
-      rootUrl: 'https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/',
-      aliases: [
-        'ColoradoHydroBaseRestRaw',
-        'ColoradoHydroBaseRestHour',
-        'ColoradoHydroBaseRestDay'
-      ]
+      rootUrl: 'https://dwr.state.co.us/Rest/GET/api/v2/',
+      aliases: []
     },
     {
       name: "Delimited",

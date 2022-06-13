@@ -352,7 +352,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   * @param symbolProperties The display style object for the current layer's legend.
   * @param styleType A string differentiating between style objects.
   */
-  styleOuterShape(symbolProperties: any, styleType: string): Object {
+  styleOuterShape(styleType: string, symbolProperties?: any): Object {
 
     switch (styleType) {
       // SingleSymbol classificationType map configuration property.

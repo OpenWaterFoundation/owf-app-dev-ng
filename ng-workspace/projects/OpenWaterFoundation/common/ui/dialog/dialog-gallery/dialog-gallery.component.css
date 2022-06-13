@@ -74,13 +74,3 @@ case) and have it subtracted from the size of the dialog. */
   margin: 0px 20px 0px 0px;
   background-color: #c2c1c1;
 }
-
-/* This hard-codes the upper dialog close button to 80px in width, so no matter what the size of the dialog, the button size
-will be static. */
-.upper-close-button {
-  background-color: #c2c1c1;
-  height: 100%;
-  width: 80px;
-  float: right;
-  outline: none;
-}
