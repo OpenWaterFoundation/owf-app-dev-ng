@@ -315,6 +315,17 @@ export class TSIdent {
 
   /**
   Parse a TSIdent instance given a String representation of the identifier.
+  The behavior flag is assumed to be zero.
+  @return A TSIdent instance given a full identifier string.
+  @param identifier Full identifier as string.
+  @exception if an error occurs (usually a bad interval).
+  */
+  parseIdentifierNoFlag ( identifier: string ): TSIdent {
+    return this.parseIdentifier ( identifier, 0 );
+  }
+
+  /**
+  Parse a TSIdent instance given a String representation of the identifier.
   @return A TSIdent instance given a full identifier string.
   @param identifier Full identifier as string.
   @param behavior_flag Behavior mask to use when creating instance.
@@ -343,7 +354,7 @@ export class TSIdent {
       let nlist = inputTypeList.length;
       // Reset to first part for processing below checks below...
       identifierNoInputName = inputTypeList[0];
-      if ( nlist == 2 ) {
+      if ( nlist === 2 ) {
         tsident.setInputType ( inputTypeList[1] );
       }
       else if ( nlist >= 3 ) {

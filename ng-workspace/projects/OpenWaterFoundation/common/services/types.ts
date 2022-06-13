@@ -150,6 +150,8 @@ export interface AppConfig {
   favicon?: string;
   dataUnitsPath?: string;
   googleAnalyticsTrackingId?: string;
+  apiKey?: string;
+  standaloneMap?: StandaloneMap;
   version?: string;
   datastores?: Datastore[];
   mainMenu?: MainMenu[];
@@ -301,6 +303,9 @@ export interface MainMenu {
   name?: string;
   action?: string;
   enabled?: any;
+  dashboardFile?: string;
+  markdownFile?: string;
+  mapProject?: string;
   tooltip?: string;
   url?: string;
   visible?: any;
@@ -311,8 +316,11 @@ export interface MainMenu {
 export interface SubMenu {
   name?:  string;
   action?:  string;
+  id?: string;
   enabled?: any;
+  dashboardFile?: string;
   mapProject?: string;
+  markdownFile?: string;
   separatorBefore?: any;
   doubleSeparatorBefore?: any;
   tooltip?: string;
@@ -699,4 +707,8 @@ export interface ChartDialog {
 export interface ParsedProp {
   foundProps: string[];
   line: string;
+}
+
+export interface StandaloneMap {
+  mapProject: string;
 }

@@ -12,7 +12,13 @@ These elements will only be added if they are applicable for the new version.
 
 # 3.6.2 or 3.7.0 #
 
+### Refactoring ###
 
+* Updated how each dialog's upper close button is styled.
+
+### Features / Enhancements ###
+
+* Made Chart & Heatmap dialogs resizable again.
 
 # 3.6.1 #
 

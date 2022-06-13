@@ -81,7 +81,9 @@ export class DatastoreManager {
       case IM.DatastoreType.stateMod:
         return StateModDatastore.readTimeSeries(service, datastore, fullTSID);
       case IM.DatastoreType.json:
-        return ColoradoHydroBaseRestDatastore.getData(service, datastore, fullTSID);
+        // TODO: DO NOT PUSH TO GITHUB.
+        return new ColoradoHydroBaseRestDatastore(service, datastore.rootUrl)
+        .getData(datastore, fullTSID);
       case 'unknown':
       default:
         console.error("Unsupported datastore '" + fullTSID.datastore + "'.");

@@ -15,13 +15,10 @@ import * as Papa           from 'papaparse';
   providedIn: 'root'
 })
 export class OwfCommonService {
-  /** Object containing a geoLayerId as the key and a boolean representing whether
-   * the given geoLayer has been given a bad path as the value. */
-  public badPath: {} = {};
-  /** Object containing the contents from the graph template configuration file. */
-  public chartTemplateObject: Object;
-  /** Object that holds the application configuration contents from the app-config.json file. */
-  public appConfig: any;
+
+  /** Object that holds the application configuration contents from the `app-config.json`
+   * file. */
+  public appConfig: IM.AppConfig;
   /** The hard-coded string of the name of the application configuration file. It
    * is readonly, because it must be named app-config.json by the user. */
   public readonly appConfigFile: string = 'app-config.json';
@@ -34,9 +31,12 @@ export class OwfCommonService {
    * under assets/app. If not, this string will be changed to 'assets/app-default'
    * and the default InfoMapper set up will be used instead. */
   public appPath: string = 'assets/app/';
-  /**
-   * 
-   */
+  /** Object containing a geoLayerId as the key and a boolean representing whether
+   * the given geoLayer has been given a bad path as the value. */
+  public badPath = {};
+   /** Object containing the contents from the graph template configuration file. */
+  public chartTemplateObject: Object;
+  /** Absolute path to the dashboard configuration file. Used for relative paths. */
   public dashboardConfigPath: string;
   /** An array of DataUnit objects that each contain the precision for different
    * types of data, from degrees to mile per hour. Read from the application config
@@ -315,6 +315,10 @@ export class OwfCommonService {
           return saveFileName + '.csv';
         }
     } 
+  }
+
+  getApiKey(): string {
+    return this.appConfig.apiKey;
   }
 
   /**
@@ -617,7 +621,7 @@ export class OwfCommonService {
       } else {
         if (this.appConfig.mainMenu[i].id === id) {
           var path: string = '';
-          let splitPath = this.appConfig.mainMenu[i].split('/');
+          let splitPath = this.appConfig.mainMenu[i].mapProject.split('/');
           for (let i = 0; i < splitPath.length - 1; i++) {
             path += splitPath[i] + '/';
           }
@@ -1374,10 +1378,12 @@ export class OwfCommonService {
   }
 
   /**
-   * Sets the globally used @var appConfig for access to the app's configuration settings
-   * @param appConfig The entire application configuration read in from the app-config file as an object
+   * Sets the globally used @var appConfig for access to the app's configuration
+   * settings.
+   * @param appConfig The entire application configuration read in from the app-config
+   * .file as an object
    */
-  public setAppConfig(appConfig: {}): void { this.appConfig = appConfig; }
+  public setAppConfig(appConfig: IM.AppConfig): void { this.appConfig = appConfig; }
 
   /**
    * No configuration file was detected from the user, so the 'assets/app-default/' path is set
@@ -1389,11 +1395,15 @@ export class OwfCommonService {
    *cs, or possibly creates the badPath object with the geo
    * @param geoLayerId The geoLayerId from the geoLayer where the bad path was set
    */
-  public setBadPath(path: string, geoLayerId: string): void { this.badPath[geoLayerId] = [true, path]; }
+  public setBadPath(path: string, geoLayerId: string): void {
+    this.badPath[geoLayerId] = [true, path];
+  }
 
   /**
-   * Sets @var chartTemplateObject with the object read in from JSON graph template file
-   * @param graphTemplateObject The graph template object obtained from the graph template file
+   * Sets @var chartTemplateObject with the object read in from JSON graph template
+   * file.
+   * @param graphTemplateObject The graph template object obtained from the graph
+   * template file.
    */
   public setChartTemplateObject(graphTemplateObject: Object): void {
     this.chartTemplateObject = graphTemplateObject;

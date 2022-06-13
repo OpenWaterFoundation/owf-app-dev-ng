@@ -254,6 +254,15 @@ export class DateTime {
   private __hsecond: number;
 
   /**
+  Nanosecond fraction of a second (0 to 999,999,999).
+  Other values can e calculated from nanoseconds as follows:
+    hundredths (/10000000)
+    milliseconds (/1000000)
+    microseconds (/1000)
+  */
+  private __nano: number;
+
+  /**
   Seconds (0-59).
   */
   private __second: number;
@@ -1954,6 +1963,164 @@ export class DateTime {
     }
     this.setYearDay();
     this.__isleap = TimeUtil.isLeapYear( this.__year );
+  }
+
+  /**
+  Round the time to an even interval.
+  This is useful when setting the period for a time series from irregular end dates.
+  If a matching even interval is specified, then no change will occur.
+  Any reasonable combination of base and multiplier can be specified,
+  resulting in intervals that divide evenly into the next coarsest time interval (e.g., use 10 min, not 13 min).
+  Otherwise, results may be unexpected.
+  Time components smaller than the base are set to appropriate zero values
+  (e.g., rounding minutes results in seconds being set to zero).
+  The irregular interval results in no change to the date.
+  @param direction Specify 1 to round by incrementing the date.
+  Specify -1 to round by decrementing the date.  This flag may be modified in the future to have additional meaning.
+  @param interval_base See TimeInterval.
+  @param interval_mult Multiplier for the interval base.
+  */
+  public round ( direction: number, interval_base: number, interval_mult: number ): void {
+    if ( interval_base === TimeInterval.SECOND ) {
+      this.__nano = 0;
+    }
+    else if( interval_base === TimeInterval.MINUTE ) {
+      this.__second = 0;
+      this.__nano = 0;
+      if ( direction > 0 ) {
+        // Rounding up (if the minute is already 0 then don't need to do anything).
+        if ( interval_mult === 0 ) {
+          if ( this.__minute !== 0 ) {
+            // Want an even hour and minute is not zero.
+            // Increase the hour. Do so by incrementing the minutes.
+            this.addMinute ( 60 - this.__minute );
+          }
+          // Else.  Do nothing since minute is already zero.
+        }
+        else {
+            // Want to increment to an even interval.
+          if ( (this.__minute%interval_mult) !== 0 ) {
+            // Not exactly on interval time.
+            this.addMinute ( interval_mult -	this.__minute%interval_mult );
+          }
+        }
+      }
+      else {
+              // Rounding down (if the _minute is already 0 then don't need to do anything).
+        if ( interval_mult === 0 ) {
+          if ( this.__minute !== 0 ) {
+            // Want an even hour and minute is not zero.  Decrease the hour.
+            // Do so by decrementing the minutes.
+            this.addMinute( -1*this.__minute );
+          }
+          // Else.  Do nothing since minute is already zero.
+        }
+        else {
+            // Want to decrement to an even interval.
+          if ( (this.__minute%interval_mult) !== 0 ) {
+            // Not exactly on interval time.
+            this.addMinute ( -1*this.__minute%interval_mult );
+          }
+        }
+      }
+    }
+    else if ( interval_base === TimeInterval.HOUR ) {
+      this.__minute = 0;
+      this.__second = 0;
+      this.__nano = 0;
+      if ( direction > 0 ) {
+        // Rounding up (if the hour is already 0 then don't need to do anything).
+        if ( interval_mult === 0 ) {
+          if ( this.__hour !== 0 ) {
+            // Want an even day and hour is not zero.  Increase the day.
+            // Do so by incrementing the hours.
+            this.addHour ( 24 - this.__hour );
+          }
+          // Else.  Do nothing since hour is already zero.
+        }
+        else {
+          // Want to increment to an even interval.
+          this.addHour ( interval_mult - this.__hour%interval_mult );
+        }
+      }
+      else {
+              // Rounding down (if the _hour is already 0 then don't need to do anything).
+        if ( interval_mult === 0 ) {
+          if ( this.__hour !== 0 ) {
+            // Want an even day and hour is not zero.  Decrease the day.
+            // Do so by decrementing the hour.
+            this.addHour ( -1*this.__hour );
+          }
+          // Else.  Do nothing since hour is already zero.
+        }
+        else {
+          // Want to decrement to an even interval.
+          this.addHour ( -1*this.__hour%interval_mult );
+        }
+      }
+      }
+      else if ( interval_base === TimeInterval.DAY ) {
+        this.__hour = 0;
+        this.__minute = 0;
+        this.__second = 0;
+        this.__nano = 0;
+      if ( direction > 0 ) {
+        // Rounding up (if the _day is already 1 then don't need to do anything).
+        if ( interval_mult === 0 ) {
+          if ( this.__hour !== 0 ) {
+            // Want an even day and hour is not zero.  Increase the day.
+            // Do so by incrementing the hours.
+            this.addHour ( 24 - this.__hour );
+          }
+          // Else.  Do nothing since hour is already zero.
+        }
+        else {
+          // Want to increment to an even interval.
+          this.addHour ( interval_mult - this.__hour%interval_mult );
+        }
+      }
+      else {
+              // Rounding down (if the _hour is already 0 then don't need to do anything).
+        if ( interval_mult === 0 ) {
+          if ( this.__hour !== 0 ) {
+            // Want an even day and hour is not zero.  Decrease the day.
+            // Do so by decrementing the hour.
+            this.addHour ( -1*this.__hour );
+          }
+          // Else.  Do nothing since hour is already zero.
+        }
+        else {
+          // Want to decrement to an even interval.
+          this.addHour ( -1*this.__hour%interval_mult );
+        }
+      }
+      }
+      else if ( interval_base === TimeInterval.WEEK ) {
+          console.warn( 2, "DateTime.round", "Rounding to week not implemented yet." );
+      }
+      else if ( interval_base === TimeInterval.MONTH ) {
+        this.__day = 1;
+        this.__hour = 0;
+        this.__minute = 0;
+        this.__second = 0;
+        this.__nano = 0;
+      }
+      else if ( interval_base === TimeInterval.YEAR ) {
+        this.__month = 1;
+        this.__day = 1;
+        this.__hour = 0;
+        this.__minute = 0;
+        this.__second = 0;
+        this.__nano = 0;
+      }
+      else if ( interval_base === TimeInterval.IRREGULAR ) {
+      // Do nothing to the date.
+    }
+      else {
+        // Unsupported interval.
+      console.warn ( 2, "DateTime.round",	"Interval base " + interval_base + " is unsupported.");
+      }
+      this.reset();
   }
 
   /**

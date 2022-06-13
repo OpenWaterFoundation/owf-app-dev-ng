@@ -129,15 +129,18 @@ export class ChartComponent implements OnInit, OnDestroy {
    * data array.
    * @param units The units being used on the graph to be shown as a column.
    */
-  private addToAttributeTable(xAxisLabels: string[], axisObject: any, TSAlias: string, units: string, TSIndex: number, datePrecision?: number): void {
+  private addToAttributeTable(xAxisLabels: string[], axisObject: any, TSAlias: string,
+    units: string, TSIndex: number, datePrecision?: number): void {
 
-    // Retrieve the output precision from the DataUnits array if it exists, and if not default to 2
+    // Retrieve the output precision from the DataUnits array if it exists, and
+    // if not default to 2
     var outputPrecision = this.determineOutputPrecision(units);
-    // For the first column header name, have it be DATE if the datePrecision is week, month or year,
-    // or DATE / TIME if day, hour, minute, etc..
+    // For the first column header name, have it be DATE if the datePrecision is
+    // week, month or year, or DATE / TIME if day, hour, minute, etc..
     var column1Name = (datePrecision > 30) ? 'DATE': 'DATE / TIME';
     this.dateTimeColumnName = column1Name;
-    // If the first time series, create the Date / Time column, and the data column for the time series
+    // If the first time series, create the Date / Time column, and the data column
+    // for the time series.
     if (TSIndex === 0) {
       // Create the column name for the current time series' units, including units if it exists, and skipping it otherwise
       var displayedUnits = units ? TSAlias + ' (' + units + ')' : TSAlias;
@@ -224,14 +227,16 @@ export class ChartComponent implements OnInit, OnDestroy {
           if (xAxisLabels[i] < this.attributeTable[startCount][column1Name]) {
             this.attributeTable.splice(startCount, 0, { 
               [column1Name]: xAxisLabels[i],
-              [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' : axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
+              [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' :
+              axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
             })
             startCount++;
 
           } else if (xAxisLabels[i] > this.attributeTable[this.attributeTable.length - endCount][column1Name]) {
             this.attributeTable.push({
               [column1Name]: xAxisLabels[i],
-              [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' : axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
+              [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' :
+              axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
             })
             endCount++;
           }
