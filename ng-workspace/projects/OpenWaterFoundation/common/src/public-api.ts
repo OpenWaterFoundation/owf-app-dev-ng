@@ -1,5 +1,7 @@
 /* Public API Surface of the Common library. */
 
+export * from '@OpenWaterFoundation/common/dmi';
+
 export * from '@OpenWaterFoundation/common/dwr/statemod';
 
 export * from '@OpenWaterFoundation/common/leaflet';

@@ -12,6 +12,7 @@ import * as IM              from '@OpenWaterFoundation/common/services';
 import { DateTime,
           TimeInterval }    from '@OpenWaterFoundation/common/util/time';
 import { PropList }         from '@OpenWaterFoundation/common/util/io';
+import { TelemetryStation } from '@OpenWaterFoundation/common/dmi';
 
 
 // @dynamic
@@ -2034,7 +2035,7 @@ export class ColoradoHydroBaseRestDatastore {
       // 
       forkJoin(allTelemetryStationReads).subscribe((allResults: any) => {
 
-        var telemetryResult = null;
+        var telemetryResult: TelemetryStation = null;
         var telemetryStationDataTypeResult = null;
         var telTS = null;
 
@@ -2043,7 +2044,8 @@ export class ColoradoHydroBaseRestDatastore {
           telemetrySubject.next(ts);
         }
         else {
-          telemetryResult = allResults[0].ResultList[0];
+          telemetryResult = new TelemetryStation(allResults[0].ResultList[0]);
+          console.log(telemetryResult.toString());
         }
 
         if ( allResults[1] === null ) {

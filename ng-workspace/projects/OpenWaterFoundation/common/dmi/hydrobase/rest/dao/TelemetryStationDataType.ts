@@ -1,6 +1,7 @@
 // TelemetryStationDataType - data object for telemetry station data types
 
 import { DateTime }    from "@OpenWaterFoundation/common/util/time";
+import * as IM         from '@OpenWaterFoundation/common/services';
 import { TimeToolkit } from "../dto/TimeToolkit";
 
 /* NoticeStart
@@ -22,379 +23,123 @@ NoticeEnd */
 
 /**
  * This class stores a DWR web services telemetry station data type object.
- * https://dnrweb.state.co.us/DWR/DwrApiService/Help/Api/GET-api-v2-telemetrystations-telemetrystationdatatypes
+ * https://dwr.state.co.us/Rest/GET/Help/Api/GET-api-v2-telemetrystations-telemetrystationdatatypes
  */
 export class TelemetryStationDataType {
-	
-	/**
-	 * Variables declared in alphabetical order.
-	 * Documentation copied from web services.
-	 */
-	
-	/**
-	 * Abbreviation
-	 */
-	private abbrev: string;
-	
-	/**
-	 * Contributing area
-	 */
-	private contrArea: number;
-	
-	/**
-	 * County where the station is located
-	 */
-	private county: string;
-	
-	/**
-	 * Primary source/provider of well measurement data
-	 */
-	private dataSource: string;
-	
-	/**
-	 * Data source abbreviation
-	 */
-	private dataSourceAbbrev: string;
-	
-	/**
-	 * DWR Water Division
-	 */
-	private division: number;
-	
-	/**
-	 * Drainage Area
-	 */
-	private drainArea: number;
-	
-	/**
-	 * National Hydrographic Dataset stream identifier
-	 */
-	private gnisId: string;
-	
-	/**
-	 * HUC 10
-	 */
-	private huc10: string;
-	
-	/**
-	 * Latitude value in decimal degrees
-	 */
-	private latdecdeg: number;
-	
-	/**
-	 * Accuracy of location coordinates
-	 */
-	private locationAccuracy: string;
-	
-	/**
-	 * Longitude in decimal degrees
-	 */
-	private longdecdeg: number;
-	
-	/**
-	 * Last date time that this record was modified in the DWR database
-	 */
-	private modified: DateTime;
-	
-	/**
-	 * Parameter
-	 */
-	private parameter: string;
-	
-	/**
-	 * Period of record end.
-	 */
-	private parameterPorEnd: DateTime;
-	
-	/**
-	 * Period of record start.
-	 */
-	private parameterPorStart: DateTime;
-	
-	/**
-	 * Unit for given Parameter
-	 */
-	private parameterUnit: string;
-	
-	/**
-	 * Station Name
-	 */
-	private stationName: string;
-	
-	/**
-	 * Station Status
-	 */
-	private stationStatus: string;
-	
-	/**
-	 * Station Type
-	 */
-	private stationType: string;
-	
-	/**
-	 * Distance in miles to the confluence with the next downstream 
-	 * water source (or distance to state line)
-	 */
-	private streamMile: number;
-	
-	/**
-	 * Type of structure
-	 */
-	private structureType: string;
-	
-	/**
-	 * Whether third party data.
-	 */
-	private thirdParty: boolean;
-	
-	/**
-	 * USGS Station ID
-	 */
-	private usgsStationId: string;
-	
-	/**
-	 * The x (Easting) component of the Universal Transverse Mercator system. 
-	 * (Zone 12, NAD83 datum)
-	 */
-	private utmX: number;
-	
-	/**
-	 * The y (Northing) component of the Universal Transverse Mercator system. 
-	 * (Zone 12, NAD83 datum)
-	 */
-	private utmY: number;
-	/**
-	 * Added variable for use in other places in the code. 
-	 * Not originally from web services
-	 * @jurentie
-	 */
-	private timeStep: string;
-	
-	/**
-	 * DWR Water District
-	 */
-	private waterDistrict: number;
-	
-	/**
-	 * Name of the water source as specified in the court case
-	 */
-	private waterSource: string;
-	
-	/**
-	 * DWR unique structure identifier
-	 */
-	private wdid: string;
+
+
+  constructor(private telemetryStationDateType: any) {
+
+  }
+
 	
 	/**
 	 * Getters and setters for defined variables
 	 */
-	public getAbbrev(): string {
-		return this.abbrev;
+	getAbbrev(): string {
+		return this.telemetryStationDateType.abbrev;
 	}
-	public getContrArea(): number {
-		return this.contrArea;
-	}
-	
-	public getCounty(): string {
-		return this.county;
-	}
-	public getDataSource(): string {
-		return this.dataSource;
+	getContrArea(): number {
+		return this.telemetryStationDateType.contrArea;
 	}
 	
-	public getDataSourceAbbrev(): string {
-		return this.dataSourceAbbrev;
+	getCounty(): string {
+		return this.telemetryStationDateType.county;
 	}
-	public getDivision(): number {
-		return this.division;
-	}
-	
-	public getDrainArea(): number {
-		return this.drainArea;
-	}
-	public getGnisId(): string {
-		return this.gnisId;
+	getDataSource(): string {
+		return this.telemetryStationDateType.dataSource;
 	}
 	
-	public getHuc10(): string {
-		return this.huc10;
+	getDataSourceAbbrev(): string {
+		return this.telemetryStationDateType.dataSourceAbbrev;
 	}
-	public getLatdecdeg(): number {
-		return this.latdecdeg;
-	}
-	
-	public getLocationAccuracy(): string {
-		return this.locationAccuracy;
-	}
-	public getLongdecdeg(): number {
-		return this.longdecdeg;
+	getDivision(): number {
+		return this.telemetryStationDateType.division;
 	}
 	
-	public getModified(): DateTime {
-		return this.modified;
+	getDrainArea(): number {
+		return this.telemetryStationDateType.drainArea;
 	}
-	public getParameter(): string {
-		return this.parameter;
+	getGnisId(): string {
+		return this.telemetryStationDateType.gnisId;
 	}
 	
-	public getParameterPorEnd(): DateTime {
-		return this.parameterPorEnd;
+	getHuc10(): string {
+		return this.telemetryStationDateType.huc10;
+	}
+	getLatdecdeg(): number {
+		return this.telemetryStationDateType.latdecdeg;
+	}
+	
+	getLocationAccuracy(): string {
+		return this.telemetryStationDateType.locationAccuracy;
+	}
+	getLongdecdeg(): number {
+		return this.telemetryStationDateType.longdecdeg;
+	}
+	
+	getModified(): DateTime {
+		return this.telemetryStationDateType.modified;
+	}
+	getParameter(): string {
+		return this.telemetryStationDateType.parameter;
+	}
+	
+	getParameterPorEnd(): DateTime {
+		return this.telemetryStationDateType.parameterPorEnd;
 	}
 
-	public getParameterPorStart(): DateTime {
-		return this.parameterPorStart;
+	getParameterPorStart(): DateTime {
+		return this.telemetryStationDateType.parameterPorStart;
 	}
 	
-	public getParameterUnit(): string {
-		return this.parameterUnit;
+	getParameterUnit(): string {
+		return this.telemetryStationDateType.parameterUnit;
 	}
-	public getStationName(): string {
-		return this.stationName;
+	getStationName(): string {
+		return this.telemetryStationDateType.stationName;
 	}
 
-	public getStationStatus(): string {
-		return this.stationStatus;
+	getStationStatus(): string {
+		return this.telemetryStationDateType.stationStatus;
 	}
-	public getStationType(): string {
-		return this.stationType;
-	}
-	
-	public getStreamMile(): number {
-		return this.streamMile;
-	}
-	public getStructureType(): string {
-		return this.structureType;
+	getStationType(): string {
+		return this.telemetryStationDateType.stationType;
 	}
 	
-	public getTimeStep(): string {
-		return this.timeStep;
+	getStreamMile(): number {
+		return this.telemetryStationDateType.streamMile;
 	}
-	public getThirdParty(): boolean {
-		return this.thirdParty;
-	}
-	public getUsgsStationId(): string {
-		return this.usgsStationId;
+	getStructureType(): string {
+		return this.telemetryStationDateType.structureType;
 	}
 	
-	public getUtmX(): number {
-		return this.utmX;
+	getTimeStep(): string {
+		return this.telemetryStationDateType.timeStep;
 	}
-	public getUtmY(): number {
-		return this.utmY;
+	getThirdParty(): boolean {
+		return this.telemetryStationDateType.thirdParty;
 	}
-	
-	public getWaterDistrict(): number {
-		return this.waterDistrict;
-	}
-	public getWaterSource(): string {
-		return this.waterSource;
+	getUsgsStationId(): string {
+		return this.telemetryStationDateType.usgsStationId;
 	}
 	
-	public getWdid(): string {
-		return this.wdid;
+	getUtmX(): number {
+		return this.telemetryStationDateType.utmX;
 	}
-	public setAbbrev(abbrev: string): void {
-		this.abbrev = abbrev;
-	}
-	
-	public setContrArea(contrArea: number): void {
-		this.contrArea = contrArea;
-	}
-	public setCounty(county: string): void {
-		this.county = county;
+	getUtmY(): number {
+		return this.telemetryStationDateType.utmY;
 	}
 	
-	public setDataSource(dataSource: string): void {
-		this.dataSource = dataSource;
+	getWaterDistrict(): number {
+		return this.telemetryStationDateType.waterDistrict;
 	}
-	public setDataSourceAbbrev(dataSourceAbbrev: string): void {
-		this.dataSourceAbbrev = dataSourceAbbrev;
-	}
-	
-	public setDivision(division: number): void {
-		this.division = division;
-	}
-	public setDrainArea(drainArea: number): void {
-		this.drainArea = drainArea;
+	getWaterSource(): string {
+		return this.telemetryStationDateType.waterSource;
 	}
 	
-	public setGnisId(gnisId: string): void {
-		this.gnisId = gnisId;
-	}
-	public setHuc10(huc10: string): void {
-		this.huc10 = huc10;
-	}
-	
-	public setLatdecdeg(latdecdeg: number): void {
-		this.latdecdeg = latdecdeg;
-	}
-	public setLocationAccuracy(locationAccuracy: string): void {
-		this.locationAccuracy = locationAccuracy;
-	}
-	
-	public setLongdecdeg(longdecdeg: number): void {
-		this.longdecdeg = longdecdeg;
-	}
-	public setModified(modified: string): void {
-		this.modified = TimeToolkit.getInstance().toDateTime(modified, false);
-	}
-	
-	public setParameter(parameter: string): void {
-		this.parameter = parameter;
-	}
-	public setStationName(stationName: string): void {
-		this.stationName = stationName;
-	}
-	public setParameterPorEnd(parameterPorEnd: string): void {
-		this.parameterPorEnd = TimeToolkit.getInstance().toDateTime(parameterPorEnd, false);
-	}
-	public setParameterPorStart(parameterPorStart: string): void {
-		this.parameterPorStart = TimeToolkit.getInstance().toDateTime(parameterPorStart, false);
-	}
-	public setParameterUnit(parameterUnit: string): void {
-		this.parameterUnit = parameterUnit;
-	}
-	
-	public setStationStatus(stationStatus: string): void {
-		this.stationStatus = stationStatus;
-	}
-	
-	public setStationType(stationType: string): void {
-		this.stationType = stationType;
-	}
-	public setStreamMile(streamMile: number): void {
-		this.streamMile = streamMile;
-	}
-	
-	public setStructureType(structureType: string): void {
-		this.structureType = structureType;
-	}
-	public setThirdParty(thirdParty: boolean): void {
-		this.thirdParty = thirdParty;
-	}
-	public setTimeStep(timeStep: string): void {
-		this.timeStep = timeStep;
-	}
-	
-	public setUsgsStationId(usgsStationId: string): void {
-		this.usgsStationId = usgsStationId;
-	}
-	public setUtmX(utmX: number): void {
-		this.utmX = utmX;
-	}
-	
-	public setUtmY(utmY: number): void {
-		this.utmY = utmY;
-	}
-	public setWaterDistrict(waterDistrict: number): void {
-		this.waterDistrict = waterDistrict;
-	}
-	
-	public setWaterSource(waterSource: string): void {
-		this.waterSource = waterSource;
-	}
-	public setWdid(wdid: string): void {
-		this.wdid = wdid;
+	getWdid(): string {
+		return this.telemetryStationDateType.wdid;
 	}
 	
 	/**
@@ -403,32 +148,32 @@ export class TelemetryStationDataType {
 	 * web services
 	 */
 	toString(): string {
-		return "TelemetryStationDataType: [ division: " + this.division +
-    ", waterDistrict: " + this.waterDistrict + 
-		", county: " + this.county +
-    ", stationName: " + this.stationName +
-    ", dataSourceAbbrev: " + this.dataSourceAbbrev + 
-		", dataSource: " + this.dataSource +
-    ", abbrev: " + this.abbrev +
-    ", wdid: " + this.wdid +
-    ", usgsStationId: " + this.usgsStationId +
-    ", stationStatus: " + this.stationStatus +
-    ", stationType: " + this.stationType +
-    ", waterSource: " + this.waterSource +
-    ", gnisId: " + this.gnisId + 
-		", streamMile: " + this.streamMile +
-    ", structureType: " + this.structureType +
-    ", parameter: " + this.parameter + 
-		", parameterUnit: " + this.parameterUnit +
-    ", contrArea: " + this.contrArea +
-    ", drainArea: " + this.drainArea + 
-		", huc10: " + this.huc10 +
-    ", utmX: " + this.utmX +
-    ", utmY: " + this.utmY +
-    ", latdecdeg: " + this.latdecdeg +
-    ", longdecdeg: " + this.longdecdeg +
-    ", locationAccuracy: " + this.locationAccuracy +
-    ", modified: " + this.modified + " ]\n";
+		return "TelemetryStationDataType: { division: " + this.telemetryStationDateType.division +
+    ", waterDistrict: " + this.telemetryStationDateType.waterDistrict + 
+		", county: " + this.telemetryStationDateType.county +
+    ", stationName: " + this.telemetryStationDateType.stationName +
+    ", dataSourceAbbrev: " + this.telemetryStationDateType.dataSourceAbbrev + 
+		", dataSource: " + this.telemetryStationDateType.dataSource +
+    ", abbrev: " + this.telemetryStationDateType.abbrev +
+    ", wdid: " + this.telemetryStationDateType.wdid +
+    ", usgsStationId: " + this.telemetryStationDateType.usgsStationId +
+    ", stationStatus: " + this.telemetryStationDateType.stationStatus +
+    ", stationType: " + this.telemetryStationDateType.stationType +
+    ", waterSource: " + this.telemetryStationDateType.waterSource +
+    ", gnisId: " + this.telemetryStationDateType.gnisId + 
+		", streamMile: " + this.telemetryStationDateType.streamMile +
+    ", structureType: " + this.telemetryStationDateType.structureType +
+    ", parameter: " + this.telemetryStationDateType.parameter + 
+		", parameterUnit: " + this.telemetryStationDateType.parameterUnit +
+    ", contrArea: " + this.telemetryStationDateType.contrArea +
+    ", drainArea: " + this.telemetryStationDateType.drainArea + 
+		", huc10: " + this.telemetryStationDateType.huc10 +
+    ", utmX: " + this.telemetryStationDateType.utmX +
+    ", utmY: " + this.telemetryStationDateType.utmY +
+    ", latdecdeg: " + this.telemetryStationDateType.latdecdeg +
+    ", longdecdeg: " + this.telemetryStationDateType.longdecdeg +
+    ", locationAccuracy: " + this.telemetryStationDateType.locationAccuracy +
+    ", modified: " + this.telemetryStationDateType.modified + " }\n";
 	}
 
 }

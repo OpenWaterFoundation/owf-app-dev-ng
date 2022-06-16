@@ -1,6 +1,7 @@
 // TelemetryStation - data object for telemetry station
 
 import { DateTime }    from "@OpenWaterFoundation/common/util/time";
+import * as IM         from '@OpenWaterFoundation/common/services';
 import { TimeToolkit } from "../dto/TimeToolkit";
 
 /* NoticeStart
@@ -23,7 +24,7 @@ NoticeEnd */
  * This class acts as a way to convert results from DWR web services
  * to a plain old java object, for means of processing the data 
  * returned.<br>
- * https://dnrweb.state.co.us/DWR/DwrApiService/Help/Api/GET-api-v2-telemetrystations-telemetrystation
+ * https://dwr.state.co.us/Rest/GET/Help/Api/GET-api-v2-telemetrystations-telemetrystation
  * @author jurentie
  *
  */
@@ -33,470 +34,155 @@ NoticeEnd */
  * but for now ignore anything that is new so as to not break the code.
  */
 export class TelemetryStation {
+
+	private telemetryStation: any;
+
+
+	constructor(telemetryStation: any) {
+		this.telemetryStation = telemetryStation;
+	}
 	
 	/**
-	 * Variables declared in alphabetical order.
-	 * Documentation copied from web services.
+	 * Getters of all Telemetry Station variables.
 	 */
-	
-	/** 
-	 * Abbreviation 
-	 */
-	private abbrev;
-
-	/** 
-	 * Contributing Area 
-	 */
-	private contrArea;
-
-	/** 
-	 * County where the well is located 
-	 */
-	private county;
-
-	/** 
-	 * Full data source description 
-	 */
-	private dataSource;
-
-	/**
-	 * Primary source/provider of well measurement data
-	 */
-	private dataSourceAbbrev;
-	
-	/** 
-	 * DWR Water Division 
-	 */
-	private division;
-	
-	/** 
-	 * Drainage Area 
-	 */
-	private drainArea;
-
-	/** 
-	 * Flag A 
-	 */
-	private flagA;
-
-	/** 
-	 * Flag B 
-	 */
-	private flagB;
-
-	/**
-	 * National Hydrographic Dataset stream identifier
-	 */
-	private gnisId;
-
-	/** 
-	 * HUC 10 
-	 */
-	private huc10;
-
-	/** 
-	 * Latitude (decimal degrees) 
-	 */
-	private latitude;
-
-	/** 
-	 * Accuracy of location coordinates 
-	 */
-	private locationAccuracy;
-
-	/** 
-	 * Longitude (decimal degrees) 
-	 */
-	private longitude;
-
-	/** 
-	 * Measurement Date Time 
-	 */
-	private measDateTime: DateTime;
-
-	/** 
-	 * Measurement Value 
-	 */
-	private measValue: DateTime;
-
-	/**
-	 * Last date time that this record was modified in the DWR database
-	 */
-	private modified: DateTime;
-
-	/** 
-	 * Hyperlink to additional details 
-	 */
-	private moreInformation;
-
-	/** 
-	 * Parameter 
-	 */
-	private parameter;
-
-	/** 
-	 * Recorded stage (feet) 
-	 */
-	private stage;
-
-	/** 
-	 * Station Name 
-	 */
-	private stationName;
-
-	/**
-	 * Station of record end.
-	 */
-	private stationPorEnd: DateTime;
-	
-	/**
-	 * Station of record start.
-	 */
-	private stationPorStart: DateTime;
-	
-	/** 
-	 * Station Status 
-	 */
-	private stationStatus;
-
-	/** 
-	 * Station Type 
-	 */
-	private stationType;
-
-	/**
-	 * Distance in miles to the confluence with the next downstream 
-	 * water source (or distance to state line)
-	 */
-	private streamMile;
-
-	/** 
-	 * Type of structure 
-	 */
-	private structureType;
-
-	/**
-	 * Whether third party data.
-	 */
-	private thirdParty;
-	
-	/** 
-	 * Units of measure 
-	 */
-	private units;
-
-	/** 
-	 * USGS Station ID 
-	 */
-	private usgsStationId;
-
-	/** 
-	 * The x (Easting) component of the Universal Transverse Mercator system 
-	 * (Zone 12, NAD83 datum) 
-	 */
-	private utmX;
-	
-	/** 
-	 * The y (Northing) component of the Universal Transverse Mercator system 
-	 * (Zone 12, NAD83 datum) 
-	 */
-	private utmY;
-	
-	/** 
-	 * DWR Water District 
-	 */
-	private waterDistrict;
-
-	/** 
-	 * Water Source 
-	 */
-	private waterSource;
-
-	/** 
-	 * DWR unique structure identifier
-	 */
-	private wdid;
-	
-	/**
-	 * Getters and setters of defined variables.
-	 */
-	public getAbbrev() {
-		return this.abbrev;
-	}
-
-	public getContrArea() {
-		return this.contrArea;
-	}
-
-	public getCounty() {
-		return this.county;
-	}
-
-	public getDataSource() {
-		return this.dataSource;
-	}
-
-	public getDataSourceAbbrev() {
-		return this.dataSourceAbbrev;
-	}
-
-	public getDivision() {
-		return this.division;
-	}
-
-	public getDrainArea() {
-		return this.drainArea;
-	}
-
-	public getFlagA() {
-		return this.flagA;
-	}
-
-	public getFlagB() {
-		return this.flagB;
-	}
-
-	public getGnisId() {
-		return this.gnisId;
-	}
-
-	public getHuc10() {
-		return this.huc10;
-	}
-
-	public getLatitude() {
-		return this.latitude;
-	}
-
-	public getLocationAccuracy() {
-		return this.locationAccuracy;
-	}
-
-	public getLongitude() {
-		return this.longitude;
-	}
-
-	public getMeasDateTime(): DateTime {
-		return this.measDateTime;
-	}
-
-	public getMeasValue() {
-		return this.measValue;
-	}
-
-	public getModified(): DateTime {
-		return this.modified;
-	}
-
-	public getMoreInformation() {
-		return this.moreInformation;
-	}
-
-	public getParameter() {
-		return this.parameter;
-	}
-
-	public getStage() {
-		return this.stage;
-	}
-
-	public getStationName() {
-		return this.stationName;
-	}
-
-	public getStationPorEnd(): DateTime {
-		return this.stationPorEnd;
-	}
-
-	public getStationPorStart(): DateTime {
-		return this.stationPorStart;
-	}
-
-	public getStationStatus() {
-		return this.stationStatus;
-	}
-
-	public getStationType() {
-		return this.stationType;
-	}
-
-	public getStreamMile() {
-		return this.streamMile;
-	}
-
-	public getStructureType() {
-		return this.structureType;
-	}
-
-	public getThirdParty() {
-		return this.thirdParty;
-	}
-
-	public getUnits() {
-		return this.units;
-	}
-
-	public getUsgsStationId() {
-		return this.usgsStationId;
+	getAbbrev() {
+		return this.telemetryStation.abbrev;
 	}
 
-	public getUtmX() {
-		return this.utmX;
+	getContrArea() {
+		return this.telemetryStation.contrArea;
 	}
 
-	public getUtmY() {
-		return this.utmY;
+	getCounty() {
+		return this.telemetryStation.county;
 	}
 
-	public getWaterDistrict() {
-		return this.waterDistrict;
+	getDataSource() {
+		return this.telemetryStation.dataSource;
 	}
 
-	public getWaterSource() {
-		return this.waterSource;
+	getDataSourceAbbrev() {
+		return this.telemetryStation.dataSourceAbbrev;
 	}
 
-	public getWdid() {
-		return this.wdid;
+	getDivision() {
+		return this.telemetryStation.division;
 	}
 
-	public setAbbrev(abbrev) {
-		this.abbrev = abbrev;
+	getDrainArea() {
+		return this.telemetryStation.drainArea;
 	}
 
-	public setContrArea(contrArea) {
-		this.contrArea = contrArea;
+	getFlagA() {
+		return this.telemetryStation.flagA;
 	}
 
-	public setCounty(county) {
-		this.county = county;
+	getFlagB() {
+		return this.telemetryStation.flagB;
 	}
 
-	public setDataSource(dataSource) {
-		this.dataSource = dataSource;
+	getGnisId() {
+		return this.telemetryStation.gnisId;
 	}
 
-	public setDataSourceAbbrev(dataSourceAbbrev) {
-		this.dataSourceAbbrev = dataSourceAbbrev;
+	getHuc10() {
+		return this.telemetryStation.huc10;
 	}
 
-	public setDivision(div) {
-		this.division = div;
+	getLatitude() {
+		return this.telemetryStation.latitude;
 	}
 
-	public setDrainArea(drainArea) {
-		this.drainArea = drainArea;
+	getLocationAccuracy() {
+		return this.telemetryStation.locationAccuracy;
 	}
 
-	public setFlagA(flagA) {
-		this.flagA = flagA;
+	getLongitude() {
+		return this.telemetryStation.longitude;
 	}
 
-	public setFlagB(flagB) {
-		this.flagB = flagB;
+	getMeasDateTime(): DateTime {
+		return this.telemetryStation.measDateTime;
 	}
 
-	public setGnisId(gnisId) {
-		this.gnisId = gnisId;
+	getMeasValue() {
+		return this.telemetryStation.measValue;
 	}
-	
-	public setHuc10(huc10) {
-		this.huc10 = huc10;
-	}
-
-	public setLatitude(latitude) {
-		this.latitude = latitude;
-	}
-
-	public setLocationAccuracy(locationAccuracy) {
-		this.locationAccuracy = locationAccuracy;
-	}
 
-	public setLongitude(longitude) {
-		this.longitude = longitude;
+	getModified(): DateTime {
+		return this.telemetryStation.modified;
 	}
 
-	public setMeasDateTime(measDateTime) {
-		this.measDateTime = TimeToolkit.getInstance().toDateTime(measDateTime, true);
+	getMoreInformation() {
+		return this.telemetryStation.moreInformation;
 	}
 
-	public setMeasValue(measValue) {
-		this.measValue = measValue;
+	getParameter() {
+		return this.telemetryStation.parameter;
 	}
 
-	public setModified(modified) {
-		this.modified = TimeToolkit.getInstance().toDateTime(modified, true);
+	getStage() {
+		return this.telemetryStation.stage;
 	}
 
-	public setMoreInformation(moreInformation) {
-		this.moreInformation = moreInformation;
+	getStationName() {
+		return this.telemetryStation.stationName;
 	}
 
-	public setParameter(parameter) {
-		this.parameter = parameter;
+	getStationPorEnd(): DateTime {
+		return this.telemetryStation.stationPorEnd;
 	}
 
-	public setStage(stage) {
-		this.stage = stage;
-	}
-
-	public setStationName(stationName) {
-		this.stationName = stationName;
-	}
-
-	public setStationPorEnd(stationPorEnd) {
-		this.stationPorEnd = TimeToolkit.getInstance().toDateTime(stationPorEnd, false);
-	}
-	public setStationPorStart(stationPorStart) {
-		this.stationPorStart = TimeToolkit.getInstance().toDateTime(stationPorStart, false);
+	getStationPorStart(): DateTime {
+		return this.telemetryStation.stationPorStart;
 	}
 
-	public setStationStatus(stationStatus) {
-		this.stationStatus = stationStatus;
+	getStationStatus() {
+		return this.telemetryStation.stationStatus;
 	}
 
-	public setStationType(stationType) {
-		this.stationType = stationType;
+	getStationType() {
+		return this.telemetryStation.stationType;
 	}
 
-	public setStreamMile(streamMile) {
-		this.streamMile = streamMile;
+	getStreamMile() {
+		return this.telemetryStation.streamMile;
 	}
 
-	public setStructureType(structureType) {
-		this.structureType = structureType;
+	getStructureType() {
+		return this.telemetryStation.structureType;
 	}
 
-	public setThirdParty(thirdParty) {
-		this.thirdParty = thirdParty;
+	getThirdParty() {
+		return this.telemetryStation.thirdParty;
 	}
 
-	public setUnits(units) {
-		this.units = units;
+	getUnits() {
+		return this.telemetryStation.units;
 	}
 
-	public setUsgsStationId(usgsStationId) {
-		this.usgsStationId = usgsStationId;
+	getUsgsStationId() {
+		return this.telemetryStation.usgsStationId;
 	}
 
-	public setUtmX(utmX) {
-		this.utmX = utmX;
+	getUtmX() {
+		return this.telemetryStation.utmX;
 	}
 
-	public setUtmY(utmY) {
-		this.utmY = utmY;
+	getUtmY() {
+		return this.telemetryStation.utmY;
 	}
 
-	public setWaterDistrict(waterDistrict) {
-		this.waterDistrict = waterDistrict;
+	getWaterDistrict() {
+		return this.telemetryStation.waterDistrict;
 	}
 
-	public setWaterSource(waterSource) {
-		this.waterSource = waterSource;
+	getWaterSource() {
+		return this.telemetryStation.waterSource;
 	}
 
-	public setWdid(wdid) {
-		this.wdid = wdid;
+	getWdid() {
+		return this.telemetryStation.wdid;
 	}
 
 	/**
@@ -504,16 +190,37 @@ export class TelemetryStation {
 	 * Variables defined in order of how they are returned in a json format from
 	 * web services
 	 */
-	public toString(){
-		return "TelemetryStation: [ div: " + this.division + ", wd: " + this.waterDistrict + ", county: " + this.county + ", stationName: " +
-    this.stationName + ", dataSource: " + this.dataSource + ", abbrev: " + this.abbrev + ", usgsStationId: " +
-    this.usgsStationId + ", stationStatus: " + this.stationStatus + ", stationType: " + this.stationType + 
-    ", strcutureType: " + this.structureType + ", measDateTime: " + this.measDateTime + ", parameter: " + 
-    this.parameter + ", stage: " + this.stage + ", measValue: " + this.measValue + ", units: " + this.units + ", flagA" + 
-    this.flagA + ", flagB: " + this.flagB + ", contrArea: " + this.contrArea + ", drainArea: " + this.drainArea + 
-    ", huc10: " + this.huc10 + ", utmX: " + this.utmX + ", utmY: " + this.utmY + ", latitude: " + this.latitude + 
-    ", longitude: " + this.longitude + ", locationAccuracy: " + this.locationAccuracy + ", wdid: " + this.wdid + 
-    ", modified: " + this.modified + ", moreInformation: " + this.moreInformation + " ]\n";
+	toString(){
+		return "TelemetryStation: {\n" +
+		"  div: " + this.telemetryStation.division + ",\n" +
+		"  wd: " + this.telemetryStation.waterDistrict + ",\n" +
+		"  county: " + this.telemetryStation.county + ",\n" +
+		"  stationName: " + this.telemetryStation.stationName + ",\n" +
+		"  dataSource: " + this.telemetryStation.dataSource + ",\n" +
+		"  abbrev: " + this.telemetryStation.abbrev + ",\n" +
+		"  usgsStationId: " + this.telemetryStation.usgsStationId + ",\n" +
+		"  stationStatus: " + this.telemetryStation.stationStatus + ",\n" +
+		"  stationType: " + this.telemetryStation.stationType + ",\n" +
+		"  strcutureType: " + this.telemetryStation.structureType + ",\n" +
+		"  measDateTime: " + this.telemetryStation.measDateTime + ",\n" +
+		"  parameter: " + this.telemetryStation.parameter + ",\n" +
+		"  stage: " + this.telemetryStation.stage + ",\n" +
+		"  measValue: " + this.telemetryStation.measValue + ",\n" + 
+		"  units: " + this.telemetryStation.units + ",\n" +
+		"  flagA" + this.telemetryStation.flagA + ",\n" +
+		"  flagB: " + this.telemetryStation.flagB + ",\n" +
+		"  contrArea: " + this.telemetryStation.contrArea + ",\n" +
+		"  drainArea: " + this.telemetryStation.drainArea + ",\n" +
+		"  huc10: " + this.telemetryStation.huc10 + ",\n" +
+		"  utmX: " + this.telemetryStation.utmX + ",\n" +
+		"  utmY: " + this.telemetryStation.utmY + ",\n" +
+		"  latitude: " + this.telemetryStation.latitude + ",\n" +
+		"  longitude: " + this.telemetryStation.longitude + ",\n" +
+		"  locationAccuracy: " + this.telemetryStation.locationAccuracy + ",\n" +
+		"  wdid: " + this.telemetryStation.wdid + ",\n" +
+		"  modified: " + this.telemetryStation.modified + ",\n" +
+		"  moreInformation: " + this.telemetryStation.moreInformation + ",\n" +
+		"}\n";
 	}
 
 }
