@@ -854,6 +854,14 @@ export class DateTime {
   }
 
   /**
+  Return the DateTime precision.
+  @return The precision (see PRECISION*).
+  */
+  getPrecision (): number {
+    return this.__precision;
+  }
+
+  /**
   Return the week day by returning getDate(TimeZoneDefaultType.GMT).getDay().
   @return The week day (Sunday is 0).
   */

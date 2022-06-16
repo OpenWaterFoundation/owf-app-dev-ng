@@ -230,10 +230,11 @@ export class OwfCommonService {
       case IM.Path.sMP:
       case IM.Path.raP:
       case IM.Path.rP:
-        // If any of the pathType's above are given, they will either be given as an absolute or relative path. A forward
-        // slash at the beginning of the string signifies its absolute, so since assets/app/ is already given, just append
-        // the rest. If not, relative is assumed, so use the map config path as the 'home' of the path, e.g.
-        // 'assets/app/data-maps/map-configuration-files/'.
+        // If any of the pathType's above are given, they will either be given as
+        // an absolute or relative path. A forward slash at the beginning of the
+        // string signifies its absolute, so since assets/app/ is already given,
+        // just append the rest. If not, relative is assumed, so use the map config
+        // path as the 'home' of the path, e.g. 'assets/app/data-maps/map-configuration-files/'.
         if (path.startsWith('/')) {
           return path.substring(1);
         } else {
@@ -275,8 +276,11 @@ export class OwfCommonService {
    * @param featureProperties The object containing all features and values for a
    * feature; for replacing ${property} notation.
    */
-  public formatSaveFileName(saveFileName: string, saveFileType: IM.SaveFileType, featureProperties?: any): string {
-    var warning = 'Undefined detected in the save file name. Confirm "saveFile" property and/or property notation ${ } is correct';
+  public formatSaveFileName(saveFileName: string, saveFileType: IM.SaveFileType,
+    featureProperties?: any): string {
+
+    var warning = 'Undefined detected in the save file name. Confirm "saveFile" ' +
+    'property and/or property notation ${ } is correct';
 
     switch (saveFileType) {
       case IM.SaveFileType.tstable:
@@ -291,8 +295,9 @@ export class OwfCommonService {
           console.warn('Defaulting to file name and extension "timeseries.csv"')
           return 'timeseries.csv';
         } else {
-          // At this point the saveFileName is the value of the saveFile property from the popup config file. None of its
-          // ${property} notation has been converted, so the obtainPropertiesFromLine function is called to do so.
+          // At this point the saveFileName is the value of the saveFile property
+          // from the popup config file. None of its ${property} notation has been
+          // converted, so the obtainPropertiesFromLine function is called to do so.
           saveFileName = this.obtainPropertiesFromLine(saveFileName, featureProperties);
           return saveFileName;
         }
@@ -322,16 +327,18 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns either 'assets/app/' if a user-provided configuration file is supplied, or the default 'assets/app-default/'
-   * for the upper level assets path if none is given
+   * @returns either 'assets/app/' if a user-provided configuration file is supplied,
+   * or the default 'assets/app-default/' for the upper level assets path if none
+   * is given.
    */
   public getAppPath(): string {
     return this.appPath;
   }
 
   /**
-   * Check the background geoLayerViewGroup to see if the expandedInitial property exists and is set to true or false.
-   * Show or hide the background layers depending which one is present, and false by default (hiding the layers)
+   * Check the background geoLayerViewGroup to see if the expandedInitial property
+   * exists and is set to true or false. Show or hide the background layers depending
+   * which one is present, and false by default (hiding the layers).
    */
   public getBackgroundExpanded(): boolean {
     for (let geoMap of this.mapConfig.geoMaps) {
@@ -401,8 +408,10 @@ export class OwfCommonService {
   }
 
   /**
-   * Retrieves the bad path from the @var badPath object, and formats it if needed to show in the warning tooltip
-   * @param geoLayerId The geoLayerId used as the key in the @var badPath to find the correct layer's path
+   * Retrieves the bad path from the @var badPath object, and formats it if needed
+   * to show in the warning tooltip.
+   * @param geoLayerId The geoLayerId used as the key in the @var badPath to find
+   * the correct layer's path.
    */
   public getBadPath(geoLayerId: string): string {
     var splitPath = this.badPath[geoLayerId][1].split('/');

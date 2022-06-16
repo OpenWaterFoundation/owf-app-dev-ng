@@ -133,7 +133,7 @@ export class ChartComponent implements OnInit, OnDestroy {
     units: string, TSIndex: number, datePrecision?: number): void {
 
     // Retrieve the output precision from the DataUnits array if it exists, and
-    // if not default to 2
+    // if not default to 2.
     var outputPrecision = this.determineOutputPrecision(units);
     // For the first column header name, have it be DATE if the datePrecision is
     // week, month or year, or DATE / TIME if day, hour, minute, etc..
@@ -142,17 +142,20 @@ export class ChartComponent implements OnInit, OnDestroy {
     // If the first time series, create the Date / Time column, and the data column
     // for the time series.
     if (TSIndex === 0) {
-      // Create the column name for the current time series' units, including units if it exists, and skipping it otherwise
+      // Create the column name for the current time series' units, including units
+      // if it exists, and skipping it otherwise.
       var displayedUnits = units ? TSAlias + ' (' + units + ')' : TSAlias;
       this.valueColumns.push(displayedUnits);
 
       if (axisObject.csvYAxisData) {
         for (let i = 0; i < xAxisLabels.length; i++) {
-          // Push the object into the attributeTable
+          // Push the object into the attributeTable.
           this.attributeTable.push({
             [column1Name]: xAxisLabels[i],
-            // Ternary operator determining if the value is NaN. The data table will show nothing if that's the case
-            [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' : axisObject.csvYAxisData[i].toFixed(outputPrecision)
+            // Ternary operator determining if the value is NaN. The data table
+            // will show nothing if that's the case.
+            [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' :
+            axisObject.csvYAxisData[i].toFixed(outputPrecision)
           });
         }
       }
@@ -162,8 +165,10 @@ export class ChartComponent implements OnInit, OnDestroy {
           // Push the object into the attributeTable.
           this.attributeTable.push({
             [column1Name]: xAxisLabels[i],
-            // Ternary operator determining if the value is NaN. The data table will show nothing if that's the case.
-            [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' : axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
+            // Ternary operator determining if the value is NaN. The data table
+            // will show nothing if that's the case.
+            [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' :
+            axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
           });
         }
       }
@@ -179,7 +184,8 @@ export class ChartComponent implements OnInit, OnDestroy {
         for (let i = 0; i < this.attributeTable.length; i++) {
           foundIndex = xAxisLabels.findIndex(element => element === this.attributeTable[i][column1Name]);
           if (foundIndex !== -1) {
-            this.attributeTable[i][displayedUnits] = isNaN(axisObject.csvYAxisData[foundIndex]) ? '' : axisObject.csvYAxisData[foundIndex].toFixed(outputPrecision);
+            this.attributeTable[i][displayedUnits] = isNaN(axisObject.csvYAxisData[foundIndex]) ? '' :
+            axisObject.csvYAxisData[foundIndex].toFixed(outputPrecision);
             continue;
           } else {
             this.attributeTable[i][displayedUnits] = '';
@@ -193,14 +199,16 @@ export class ChartComponent implements OnInit, OnDestroy {
           if (xAxisLabels[i] < this.attributeTable[startCount][column1Name]) {
             this.attributeTable.splice(startCount, 0, { 
               [column1Name]: xAxisLabels[i],
-              [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' : axisObject.csvYAxisData[i].toFixed(outputPrecision)
+              [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' :
+              axisObject.csvYAxisData[i].toFixed(outputPrecision)
             })
             startCount++;
 
           } else if (xAxisLabels[i] > this.attributeTable[this.attributeTable.length - endCount][column1Name]) {
             this.attributeTable.push({
               [column1Name]: xAxisLabels[i],
-              [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' : axisObject.csvYAxisData[i].toFixed(outputPrecision)
+              [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' :
+              axisObject.csvYAxisData[i].toFixed(outputPrecision)
             })
             endCount++;
           }
@@ -212,7 +220,8 @@ export class ChartComponent implements OnInit, OnDestroy {
           foundIndex = xAxisLabels.findIndex(element => element === this.attributeTable[i][column1Name]);
           if (foundIndex !== -1) {
             this.attributeTable[i][displayedUnits] =
-            isNaN(axisObject.plotlyYAxisData[foundIndex]) ? '' : axisObject.plotlyYAxisData[foundIndex].toFixed(outputPrecision);
+            isNaN(axisObject.plotlyYAxisData[foundIndex]) ? '' :
+            axisObject.plotlyYAxisData[foundIndex].toFixed(outputPrecision);
             continue;
           } else {
             this.attributeTable[i][displayedUnits] = '';
@@ -525,7 +534,8 @@ export class ChartComponent implements OnInit, OnDestroy {
   * Contains at least one result array with its index in the graphTemplate data
   * array.
   */
-  private makeDelimitedPlotlyObject(delimitedData: any, graphData: IM.GraphData, index: number): IM.PopulateGraph {
+  private makeDelimitedPlotlyObject(delimitedData: any, graphData: IM.GraphData,
+    index: number): IM.PopulateGraph {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     // These two are the string representing the keys in the current result.

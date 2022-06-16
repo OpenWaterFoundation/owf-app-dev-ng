@@ -1,11 +1,16 @@
 import { Observable }       from 'rxjs/internal/Observable';
+import { BehaviorSubject,
+          forkJoin,
+          Subject }         from 'rxjs';
+
 import { TS,
           TSIdent, 
           TSUtil}           from '@OpenWaterFoundation/common/ts';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
-import { DateTime, TimeInterval }         from '@OpenWaterFoundation/common/util/time';
+import { DateTime,
+          TimeInterval }    from '@OpenWaterFoundation/common/util/time';
 import { PropList }         from '@OpenWaterFoundation/common/util/io';
 
 
@@ -68,6 +73,12 @@ export class ColoradoHydroBaseRestDatastore {
   private surfaceWaterStationMeasTypeList: string[] = null;
 
   private telemetryParamsList: any[] = null;
+  /**
+   * 
+   */
+  private paramsInitialized: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  private paramsInitialized$ = this.paramsInitialized.asObservable();
 
   // private List<ReferenceTablesWaterDistrict> waterDistrictList = null;
 
@@ -85,9 +96,9 @@ export class ColoradoHydroBaseRestDatastore {
    */
   constructor(private commonService: OwfCommonService, serviceRootURI: string) {
 
-    // this.setName ( name );
-    // this.setDescription ( description );
-    this.setServiceRootURI ( serviceRootURI );
+    // this.setName (name);
+    // this.setDescription (description);
+    this.setServiceRootURI (serviceRootURI);
     this.setApiKey(commonService.getApiKey());
     // Determine the web service version.
     this.determineAPIVersion();
@@ -104,21 +115,21 @@ export class ColoradoHydroBaseRestDatastore {
   mixed case 'Evap' climate station data type.
   This should be called from the readClimateStationMeasType and readTelemetryParams methods.
   */
-  // private checkClimateAndTelemetryStationTypes(): void {
-  //   if ( (this.climateStationMeasTypeList !== null) && (climateStationMeasTypeList.size() > 0)  &&
-  //     (telemetryParamsList != null) && (telemetryParamsList.size() > 0) ) {
-  //     // Have data to check for overlapping data.
-  //     this.climateStationMeasTypeSameAsTelemetryStationParamUpperList = new ArrayList<>();
-  //     for ( String measType : this.climateStationMeasTypeList ) {
-  //       String measTypeUpper = measType.toUpperCase();
-  //       for ( ReferenceTablesTelemetryParams param : this.telemetryParamsList ) {
-  //         if ( measTypeUpper.equalsIgnoreCase(param.getParameter()) ) {
-  //           this.climateStationMeasTypeSameAsTelemetryStationParamUpperList.add(measTypeUpper);
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  private checkClimateAndTelemetryStationTypes(): void {
+    if ( (this.climateStationMeasTypeList !== null) && (this.climateStationMeasTypeList.length > 0)  &&
+      (this.telemetryParamsList != null) && (this.telemetryParamsList.length > 0) ) {
+      // Have data to check for overlapping data.
+      this.climateStationMeasTypeSameAsTelemetryStationParamUpperList = [];
+      for ( let measType of this.climateStationMeasTypeList ) {
+        var measTypeUpper = measType.toUpperCase();
+        for ( var param of this.telemetryParamsList ) {
+          if ( measTypeUpper.toUpperCase() === param.parameter.toUpperCase()) {
+            this.climateStationMeasTypeSameAsTelemetryStationParamUpperList.push(measTypeUpper);
+          }
+        }
+      }
+    }
+  }
 
   /**
    * 
@@ -197,16 +208,20 @@ export class ColoradoHydroBaseRestDatastore {
 
   /**
    * 
-   * @param datastore 
    * @param fullTSID 
    * @returns 
    */
-  public getData(datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
+  public getData(fullTSID: IM.TSID): Observable<TS> {
 
-    var TSIDString = fullTSID.location;
+    var dataSubject = new Subject<TS>();
 
-    this.readTimeSeries(TSIDString, null, null, true, null);
-    return;
+    this.paramsInitialized$.subscribe((initialized: boolean) => {
+      if (initialized === true) {
+        dataSubject.next(this.readTimeSeries(fullTSID.location, null, null, true, null));
+      }
+    });
+    throw new Error('End of getData(). This needs to return dataSubject.asObservable()');
+    return dataSubject.asObservable();
   }
 
   /**
@@ -258,9 +273,10 @@ export class ColoradoHydroBaseRestDatastore {
    * @return true if data type is for a telemetry station, false otherwise
    */
   public isTelemetryStationTimeSeriesDataType ( dataType: string ): boolean {
+
     //String routine = getClass().getSimpleName() + ".isTelemetryStationTimeSeriesData";
     //Message.printStatus(2, routine, "Checking whether \"" + dataType + "\" is telemetry station." );
-    if ( dataType == null ) {
+    if ( dataType === null ) {
       return false;
     }
     // Remove the group from the front of the name.
@@ -278,13 +294,13 @@ export class ColoradoHydroBaseRestDatastore {
         // The data type matches a telemetry station ignoring case.
         // If the requested data type overlaps a telemetry station parameter and climate station 'measType',
         // an upper case match indicates a telemetry station parameter.
-        if ( this.climateStationMeasTypeSameAsTelemetryStationParamUpperList !== null ) {
+        if (this.climateStationMeasTypeSameAsTelemetryStationParamUpperList !== null) {
           var found = false; // If ignorecase match below.
-          for ( let sameMeasTypeUpper of this.climateStationMeasTypeSameAsTelemetryStationParamUpperList ) {
+          for (let sameMeasTypeUpper of this.climateStationMeasTypeSameAsTelemetryStationParamUpperList) {
             //Message.printStatus(2, routine, "Checking overlapping measType \"" + sameMeasTypeUpper + "\"" );
-            if ( dataTypeUpper.toUpperCase() === sameMeasTypeUpper.toUpperCase() ) {
+            if (dataTypeUpper.toUpperCase() === sameMeasTypeUpper.toUpperCase()) {
               found = true;
-              if ( dataType.toUpperCase() === sameMeasTypeUpper.toUpperCase() ) {
+              if (dataType.toUpperCase() === sameMeasTypeUpper.toUpperCase()) {
                 // Requested datatype is uppercase so assume it is telemetry station.
                 //Message.printStatus(2, routine, "Requested overlapping data type is telemetry station.");
                 return true;
@@ -292,7 +308,7 @@ export class ColoradoHydroBaseRestDatastore {
             }
           }
           // Upper case did not match so climate station data type such as 'Evap'.
-          if ( found ) {
+          if (found) {
             //Message.printStatus(2, routine, "Requested overlapping data type is NOT telemetry station.");
             return false;
           }
@@ -370,7 +386,6 @@ export class ColoradoHydroBaseRestDatastore {
     // 1. Parse the time series identifier (TSID) that was passed in.
     var ident = new TSIdent();
     var tsident:TSIdent = ident.parseIdentifierNoFlag(tsidentString);
-    console.log('tsident.identifier:', tsident);
     var locType: string = tsident.getLocationType();
     var locid: string = tsident.getLocation();
     var dataSource: string = tsident.getSource();
@@ -1943,18 +1958,20 @@ export class ColoradoHydroBaseRestDatastore {
     //     }
     //   }
     // }
-    if ( this.isTelemetryStationTimeSeriesDataType(dataTypeReq) ) {
+    if (this.isTelemetryStationTimeSeriesDataType(dataTypeReq)) {
+      var telemetrySubject = new Subject<TS>();
       var abbrev: string = locid;
       var parameter: string = ts.getDataType();
+      var allTelemetryStationReads: Observable<any>[] = [];
 
       // Round the times and also remove time zone since not returned from web services.
-      if ( readStart != null ) {
+      if (readStart !== null) {
         // Round to 15-minute so that allocated time series will align with data.
         readStart = new DateTime(readStart);
         readStart.round(-1, TimeInterval.MINUTE, 15);
         readStart.setTimeZone("");
       }
-      if ( readEnd != null ) {
+      if (readEnd !== null) {
         // Round to 15-minute so that allocated time series will align with data.
         readEnd = new DateTime(readEnd);
         readEnd.round(1, TimeInterval.MINUTE, 15);
@@ -1966,110 +1983,118 @@ export class ColoradoHydroBaseRestDatastore {
       "/telemetrystations/telemetrystation?format=json&includeThirdParty=true&abbrev="
       + abbrev + this.getApiKeyStringDefault();
 
-      // if ( Message.isDebugOn ) {
+      // if (Message.isDebugOn ) {
       //   Message.printDebug(dl, routine, "telemetryRequest: " + telemetryRequest);
       // }
+      allTelemetryStationReads.push(this.commonService.getJSONData(telemetryRequest));
+
+      // Get the Telemetry station data type (TODO smalers 2019-06-16 might be able to not query station if have enough overlap).
+      var telemetryStationDataTypeRequest: string = this.getServiceRootURI() +
+      "/telemetrystations/telemetrystationdatatypes?format=json&includeThirdParty=true&abbrev=" +
+      abbrev + "&parameter=" + parameter + this.getApiKeyStringDefault();
+
+      allTelemetryStationReads.push(this.commonService.getJSONData(telemetryStationDataTypeRequest));
+
+      // Read the time series records.
+      var telRequest = '';
+
+      // Retrieve telemetry station data based on date interval.
+      if (intervalBase === DateTime.PRECISION_MINUTE){
+        // Note that this is 15-minute, not instantaneous.
+        telRequest += this.getServiceRootURI() +
+        "/telemetrystations/telemetrytimeseriesraw?format=json&includeThirdParty=true&abbrev=" +
+        abbrev + "&parameter=" + parameter;
+      }
+      else if (intervalBase === DateTime.PRECISION_HOUR){
+        telRequest += this.getServiceRootURI() +
+        "/telemetrystations/telemetrytimeserieshour?format=json&includeThirdParty=true&abbrev=" +
+        abbrev + "&parameter=" + parameter;
+      }
+      else if (intervalBase === DateTime.PRECISION_DAY){
+        telRequest += this.getServiceRootURI() +
+        "/telemetrystations/telemetrytimeseriesday?format=json&includeThirdParty=true&abbrev=" +
+        abbrev + "&parameter=" + parameter;
+      }
+      // Date/time format is the same regardless of interval.
+      // if ( readStart !== null ) {
+      //   telRequest += "&startDate=" + URLEncoder.encode(String.format("%02d/%02d/%04d_%02d:%02d", readStart.getMonth(), readStart.getDay(), readStart.getYear(), readStart.getHour(), readStart.getMinute() ), "UTF-8");
+      // }
+      // if ( readEnd !== null ) {
+      //   telRequest += "&endDate=" + URLEncoder.encode(String.format("%02d/%02d/%04d_%02d:%02d", readEnd.getMonth(), readEnd.getDay(), readEnd.getYear(), readEnd.getHour(), readEnd.getMinute() ), "UTF-8");
+      // }
+      // Add URL without key, to help with troubleshooting.
+      ts.setProperty("dataUrl", telRequest.replace("format=json", "format=jsonprettyprint"));
+      telRequest += this.getApiKeyStringDefault();
+      
+      allTelemetryStationReads.push(this.commonService.getJSONData(telRequest));
       console.log('telemetryRequest:', telemetryRequest);
+      console.log('telemetryStationDataTypeRequest:', telemetryStationDataTypeRequest);
+      console.log('telRequest:', telRequest);
+
+      // 
+      forkJoin(allTelemetryStationReads).subscribe((allResults: any) => {
+
+        var telemetryResult = null;
+        var telemetryStationDataTypeResult = null;
+        var telTS = null;
+
+        if ( allResults[0] === null ) {
+          console.warn(3, routine, "No data returned for:  " + telemetryRequest);
+          telemetrySubject.next(ts);
+        }
+        else {
+          telemetryResult = allResults[0].ResultList[0];
+        }
+
+        if ( allResults[1] === null ) {
+          console.warn(3, routine, "No data returned for:  " + telemetryStationDataTypeRequest);
+          telemetrySubject.next(ts);
+        }
+        else {
+          telemetryStationDataTypeResult = allResults[1].ResultList[0];
+        }
+        
+        // Set the description:
+        // - use the station name since nothing suitable on data type/parameter
+        ts.setDescription(telemetryResult.getStationName());
+        
+        // Set data units:
+        // - also set a boolean to allow checking the records because some time series don't seem to have units in metadata
+        ts.setDataUnitsOriginal(telemetryStationDataTypeResult.getParameterUnit());
+        ts.setDataUnits(telemetryStationDataTypeResult.getParameterUnit());
+        var dataUnitsSet = false;
+        var dataUnitsOriginalSet = false;
+        if ( ts.getDataUnitsOriginal().length > 0 ) {
+          dataUnitsOriginalSet = true;
+        }
+        if ( ts.getDataUnits().length > 0 ) {
+          dataUnitsSet = true;
+        }
+        
+        // Set the available start and end date to the time series parameter period.
+        ts.setDate1Original(telemetryStationDataTypeResult.getParameterPorStart());
+        ts.setDate2Original(telemetryStationDataTypeResult.getParameterPorEnd());
+  
+        // this.setTimeSeriesPropertiesForTelemetryStation(ts, telStation, telStationDataType);
+        // setCommentsForTelemetryStation(ts, telStation);
+  
+        // // If not reading the data, return the time series with only header information.
+        // if (!readData){
+        //   return ts;
+        // }
+
+        telTS = allResults[2].ResultList;
+        if ((!allResults) || (allResults[2] === null) || (allResults[2].length === 0)){
+          return ts;
+        }
+
+        console.log('telemetryResult:', telemetryResult);
+        console.log('telemetryStationDataTypeResult:', telemetryStationDataTypeResult);
+        console.log('telTS:', telTS);
+      });
       throw new Error('Stopping here.');
-    //   JsonNode results0 = jacksonToolkit.getJsonNodeFromWebServices(telemetryRequest);
-    //   JsonNode telemetryResult = null;
-    //   if ( results0 === null ) {
-    //     console.warn(3, routine, "No data returned for:  " + telemetryRequest);
-    //     return ts;
-    //   }
-    //   else {
-    //     telemetryResult = results0[0];
-    //   }
-      
-    //   TelemetryStation telStation = (TelemetryStation)jacksonToolkit.treeToValue(telemetryResult, TelemetryStation.class);
-    //   // Message.printStatus(2, routine, "Retrieve telemetry stations from DWR REST API request url: " + telemetryRequest);
 
-    //   // Get the Telemetry station data type (TODO smalers 2019-06-16 might be able to not query station if have enough overlap).
-    //   var telemetryStationDataTypeRequest: string = this.getServiceRootURI() +
-    //   "/telemetrystations/telemetrystationdatatypes?format=json&includeThirdParty=true&abbrev=" +
-    //   abbrev + "&parameter=" + parameter + this.getApiKeyStringDefault();
-    //   // if ( Message.isDebugOn ) {
-    //   //   Message.printDebug(dl, routine, "telemetryStationDataTypeRequest: " + telemetryStationDataTypeRequest);
-    //   // }
-    //   results0 = jacksonToolkit.getJsonNodeFromWebServices(telemetryStationDataTypeRequest);
-    //   JsonNode telemetryStationDataTypeResult = null;
-    //   if ( results0 === null ) {
-    //     console.warn(3, routine, "No data returned for:  " + telemetryStationDataTypeRequest);
-    //     return ts;
-    //   }
-    //   else {
-    //     telemetryStationDataTypeResult = results0[0];
-    //   }
       
-    //   TelemetryStationDataType telStationDataType = (TelemetryStationDataType)jacksonToolkit.treeToValue(telemetryStationDataTypeResult, TelemetryStationDataType.class);
-    //   // Message.printStatus(2, routine, "Retrieve telemetry station data types from DWR REST API request url: " + telemetryStationDataTypeRequest);
-      
-    //   // Set the description:
-    //   // - use the station name since nothing suitable on data type/parameter
-    //   ts.setDescription(telStation.getStationName());
-      
-    //   // Set data units:
-    //   // - also set a boolean to allow checking the records because some time series don't seem to have units in metadata
-    //   ts.setDataUnitsOriginal(telStationDataType.getParameterUnit());
-    //   ts.setDataUnits(telStationDataType.getParameterUnit());
-    //   var dataUnitsSet = false;
-    //   var dataUnitsOriginalSet = false;
-    //   if ( ts.getDataUnitsOriginal().length > 0 ) {
-    //     dataUnitsOriginalSet = true;
-    //   }
-    //   if ( ts.getDataUnits().length > 0 ) {
-    //     dataUnitsSet = true;
-    //   }
-      
-    //   // Set the available start and end date to the time series parameter period.
-    //   ts.setDate1Original(telStationDataType.getParameterPorStart());
-    //   ts.setDate2Original(telStationDataType.getParameterPorEnd());
-    //   // Message.printStatus(2,routine,"Date1Original=" + ts.getDate1Original() + " Date2Original=" + ts.getDate2Original());
-
-    //   setTimeSeriesPropertiesForTelemetryStation(ts, telStation, telStationDataType);
-    //   setCommentsForTelemetryStation(ts, telStation);
-
-    //   // If not reading the data, return the time series with only header information.
-    //   if (!readData){
-    //     return ts;
-    //   }
-
-    //   // Read the time series records.
-    //   var telRequest = '';
-
-    //   // Retrieve telemetry station data based on date interval.
-    //   if (intervalBase === DateTime.PRECISION_MINUTE){
-    //     // Note that this is 15-minute, not instantaneous.
-    //     telRequest += this.getServiceRootURI() +
-    //     "/telemetrystations/telemetrytimeseriesraw?format=json&includeThirdParty=true&abbrev=" +
-    //     abbrev + "&parameter=" + parameter;
-    //   }
-    //   else if (intervalBase === DateTime.PRECISION_HOUR){
-    //     telRequest += this.getServiceRootURI() +
-    //     "/telemetrystations/telemetrytimeserieshour?format=json&includeThirdParty=true&abbrev=" +
-    //     abbrev + "&parameter=" + parameter;
-    //   }
-    //   else if (intervalBase === DateTime.PRECISION_DAY){
-    //     telRequest += this.getServiceRootURI() +
-    //     "/telemetrystations/telemetrytimeseriesday?format=json&includeThirdParty=true&abbrev=" +
-    //     abbrev + "&parameter=" + parameter;
-    //   }
-    //   // Date/time format is the same regardless of interval.
-    //   if ( readStart !== null ) {
-    //     telRequest += "&startDate=" + URLEncoder.encode(String.format("%02d/%02d/%04d_%02d:%02d", readStart.getMonth(), readStart.getDay(), readStart.getYear(), readStart.getHour(), readStart.getMinute() ), "UTF-8");
-    //   }
-    //   if ( readEnd !== null ) {
-    //     telRequest += "&endDate=" + URLEncoder.encode(String.format("%02d/%02d/%04d_%02d:%02d", readEnd.getMonth(), readEnd.getDay(), readEnd.getYear(), readEnd.getHour(), readEnd.getMinute() ), "UTF-8");
-    //   }
-    //   // Add URL without key, to help with troubleshooting.
-    //   ts.setProperty("dataUrl", telRequest.toString().replace("format=json", "format=jsonprettyprint"));
-    //   telRequest += this.getApiKeyStringDefault();
-    //   // Message.printStatus(2, routine, "Retrieve telemetry time series from DWR REST API request url: " + telRequest);
-      
-    //   JsonNode results = jacksonToolkit.getJsonNodeFromWebServices(telRequest.toString());
-    //   if ( (results === null) || (results.size() === 0) ){
-    //     return ts;
-    //   }
 
     //   // Set the actual data period to the requested period if specified,
     //   // or the actual period if the requested period was not specified.
@@ -2377,6 +2402,7 @@ export class ColoradoHydroBaseRestDatastore {
       for (let param of resultList) {
         this.telemetryParamsList.push(param)
       }
+      this.paramsInitialized.next(true);
     });
 
     // JsonNode results = JacksonToolkit.getInstance().getJsonNodeFromWebServices(telemetryParamsRequest);
@@ -2387,7 +2413,7 @@ export class ColoradoHydroBaseRestDatastore {
     // Also check for overlap between climate station and telemetry station data types,
     // which is used in some cases to differentiate uppercase 'EVAP' for telemetry station parameter and
     // mixed case 'Evap' climate station data type.
-    // this.checkClimateAndTelemetryStationTypes();
+    this.checkClimateAndTelemetryStationTypes();
   }
 
   /**
@@ -2405,5 +2431,84 @@ export class ColoradoHydroBaseRestDatastore {
   public setServiceRootURI ( serviceRootURI: string ): void {
     this.__serviceRootURI = serviceRootURI;
   }
+
+  /**
+   * Set the properties of the time series if the datatype is telemetry station.
+   * @param ts - The time series to add data to. Also used for retrieving data used in setting the properties.<br>
+   * {@link RTi.TS.TS}
+   * @param tel - The TelemetryStation object containing data used in setting the properties.<br>
+   * {@link cdss.dmi.hydrobase.rest.dao.TelemetryStation}
+   * @param telDataType the TelementryStationDataType to set properties.<br>
+   * {@link cdss.dmi.hydrobase.rest.dao.TelemetryStationDataType}
+   */
+  // setTimeSeriesPropertiesForTelemetryStation (ts: TS, tel: TelemetryStation, telDataType: TelemetryStationDataType): void
+  // {   // Use the same names as the database view columns, same order as view:
+  //   // - all of the following are immutable objects other than DateTime
+  //   // Get the precision for period.
+  //   var precision = -1;
+  //   var dt: DateTime = ts.getDate1();
+  //   if ( dt !== null ) {
+  //     precision = dt.getPrecision();
+  //   }
+  //   ts.setProperty("telemetrystation.div", tel.getDivision());
+  //   ts.setProperty("telemetrystation.wd", tel.getWaterDistrict());
+  //   ts.setProperty("telemetrystation.county", tel.getCounty());
+  //   ts.setProperty("telemetrystation.stationName", tel.getStationName());
+  //   ts.setProperty("telemetrystation.dataSourceAbbrev", tel.getDataSourceAbbrev());
+  //   ts.setProperty("telemetrystation.dataSource", tel.getDataSource());
+  //   ts.setProperty("telemetrystation.waterSource", tel.getWaterSource());
+  //   ts.setProperty("telemetrystation.gnisId", tel.getGnisId());
+  //   ts.setProperty("telemetrystation.streamMile", tel.getStreamMile());
+  //   ts.setProperty("telemetrystation.abbrev", tel.getAbbrev());
+  //   ts.setProperty("telemetrystation.usgsStationId", tel.getUsgsStationId());
+  //   ts.setProperty("telemetrystation.stationStatus", tel.getStationStatus());
+  //   ts.setProperty("telemetrystation.stationType", tel.getStationType());
+  //   ts.setProperty("telemetrystation.structureType", tel.getStructureType());
+  //   ts.setProperty("telemetrystation.measDateTime", (tel.getMeasDateTime() == null) ? null : new DateTime(tel.getMeasDateTime()));
+  //   ts.setProperty("telemetrystation.parameter", tel.getParameter());
+  //   ts.setProperty("telemetrystation.stage", tel.getStage());
+  //   // Don't include measValue because it is confusing if the last measurement is not the same parameter:
+  //   // - similarly for units
+  //   //ts.setProperty("measValue", tel.getMeasValue());
+  //   //ts.setProperty("units", tel.getUnits());
+  //   ts.setProperty("telemetrystation.units", tel.getUnits());
+  //   ts.setProperty("telemetrystation.flagA", tel.getFlagA());
+  //   ts.setProperty("telemetrystation.flagB", tel.getFlagB());
+  //   ts.setProperty("telemetrystation.contrArea", tel.getContrArea());
+  //   ts.setProperty("telemetrystation.drainArea", tel.getDrainArea());
+  //   ts.setProperty("telemetrystation.huc10", tel.getHuc10());
+  //   ts.setProperty("telemetrystation.utmX", tel.getUtmX());
+  //   ts.setProperty("telemetrystation.utmY", tel.getUtmY());
+  //   ts.setProperty("telemetrystation.latitude", tel.getLatitude());
+  //   ts.setProperty("telemetrystation.longitude", tel.getLongitude());
+  //   ts.setProperty("telemetrystation.locationAccuracy", tel.getLocationAccuracy());
+  //   ts.setProperty("telemetrystation.wdid", tel.getWdid());
+  //   ts.setProperty("telemetrystation.modified", (tel.getModified() == null) ? null : new DateTime(tel.getModified()));
+  //   ts.setProperty("telemetrystation.moreInformation", tel.getMoreInformation());
+  //   dt = tel.getStationPorStart();
+  //   if ( dt != null ) {
+  //     dt = new DateTime(dt);
+  //     if ( precision >= 0 ) {
+  //       dt.setPrecisionOne(precision);
+  //     }
+  //   }
+  //   ts.setProperty("telemetrystation.porStart", dt);
+  //   dt = tel.getStationPorEnd();
+  //   if ( dt != null ) {
+  //     dt = new DateTime(dt);
+  //     if ( precision >= 0 ) {
+  //       dt.setPrecisionOne(precision);
+  //     }
+  //   }
+  //   ts.setProperty("telemetrystation.porEnd", dt);
+  //   ts.setProperty("telemetrystation.thirdParty", tel.getThirdParty());
+  //   if ( telDataType != null ) {
+  //     // Include data type properties, but only those not redundant with telemetry station.
+  //     ts.setProperty("telemetrystationdatatypes.parameter", telDataType.getParameter());
+  //     ts.setProperty("telemetrystationdatatypes.parameterPorStart", telDataType.getParameterPorStart());
+  //     ts.setProperty("telemetrystationdatatypes.parameterPorEnd", telDataType.getParameterPorEnd());
+  //     ts.setProperty("telemetrystationdatatypes.parameterUnit", telDataType.getParameterUnit());
+  //   }
+  // }
 
 }

@@ -21,7 +21,7 @@ export class DatastoreManager {
     {
       name: "ColoradoHydroBaseRest",
       type: "owf.datastore.json",
-      rootUrl: 'https://dwr.state.co.us/Rest/GET/api/v2/',
+      rootUrl: 'https://dwr.state.co.us/Rest/GET/api/v2',
       aliases: []
     },
     {
@@ -46,6 +46,8 @@ export class DatastoreManager {
   /**
    * 
    */
+  createdDatastores = {};
+  /** An array of user-provided datastores from the `app-config.json` file. */
   private userDatastores: IM.Datastore[] = [];
   /** The singleton instance of this MapLayerManager class. */
   private static instance: DatastoreManager;
@@ -81,9 +83,8 @@ export class DatastoreManager {
       case IM.DatastoreType.stateMod:
         return StateModDatastore.readTimeSeries(service, datastore, fullTSID);
       case IM.DatastoreType.json:
-        // TODO: DO NOT PUSH TO GITHUB.
-        return new ColoradoHydroBaseRestDatastore(service, datastore.rootUrl)
-        .getData(datastore, fullTSID);
+
+        return new ColoradoHydroBaseRestDatastore(service, datastore.rootUrl).getData(fullTSID);
       case 'unknown':
       default:
         console.error("Unsupported datastore '" + fullTSID.datastore + "'.");
@@ -133,6 +134,13 @@ export class DatastoreManager {
       type: 'unknown',
       rootUrl: 'unknown'
     };
+  }
+
+  public initializeDatastores(): void {
+
+    // Create and initialize the ColoradoHydroBaseRestDatastore instance.
+    // this.createdDatastores['ColoradoHydroBaseRestDatastore'] =
+    // new ColoradoHydroBaseRestDatastore()
   }
 
   /**
