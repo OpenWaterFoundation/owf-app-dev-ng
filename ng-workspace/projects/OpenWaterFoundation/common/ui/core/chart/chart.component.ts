@@ -727,11 +727,15 @@ export class ChartComponent implements OnInit, OnDestroy {
     // Iterate over all graphData objects in the graph template file.
     graphData.forEach((graphData) => {
       var dataObservable = this.dsManager.getDatastoreData(this.commonService, graphData.properties.TSID);
+      
+      console.log('dataObservable:', dataObservable);
       allDataObservables.push(dataObservable);
     });
 
-    this.allResultsSub$ = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
+    console.log('allDataObservables:', allDataObservables);
 
+    this.allResultsSub$ = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
+      console.log('allResults:', allResults);
       this.TSArrayOGResultRef = allResults;
 
       allResults.forEach((result: any, i: number) => {

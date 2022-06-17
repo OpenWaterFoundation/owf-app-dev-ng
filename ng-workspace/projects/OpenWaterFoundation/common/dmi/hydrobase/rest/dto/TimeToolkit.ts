@@ -41,7 +41,7 @@ export class TimeToolkit {
 	 * @return instance of TimeToolkit class.
 	 */
 	public static getInstance(): TimeToolkit {
-		if (TimeToolkit.instance == null) { TimeToolkit.instance = new TimeToolkit(); }
+		if (!TimeToolkit.instance) { TimeToolkit.instance = new TimeToolkit(); }
 		return TimeToolkit.instance;
 	}
 	
@@ -59,7 +59,6 @@ export class TimeToolkit {
 		}
 
     var localDateTime = new Date(parseISO(s));
-    console.log('localDateTime:', localDateTime);
 
 		var date = new DateTime(DateTime.PRECISION_SECOND);
 		// date.setYear(ldt.getYear());

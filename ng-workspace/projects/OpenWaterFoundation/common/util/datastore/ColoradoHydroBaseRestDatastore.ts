@@ -13,7 +13,8 @@ import { DateTime,
           TimeInterval }             from '@OpenWaterFoundation/common/util/time';
 import { PropList }                  from '@OpenWaterFoundation/common/util/io';
 import { TelemetryStation,
-          TelemetryStationDataType } from '@OpenWaterFoundation/common/dmi';
+          TelemetryStationDataType,
+          TelemetryTimeSeries }      from '@OpenWaterFoundation/common/dmi';
 
 
 // @dynamic
@@ -213,17 +214,17 @@ export class ColoradoHydroBaseRestDatastore {
    * @param fullTSID 
    * @returns 
    */
-  public getData(fullTSID: IM.TSID): Observable<TS> {
+  public getData(fullTSID: IM.TSID): Subject<Observable<TS>> {
 
-    var dataSubject = new Subject<TS>();
+    var dataSubject = new Subject<Observable<TS>>();
 
+    // Wait until initialized.
     this.paramsInitialized$.subscribe((initialized: boolean) => {
       if (initialized === true) {
         dataSubject.next(this.readTimeSeries(fullTSID.location, null, null, true, null));
       }
     });
-    throw new Error('End of getData(). This needs to return dataSubject.asObservable()');
-    return dataSubject.asObservable();
+    return dataSubject;
   }
 
   /**
@@ -369,7 +370,7 @@ export class ColoradoHydroBaseRestDatastore {
   or minimally-initialized time series if unable to read.
   */
   readTimeSeries( tsidentString: string, readStart: DateTime, readEnd: DateTime,
-    readData: boolean, props: PropList ): TS {   
+    readData: boolean, props: PropList ): Observable<TS> {   
     var routine = "ColoradoHydroBaseRestDatastore.readTimeSeries";
     var dl = 1; // Debug level.
 
@@ -2029,210 +2030,203 @@ export class ColoradoHydroBaseRestDatastore {
       telRequest += this.getApiKeyStringDefault();
       
       allTelemetryStationReads.push(this.commonService.getJSONData(telRequest));
-      console.log('telemetryRequest:', telemetryRequest);
-      console.log('telemetryStationDataTypeRequest:', telemetryStationDataTypeRequest);
-      console.log('telRequest:', telRequest);
 
       // 
       forkJoin(allTelemetryStationReads).subscribe((allResults: any) => {
 
-        var telemetryResult: TelemetryStation = null;
-        var telemetryStationDataTypeResult = null;
-        var telTS = null;
+        var telStation: TelemetryStation = null;
+        var telStationDataType: TelemetryStationDataType = null;
+        var telTSArray: any[] = null;
 
-        if ( allResults[0] === null ) {
+        if (allResults[0] === null) {
           console.warn(3, routine, "No data returned for:  " + telemetryRequest);
           telemetrySubject.next(ts);
         }
         else {
-          telemetryResult = new TelemetryStation(allResults[0].ResultList[0]);
+          telStation = new TelemetryStation(allResults[0].ResultList[0]);
         }
 
-        if ( allResults[1] === null ) {
+        if (allResults[1] === null) {
           console.warn(3, routine, "No data returned for:  " + telemetryStationDataTypeRequest);
           telemetrySubject.next(ts);
         }
         else {
-          telemetryStationDataTypeResult = new TelemetryStationDataType(allResults[1].ResultList[0]);
+          telStationDataType = new TelemetryStationDataType(allResults[1].ResultList[0]);
         }
         
         // Set the description:
         // - use the station name since nothing suitable on data type/parameter
-        ts.setDescription(telemetryResult.getStationName());
-        
+        ts.setDescription(telStation.getStationName());
+
         // Set data units:
         // - also set a boolean to allow checking the records because some time series don't seem to have units in metadata
-        ts.setDataUnitsOriginal(telemetryStationDataTypeResult.getParameterUnit());
-        ts.setDataUnits(telemetryStationDataTypeResult.getParameterUnit());
+        ts.setDataUnitsOriginal(telStationDataType.getParameterUnit());
+        ts.setDataUnits(telStationDataType.getParameterUnit());
         var dataUnitsSet = false;
         var dataUnitsOriginalSet = false;
-        if ( ts.getDataUnitsOriginal().length > 0 ) {
+        if (ts.getDataUnitsOriginal().length > 0) {
           dataUnitsOriginalSet = true;
         }
-        if ( ts.getDataUnits().length > 0 ) {
+        if (ts.getDataUnits().length > 0) {
           dataUnitsSet = true;
         }
-        
-        // Set the available start and end date to the time series parameter period.
-        ts.setDate1Original(telemetryStationDataTypeResult.getParameterPorStart());
-        ts.setDate2Original(telemetryStationDataTypeResult.getParameterPorEnd());
-  
-        // this.setTimeSeriesPropertiesForTelemetryStation(ts, telStation, telStationDataType);
-        // setCommentsForTelemetryStation(ts, telStation);
-  
-        // // If not reading the data, return the time series with only header information.
-        // if (!readData){
-        //   return ts;
-        // }
 
-        telTS = allResults[2].ResultList;
-        if ((!allResults) || (allResults[2] === null) || (allResults[2].length === 0)){
+        // Set the available start and end date to the time series parameter period.
+        ts.setDate1Original(telStationDataType.getParameterPorStart());
+        ts.setDate2Original(telStationDataType.getParameterPorEnd());
+
+        telTSArray = allResults[2].ResultList;
+        if ((!telTSArray) || (telTSArray === null) || (telTSArray.length === 0)){
           return ts;
         }
 
-        console.log('telemetryResult:', telemetryResult);
-        console.log('telemetryStationDataTypeResult:', telemetryStationDataTypeResult);
-        console.log('telTS:', telTS);
-      });
-      throw new Error('Stopping here.');
+        // Set the actual data period to the requested period if specified,
+        // or the actual period if the requested period was not specified.
+        if (readStart === null) {
+          var firstDate: DateTime = null;
+          let telTS = new TelemetryTimeSeries(telTSArray[0]);
+          if ((intervalBase === DateTime.PRECISION_DAY) || (intervalBase === DateTime.PRECISION_HOUR)) {
+            firstDate = telTS.getMeasDate();
+          }
+          else {
+            firstDate = telTS.getMeasDateTime();
+          }
+          ts.setDate1(firstDate);
+        }
+        else {
+          ts.setDate1(readStart);
+        }
 
-      
+        if (readEnd === null) {
+          let telTS = new TelemetryTimeSeries(telTSArray[telTSArray.length - 1])
+          var lastDate: DateTime = null;
+          if ((intervalBase === DateTime.PRECISION_DAY) || (intervalBase === DateTime.PRECISION_HOUR)) {
+            lastDate = telTS.getMeasDate();
+          }
+          else {
+            lastDate = telTS.getMeasDateTime();
+          }
+          ts.setDate2(lastDate);
+        }
+        else {
+          ts.setDate2(readEnd);
+        }
 
-    //   // Set the actual data period to the requested period if specified,
-    //   // or the actual period if the requested period was not specified.
-    //   if ( readStart === null ) {
-    //     TelemetryTimeSeries telTS = (TelemetryTimeSeries)jacksonToolkit.treeToValue(results[0], TelemetryTimeSeries.class);
-    //     var firstDate: DateTime = null;
-    //     if ( (intervalBase == DateTime.PRECISION_DAY) || (intervalBase == DateTime.PRECISION_HOUR) ) {
-    //       firstDate = telTS.getMeasDate();
-    //     }
-    //     else {
-    //       firstDate = telTS.getMeasDateTime();
-    //     }
-    //     ts.setDate1(firstDate);
-    //   }
-    //   else {
-    //     ts.setDate1(readStart);
-    //   }
-    //   if ( readEnd == null ) {
-    //     TelemetryTimeSeries telTS = (TelemetryTimeSeries)jacksonToolkit.treeToValue(results[results.size() - 1], TelemetryTimeSeries.class);
-    //     var lastDate: DateTime = null;
-    //     if ( (intervalBase == DateTime.PRECISION_DAY) || (intervalBase == DateTime.PRECISION_HOUR) ) {
-    //       lastDate = telTS.getMeasDate();
-    //     }
-    //     else {
-    //       lastDate = telTS.getMeasDateTime();
-    //     }
-    //     ts.setDate2(lastDate);
-    //   }
-    //   else {
-    //     ts.setDate2(readEnd);
-    //   }
+        // Allocate data space.
+        ts.allocateDataSpace();
+      
+        this.setTimeSeriesPropertiesForTelemetryStation(ts, telStation, telStationDataType);
+        // TODO jpkeahey 2022-06-17: This was throwing a non-trivial error. Implement later?
+        // this.setCommentsForTelemetryStation(ts, telStation);
+  
+        // If not reading the data, return the time series with only header information.
+        if (!readData){
+          return ts;
+        }
 
-    //   // Allocate data space.
-    //   ts.allocateDataSpace();
-    //   // Message.printStatus(2, routine, "Allocated memory for " + ts.getDate1() + " to " + ts.getDate2() );
-      
-    //   // FIXME @jurentie 06/20/2018 change name of telemetryRequest/telRequest.
-    //   // Set the properties.
-    //   // ts.addToGenesis("read data from web services " + telemetryRequest + " and " + telRequest + ".");
-      
-    //   // Read the data
-    //   // Pass data into the TS object.
-    //   var measUnit: string = null;
-    //   if (intervalBase === TimeInterval.MINUTE){
-    //     // Can declare DateTime outside of loop because time series stores in an array.
-    //     var date = new DateTime(DateTime.PRECISION_MINUTE);
-    //     for(var i = 0; i < results.size(); i++){
-    //       TelemetryTimeSeries telTSMinute = (TelemetryTimeSeries)jacksonToolkit.treeToValue(results[i], TelemetryTimeSeries.class);
-    //       // If units were not set in the telemetry data types, set here.
-    //       measUnit = telTSMinute.getMeasUnit();
-    //       if ( !dataUnitsSet && (measUnit != null) && measUnit.length > 0 ) {
-    //         // Make sure the units are consistent.
-    //         ts.setDataUnits(measUnit);
-    //         dataUnitsSet = true;
-    //       }
-    //       if ( !dataUnitsOriginalSet && (measUnit != null) && measUnit.length > 0 ) {
-    //         // Make sure the units are consistent.
-    //         ts.setDataUnitsOriginal(measUnit);
-    //         dataUnitsOriginalSet = true;
-    //       }
-          
-    //       // Set the date.
-    //       date.setYear(telTSMinute.getYear());
-    //       date.setMonth(telTSMinute.getMonth());
-    //       date.setDay(telTSMinute.getDay());
-    //       date.setHour(telTSMinute.getHour());
-    //       date.setMinute(telTSMinute.getMinute());
+        // Read the data
+        // Pass data into the TS object.
+        var measUnit: string = null;
+        if (intervalBase === TimeInterval.MINUTE) {
+          // Can declare DateTime outside of loop because time series stores in an array.
+          var date = new DateTime(DateTime.PRECISION_MINUTE);
+          for (var i = 0; i < telTSArray.length; ++i) {
+            var telTSMinute = new TelemetryTimeSeries(telTSArray[i]);
+            // If units were not set in the telemetry data types, set here.
+            measUnit = telTSMinute.getMeasUnit();
+            if ( !dataUnitsSet && (measUnit != null) && measUnit.length > 0 ) {
+              // Make sure the units are consistent.
+              ts.setDataUnits(measUnit);
+              dataUnitsSet = true;
+            }
+            if ( !dataUnitsOriginalSet && (measUnit != null) && measUnit.length > 0 ) {
+              // Make sure the units are consistent.
+              ts.setDataUnitsOriginal(measUnit);
+              dataUnitsOriginalSet = true;
+            }
             
-    //       // Get the data.
-    //       var value: number = telTSMinute.getMeasValue();
-    //       if ( !this.isTimeSeriesValueMissing(value, true) ) {
-    //         ts.setDataValueTwo(date, value);
-    //       }
-    //     }
-    //   }
-    //   if (intervalBase == TimeInterval.HOUR){
-    //     // Can declare DateTime outside of loop because time series stores in an array.
-    //     var date = new DateTime(DateTime.PRECISION_HOUR);
-    //     for (var i = 0; i < results.size(); i++){
-    //       TelemetryTimeSeries telTSHour = (TelemetryTimeSeries)jacksonToolkit.treeToValue(results[i], TelemetryTimeSeries.class);
-    //       // If units were not set in the telemetry data types, set here.
-    //       measUnit = telTSHour.getMeasUnit();
-    //       if ( !dataUnitsSet && (measUnit !== null) && measUnit.length > 0 ) {
-    //         // Make sure the units are consistent.
-    //         ts.setDataUnits(measUnit);
-    //         dataUnitsSet = true;
-    //       }
-    //       if ( !dataUnitsOriginalSet && (measUnit != null) && measUnit.length > 0 ) {
-    //         // Make sure the units are consistent.
-    //         ts.setDataUnitsOriginal(measUnit);
-    //         dataUnitsOriginalSet = true;
-    //       }
-          
-    //       // Set the date.
-    //       date.setYear(telTSHour.getYear());
-    //       date.setMonth(telTSHour.getMonth());
-    //       date.setDay(telTSHour.getDay());
-    //       date.setHour(telTSHour.getHour());
+            // Set the date.
+            date.setYear(telTSMinute.getYear());
+            date.setMonth(telTSMinute.getMonth());
+            date.setDay(telTSMinute.getDay());
+            date.setHour(telTSMinute.getHour());
+            date.setMinute(telTSMinute.getMinute());
+              
+            // Get the data.
+            var value: number = telTSMinute.getMeasValue();
+            if ( !this.isTimeSeriesValueMissing(value, true) ) {
+              ts.setDataValueTwo(date, value);
+            }
+          }
+        }
+        if (intervalBase === TimeInterval.HOUR){
+          // Can declare DateTime outside of loop because time series stores in an array.
+          var date = new DateTime(DateTime.PRECISION_HOUR);
+          for (var i = 0; i < telTSArray.length; ++i) {
+            var telTSHour = new TelemetryTimeSeries(telTSArray[i]);
+            // If units were not set in the telemetry data types, set here.
+            measUnit = telTSHour.getMeasUnit();
+            if ( !dataUnitsSet && (measUnit !== null) && measUnit.length > 0 ) {
+              // Make sure the units are consistent.
+              ts.setDataUnits(measUnit);
+              dataUnitsSet = true;
+            }
+            if ( !dataUnitsOriginalSet && (measUnit !== null) && measUnit.length > 0 ) {
+              // Make sure the units are consistent.
+              ts.setDataUnitsOriginal(measUnit);
+              dataUnitsOriginalSet = true;
+            }
+            
+            // Set the date.
+            date.setYear(telTSHour.getYear());
+            date.setMonth(telTSHour.getMonth());
+            date.setDay(telTSHour.getDay());
+            date.setHour(telTSHour.getHour());
 
-    //       // Get the data.
-    //       var value: number = telTSHour.getMeasValue();
-    //       if ( !this.isTimeSeriesValueMissing(value, true) ) {
-    //         ts.setDataValueTwo(date, value);
-    //       }
-    //     }
-    //   }
-    //   if (intervalBase == TimeInterval.DAY){
-    //     // Can declare DateTime outside of loop because time series stores in an array.
-    //     var date = new DateTime(DateTime.PRECISION_DAY);
-    //     for(var i = 0; i < results.size(); i++){
-    //       TelemetryTimeSeries telTSDay = (TelemetryTimeSeries)jacksonToolkit.treeToValue(results[i], TelemetryTimeSeries.class);
-    //       // If units were not set in the telemetry data types, set here.
-    //       measUnit = telTSDay.getMeasUnit();
-    //       if ( !dataUnitsSet && (measUnit != null) && !measUnit.isEmpty() ) {
-    //         // Make sure the units are consistent.
-    //         ts.setDataUnits(measUnit);
-    //         dataUnitsSet = true;
-    //       }
-    //       if ( !dataUnitsOriginalSet && (measUnit != null) && !measUnit.isEmpty() ) {
-    //         // Make sure the units are consistent.
-    //         ts.setDataUnitsOriginal(measUnit);
-    //         dataUnitsOriginalSet = true;
-    //       }
-          
-    //       // Set the date.
-    //       date.setYear(telTSDay.getYear());
-    //       date.setMonth(telTSDay.getMonth());
-    //       date.setDay(telTSDay.getDay());
+            // Get the data.
+            var value: number = telTSHour.getMeasValue();
+            if ( !this.isTimeSeriesValueMissing(value, true) ) {
+              ts.setDataValueTwo(date, value);
+            }
+          }
+        }
+        if (intervalBase === TimeInterval.DAY) {
+          // Can declare DateTime outside of loop because time series stores in an array.
+          var date = new DateTime(DateTime.PRECISION_DAY);
+          for (var i = 0; i < telTSArray.length; ++i) {
+            var telTSDay = new TelemetryTimeSeries(telTSArray[i]);
+            // If units were not set in the telemetry data types, set here.
+            measUnit = telTSDay.getMeasUnit();
+            if (!dataUnitsSet && (measUnit !== null) && measUnit.length === 0) {
+              // Make sure the units are consistent.
+              ts.setDataUnits(measUnit);
+              dataUnitsSet = true;
+            }
+            if (!dataUnitsOriginalSet && (measUnit !== null) && measUnit.length === 0) {
+              // Make sure the units are consistent.
+              ts.setDataUnitsOriginal(measUnit);
+              dataUnitsOriginalSet = true;
+            }
+            
+            // Set the date.
+            date.setYear(telTSDay.getYear());
+            date.setMonth(telTSDay.getMonth());
+            date.setDay(telTSDay.getDay());
 
-    //       // Get the data.
-    //       var value: number = telTSDay.getMeasValue();
-    //       if ( !this.isTimeSeriesValueMissing(value, true) ) {
-    //         ts.setDataValueTwo(date, value);
-    //       }
-    //     }
-    //   }
+            // Get the data.
+            var value: number = telTSDay.getMeasValue();
+            if ( !this.isTimeSeriesValueMissing(value, true) ) {
+              ts.setDataValueTwo(date, value);
+            }
+          }
+        }
+
+        console.log('readTimeSeries.telStation:', telStation);
+        console.log('readTimeSeries.telStationDataType:', telStationDataType);
+        console.log('readTimeSeries.telTSArray:', telTSArray);
+        console.log('readTimeSeries.ts:', telTSArray);
+      });
+  
     }
     // ---------------------------------------------------------------------------------------------------------------------------------------------------------------
     // else if (
@@ -2361,8 +2355,8 @@ export class ColoradoHydroBaseRestDatastore {
     }
     
     // Return the time series:
-    // - may have returned before here if missing data or not reading data
-      return ts;
+    // - may have returned before here if missing data or not reading data.
+    return telemetrySubject.asObservable();
   }
 
   /**
@@ -2427,6 +2421,28 @@ export class ColoradoHydroBaseRestDatastore {
   }
 
   /**
+   * Set the comments of the time series if the datatype is for a telemetry station.
+   * @param ts - The time series to add data to. Also used for retrieving data used in setting the comments.<br>
+   * {@link RTi.TS.TS}
+   * @param sta - The TelemetryStation object containing data used in setting the comments.<br>
+   * {@link cdss.dmi.hydrobase.rest.dao.TelemetryStation}
+   */
+  // setCommentsForTelemetryStation(ts: TS, telStation: TelemetryStation): void {
+  //   ts.addToComments("Telemetry station and time series information from HydroBaseRest...");
+  //   ts.addToComments("Time Series Identifier          = " + ts.getIdentifier());
+  //   ts.addToComments("Description                     = " + ts.getDescription());
+  //   ts.addToComments("Data Source                     = " + telStation.getDataSource());
+  //   ts.addToComments("Data Type                       = " + ts.getDataType());
+  //   ts.addToComments("Data Interval                   = " + ts.getIdentifier().getInterval());
+  //   ts.addToComments("Data Units                      = " + ts.getDataUnits());
+  //   ts.addToComments("HydroBase query period          = " + ts.getDate1() + " to " + ts.getDate2());
+  //   ts.addToComments("HydroBase availabe period       = " + ts.getDate1Original() + " to " + ts.getDate2Original());
+  //   ts.addToComments("Located in water div            = " + telStation.getDivision());
+  //   ts.addToComments("Located in county               = " + telStation.getCounty());
+  //   ts.addToComments("Latitude, Longitude             = " + telStation.getLatitude() + ", " + telStation.getLongitude());
+  // }
+
+  /**
    * Set the service root URI for the data store.
    * @param serviceRootURI the service root URI for the data store.
    */
@@ -2443,74 +2459,75 @@ export class ColoradoHydroBaseRestDatastore {
    * @param telDataType the TelementryStationDataType to set properties.<br>
    * {@link cdss.dmi.hydrobase.rest.dao.TelemetryStationDataType}
    */
-  // setTimeSeriesPropertiesForTelemetryStation (ts: TS, tel: TelemetryStation, telDataType: TelemetryStationDataType): void
-  // {   // Use the same names as the database view columns, same order as view:
-  //   // - all of the following are immutable objects other than DateTime
-  //   // Get the precision for period.
-  //   var precision = -1;
-  //   var dt: DateTime = ts.getDate1();
-  //   if ( dt !== null ) {
-  //     precision = dt.getPrecision();
-  //   }
-  //   ts.setProperty("telemetrystation.div", tel.getDivision());
-  //   ts.setProperty("telemetrystation.wd", tel.getWaterDistrict());
-  //   ts.setProperty("telemetrystation.county", tel.getCounty());
-  //   ts.setProperty("telemetrystation.stationName", tel.getStationName());
-  //   ts.setProperty("telemetrystation.dataSourceAbbrev", tel.getDataSourceAbbrev());
-  //   ts.setProperty("telemetrystation.dataSource", tel.getDataSource());
-  //   ts.setProperty("telemetrystation.waterSource", tel.getWaterSource());
-  //   ts.setProperty("telemetrystation.gnisId", tel.getGnisId());
-  //   ts.setProperty("telemetrystation.streamMile", tel.getStreamMile());
-  //   ts.setProperty("telemetrystation.abbrev", tel.getAbbrev());
-  //   ts.setProperty("telemetrystation.usgsStationId", tel.getUsgsStationId());
-  //   ts.setProperty("telemetrystation.stationStatus", tel.getStationStatus());
-  //   ts.setProperty("telemetrystation.stationType", tel.getStationType());
-  //   ts.setProperty("telemetrystation.structureType", tel.getStructureType());
-  //   ts.setProperty("telemetrystation.measDateTime", (tel.getMeasDateTime() == null) ? null : new DateTime(tel.getMeasDateTime()));
-  //   ts.setProperty("telemetrystation.parameter", tel.getParameter());
-  //   ts.setProperty("telemetrystation.stage", tel.getStage());
-  //   // Don't include measValue because it is confusing if the last measurement is not the same parameter:
-  //   // - similarly for units
-  //   //ts.setProperty("measValue", tel.getMeasValue());
-  //   //ts.setProperty("units", tel.getUnits());
-  //   ts.setProperty("telemetrystation.units", tel.getUnits());
-  //   ts.setProperty("telemetrystation.flagA", tel.getFlagA());
-  //   ts.setProperty("telemetrystation.flagB", tel.getFlagB());
-  //   ts.setProperty("telemetrystation.contrArea", tel.getContrArea());
-  //   ts.setProperty("telemetrystation.drainArea", tel.getDrainArea());
-  //   ts.setProperty("telemetrystation.huc10", tel.getHuc10());
-  //   ts.setProperty("telemetrystation.utmX", tel.getUtmX());
-  //   ts.setProperty("telemetrystation.utmY", tel.getUtmY());
-  //   ts.setProperty("telemetrystation.latitude", tel.getLatitude());
-  //   ts.setProperty("telemetrystation.longitude", tel.getLongitude());
-  //   ts.setProperty("telemetrystation.locationAccuracy", tel.getLocationAccuracy());
-  //   ts.setProperty("telemetrystation.wdid", tel.getWdid());
-  //   ts.setProperty("telemetrystation.modified", (tel.getModified() == null) ? null : new DateTime(tel.getModified()));
-  //   ts.setProperty("telemetrystation.moreInformation", tel.getMoreInformation());
-  //   dt = tel.getStationPorStart();
-  //   if ( dt != null ) {
-  //     dt = new DateTime(dt);
-  //     if ( precision >= 0 ) {
-  //       dt.setPrecisionOne(precision);
-  //     }
-  //   }
-  //   ts.setProperty("telemetrystation.porStart", dt);
-  //   dt = tel.getStationPorEnd();
-  //   if ( dt != null ) {
-  //     dt = new DateTime(dt);
-  //     if ( precision >= 0 ) {
-  //       dt.setPrecisionOne(precision);
-  //     }
-  //   }
-  //   ts.setProperty("telemetrystation.porEnd", dt);
-  //   ts.setProperty("telemetrystation.thirdParty", tel.getThirdParty());
-  //   if ( telDataType != null ) {
-  //     // Include data type properties, but only those not redundant with telemetry station.
-  //     ts.setProperty("telemetrystationdatatypes.parameter", telDataType.getParameter());
-  //     ts.setProperty("telemetrystationdatatypes.parameterPorStart", telDataType.getParameterPorStart());
-  //     ts.setProperty("telemetrystationdatatypes.parameterPorEnd", telDataType.getParameterPorEnd());
-  //     ts.setProperty("telemetrystationdatatypes.parameterUnit", telDataType.getParameterUnit());
-  //   }
-  // }
+  setTimeSeriesPropertiesForTelemetryStation (ts: TS, tel: TelemetryStation,
+    telDataType: TelemetryStationDataType): void {
+    // Use the same names as the database view columns, same order as view:
+    // - all of the following are immutable objects other than DateTime
+    // Get the precision for period.
+    var precision = -1;
+    var dt: DateTime = ts.getDate1();
+    if ( dt !== null ) {
+      precision = dt.getPrecision();
+    }
+    ts.setProperty("telemetrystation.div", tel.getDivision());
+    ts.setProperty("telemetrystation.wd", tel.getWaterDistrict());
+    ts.setProperty("telemetrystation.county", tel.getCounty());
+    ts.setProperty("telemetrystation.stationName", tel.getStationName());
+    ts.setProperty("telemetrystation.dataSourceAbbrev", tel.getDataSourceAbbrev());
+    ts.setProperty("telemetrystation.dataSource", tel.getDataSource());
+    ts.setProperty("telemetrystation.waterSource", tel.getWaterSource());
+    ts.setProperty("telemetrystation.gnisId", tel.getGnisId());
+    ts.setProperty("telemetrystation.streamMile", tel.getStreamMile());
+    ts.setProperty("telemetrystation.abbrev", tel.getAbbrev());
+    ts.setProperty("telemetrystation.usgsStationId", tel.getUsgsStationId());
+    ts.setProperty("telemetrystation.stationStatus", tel.getStationStatus());
+    ts.setProperty("telemetrystation.stationType", tel.getStationType());
+    ts.setProperty("telemetrystation.structureType", tel.getStructureType());
+    ts.setProperty("telemetrystation.measDateTime", (tel.getMeasDateTime() == null) ? null : new DateTime(tel.getMeasDateTime()));
+    ts.setProperty("telemetrystation.parameter", tel.getParameter());
+    ts.setProperty("telemetrystation.stage", tel.getStage());
+    // Don't include measValue because it is confusing if the last measurement is not the same parameter:
+    // - similarly for units
+    //ts.setProperty("measValue", tel.getMeasValue());
+    //ts.setProperty("units", tel.getUnits());
+    ts.setProperty("telemetrystation.units", tel.getUnits());
+    ts.setProperty("telemetrystation.flagA", tel.getFlagA());
+    ts.setProperty("telemetrystation.flagB", tel.getFlagB());
+    ts.setProperty("telemetrystation.contrArea", tel.getContrArea());
+    ts.setProperty("telemetrystation.drainArea", tel.getDrainArea());
+    ts.setProperty("telemetrystation.huc10", tel.getHuc10());
+    ts.setProperty("telemetrystation.utmX", tel.getUtmX());
+    ts.setProperty("telemetrystation.utmY", tel.getUtmY());
+    ts.setProperty("telemetrystation.latitude", tel.getLatitude());
+    ts.setProperty("telemetrystation.longitude", tel.getLongitude());
+    ts.setProperty("telemetrystation.locationAccuracy", tel.getLocationAccuracy());
+    ts.setProperty("telemetrystation.wdid", tel.getWdid());
+    ts.setProperty("telemetrystation.modified", (tel.getModified() === null) ? null : new DateTime(tel.getModified()));
+    ts.setProperty("telemetrystation.moreInformation", tel.getMoreInformation());
+    dt = tel.getStationPorStart();
+    if ( dt !== null ) {
+      dt = new DateTime(dt);
+      if ( precision >= 0 ) {
+        dt.setPrecisionOne(precision);
+      }
+    }
+    ts.setProperty("telemetrystation.porStart", dt);
+    dt = tel.getStationPorEnd();
+    if ( dt != null ) {
+      dt = new DateTime(dt);
+      if ( precision >= 0 ) {
+        dt.setPrecisionOne(precision);
+      }
+    }
+    ts.setProperty("telemetrystation.porEnd", dt);
+    ts.setProperty("telemetrystation.thirdParty", tel.getThirdParty());
+    if ( telDataType !== null ) {
+      // Include data type properties, but only those not redundant with telemetry station.
+      ts.setProperty("telemetrystationdatatypes.parameter", telDataType.getParameter());
+      ts.setProperty("telemetrystationdatatypes.parameterPorStart", telDataType.getParameterPorStart());
+      ts.setProperty("telemetrystationdatatypes.parameterPorEnd", telDataType.getParameterPorEnd());
+      ts.setProperty("telemetrystationdatatypes.parameterUnit", telDataType.getParameterUnit());
+    }
+  }
 
 }

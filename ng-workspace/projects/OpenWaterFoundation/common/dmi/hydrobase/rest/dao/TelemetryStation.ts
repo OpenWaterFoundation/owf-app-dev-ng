@@ -35,12 +35,8 @@ NoticeEnd */
  */
 export class TelemetryStation {
 
-	private telemetryStation: any;
 
-
-	constructor(telemetryStation: any) {
-		this.telemetryStation = telemetryStation;
-	}
+	constructor(private telemetryStation: IM.TelStation) {}
 	
 	/**
 	 * Getters of all Telemetry Station variables.

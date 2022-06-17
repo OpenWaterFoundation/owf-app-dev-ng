@@ -734,7 +734,7 @@ export class DateTime {
   public static copyConstructor(t: DateTime): DateTime {
     var dateTime = new DateTime(null);
 
-    if (t != null) {
+    if (t !== null) {
       dateTime.__hsecond = t.__hsecond;
       dateTime.__second = t.__second;
       dateTime.__minute = t.__minute;

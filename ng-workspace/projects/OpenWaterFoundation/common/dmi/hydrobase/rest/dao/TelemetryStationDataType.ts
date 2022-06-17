@@ -28,7 +28,7 @@ NoticeEnd */
 export class TelemetryStationDataType {
 
 
-  constructor(private telemetryStationDateType: any) {
+  constructor(private telemetryStationDateType: IM.TelStationDataType) {
 
   }
 

@@ -453,14 +453,16 @@ export class OwfCommonService {
           return this.appConfig.mainMenu[i].markdownFile;
       }
     }
-    // Return the homePage path by default. Check to see if it's an absolute path first.
+    // Return the homePage path by default. Check if it's an absolute path first.
     if (id.startsWith('/')) {
       return id.substring(1);
     }
     // If it doesn't, use the path relative to the home page.
     else {
       var arr: string[] = this.appConfig.homePage.split('/');
-      return arr.splice(0, arr.length - 1).join('/').substring(1) + '/' + (id.startsWith('/') ? id.substring(1) : id);
+
+      return arr.splice(0, arr.length - 1).join('/').substring(1) + '/' +
+      (id.startsWith('/') ? id.substring(1) : id);
     }
   }
 
@@ -507,8 +509,9 @@ export class OwfCommonService {
   public getDataUnitArray(): any[] { return this.dataUnits; }
 
   /**
-   * Goes through each geoMap, geoLayerViewGroup, and geoLayerView in a geoMapProject and returns the FIRST occurrence of a
-   * background layer that has the selectedInitial property set to true, effectively getting the default background layer
+   * Goes through each geoMap, geoLayerViewGroup, and geoLayerView in a geoMapProject
+   * and returns the FIRST occurrence of a background layer that has the selectedInitial
+   * property set to true, effectively getting the default background layer.
    */
   public getDefaultBackgroundLayer(): string {
     for (let geoMap of this.mapConfig.geoMaps) {
@@ -526,7 +529,8 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns An array of the three provided ExtentInitial numbers to be used for initial map creation.
+   * @returns An array of the three provided ExtentInitial numbers to be used for
+   * initial map creation.
    */
   public getExtentInitial(): number[] {
     // Make sure to do some error handling for incorrect input.
@@ -535,7 +539,8 @@ export class OwfCommonService {
         this.mapConfig.geoMaps[0].properties.extentInitial +
         "' is incorrectly formatted. Confirm property is extentInitial." +
         "Setting ZoomLevel to '[0, 0], 0' for world-wide view")
-      // Return a default array with all 0's so it's quite obvious the map created is not intended
+      // Return a default array with all 0's so it's quite obvious the map created
+      // is not intended.
       return [0, 0, 0];
     }
     var finalExtent: number[];
@@ -547,7 +552,8 @@ export class OwfCommonService {
       " is incorrect. Usage for a ZoomLevel property is 'ZoomLevel:Longitude, Latitude, Zoom Level'");
 
     try {
-      // Try to convert all strings in the split array to numbers to return as a number array for the initial extent
+      // Try to convert all strings in the split array to numbers to return as a
+      // number array for the initial extent.
       finalExtent = splitInitial[1].split(',').map(x => +x);
     } catch (e) {
       console.error(e.message);
@@ -655,9 +661,10 @@ export class OwfCommonService {
   public getGapminderConfigPath(): string { return this.gapminderConfigPath; }
 
   /**
-   * Goes through each geoLayer in the GeoMapProject and if one matches with the given geoLayerId parameter,
-   * returns the geometryType attribute of that geoLayer.
-   * @param id The geoLayerId of the layerView to be compared with the geoLayerId of the geoLayer
+   * Goes through each geoLayer in the GeoMapProject and if one matches with the
+   * given geoLayerId parameter, returns the geometryType attribute of that geoLayer.
+   * @param id The geoLayerId of the layerView to be compared with the geoLayerId
+   * of the geoLayer.
    */
   public getGeometryType(id: string): string {
     for (let geoLayer of this.mapConfig.geoMaps[0].geoLayers) {
@@ -669,8 +676,9 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns the base path to the GeoJson files being used in the application. When prepended with the @var appPath,
-   * shows the full path the application needs to find any GeoJson file
+   * @returns the base path to the GeoJson files being used in the application.
+   * When prepended with the @var appPath, shows the full path the application
+   * needs to find any GeoJson file.
    */
   public getGeoJSONBasePath(): string { return this.geoJSONBasePath; }
 
@@ -723,7 +731,8 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns an array of eventHandler objects from the geoLayerView whose geoLayerId matches the given @param geoLayerId
+   * @returns an array of eventHandler objects from the geoLayerView whose geoLayerId
+   * matches the given @param geoLayerId.
    * @param geoLayerId The geoLayerId to match with.
    */
   public getGeoLayerViewEventHandler(geoLayerId: string): IM.EventHandler[] {
@@ -800,7 +809,8 @@ export class OwfCommonService {
       else
         return this.appConfig.homePage;
     }
-    else throw new Error("The 'homePage' property in the app configuration file not set. Please set the path to the home page.")
+    else throw new Error("The 'homePage' property in the app configuration file " +
+    "not set. Please set the path to the home page.")
   }
 
   /**
@@ -809,8 +819,9 @@ export class OwfCommonService {
    * @returns The JSON retrieved from the host as an Observable.
    */
   public getJSONData(path: string, type?: string, id?: string): Observable<any> {
-    // This creates an options object with the optional headers property to add headers to the request. This could solve some
-    // CORS issues, but is not completely tested yet
+    // This creates an options object with the optional headers property to add
+    // headers to the request. This could solve some CORS issues, but is not completely
+    // tested yet.
     // var options = {
     //   headers: new HttpHeaders({
     //     'Access-Control-Request-Method': 'GET'
@@ -835,8 +846,8 @@ export class OwfCommonService {
   public getLayerMarkerData(): void { return this.mapConfig.layerViewGroups; }
 
   /**
-   * NOTE: This function is not currently being used, as it's being used by functions in map.component.ts that have
-   * not been implemented yet.
+   * NOTE: This function is not currently being used, as it's being used by functions
+   * in map.component.ts that have not been implemented yet.
    * @param id The given geoLayerId to match with
    */
   public getLayerFromId(id: string) {
@@ -874,12 +885,14 @@ export class OwfCommonService {
 
   /**
    * Read data asynchronously from a file or URL and return it as plain text.
-   * @param path The path to the file to be read, or the URL to send the GET request
-   * @param type Optional type of request sent, e.g. IM.Path.cPP. Used for error handling and messaging
-   * @param id Optional app-config id to help determine where exactly an error occurred
+   * @param path The path to the file to be read, or the URL to send the GET request.
+   * @param type Optional type of request sent, e.g. IM.Path.cPP. Used for error
+   * handling and messaging.
+   * @param id Optional app-config id to help determine where exactly an error occurred.
    */
   public getPlainText(path: string, type?: string, id?: string): Observable<any> {
-    // This next line is important, as it tells our response that it needs to return plain text, not a default JSON object.
+    // This next line is important, as it tells our response that it needs to return
+    // plain text, not a default JSON object.
     const obj: Object = { responseType: 'text' as 'text' };
 
     return this.http.get<any>(path, obj)
@@ -904,8 +917,8 @@ export class OwfCommonService {
     var splitInterval = rawInterval.split(' ');
     var refreshInterval = 0;
 
-    // Iterate over each spaced item in the string and insert each number in the delayArr in
-    // the order HR, MIN, SEC.
+    // Iterate over each spaced item in the string and insert each number in the
+    // delayArr in the order HR, MIN, SEC.
     for (var elem of splitInterval) {
       if (elem.includes('H')) {
         var hours = elem.split('H')[0];
@@ -917,9 +930,9 @@ export class OwfCommonService {
         var seconds = elem.split('SEC')[0];
         refreshInterval += (+seconds * 1000)
       } else if (!isNaN(+elem)) {
-        // The refreshInterval string is attempted to be converted to a number. The + is only
-        // successful if the string contains only numeric characters, including periods, otherwise
-        // it returns NaN. Return the number given as seconds.
+        // The refreshInterval string is attempted to be converted to a number.
+        // The + is successful if the string contains only numeric characters, including
+        // periods, otherwise it returns NaN. Return the number given as seconds.
         refreshInterval += (+elem * 1000);
       }
     }
@@ -965,13 +978,12 @@ export class OwfCommonService {
           var seconds = elem.split('SEC')[0];
           refreshOffset += (+seconds * 1000);
         } else if (!isNaN(+elem)) {
-          // The refreshInterval string is attempted to be converted to a number. The + is only
-          // successful if the string contains only numeric characters, including periods, otherwise
-          // it returns NaN. Return the number given as seconds.
+          // See comment for this line in refreshInterval() above.
           refreshOffset += (+elem * 1000);
         }
       }
-      // If the offset is greater than 24 hours, let user know it must be less, and run the default.
+      // If the offset is greater than 24 hours, let user know it must be less,
+      // and run the default.
       if (refreshOffset > 86400000) {
         console.error('Refresh interval is greater than 24 hours, and must be less. Setting offset to midnight.');
         return this.setRefreshOffset(refreshInterval);
@@ -1041,7 +1053,8 @@ export class OwfCommonService {
 
       switch(type) {
         case IM.Path.fMCP:
-          console.error("Confirm the app configuration property 'mapProject' with id '" + id + "' is the correct path");
+          console.error("Confirm the app configuration property 'mapProject' with id '" +
+          id + "' is the correct path");
           break;
         case IM.Path.gLGJP:
           console.error("Confirm the map configuration property 'sourcePath' is the correct path");
@@ -1050,16 +1063,19 @@ export class OwfCommonService {
           console.error("Confirm the map configuration EventHandler property 'eventConfigPath' is the correct path");
           break;
         case IM.Path.aCP:
-          console.error("No app-config.json detected in " + this.appPath + ". Confirm app-config.json exists in " + this.appPath);
+          console.error("No app-config.json detected in " + this.appPath +
+          ". Confirm app-config.json exists in " + this.appPath);
           break;
         case IM.Path.cPage:
-          console.error("Confirm the app configuration property 'markdownFilepath' with id '" + id + "' is the correct path");
+          console.error("Confirm the app configuration property 'markdownFilepath' with id '" +
+          id + "' is the correct path");
           break;
         case IM.Path.rP:
           console.error("Confirm the popup configuration file property 'resourcePath' is the correct path");
           break;
       }
-      // TODO: jpkeahey 2020.07.22 - Don't show a map error no matter what. I'll probably want to in some cases.
+      // TODO: jpkeahey 2020.07.22 - Don't show a map error no matter what. I'll
+      // probably want to in some cases.
       // this.router.navigateByUrl('map-error');
       // Let the app keep running by returning an empty result. Because each service
       // method returns a different kind of Observable result, this function takes a
@@ -1118,7 +1134,8 @@ export class OwfCommonService {
    * (foundProps): An array of all found properties in the line in the order they were found,
    * and (line): The line with all ${property} notation properly converted.
    */
-  public obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any, labelProp?: boolean, countFoundProps?: boolean): any {
+  public obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any,
+  labelProp?: boolean, countFoundProps?: boolean): any {
 
     var allFoundProps: string[] = [];
     var propertyString = '';
@@ -1127,11 +1144,14 @@ export class OwfCommonService {
     var featureValue = '';
     // Go through the entire line
     while (currentIndex < line.length) {
-      // Check to see if the string at the current index and the next index exists, and if they are equal to '${'
-      if (line[currentIndex] && line[currentIndex + 1] && line[currentIndex] === '$' && line[currentIndex + 1] === '{') {
+      // Check to see if the string at the current index and the next index exists,
+      // and if they are equal to '${'.
+      if (line[currentIndex] && line[currentIndex + 1] && line[currentIndex] === '$'
+      && line[currentIndex + 1] === '{') {
+
         currentIndex = currentIndex + 2;
-        // A property notation has been found. Move the current index up by 2 and now go through the line that contains a property
-        // until an ending '}' is found.
+        // A property notation has been found. Move the current index up by 2 and
+        // now go through the line that contains a property until an ending '}' is found.
         for (let i = currentIndex; i < line.length; i++) {
           if (line[i] !== '}') {
             propertyString += line[i];
@@ -1141,8 +1161,9 @@ export class OwfCommonService {
             break;
           }
         }
-        // You have gone through everything inside the ${property} format and gotten the string. Split by the colon and now we
-        // have our true property. I might have to use the throwaway variable later, which is the featureAttribute string.
+        // You have gone through everything inside the ${property} format and gotten
+        // the string. Split by the colon and now we have our true property. I might
+        // have to use the throwaway variable later.
         let splitArr = propertyString.split(':');
         var prop: string;
         if (splitArr.length === 1) {
@@ -1156,14 +1177,17 @@ export class OwfCommonService {
         featureValue = featureProperties[prop];
 
         if (prop === undefined) {
-          console.warn('A property of the [' + key + '] attribute in the graph template file is incorrectly formatted. ' +
-            'This might cause an error in retrieving the graph, or other unintended output on the graph.');
+          console.warn('A property of the [' + key + '] attribute in the graph ' +
+          'template file is incorrectly formatted. This might cause an error in ' +
+          'retrieving the graph, or other unintended output on the graph.');
         }
-        // If the featureValue is undefined, then the property given after the colon (:) does not exist on the feature. Let
-        // the user know in a warning and return the ${property} that was given by the user so it's obvious there's an issue.
+        // If the featureValue is undefined, then the property given after the colon
+        // does not exist on the feature. Warn user and return the ${property} that
+        // was given by the user so it's obvious there's an issue.
         if (featureValue === undefined) {
-          console.warn('The featureAttribute property "' + prop + '" does not exist in the feature. Confirm the spelling ' +
-            'and punctuation of the attribute is correct.');
+          console.warn('The featureAttribute property "' + prop +
+          '" does not exist in the feature. Confirm the spelling ' +
+          'and punctuation of the attribute is correct.');
           formattedLine += '${' + propertyString + '}';
           propertyString = '';
           continue;

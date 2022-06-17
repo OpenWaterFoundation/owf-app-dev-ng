@@ -684,78 +684,89 @@ export interface TSID {
 
 ///////////////////////////// Telemetry Station \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-// export interface TelemetryStation {
-//   abbrev: string;
-//   contrArea: number;
-//   county: string;
-//   dataSource: string;
-//   dataSourceAbbrev: string;
-//   division: number;
-//   drainArea: number;
-//   flagA: string;
-//   flagB: string;
-//   gnisId: string;
-//   huc10: string;
-//   latitude: number;
-//   locationAccuracy: string;
-//   longitude: number;
-//   measDateTime: DateTime;
-//   measValue: DateTime;
-//   modified: DateTime;
-//   moreInformation: string;
-//   parameter: string;
-//   stage: number;
-//   stationName: string;
-//   stationPorEnd: DateTime;
-//   stationPorStart: DateTime;
-//   stationStatus: string;
-//   stationType: string;
-//   streamMile: number;
-//   structureType: string;
-//   thirdParty: boolean;
-//   units: string;
-//   usgsStationId: string;
-//   utmX: number;
-//   utmY: number;
-//   waterDistrict: number;
-//   waterSource: string;
-//   wdid: string;
-// }
+export interface TelStation {
+  abbrev: string;
+  contrArea: number;
+  county: string;
+  dataSource: string;
+  dataSourceAbbrev: string;
+  division: number;
+  drainArea: number;
+  flagA: string;
+  flagB: string;
+  gnisId: string;
+  huc10: string;
+  latitude: number;
+  locationAccuracy: string;
+  longitude: number;
+  measDateTime: DateTime;
+  measValue: DateTime;
+  modified: DateTime;
+  moreInformation: string;
+  parameter: string;
+  stage: number;
+  stationName: string;
+  stationPorEnd: DateTime;
+  stationPorStart: DateTime;
+  stationStatus: string;
+  stationType: string;
+  streamMile: number;
+  structureType: string;
+  thirdParty: boolean;
+  units: string;
+  usgsStationId: string;
+  utmX: number;
+  utmY: number;
+  waterDistrict: number;
+  waterSource: string;
+  wdid: string;
+}
 
-// export interface TelemetryStationDataType {
-//   abbrev: string;
-//   contrArea: number;
-//   county: string;
-//   dataSource: string;
-//   dataSourceAbbrev: string;
-//   division: number;
-//   drainArea: number;
-//   gnisId: string;
-//   huc10: string;
-//   latdecdeg: number;
-//   locationAccuracy: string;
-//   longdecdeg: number;
-//   modified: DateTime;
-//   parameter: string;
-//   parameterPorEnd: DateTime;
-//   parameterPorStart: DateTime;
-//   parameterUnit: string;
-//   stationName: string;
-//   stationStatus: string;
-//   stationType: string;
-//   streamMile: number;
-//   structureType: string;
-//   thirdParty: boolean;
-//   timeStep?: string;
-//   usgsStationId: string;
-//   utmX: number;
-//   utmY: number;
-//   waterDistrict: number;
-//   waterSource: string;
-//   wdid: string;
-// }
+export interface TelStationDataType {
+  abbrev: string;
+  contrArea: number;
+  county: string;
+  dataSource: string;
+  dataSourceAbbrev: string;
+  division: number;
+  drainArea: number;
+  gnisId: string;
+  huc10: string;
+  latdecdeg: number;
+  locationAccuracy: string;
+  longdecdeg: number;
+  modified: DateTime;
+  parameter: string;
+  parameterPorEnd: DateTime;
+  parameterPorStart: DateTime;
+  parameterUnit: string;
+  stationName: string;
+  stationStatus: string;
+  stationType: string;
+  streamMile: number;
+  structureType: string;
+  thirdParty: boolean;
+  timeStep?: string;
+  usgsStationId: string;
+  utmX: number;
+  utmY: number;
+  waterDistrict: number;
+  waterSource: string;
+  wdid: string;
+}
 
-
+export interface TelTimeSeries {
+  abbrev: string;
+  flagA: string;
+  flagB: string;
+  measCount: number;
+  measDate?: any;
+  measDateTime?: any;
+  measUnit: string;
+  measValue: number;
+  modified: any;
+  parameter: string;
+}
 
 /////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
