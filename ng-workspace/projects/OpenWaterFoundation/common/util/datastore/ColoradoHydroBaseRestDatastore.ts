@@ -1,18 +1,19 @@
-import { Observable }       from 'rxjs/internal/Observable';
+import { Observable }                from 'rxjs/internal/Observable';
 import { BehaviorSubject,
           forkJoin,
-          Subject }         from 'rxjs';
+          Subject }                  from 'rxjs';
 
 import { TS,
           TSIdent, 
-          TSUtil}           from '@OpenWaterFoundation/common/ts';
+          TSUtil}                    from '@OpenWaterFoundation/common/ts';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { OwfCommonService }          from '@OpenWaterFoundation/common/services';
+import * as IM                       from '@OpenWaterFoundation/common/services';
 import { DateTime,
-          TimeInterval }    from '@OpenWaterFoundation/common/util/time';
-import { PropList }         from '@OpenWaterFoundation/common/util/io';
-import { TelemetryStation } from '@OpenWaterFoundation/common/dmi';
+          TimeInterval }             from '@OpenWaterFoundation/common/util/time';
+import { PropList }                  from '@OpenWaterFoundation/common/util/io';
+import { TelemetryStation,
+          TelemetryStationDataType } from '@OpenWaterFoundation/common/dmi';
 
 
 // @dynamic
@@ -2045,7 +2046,6 @@ export class ColoradoHydroBaseRestDatastore {
         }
         else {
           telemetryResult = new TelemetryStation(allResults[0].ResultList[0]);
-          console.log(telemetryResult.toString());
         }
 
         if ( allResults[1] === null ) {
@@ -2053,7 +2053,7 @@ export class ColoradoHydroBaseRestDatastore {
           telemetrySubject.next(ts);
         }
         else {
-          telemetryStationDataTypeResult = allResults[1].ResultList[0];
+          telemetryStationDataTypeResult = new TelemetryStationDataType(allResults[1].ResultList[0]);
         }
         
         // Set the description:
