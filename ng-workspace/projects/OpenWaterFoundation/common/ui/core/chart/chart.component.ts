@@ -8,6 +8,7 @@ import { Component,
 import { BehaviorSubject,
           forkJoin,
           Observable,
+          Subject,
           Subscription }     from 'rxjs';
 
 import structuredClone       from '@ungap/structured-clone';
@@ -726,53 +727,64 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     // Iterate over all graphData objects in the graph template file.
     graphData.forEach((graphData) => {
-      var dataObservable = this.dsManager.getDatastoreData(this.commonService, graphData.properties.TSID);
-      
-      console.log('dataObservable:', dataObservable);
-      allDataObservables.push(dataObservable);
+      var datastoreData = this.dsManager.getDatastoreData(this.commonService, graphData.properties.TSID);
+
+      if (datastoreData instanceof Observable) {
+        allDataObservables.push(datastoreData);
+      }
     });
 
-    console.log('allDataObservables:', allDataObservables);
+    this.commonService.datastoreDataSubject$.subscribe((datastoreResult: Observable<TS>) => {
 
-    this.allResultsSub$ = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
-      console.log('allResults:', allResults);
-      this.TSArrayOGResultRef = allResults;
-
-      allResults.forEach((result: any, i: number) => {
-
-        // Check for any errors.
-        if (result.error) {
-          console.error('Graph Template file: Graph object in position ' + (i + 1) +
-            ' from the data array has errored. If this chart object does not have an ' +
-            'eventHandler, ${} properties are not allowed in the path to the data.');
-          chartError = true;
-          return;
-        }
-
-        var TSID = this.commonService.parseTSID(graphData[i].properties.TSID);
-        var datastore = this.dsManager.getDatastore(TSID.datastore);
-
-        switch (datastore.type) {
-          case IM.DatastoreType.delimited:
-            allGraphObjects.push(this.makeDelimitedPlotlyObject(result, graphData[i], i));
-            break;
-          case IM.DatastoreType.dateValue:
-          case IM.DatastoreType.stateMod:
-            this.isTSFile = true;
-            allGraphObjects.push(this.makeTSPlotlyObject(result, graphData[i], i));
-            break;
-        }
-      });
-
-      if (chartError === true) {
-        this.setChartError = true;
-        return;
-      } else {
-        this.setChartError = false;
+      if (datastoreResult !== null) {
+        allDataObservables.push(datastoreResult);
       }
 
-      this.createPlotlyGraph(allGraphObjects);
+      if (allDataObservables.length === graphData.length) {
+
+        this.allResultsSub$ = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
+
+          this.TSArrayOGResultRef = allResults;
+    
+          allResults.forEach((result: any, i: number) => {
+    
+            // Check for any errors.
+            if (result.error) {
+              console.error('Graph Template file: Graph object in position ' + (i + 1) +
+                ' from the data array has errored. If this chart object does not have an ' +
+                'eventHandler, ${} properties are not allowed in the path to the data.');
+              chartError = true;
+              return;
+            }
+    
+            var TSID = this.commonService.parseTSID(graphData[i].properties.TSID);
+            var datastore = this.dsManager.getDatastore(TSID.datastore);
+    
+            switch (datastore.type) {
+              case IM.DatastoreType.delimited:
+                allGraphObjects.push(this.makeDelimitedPlotlyObject(result, graphData[i], i));
+                break;
+              case IM.DatastoreType.dateValue:
+              case IM.DatastoreType.stateMod:
+                this.isTSFile = true;
+                allGraphObjects.push(this.makeTSPlotlyObject(result, graphData[i], i));
+                break;
+            }
+          });
+    
+          if (chartError === true) {
+            this.setChartError = true;
+            return;
+          } else {
+            this.setChartError = false;
+          }
+    
+          this.createPlotlyGraph(allGraphObjects);
+        });
+      }
     });
+
+    
   }
 
   /**

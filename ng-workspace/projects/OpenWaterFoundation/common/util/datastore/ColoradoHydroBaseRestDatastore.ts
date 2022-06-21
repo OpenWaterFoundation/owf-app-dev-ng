@@ -1,6 +1,7 @@
 import { Observable }                from 'rxjs/internal/Observable';
 import { BehaviorSubject,
           forkJoin,
+          map,
           Subject }                  from 'rxjs';
 
 import { TS,
@@ -135,23 +136,6 @@ export class ColoradoHydroBaseRestDatastore {
   }
 
   /**
-   * 
-   * @param rootUrl 
-   * @param path 
-   * @returns 
-   */
-  private convertPath(rootUrl: string, path: string): string {
-
-    // service.obtainPropertiesFromLine(path, something);
-
-    if (path.startsWith('/')) {
-      return rootUrl + path.substring(1);
-    } else {
-      return rootUrl + path;
-    }
-  }
-
-  /**
    * Determine the web service API version. This will set 
    * __apiVersion to be the integer of the API service version number 
    * found at the end of the service request URI. 
@@ -214,17 +198,15 @@ export class ColoradoHydroBaseRestDatastore {
    * @param fullTSID 
    * @returns 
    */
-  public getData(fullTSID: IM.TSID): Subject<Observable<TS>> {
-
-    var dataSubject = new Subject<Observable<TS>>();
+  public getData(fullTSID: IM.TSID): string {
 
     // Wait until initialized.
     this.paramsInitialized$.subscribe((initialized: boolean) => {
       if (initialized === true) {
-        dataSubject.next(this.readTimeSeries(fullTSID.location, null, null, true, null));
+        this.commonService.datastoreDataSubject.next(this.readTimeSeries(fullTSID.location, null, null, true, null));
       }
     });
-    return dataSubject;
+    return 'Finished';
   }
 
   /**
@@ -234,18 +216,18 @@ export class ColoradoHydroBaseRestDatastore {
    */
   public getDataTypeWithoutGroup ( dataType: string ): string {
     // Parse the group.
-      var pos = dataType.indexOf(" -");
-      var group = "";
-      if ( pos > 0 ) {
-        // Have a group.
-        group = dataType.substring(0,pos).trim();
-          dataType = dataType.substring(pos+2).trim();
-      }
-      else {
-        // No group.
-          dataType = dataType.trim();
-      }
-      return dataType;
+    var pos = dataType.indexOf(" -");
+    var group = "";
+    if ( pos > 0 ) {
+      // Have a group.
+      group = dataType.substring(0,pos).trim();
+        dataType = dataType.substring(pos+2).trim();
+    }
+    else {
+      // No group.
+        dataType = dataType.trim();
+    }
+    return dataType;
   }
 
   /**
@@ -263,8 +245,8 @@ export class ColoradoHydroBaseRestDatastore {
    */
   private initialize(): void {
     if (this.initialized) {
-        // Already initialized.
-        return;
+      // Already initialized.
+      return;
     }
     // Otherwise initialize the global data for the data store.
     this.initialized = true;
@@ -370,7 +352,12 @@ export class ColoradoHydroBaseRestDatastore {
   or minimally-initialized time series if unable to read.
   */
   readTimeSeries( tsidentString: string, readStart: DateTime, readEnd: DateTime,
-    readData: boolean, props: PropList ): Observable<TS> {   
+    readData: boolean, props: PropList ): Observable<TS> {
+
+    // Before anything else is done, add to the datastore's array of observables
+    // that will need to be read in asynchronously.
+    // this.readGlobalData();
+
     var routine = "ColoradoHydroBaseRestDatastore.readTimeSeries";
     var dl = 1; // Debug level.
 
@@ -1962,7 +1949,7 @@ export class ColoradoHydroBaseRestDatastore {
     //   }
     // }
     if (this.isTelemetryStationTimeSeriesDataType(dataTypeReq)) {
-      var telemetrySubject = new Subject<TS>();
+
       var abbrev: string = locid;
       var parameter: string = ts.getDataType();
       var allTelemetryStationReads: Observable<any>[] = [];
@@ -2032,7 +2019,12 @@ export class ColoradoHydroBaseRestDatastore {
       allTelemetryStationReads.push(this.commonService.getJSONData(telRequest));
 
       // 
-      forkJoin(allTelemetryStationReads).subscribe((allResults: any) => {
+      return forkJoin(allTelemetryStationReads).pipe(
+      map((allResults: any) => {
+
+        console.log('allResults[0]:', JSON.stringify(allResults[0].ResultList, null, 4));
+        console.log('allResults[1]:', JSON.stringify(allResults[1].ResultList, null, 4));
+        console.log('allResults[2]:', JSON.stringify(allResults[2].ResultList, null, 4));
 
         var telStation: TelemetryStation = null;
         var telStationDataType: TelemetryStationDataType = null;
@@ -2040,7 +2032,7 @@ export class ColoradoHydroBaseRestDatastore {
 
         if (allResults[0] === null) {
           console.warn(3, routine, "No data returned for:  " + telemetryRequest);
-          telemetrySubject.next(ts);
+          return ts;
         }
         else {
           telStation = new TelemetryStation(allResults[0].ResultList[0]);
@@ -2048,7 +2040,7 @@ export class ColoradoHydroBaseRestDatastore {
 
         if (allResults[1] === null) {
           console.warn(3, routine, "No data returned for:  " + telemetryStationDataTypeRequest);
-          telemetrySubject.next(ts);
+          return ts;
         }
         else {
           telStationDataType = new TelemetryStationDataType(allResults[1].ResultList[0]);
@@ -2134,12 +2126,12 @@ export class ColoradoHydroBaseRestDatastore {
             var telTSMinute = new TelemetryTimeSeries(telTSArray[i]);
             // If units were not set in the telemetry data types, set here.
             measUnit = telTSMinute.getMeasUnit();
-            if ( !dataUnitsSet && (measUnit != null) && measUnit.length > 0 ) {
+            if (!dataUnitsSet && (measUnit != null) && measUnit.length > 0) {
               // Make sure the units are consistent.
               ts.setDataUnits(measUnit);
               dataUnitsSet = true;
             }
-            if ( !dataUnitsOriginalSet && (measUnit != null) && measUnit.length > 0 ) {
+            if (!dataUnitsOriginalSet && (measUnit != null) && measUnit.length > 0) {
               // Make sure the units are consistent.
               ts.setDataUnitsOriginal(measUnit);
               dataUnitsOriginalSet = true;
@@ -2159,7 +2151,7 @@ export class ColoradoHydroBaseRestDatastore {
             }
           }
         }
-        if (intervalBase === TimeInterval.HOUR){
+        if (intervalBase === TimeInterval.HOUR) {
           // Can declare DateTime outside of loop because time series stores in an array.
           var date = new DateTime(DateTime.PRECISION_HOUR);
           for (var i = 0; i < telTSArray.length; ++i) {
@@ -2185,7 +2177,7 @@ export class ColoradoHydroBaseRestDatastore {
 
             // Get the data.
             var value: number = telTSHour.getMeasValue();
-            if ( !this.isTimeSeriesValueMissing(value, true) ) {
+            if (!this.isTimeSeriesValueMissing(value, true)) {
               ts.setDataValueTwo(date, value);
             }
           }
@@ -2215,17 +2207,19 @@ export class ColoradoHydroBaseRestDatastore {
 
             // Get the data.
             var value: number = telTSDay.getMeasValue();
-            if ( !this.isTimeSeriesValueMissing(value, true) ) {
+            // console.log('value:', value);
+            // console.log('value is missing:', this.isTimeSeriesValueMissing(value, true));
+            // console.log('date:', date);
+            if (!this.isTimeSeriesValueMissing(value, true)) {
               ts.setDataValueTwo(date, value);
             }
           }
         }
-
         console.log('readTimeSeries.telStation:', telStation);
         console.log('readTimeSeries.telStationDataType:', telStationDataType);
         console.log('readTimeSeries.telTSArray:', telTSArray);
-        console.log('readTimeSeries.ts:', telTSArray);
-      });
+        return ts;
+      }));
   
     }
     // ---------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2353,10 +2347,6 @@ export class ColoradoHydroBaseRestDatastore {
       console.warn(3, routine, message);
       throw new Error(message);
     }
-    
-    // Return the time series:
-    // - may have returned before here if missing data or not reading data.
-    return telemetrySubject.asObservable();
   }
 
   /**

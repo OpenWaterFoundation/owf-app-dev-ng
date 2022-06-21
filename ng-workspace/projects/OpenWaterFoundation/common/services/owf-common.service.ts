@@ -38,6 +38,10 @@ export class OwfCommonService {
   public chartTemplateObject: Object;
   /** Absolute path to the dashboard configuration file. Used for relative paths. */
   public dashboardConfigPath: string;
+
+  datastoreDataSubject = new BehaviorSubject<any>(null);
+
+  datastoreDataSubject$: Observable<any> = this.datastoreDataSubject.asObservable();
   /** An array of DataUnit objects that each contain the precision for different
    * types of data, from degrees to mile per hour. Read from the application config
    * file top level property dataUnitsPath. */
@@ -45,7 +49,7 @@ export class OwfCommonService {
   /** The hard-coded string of the path to the default icon path that will be used
    * for the website if none is given. */
   public readonly defaultFaviconPath = 'assets/app-default/img/OWF-Logo-Favicon-32x32.ico';
-
+  /** The absolute path to a gapminder configuration file and used for relative paths. */
   public gapminderConfigPath = '';
   /** NOTE: Not currently in use. */
   public highlighted = new BehaviorSubject(false);
@@ -89,8 +93,13 @@ export class OwfCommonService {
   public mapConfigLayerOrder: string[] = [];
   /** A string representing the path to the map configuration file. */
   public mapConfigPath: string = '';
-
+  /**
+   * 
+   */
   private _mapConfig = new BehaviorSubject<any>({});
+  /**
+   * 
+   */
   readonly mapConfig$ = this._mapConfig.asObservable();
   private mapConfigTest = {};
   /** Object containing the original style for a given feature. */
@@ -437,9 +446,11 @@ export class OwfCommonService {
   }
 
   /**
-   * Iterates through all menus and sub-menus in the application configuration file and
-   * @returns the markdownFile (contentPage) path found there that matches the given geoLayerId
-   * @param id The geoLayerId to compare with
+   * Iterates through all mainMenus and subMenus in the app configuration file and
+   * determines the path to the first object with the markdownFile property.
+   * @returns The markdownFile (contentPage) path found there that matches the given
+   * geoLayerId.
+   * @param id The geoLayerId to compare with.
    */
   public getContentPathFromId(id: string) {
     for (let i = 0; i < this.appConfig.mainMenu.length; i++) {
@@ -516,9 +527,11 @@ export class OwfCommonService {
   public getDefaultBackgroundLayer(): string {
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
-        if (geoLayerViewGroup.properties.isBackground && geoLayerViewGroup.properties.isBackground.toUpperCase() === 'TRUE') {
+        if (geoLayerViewGroup.properties.isBackground &&
+          geoLayerViewGroup.properties.isBackground.toUpperCase() === 'TRUE') {
           for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-            if (geoLayerView.properties.selectedInitial && geoLayerView.properties.selectedInitial.toUpperCase() === 'TRUE') {
+            if (geoLayerView.properties.selectedInitial &&
+              geoLayerView.properties.selectedInitial.toUpperCase() === 'TRUE') {
               return geoLayerView.name;
             }
           }
@@ -548,8 +561,8 @@ export class OwfCommonService {
     let splitInitial: string[] = extentInitial.split(':');
 
     if (splitInitial[0] === 'ZoomLevel' && splitInitial[1].split(',').length !== 3)
-      console.error("ZoomLevel inputs of " + splitInitial[1] +
-      " is incorrect. Usage for a ZoomLevel property is 'ZoomLevel:Longitude, Latitude, Zoom Level'");
+      console.error("ZoomLevel inputs of " + splitInitial[1] + " is incorrect. " +
+      "Usage for a ZoomLevel property is 'ZoomLevel:Longitude, Latitude, Zoom Level'");
 
     try {
       // Try to convert all strings in the split array to numbers to return as a
@@ -722,7 +735,8 @@ export class OwfCommonService {
     var allGeoLayerViewGroups: string[] = [];
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
-        if (!geoLayerViewGroup.properties.isBackground || geoLayerViewGroup.properties.isBackground === 'false') {
+        if (!geoLayerViewGroup.properties.isBackground ||
+          geoLayerViewGroup.properties.isBackground === 'false') {
           allGeoLayerViewGroups.push(geoLayerViewGroup.geoLayerViewGroupId);
         }
       }
@@ -740,7 +754,8 @@ export class OwfCommonService {
     var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
 
     for (let geoLayerViewGroup of geoLayerViewGroups) {
-      if (!geoLayerViewGroup.properties.isBackground || geoLayerViewGroup.properties.isBackground === 'false') {
+      if (!geoLayerViewGroup.properties.isBackground ||
+        geoLayerViewGroup.properties.isBackground === 'false') {
         for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
           if (geoLayerView.geoLayerId === geoLayerId) {
             return geoLayerView.eventHandlers;
@@ -938,7 +953,8 @@ export class OwfCommonService {
     }
 
     if (refreshInterval < 30000) {
-      console.error('Refresh interval is less than 30 seconds, and must be greater. Skipping layer refresh');
+      console.error('Refresh interval is less than 30 seconds, and must be greater. ' +
+      'Skipping layer refresh');
       return NaN;
     }
 
@@ -985,7 +1001,8 @@ export class OwfCommonService {
       // If the offset is greater than 24 hours, let user know it must be less,
       // and run the default.
       if (refreshOffset > 86400000) {
-        console.error('Refresh interval is greater than 24 hours, and must be less. Setting offset to midnight.');
+        console.error('Refresh interval is greater than 24 hours, and must be less. ' +
+        'Setting offset to midnight.');
         return this.setRefreshOffset(refreshInterval);
       }
       // Finally, find the offset.
@@ -1060,7 +1077,8 @@ export class OwfCommonService {
           console.error("Confirm the map configuration property 'sourcePath' is the correct path");
           break;
         case IM.Path.eCP:
-          console.error("Confirm the map configuration EventHandler property 'eventConfigPath' is the correct path");
+          console.error("Confirm the map configuration EventHandler property " +
+          "'eventConfigPath' is the correct path");
           break;
         case IM.Path.aCP:
           console.error("No app-config.json detected in " + this.appPath +
@@ -1071,7 +1089,8 @@ export class OwfCommonService {
           id + "' is the correct path");
           break;
         case IM.Path.rP:
-          console.error("Confirm the popup configuration file property 'resourcePath' is the correct path");
+          console.error("Confirm the popup configuration file property 'resourcePath' " +
+          "is the correct path");
           break;
       }
       // TODO: jpkeahey 2020.07.22 - Don't show a map error no matter what. I'll
@@ -1113,7 +1132,8 @@ export class OwfCommonService {
    */
   public isURL(property: any): boolean {
     if (typeof property === 'string') {
-      if (property.startsWith('http://') || property.startsWith('https://') || property.startsWith('www.')) {
+      if (property.startsWith('http://') || property.startsWith('https://') ||
+      property.startsWith('www.')) {
         return true;
       }
     } else return false;
@@ -1192,7 +1212,8 @@ export class OwfCommonService {
           propertyString = '';
           continue;
         }
-        // If the property is for a graduated label property, check to see if any operators need to be removed.
+        // If the property is for a graduated label property, check to see if any
+        // operators need to be removed.
         if (labelProp === true) {
           if (featureValue.includes('=')) {
             featureValue = featureValue.substring(featureValue.indexOf('=') + 1);
@@ -1205,26 +1226,32 @@ export class OwfCommonService {
           }
         }
 
-        // This looks for all the content inside two soft parentheses
+        // This looks for all the content inside two soft parentheses.
         var regExp = /\(([^)]+)/;
-        // Iterate over the currently implemented property functions that OWF is supporting, which is being organized in the
-        // PropFunction enum at the end of this file
+        // Iterate over the currently implemented property functions that OWF is
+        // supporting, which is being organized in the PropFunction enum at the
+        // end of this file.
         for (const propFunction of Object.values(IM.PropFunction)) {
-          // We're at the index after the ${} property, so check to see if it is immediately followed by a PropFunction string
+          // We're at the index after the ${} property, so check to see if it is
+          // immediately followed by a PropFunction string.
           if (line.substring(currentIndex).startsWith(propFunction)) {
-            // Use the regExp variable above to get all contents between the parens, check if null - no parameters were given
-            // in the PropFunction - and run the appropriate function
+            // Use the regExp variable above to get all contents between the parens,
+            // check if null - no parameters were given in the PropFunction - and
+            // run the appropriate function.
             if (regExp.exec(line.substring(currentIndex)) !== null) {
-              featureValue = this.runPropFunction(featureValue, propFunction, regExp.exec(line.substring(currentIndex))[1]);
+              featureValue = this.runPropFunction(featureValue, propFunction,
+                regExp.exec(line.substring(currentIndex))[1]);
             } else {
               featureValue = this.runPropFunction(featureValue, propFunction);
             }
-            // Set the current index to the letter after the function parenthesis e.g. replace(...) <----
-            // Use the currentIndex as the start of the search for the index of ')', for chaining functions
+            // Set the current index to the letter after the function parenthesis
+            // e.g. replace(...). Use the currentIndex as the start of the search
+            // for the index of ')', for chaining functions.
             currentIndex = line.indexOf(')', currentIndex) + 1;
           }
         }
-        // Add the possibly manipulated featureValue to the formattedLine string that will be returned
+        // Add the possibly manipulated featureValue to the formattedLine string
+        // that will be returned.
         formattedLine += featureValue;
         propertyString = '';
       }
@@ -1339,7 +1366,8 @@ export class OwfCommonService {
   /**
    * Run the appropriate PropFunction function that needs to be called on the ${} property value
    * @param featureValue The property value that needs to be manipulated
-   * @param propFunction The PropFunction enum value to determine which implemented function needs to be called
+   * @param propFunction The PropFunction enum value to determine which implemented
+   * function needs to be called.
    * @param args The optional arguments found in the parens of the PropFunction as a string
    */
   public runPropFunction(featureValue: string, propFunction: IM.PropFunction, args?: string): string {
@@ -1360,12 +1388,14 @@ export class OwfCommonService {
         }
 
         if (argArray.length !== 2) {
-          console.warn('The function \'.replace()\' must be given two arguments, the searched for pattern and the replacement ' +
-            'for the pattern e.g. .replace(\' \', \'\')');
+          console.warn('The function \'.replace()\' must be given two arguments, ' +
+          'the searched for pattern and the replacement for the pattern ' +
+          'e.g. .replace(\' \', \'\')');
           return featureValue;
         } else {
-          // Create a new regular expression object with the pattern we want to find (the first argument) and g to replace
-          // globally, or all instances of the found pattern
+          // Create a new regular expression object with the pattern we want to find
+          // (the first argument) and g to replace globally, or all instances of
+          // the found pattern.
           var regex = new RegExp(argArray[0], 'g');
           return featureValue.replace(regex, argArray[1]);
         }
@@ -1373,30 +1403,35 @@ export class OwfCommonService {
   }
 
   /**
-   * Sanitizes the markdown syntax by checking if image links are present, and replacing them with the full path to the
-   * image relative to the markdown file being displayed. This eases usability so that just the name and extension of the
-   * file can be used e.g. `![Waldo](waldo.png)` will be converted to `![Waldo](full/path/to/markdown/file/waldo.png)`
-   * @param doc The documentation string retrieved from the markdown file
+   * Sanitizes the markdown syntax by checking if image links are present, and replacing
+   * them with the full path to the image relative to the markdown file being displayed.
+   * This eases usability so that just the name and extension of the file can be
+   * used e.g. `![Waldo](waldo.png)` will be converted to
+   * `![Waldo](full/path/to/markdown/file/waldo.png)`.
+   * @param doc The documentation string retrieved from the markdown file.
    */
   public sanitizeDoc(doc: string, pathType: IM.Path): string {
-    // Needed for a smaller scope when replacing the image links
+    // Needed for a smaller scope when replacing the image links.
     var _this = this;
     // If anywhere in the documentation there exists  ![any amount of text](
-    // then it is the syntax for an image, and the path needs to be changed
+    // then it is the syntax for an image, and the path needs to be changed.
     if (/!\[(.*?)\]\(/.test(doc)) {
-      // Create an array of all substrings in the documentation that match the regular expression  ](any amount of text)
+      // Create an array of all substrings in the documentation that match the regular
+      // expression  ](any amount of text).
       var allImages: string[] = doc.match(/\]\((.*?)\)/g);
-      // Go through each one of these strings and replace each one that does not specify itself as an in-page link,
-      // or external link
+      // Go through each one of these strings and replace each one that does not
+      // specify itself as an in-page link, or external link.
       for (let image of allImages) {
-        if (image.startsWith('](#') || image.startsWith('](https') || image.startsWith('](http') || image.startsWith('](www')) {
+        if (image.startsWith('](#') || image.startsWith('](https') ||
+        image.startsWith('](http') || image.startsWith('](www')) {
           continue;
         } else {
 
           doc = doc.replace(image, function(word) {
             // Take off the pre pending ]( and ending )
             var innerParensContent = word.substring(2, word.length - 1);
-            // Return the formatted full markdown path with the corresponding bracket and parentheses
+            // Return the formatted full markdown path with the corresponding bracket
+            // and parentheses.
             if (innerParensContent.startsWith('assets/img/')) {
               return '](' + innerParensContent + ')';
             }
@@ -1419,7 +1454,8 @@ export class OwfCommonService {
   public setAppConfig(appConfig: IM.AppConfig): void { this.appConfig = appConfig; }
 
   /**
-   * No configuration file was detected from the user, so the 'assets/app-default/' path is set
+   * No configuration file was detected from the user, so the 'assets/app-default/'
+   * path is set.
    * @param path The default assets path to set the @var appPath to
    */
   public setAppPath(path: string): void { this.appPath = path; }
@@ -1505,28 +1541,33 @@ export class OwfCommonService {
   }
 
   /**
-   * Iterates over each geoLayerViewGroup in the geoMap and pushes each geoLayerView's geoLayerId in the order they are given,
-   * so the InfoMapper knows the order in which they should be draw on the Leaflet map.
+   * Iterates over each geoLayerViewGroup in the geoMap and pushes each geoLayerView's
+   * geoLayerId in the order they are given, so the InfoMapper knows the order in
+   * which they should be draw on the Leaflet map.
    */
   public getMapConfigLayerOrder(): string[] {
     var layerArray: string[] = [];
 
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
-        if (!geoLayerViewGroup.properties.isBackground || geoLayerViewGroup.properties.isBackground === 'false')
-        for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-          layerArray.push(geoLayerView.geoLayerId);
+        if (!geoLayerViewGroup.properties.isBackground ||
+        geoLayerViewGroup.properties.isBackground === 'false') {
+          for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
+            layerArray.push(geoLayerView.geoLayerId);
+          }
         }
       }
     }
-    // Reverse the array here, since we'll start on the layer that should be at the bottom, bring it to the front of Leaflet map,
-    // move on to the layer that should be on top of the bottom layer, bring it to the front, and so on.
+    // Reverse the array here, since we'll start on the layer that should be at
+    // the bottom, bring it to the front of Leaflet map, move on to the layer that
+    // should be on top of the bottom layer, bring it to the front, and so on.
     return layerArray.reverse();
   }
 
   /**
-   * Sets the @var mapConfigPath to the path of the map configuration file in the application.
-   * @param path The path to set to
+   * Sets the @var mapConfigPath to the path of the map configuration file in the
+   * application.
+   * @param path The path to set to.
    */
   public setMapConfigPath(path: string): void { this.mapConfigPath = path; }
 
@@ -1594,7 +1635,9 @@ export class OwfCommonService {
    * Sets the @var serverUnavailable with a key of @var geoLayerId to true.
    * @param geoLayerId The geoLayerId to compare to while creating the side bar
    */
-  public setServerUnavailable(geoLayerId: string): void { this.serverUnavailable[geoLayerId] = true; }
+  public setServerUnavailable(geoLayerId: string): void {
+    this.serverUnavailable[geoLayerId] = true;
+  }
 
   /**
    * Sets the @var graphTSID to the given tsid.

@@ -134,7 +134,8 @@ export class ChartService {
 
       // 
       if (timeSeries instanceof DayTS) {
-        if (iter.getDay() === endDate.getDay() && iter.getMonth() === endDate.getMonth() &&
+        if (iter.getDay() === endDate.getDay() &&
+        iter.getMonth() === endDate.getMonth() &&
         iter.getYear() === endDate.getYear()) {
 
           var lastValue = timeSeries.getDataValue(iter);

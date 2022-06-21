@@ -87,7 +87,7 @@ export class StateModTS {
         // Determine the interval of the file and create a time series that matches...      
         ts = TSUtil.newTimeSeries(tsident_string, true);
 
-        if (ts == null) {
+        if (ts === null) {
           console.error("Unable to create time series for \"" + tsident_string + "\"");
           return ts;
         }
@@ -102,7 +102,8 @@ export class StateModTS {
         ts.getIdentifier().setInputType("StateMod");
         ts.setInputName(filename);
         // Already in the low-level code
-        ts.getIdentifier().setInputName(filename);       
+        ts.getIdentifier().setInputName(filename);
+
         return ts;
       }),
       catchError(() => of({ error: "An error has occurred." }))

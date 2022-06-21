@@ -2,7 +2,6 @@
 
 import { DateTime }    from "@OpenWaterFoundation/common/util/time";
 import * as IM         from '@OpenWaterFoundation/common/services';
-import { TimeToolkit } from "../dto/TimeToolkit";
 
 /* NoticeStart
 CDSS HydroBase REST Web Services Java Library
@@ -35,6 +34,18 @@ export class TelemetryTimeSeries {
     this.initAllDateTimeAttributes();
   }
 
+
+	/**
+	 * Appends zeros as a string to a date string so that it is in a format that the
+	 * Java converted code can handle. For the modified attribute.
+	 * @param dateString 
+	 */
+	formatTo8601(dateString: string): string {
+		if (dateString.includes('.')) {
+			return dateString.substring(0, dateString.lastIndexOf('.'));
+		}
+		return dateString;
+	}
 
 	/**
 	 * Getters and setters for defined variables.
@@ -126,13 +137,14 @@ export class TelemetryTimeSeries {
 
   initAllDateTimeAttributes(): void {
     if (typeof this.telemetryTimeSeries.measDate === 'string') {
-      this.telemetryTimeSeries.measDate = TimeToolkit.getInstance().toDateTime(this.telemetryTimeSeries.measDate, false);
+      this.telemetryTimeSeries.measDate = DateTime.parse(this.telemetryTimeSeries.measDate);
     } else if (typeof this.telemetryTimeSeries.measDateTime === 'string') {
-      this.telemetryTimeSeries.measDateTime = TimeToolkit.getInstance().toDateTime(this.telemetryTimeSeries.measDateTime, false);
+      this.telemetryTimeSeries.measDateTime = DateTime.parse(this.telemetryTimeSeries.measDateTime);
     }
 
     if (typeof this.telemetryTimeSeries.modified === 'string') {
-      this.telemetryTimeSeries.modified = TimeToolkit.getInstance().toDateTime(this.telemetryTimeSeries.modified, false);
+			this.telemetryTimeSeries.modified = this.formatTo8601(this.telemetryTimeSeries.modified);
+      this.telemetryTimeSeries.modified = DateTime.parse(this.telemetryTimeSeries.modified);
     }
   }
 	
@@ -141,16 +153,18 @@ export class TelemetryTimeSeries {
 	 * Variables defined in order of how they are returned in a json format from * web services.
 	 */
 	toString(): string {
-		return "TelemetryTimeSeriesRaw: { abbrev: " + this.telemetryTimeSeries.abbrev +
-    ", parameter: " + this.telemetryTimeSeries.parameter + 
-		", measDateTime: " + this.telemetryTimeSeries.measDateTime +
-    ", measValue: " + this.telemetryTimeSeries.measValue +
-    ", measUnit: " + this.telemetryTimeSeries.measUnit +
-    ", flagA: " + this.telemetryTimeSeries.flagA +
-    ", flagB: " + this.telemetryTimeSeries.flagB +
-    ", measCount: " + this.telemetryTimeSeries.measCount +
-    ", modified: " + this.telemetryTimeSeries.modified +
-    " }\n";
+		return "TelemetryTimeSeries: {\n" +
+		"  abbrev: " + this.telemetryTimeSeries.abbrev + ",\n" +
+    "  parameter: " + this.telemetryTimeSeries.parameter + ",\n" +
+		"  measDate: " + this.telemetryTimeSeries.measDate + ",\n" +
+		"  measDateTime: " + this.telemetryTimeSeries.measDateTime + ",\n" +
+    "  measValue: " + this.telemetryTimeSeries.measValue + ",\n" +
+    "  measUnit: " + this.telemetryTimeSeries.measUnit + ",\n" +
+    "  flagA: " + this.telemetryTimeSeries.flagA + ",\n" +
+    "  flagB: " + this.telemetryTimeSeries.flagB + ",\n" +
+    "  measCount: " + this.telemetryTimeSeries.measCount + ",\n" +
+    "  modified: " + this.telemetryTimeSeries.modified + ",\n" +
+    "}\n";
 	}
 
 }

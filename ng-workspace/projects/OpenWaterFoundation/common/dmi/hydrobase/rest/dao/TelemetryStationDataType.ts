@@ -2,7 +2,6 @@
 
 import { DateTime }    from "@OpenWaterFoundation/common/util/time";
 import * as IM         from '@OpenWaterFoundation/common/services';
-import { TimeToolkit } from "../dto/TimeToolkit";
 
 /* NoticeStart
 CDSS HydroBase REST Web Services Java Library
@@ -29,7 +28,7 @@ export class TelemetryStationDataType {
 
 
   constructor(private telemetryStationDateType: IM.TelStationDataType) {
-
+		// this.initAllDateTimeAttributes();
   }
 
 	
@@ -141,6 +140,21 @@ export class TelemetryStationDataType {
 	getWdid(): string {
 		return this.telemetryStationDateType.wdid;
 	}
+
+	initAllDateTimeAttributes(): void {
+    if (typeof this.telemetryStationDateType.modified === 'string') {
+			// this.telemetryStation.modified = this.formatTo8601(this.telemetryStation.modified);
+      this.telemetryStationDateType.modified = DateTime.parse(this.telemetryStationDateType.modified);
+    }
+
+		if (typeof this.telemetryStationDateType.parameterPorStart === 'string') {
+			this.telemetryStationDateType.parameterPorStart = DateTime.parse(this.telemetryStationDateType.parameterPorStart);
+		}
+
+		if (typeof this.telemetryStationDateType.parameterPorEnd === 'string') {
+			this.telemetryStationDateType.parameterPorEnd = DateTime.parse(this.telemetryStationDateType.parameterPorEnd);
+		}
+  }
 	
 	/**
 	 * To string method for testing purposes:

@@ -272,7 +272,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * Assigns the array of objects of each line in the CSV file as the value in the
   * @var graduatedLayerColors with the geoLayerId as the key. Also possibly replaces
   * any ${property} notation variable in the `label` value if it exists.
-  * @param results An array of objects that represent each line from the CSV classification file.
+  * @param results An array of objects that represent each line from the CSV classification
+  * file.
   * @param geoLayerId The geoLayerId for the current layer.
   */
   private assignGraduatedFileColor(results: any[], geoLayerId: string): void {
@@ -436,7 +437,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       divContents = ('<h4 id="geoLayerView">' + mapName + '</h4>' + '<p id="point-info"></p>');
       if (instruction != "") {
-        divContents += ('<hr class="upper-left-map-info-divider"/>' + '<p id="instructions"><i>' + instruction + '</i></p>');
+        divContents += ('<hr class="upper-left-map-info-divider"/>' + '<p id="instructions"><i>' +
+        instruction + '</i></p>');
       }
       div.innerHTML = divContents;
     }
@@ -446,7 +448,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Iterate through each geoLayerView in every geoLayerViewGroup, and create
     // & add a Leaflet map layer for them.
     geoLayerViewGroups.forEach((geoLayerViewGroup: IM.GeoLayerViewGroup) => {
-      if (geoLayerViewGroup.properties.isBackground === undefined || geoLayerViewGroup.properties.isBackground === 'false') {
+      if (geoLayerViewGroup.properties.isBackground === undefined ||
+      geoLayerViewGroup.properties.isBackground === 'false') {
 
         for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
 

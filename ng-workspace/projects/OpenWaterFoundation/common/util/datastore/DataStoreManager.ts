@@ -70,7 +70,7 @@ export class DatastoreManager {
    * @param TSID The full TSID string.
    * @returns The data from the requested Datastore as an observable.
    */
-  public getDatastoreData(service: OwfCommonService, TSID: string): Observable<any> {
+  public getDatastoreData(service: OwfCommonService, TSID: string): any {
     // Parse the TSID string into the TSID object.
     var fullTSID = service.parseTSID(TSID);
     var datastore = this.getDatastore(fullTSID.datastore);
@@ -84,7 +84,7 @@ export class DatastoreManager {
         return StateModDatastore.readTimeSeries(service, datastore, fullTSID);
       case IM.DatastoreType.json:
         return new ColoradoHydroBaseRestDatastore(service, datastore.rootUrl)
-        .getData(fullTSID).asObservable();
+        .getData(fullTSID);
       case 'unknown':
       default:
         console.error("Unsupported datastore '" + fullTSID.datastore + "'.");
