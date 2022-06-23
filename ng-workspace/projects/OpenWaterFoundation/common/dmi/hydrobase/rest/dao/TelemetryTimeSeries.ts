@@ -40,7 +40,7 @@ export class TelemetryTimeSeries {
 	 * Java converted code can handle. For the modified attribute.
 	 * @param dateString 
 	 */
-	formatTo8601(dateString: string): string {
+	 formatToRecognized(dateString: string): string {
 		if (dateString.includes('.')) {
 			return dateString.substring(0, dateString.lastIndexOf('.'));
 		}
@@ -143,7 +143,7 @@ export class TelemetryTimeSeries {
     }
 
     if (typeof this.telemetryTimeSeries.modified === 'string') {
-			this.telemetryTimeSeries.modified = this.formatTo8601(this.telemetryTimeSeries.modified);
+			this.telemetryTimeSeries.modified = this.formatToRecognized(this.telemetryTimeSeries.modified);
       this.telemetryTimeSeries.modified = DateTime.parse(this.telemetryTimeSeries.modified);
     }
   }

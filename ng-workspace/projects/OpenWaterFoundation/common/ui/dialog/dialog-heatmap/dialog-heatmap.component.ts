@@ -32,7 +32,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
 
   /** Subscription to be unsubscribed to at component destruction to prevent memory
    * leaks.*/
-  private forkJoinSub$: Subscription;
+  private forkJoinSub: Subscription;
   /** Path to the data being displayed in the heatmap. */
   public graphFilePath: string;
   /** The geoLayer object from the map configuration file. */
@@ -168,8 +168,8 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    * Called once, before the instance is destroyed.
    */
   ngOnDestroy(): void {
-    if (this.forkJoinSub$) {
-      this.forkJoinSub$.unsubscribe();
+    if (this.forkJoinSub) {
+      this.forkJoinSub.unsubscribe();
     } 
   }
 
@@ -224,7 +224,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
 
     // Now that the array has all the Observables needed, forkJoin and subscribe to them all. Their results will now be
     // returned as an Array with each index corresponding to the order in which they were pushed onto the array.
-    this.forkJoinSub$ = forkJoin(dataArray).subscribe((resultsArray: TS[]) => {
+    this.forkJoinSub = forkJoin(dataArray).subscribe((resultsArray: TS[]) => {
       this.createHeatmap(resultsArray);
     });
 

@@ -20,7 +20,7 @@ export class DatastoreManager {
   private readonly builtInDatastores: IM.Datastore[] = [
     {
       name: "ColoradoHydroBaseRest",
-      type: "owf.datastore.json",
+      type: "owf.datastore.ColoradoHydroBaseRest",
       rootUrl: 'https://dwr.state.co.us/Rest/GET/api/v2',
       aliases: []
     },
@@ -66,7 +66,8 @@ export class DatastoreManager {
   }
 
   /**
-   * @param service The OWF service for fetching data.
+   * Determines what datastore is being used, and calls 
+   * @param service The OWF service for fetching data using async HTTP calls.
    * @param TSID The full TSID string.
    * @returns The data from the requested Datastore as an observable.
    */
@@ -82,9 +83,8 @@ export class DatastoreManager {
         return DateValueDatastore.readTimeSeries(service, datastore, fullTSID);
       case IM.DatastoreType.stateMod:
         return StateModDatastore.readTimeSeries(service, datastore, fullTSID);
-      case IM.DatastoreType.json:
-        return new ColoradoHydroBaseRestDatastore(service, datastore.rootUrl)
-        .getData(fullTSID);
+      case IM.DatastoreType.ColoradoHydroBaseRest:
+        return new ColoradoHydroBaseRestDatastore(service, datastore.rootUrl).getAsyncData(fullTSID);
       case 'unknown':
       default:
         console.error("Unsupported datastore '" + fullTSID.datastore + "'.");

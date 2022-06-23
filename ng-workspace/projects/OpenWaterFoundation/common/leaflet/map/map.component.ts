@@ -81,7 +81,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public eventActions: {} = {};
   /** For the Leaflet map's config file subscription object so it can be closed on
    * this component's destruction. */
-  private forkJoinSub$ = <any>Subscription;
+  private forkJoinSub = <any>Subscription;
   /** An object of Style-like objects containing:
    *     key  : geoLayerId
    *     value: object with style properties
@@ -110,7 +110,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * the path to the app configuration file. */
   @Input('map-config') mapConfigStandalonePath: string;
   /** The map configuration subscription, unsubscribed to on component destruction. */
-  private mapConfigSub$ = <any>Subscription;
+  private mapConfigSub = <any>Subscription;
   /** Determines whether the map config file path was correct, found, and read in.
    * If true, the map will be displayed. If false, the 404 div will let the user
    * know there was an issue with the URL/path to the */
@@ -133,9 +133,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public projectVersion: Observable<any>;
   /** The refresh subscription. Used with the rxjs timer, and unsubscribed on component
    * destruction. */
-  private refreshSub$ = new Subscription();
+  private refreshSub = new Subscription();
   /** The activatedRoute subscription, unsubscribed to on component destruction. */
-  private actRouteSub$ = <any>Subscription;
+  private actRouteSub = <any>Subscription;
   /** Boolean showing if the URL given for a layer is currently unavailable. */
   public serverUnavailable = false;
   /** Boolean to indicate whether the sidebar has been initialized. Don't need to
@@ -461,8 +461,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           // the user an error message and log an error message that one needs to
           // be added to show something other than default styling.
           if (!symbol) {
-            console.error('Layer with geoLayerId \'' + geoLayer.geoLayerId + '\' was not given a geoLayerSymbol, ' +
-              'which must be used to create the layer using the \'classificationType\' property.');
+            console.error('Layer with geoLayerId \'' + geoLayer.geoLayerId +
+            '\' was not given a geoLayerSymbol, which must be used to create the ' +
+            'layer using the \'classificationType\' property.');
             return;
           }
           // Obtain the event handler information from the geoLayerView for use
@@ -485,8 +486,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           // Push each event handler onto the async array if there are any.
           if (eventHandlers.length > 0) {
             eventHandlers.forEach((event: IM.EventHandler) => {
-              // TODO: jpkeahey 2020.10.22 - popupConfigPath will be deprecated, but will still work for now, just with a warning
-              // message displayed to the user.
+              // TODO: jpkeahey 2020.10.22 - popupConfigPath will be deprecated,
+              // but will still work for now, just with a warning message displayed
+              // to the user.
               if (event.properties.popupConfigPath) {
                 console.warn('The Event Handler property \'popupConfigPath\' is deprecated. \'eventConfigPath\' will replace ' +
                   'it, will be supported in the future, and should be used instead');
@@ -509,8 +511,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           }
           // Use forkJoin to go through the array and be able to subscribe to every
           // element and get the response back in the results array when finished.
-          this.forkJoinSub$ = forkJoin(asyncData).subscribe((results) => {
-            // The scope of this does not reach the leaflet event functions. _this will allow a reference to this.
+          this.forkJoinSub = forkJoin(asyncData).subscribe((results) => {
+            // The scope of this does not reach the leaflet event functions.
             var _this = this;
             // The first element in the results array will always be the features
             // returned from the geoJSON file. If it's undefined, it's for an Image
@@ -535,7 +537,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             }
 
             var eventObject: any = {};
-            // Go through each event and assign the retrieved template output to each event type in an eventObject
+            // Go through each event and assign the retrieved template output to
+            // each event type in an eventObject.
             if (eventHandlers.length > 0) {
               for (let i = 0; i < eventHandlers.length; i++) {
                 eventObject[eventHandlers[i].eventType + '-eCP'] = results[i + 1];
@@ -1493,7 +1496,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * Unused.
   */
   public findFromAddress() {
-    var testAddress = 'https://api.geocod.io/v1.6/geocode?q=1109+N+Highland+St%2c+Arlington+VA&api_key=e794ffb42737727f9904673702993bd96707bf6';
+    var testAddress = 'https://api.geocod.io/v1.6/geocode' +
+    '?q=1109+N+Highland+St%2c+Arlington+VA&api_key=e794ffb42737727f9904673702993bd96707bf6';
     this.commonService.getJSONData(testAddress).subscribe((address: any) => {
     });
   }
@@ -1533,7 +1537,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Get AND sets the map config path and geoJson path for relative path use.
     this.commonService.getFullMapConfigPath(this.mapID, standalone, configPath);
 
-    this.mapConfigSub$ = this.commonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
+    this.mapConfigSub = this.commonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
     .subscribe((mapConfig: any) => {
       // this.commonService.setGeoMapID(mapConfig.geoMaps[0].geoMapId);
       // console.log(this.mapManager.mapAlreadyCreated(this.commonService.getGeoMapID()));
@@ -1568,7 +1572,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     // When the parameters in the URL are changed the map will refresh and load
     // according to new configuration data.
-    this.actRouteSub$ = this.actRoute.paramMap.subscribe((paramMap) => {
+    this.actRouteSub = this.actRoute.paramMap.subscribe((paramMap) => {
 
       if (!this.route.url.toLowerCase().includes('/map/') &&
       !this.appConfigStandalonePath && !this.mapConfigStandalonePath) {
@@ -1599,17 +1603,17 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   public ngOnDestroy(): void {
     // Unsubscribe from all subscriptions that occurred in the Map Component.
-    if (this.actRouteSub$) {
-      this.actRouteSub$.unsubscribe();
+    if (this.actRouteSub) {
+      this.actRouteSub.unsubscribe();
     }
-    if (this.forkJoinSub$) {
-      this.forkJoinSub$.unsubscribe();
+    if (this.forkJoinSub) {
+      this.forkJoinSub.unsubscribe();
     }
-    if (this.refreshSub$) {
-      this.refreshSub$.unsubscribe();
+    if (this.refreshSub) {
+      this.refreshSub.unsubscribe();
     }
-    if (this.mapConfigSub$) {
-      this.mapConfigSub$.unsubscribe();
+    if (this.mapConfigSub) {
+      this.mapConfigSub.unsubscribe();
     }
     // If a popup is open on the map and a Content Page button is clicked on, then
     // this Map Component will be destroyed. Instead of resetting the map variables,
@@ -1921,7 +1925,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Adds each refresh subscription after the first as child subscriptions
     // (in case of multiple refreshing layers), so when unsubscribing occurs
     // at component destruction, all are unsubscribed from.
-    this.refreshSub$.add(delay.subscribe(() => {
+    this.refreshSub.add(delay.subscribe(() => {
       // Update the MatTooltip date display string on the sidebar geoLayerView name.
       this.lastRefresh[geoLayer.geoLayerId] = new Date(Date.now()).toTimeString().split(" ")[0];
       // Refresh a vector layer.

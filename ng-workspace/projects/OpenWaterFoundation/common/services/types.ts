@@ -18,7 +18,7 @@ export enum ChartDisplayType {
 export enum DatastoreType {
   delimited = 'owf.datastore.delimited',
   dateValue = 'owf.datastore.datevalue',
-  json = 'owf.datastore.json',
+  ColoradoHydroBaseRest = 'owf.datastore.ColoradoHydroBaseRest',
   stateMod = 'owf.datastore.statemod'
 }
 

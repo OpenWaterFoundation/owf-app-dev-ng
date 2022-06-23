@@ -40,7 +40,7 @@ export class StatusIndicatorComponent {
   /**
    * 
    */
-  CSVSub$: Subscription;
+  CSVSub: Subscription;
   /**
    * 
    */
@@ -56,7 +56,7 @@ export class StatusIndicatorComponent {
   /**
    * 
    */
-  JSONSub$: Subscription;
+  JSONSub: Subscription;
   /** The main data to be displayed on this Status Indicator widget. */
   mainData: string;
   /**
@@ -201,11 +201,11 @@ export class StatusIndicatorComponent {
    */
   ngOnDestroy(): void {
     // Unsubscribe from all existing subscriptions.
-    if (this.CSVSub$) {
-      this.CSVSub$.unsubscribe();
+    if (this.CSVSub) {
+      this.CSVSub.unsubscribe();
     }
-    if (this.JSONSub$) {
-      this.JSONSub$.unsubscribe();
+    if (this.JSONSub) {
+      this.JSONSub.unsubscribe();
     }
   }
 
@@ -285,7 +285,7 @@ export class StatusIndicatorComponent {
     var fullCSVDataPath = this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath]);
     delimitedData$.push(this.commonService.papaParse(fullCSVDataPath, true));
 
-    this.CSVSub$ = forkJoin(delimitedData$).subscribe((delimitedData: any[]) => {
+    this.CSVSub = forkJoin(delimitedData$).subscribe((delimitedData: any[]) => {
 
       var classifyData: any;
       var mainData: any;
@@ -317,7 +317,7 @@ export class StatusIndicatorComponent {
     var fullJSONDataPath = this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath]);
     allData$.push(this.commonService.getJSONData(fullJSONDataPath));
 
-    this.JSONSub$ = forkJoin(allData$).subscribe((allData: any) => {
+    this.JSONSub = forkJoin(allData$).subscribe((allData: any) => {
 
       var classifyData: any;
       var mainData: any;

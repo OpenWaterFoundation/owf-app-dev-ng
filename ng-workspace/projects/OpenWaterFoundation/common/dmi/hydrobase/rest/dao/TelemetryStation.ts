@@ -38,6 +38,22 @@ export class TelemetryStation {
 	constructor(private telemetryStation: IM.TelStation) {
 		this.initAllDateTimeAttributes();
 	}
+
+
+	/**
+	 * Appends zeros as a string to a date string so that it is in a format that the
+	 * Java converted code can handle. For the modified attribute.
+	 * @param dateString 
+	 */
+	formatToRecognized(dateString: string): string {
+		if (dateString.includes('.')) {
+			return dateString.substring(0, dateString.lastIndexOf('.'));
+		}
+		if (dateString.includes('-')) {
+			return dateString.substring(0, dateString.lastIndexOf('-'));
+		}
+		return dateString;
+	}
 	
 	/**
 	 * Getters of all Telemetry Station variables.
@@ -184,19 +200,22 @@ export class TelemetryStation {
 
 	initAllDateTimeAttributes(): void {
     if (typeof this.telemetryStation.measDateTime === 'string') {
+      this.telemetryStation.measDateTime = this.formatToRecognized(this.telemetryStation.measDateTime);
       this.telemetryStation.measDateTime = DateTime.parse(this.telemetryStation.measDateTime);
     }
 
     if (typeof this.telemetryStation.modified === 'string') {
-			// this.telemetryStation.modified = this.formatTo8601(this.telemetryStation.modified);
+      this.telemetryStation.modified = this.formatToRecognized(this.telemetryStation.modified);
       this.telemetryStation.modified = DateTime.parse(this.telemetryStation.modified);
     }
 
 		if (typeof this.telemetryStation.stationPorStart === 'string') {
+			this.telemetryStation.stationPorStart = this.formatToRecognized(this.telemetryStation.stationPorStart);
 			this.telemetryStation.stationPorStart = DateTime.parse(this.telemetryStation.stationPorStart);
 		}
 
 		if (typeof this.telemetryStation.stationPorEnd === 'string') {
+			this.telemetryStation.stationPorEnd = this.formatToRecognized(this.telemetryStation.stationPorEnd);
 			this.telemetryStation.stationPorEnd = DateTime.parse(this.telemetryStation.stationPorEnd);
 		}
   }

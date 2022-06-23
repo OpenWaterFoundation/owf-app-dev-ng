@@ -194,11 +194,13 @@ export class ColoradoHydroBaseRestDatastore {
   }
 
   /**
-   * 
-   * @param fullTSID 
-   * @returns 
+   * Waits for the async constructor code to finish before calling the datastore's
+   * readTimeSeries method. Calls the datastoreDataSubject's next to update when
+   * the TS object code has finished, to be used by consuming components.
+   * @param fullTSID The parsed TSID string as an object.
+   * @returns A string that will be ignored by consuming components.
    */
-  public getData(fullTSID: IM.TSID): string {
+  public getAsyncData(fullTSID: IM.TSID): string {
 
     // Wait until initialized.
     this.paramsInitialized$.subscribe((initialized: boolean) => {
@@ -2019,12 +2021,7 @@ export class ColoradoHydroBaseRestDatastore {
       allTelemetryStationReads.push(this.commonService.getJSONData(telRequest));
 
       // 
-      return forkJoin(allTelemetryStationReads).pipe(
-      map((allResults: any) => {
-
-        console.log('allResults[0]:', JSON.stringify(allResults[0].ResultList, null, 4));
-        console.log('allResults[1]:', JSON.stringify(allResults[1].ResultList, null, 4));
-        console.log('allResults[2]:', JSON.stringify(allResults[2].ResultList, null, 4));
+      return forkJoin(allTelemetryStationReads).pipe(map((allResults: any) => {
 
         var telStation: TelemetryStation = null;
         var telStationDataType: TelemetryStationDataType = null;
@@ -2215,12 +2212,8 @@ export class ColoradoHydroBaseRestDatastore {
             }
           }
         }
-        console.log('readTimeSeries.telStation:', telStation);
-        console.log('readTimeSeries.telStationDataType:', telStationDataType);
-        console.log('readTimeSeries.telTSArray:', telTSArray);
         return ts;
       }));
-  
     }
     // ---------------------------------------------------------------------------------------------------------------------------------------------------------------
     // else if (

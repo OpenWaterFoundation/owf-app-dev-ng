@@ -28,9 +28,24 @@ export class TelemetryStationDataType {
 
 
   constructor(private telemetryStationDateType: IM.TelStationDataType) {
-		// this.initAllDateTimeAttributes();
+		this.initAllDateTimeAttributes();
   }
 
+
+	/**
+	 * Appends zeros as a string to a date string so that it is in a format that the
+	 * Java converted code can handle. For the modified attribute.
+	 * @param dateString 
+	 */
+	 formatToRecognized(dateString: string): string {
+		if (dateString.includes('.')) {
+			return dateString.substring(0, dateString.lastIndexOf('.'));
+		}
+		if (dateString.includes('-')) {
+			return dateString.substring(0, dateString.lastIndexOf('-'));
+		}
+		return dateString;
+	}
 	
 	/**
 	 * Getters and setters for defined variables
@@ -143,7 +158,7 @@ export class TelemetryStationDataType {
 
 	initAllDateTimeAttributes(): void {
     if (typeof this.telemetryStationDateType.modified === 'string') {
-			// this.telemetryStation.modified = this.formatTo8601(this.telemetryStation.modified);
+      this.telemetryStationDateType.modified = this.formatToRecognized(this.telemetryStationDateType.modified);
       this.telemetryStationDateType.modified = DateTime.parse(this.telemetryStationDateType.modified);
     }
 

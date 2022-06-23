@@ -38,7 +38,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   private attributeTable = [];
   /** Subscription to be unsubscribed to at component destruction to prevent memory
   * leaks.*/
-  private allResultsSub$: Subscription;
+  private allResultsSub: Subscription;
   /** The attribute provided to this component when created from a dialog, e.g.
    * <core-chart [chartDialog]="widget"></core-chart> */
   @Input('chartDialog') chartDialog: IM.ChartDialog;
@@ -55,6 +55,8 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** The dataLoading BehaviorSubject as an observable so it can be 'listened' to
   * in the template file and conditionally show HTML as needed. */
   dataLoading$ = this.dataLoading.asObservable();
+
+  private datastoreSub: Subscription;
   /**
    * 
    */
@@ -73,7 +75,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** The object containing all of the layer's feature properties. */
   featureProperties: any;
   /** Subscription for the initial files to read if provided in the Chart Widget. */
-  initialResultsSub$: Subscription;
+  initialResultsSub: Subscription;
   /** Observable that's updated as a BehaviorSubject when a critical error creating
   * this component occurs. */
   isChartError$: Observable<boolean>;
@@ -620,10 +622,10 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     // 
-     var xAxisLabels: string[] = this.chartService.getDates(
+    var xAxisLabels: string[] = this.chartService.getDates(
       timeSeries.getDate1().toString(),
       timeSeries.getDate2().toString(),
-      timeSeries);
+      timeSeries);    
 
     var start = timeSeries.getDate1().getYear() + "-" +
       this.chartService.zeroPad(timeSeries.getDate1().getMonth(), 2);
@@ -702,15 +704,20 @@ export class ChartComponent implements OnInit, OnDestroy {
   * subscriptions to prevent memory leaks.
   */
   ngOnDestroy(): void {
-    if (this.allResultsSub$) {
-      this.allResultsSub$.unsubscribe();
+    if (this.allResultsSub) {
+      this.allResultsSub.unsubscribe();
     }
-    if (this.initialResultsSub$) {
-      this.initialResultsSub$.unsubscribe()
+    if (this.datastoreSub) {
+      this.datastoreSub.unsubscribe();
+    }
+    if (this.initialResultsSub) {
+      this.initialResultsSub.unsubscribe()
     }
     if (this.updateResultsSub) {
       this.updateResultsSub.unsubscribe();
     }
+    // Reset the datastoreDataSubject back to default null.
+    this.commonService.datastoreDataSubject.next(null);
   }
 
   /**
@@ -728,22 +735,28 @@ export class ChartComponent implements OnInit, OnDestroy {
     // Iterate over all graphData objects in the graph template file.
     graphData.forEach((graphData) => {
       var datastoreData = this.dsManager.getDatastoreData(this.commonService, graphData.properties.TSID);
-
+      // If the datastoreData is an observable, it was made from a datastore that
+      // does not require it to make an additional async call before creating and
+      // returning the Observable<TS>, and can be added to the array.
       if (datastoreData instanceof Observable) {
         allDataObservables.push(datastoreData);
       }
     });
 
-    this.commonService.datastoreDataSubject$.subscribe((datastoreResult: Observable<TS>) => {
+    // By default, subscribe to the datastoreDataSubject in case an extra async
+    // datastore is used.
+    this.datastoreSub = this.commonService.datastoreDataSubject$.subscribe((datastoreResult: Observable<TS>) => {
 
+      // The subject will be null on initialization.
       if (datastoreResult !== null) {
         allDataObservables.push(datastoreResult);
       }
 
+      // Once an observable for each data object in the graph file has been made,
+      // the forkJoin can be performed.
       if (allDataObservables.length === graphData.length) {
 
-        this.allResultsSub$ = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
-
+        this.allResultsSub = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
           this.TSArrayOGResultRef = allResults;
     
           allResults.forEach((result: any, i: number) => {
@@ -766,6 +779,7 @@ export class ChartComponent implements OnInit, OnDestroy {
                 break;
               case IM.DatastoreType.dateValue:
               case IM.DatastoreType.stateMod:
+              case IM.DatastoreType.ColoradoHydroBaseRest:
                 this.isTSFile = true;
                 allGraphObjects.push(this.makeTSPlotlyObject(result, graphData[i], i));
                 break;
@@ -945,7 +959,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   */
   private setupForWidget(): void {
 
-    this.initialResultsSub$ = this.commonService.getJSONData(
+    this.initialResultsSub = this.commonService.getJSONData(
       this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
     ).subscribe({
 
