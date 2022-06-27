@@ -112,26 +112,30 @@ export class ChartService {
     let endDate: DateTime = timeSeries.getDate2();
     // The DateTime iterator for the the while loop.
     let iter: DateTime = startDate;
-    // The index of the x_axisLabel array to push into the chartJS_yAxisData as the x property.
+    // The index of the x_axisLabel array to push into the chartJS_yAxisData as
+    // the x property.
     var labelIndex = 0;      
     
     do {
       // Grab the value from the current Time Series that's being looked at.
       let value = timeSeries.getDataValue(iter);
 
-      // If it's missing, replace value with NaN and push onto the array. If not just push the value onto the array.
+      // If it's missing, replace value with NaN and push onto the array. If not
+      // just push the value onto the array.
       if (timeSeries.isDataMissing(value)) {
         yAxisData.push(NaN);
       } else {
         yAxisData.push(value);
       }
-      // Update the interval and labelIndex now that the dataObject has been pushed onto the chartJS_yAxisData array.
+      // Update the interval and labelIndex now that the dataObject has been pushed
+      // onto the chartJS_yAxisData array.
       iter.addInterval(timeSeries.getDataIntervalBase(), timeSeries.getDataIntervalMult());
       labelIndex++;
 
       // 
       if (timeSeries instanceof DayTS) {
-        if (iter.getDay() === endDate.getDay() && iter.getMonth() === endDate.getMonth() &&
+        if (iter.getDay() === endDate.getDay() &&
+        iter.getMonth() === endDate.getMonth() &&
         iter.getYear() === endDate.getYear()) {
 
           var lastValue = timeSeries.getDataValue(iter);

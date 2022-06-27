@@ -1,18 +1,6 @@
 import { Injectable }   from "@angular/core";
 
-import { DateTime }     from '@OpenWaterFoundation/common/util/time';
 import * as IM          from '@OpenWaterFoundation/common/services';
-
-import { DayTS,
-          MonthTS,
-          TS,
-          YearTS,
-          DateValueTS } from '@OpenWaterFoundation/common/ts';
-
-import { add,
-          format,
-          isEqual,
-          parseISO }    from 'date-fns';
 
 /** The DialogService provides helper function to all Dialog Components in the Common
  * library. Any function not directly related to a Dialog Component's core functionality

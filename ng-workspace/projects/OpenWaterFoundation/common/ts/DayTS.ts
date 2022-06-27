@@ -2,6 +2,7 @@ import { TS }        from "./TS";
 import { DateTime,
           TimeInterval,
           TimeUtil } from "@OpenWaterFoundation/common/util/time";
+import { TSData }    from "./TSData";
 
 
 /** The DayTS class is the base class for daily time series. The class can be
@@ -1315,51 +1316,51 @@ export class DayTS extends TS {
   // 	return strings;
   // }
 
-  // /**
-  // Return the data point corresponding to the date.
-  // <pre>
-  //              	Day data is stored in a two-dimensional array:
-  //   		     |----------------> days
-  //   		     |
-  //   		    \|/
-  //   		   month 
+  /**
+  Return the data point corresponding to the date.
+  <pre>
+               	Day data is stored in a two-dimensional array:
+    		     |----------------> days
+    		     |
+    		    \|/
+    		   month 
 
-  // </pre>
-  // @param date date/time to get data.
-  // @param tsdata if null, a new instance of TSData will be returned.  If non-null, the provided
-  // instance will be used (this is often desirable during iteration to decrease memory use and
-  // increase performance).
-  // @return a TSData for the specified date/time.
-  // @see TSData
-  // */
-  // public TSData getDataPoint ( DateTime date, TSData tsdata )
-  // {	// Initialize data to most of what we need...
-  // 	if ( tsdata == null ) {
-  // 		// Allocate it...
-  // 		tsdata = new TSData();
-  // 	}
-  // 	if ( (date.lessThan(_date1)) || (date.greaterThan(_date2)) ) {
-  // 		if ( Message.isDebugOn ) {
-  // 			Message.printDebug ( 50, "DayTS.getDataValue",
-  // 			date + " not within POR (" + _date1 + " - " + _date2 + ")" );
-  // 		}
-  // 		tsdata.setValues ( date, _missing, _data_units, "", 0 );
-  // 		return tsdata;
-  // 	}
-  // 	getDataPosition ( date );	// This computes _row and _column
-  // 	if ( _has_data_flags ) {
-  // 	    if ( _internDataFlagStrings ) {
-  // 	        tsdata.setValues ( date, getDataValue(date), _data_units, _dataFlags[_row][_column].intern(), 0 );
-  // 	    }
-  // 	    else {
-  // 	        tsdata.setValues ( date, getDataValue(date), _data_units, _dataFlags[_row][_column], 0 );
-  // 	    }
-  // 	}
-  // 	else {
-  //         tsdata.setValues ( date, getDataValue(date), _data_units, "", 0 );
-  // 	}
-  // 	return tsdata;
-  // }
+  </pre>
+  @param date date/time to get data.
+  @param tsdata if null, a new instance of TSData will be returned.  If non-null, the provided
+  instance will be used (this is often desirable during iteration to decrease memory use and
+  increase performance).
+  @return a TSData for the specified date/time.
+  @see TSData
+  */
+  getDataPoint(date: DateTime, tsdata: TSData): TSData {	
+  // Initialize data to most of what we need...
+  	if ( tsdata === null ) {
+  		// Allocate it...
+  		tsdata = new TSData();
+  	}
+  	if ((date.lessThan(this._date1)) || (date.greaterThan(this._date2))) {
+  		// if ( Message.isDebugOn ) {
+  		// 	Message.printDebug ( 50, "DayTS.getDataValue",
+  		// 	date + " not within POR (" + _date1 + " - " + _date2 + ")" );
+  		// }
+  		tsdata.setValues(date, this._missing, this._data_units, "", 0);
+  		return tsdata;
+  	}
+  	this.getDataPosition(date);	// This computes _row and _column
+  	if (this._has_data_flags) {
+      if (this._internDataFlagStrings) {
+        tsdata.setValues( date, this.getDataValue(date), this._data_units, this._dataFlags[this._row][this._column].intern(), 0);
+      }
+      else {
+        tsdata.setValues(date, this.getDataValue(date), this._data_units, this._dataFlags[this._row][this._column], 0);
+      }
+  	}
+  	else {
+      tsdata.setValues(date, this.getDataValue(date), this._data_units, "", 0);
+  	}
+  	return tsdata;
+  }
 
   /**
   Return the position corresponding to the date.  The position array is volatile

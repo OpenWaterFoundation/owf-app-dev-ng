@@ -8,6 +8,7 @@ import { Component,
 import { BehaviorSubject,
           forkJoin,
           Observable,
+          Subject,
           Subscription }     from 'rxjs';
 
 import structuredClone       from '@ungap/structured-clone';
@@ -37,7 +38,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   private attributeTable = [];
   /** Subscription to be unsubscribed to at component destruction to prevent memory
   * leaks.*/
-  private allResultsSub$: Subscription;
+  private allResultsSub: Subscription;
   /** The attribute provided to this component when created from a dialog, e.g.
    * <core-chart [chartDialog]="widget"></core-chart> */
   @Input('chartDialog') chartDialog: IM.ChartDialog;
@@ -54,6 +55,8 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** The dataLoading BehaviorSubject as an observable so it can be 'listened' to
   * in the template file and conditionally show HTML as needed. */
   dataLoading$ = this.dataLoading.asObservable();
+
+  private datastoreSub: Subscription;
   /**
    * 
    */
@@ -72,7 +75,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** The object containing all of the layer's feature properties. */
   featureProperties: any;
   /** Subscription for the initial files to read if provided in the Chart Widget. */
-  initialResultsSub$: Subscription;
+  initialResultsSub: Subscription;
   /** Observable that's updated as a BehaviorSubject when a critical error creating
   * this component occurs. */
   isChartError$: Observable<boolean>;
@@ -129,27 +132,33 @@ export class ChartComponent implements OnInit, OnDestroy {
    * data array.
    * @param units The units being used on the graph to be shown as a column.
    */
-  private addToAttributeTable(xAxisLabels: string[], axisObject: any, TSAlias: string, units: string, TSIndex: number, datePrecision?: number): void {
+  private addToAttributeTable(xAxisLabels: string[], axisObject: any, TSAlias: string,
+    units: string, TSIndex: number, datePrecision?: number): void {
 
-    // Retrieve the output precision from the DataUnits array if it exists, and if not default to 2
+    // Retrieve the output precision from the DataUnits array if it exists, and
+    // if not default to 2.
     var outputPrecision = this.determineOutputPrecision(units);
-    // For the first column header name, have it be DATE if the datePrecision is week, month or year,
-    // or DATE / TIME if day, hour, minute, etc..
+    // For the first column header name, have it be DATE if the datePrecision is
+    // week, month or year, or DATE / TIME if day, hour, minute, etc..
     var column1Name = (datePrecision > 30) ? 'DATE': 'DATE / TIME';
     this.dateTimeColumnName = column1Name;
-    // If the first time series, create the Date / Time column, and the data column for the time series
+    // If the first time series, create the Date / Time column, and the data column
+    // for the time series.
     if (TSIndex === 0) {
-      // Create the column name for the current time series' units, including units if it exists, and skipping it otherwise
+      // Create the column name for the current time series' units, including units
+      // if it exists, and skipping it otherwise.
       var displayedUnits = units ? TSAlias + ' (' + units + ')' : TSAlias;
       this.valueColumns.push(displayedUnits);
 
       if (axisObject.csvYAxisData) {
         for (let i = 0; i < xAxisLabels.length; i++) {
-          // Push the object into the attributeTable
+          // Push the object into the attributeTable.
           this.attributeTable.push({
             [column1Name]: xAxisLabels[i],
-            // Ternary operator determining if the value is NaN. The data table will show nothing if that's the case
-            [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' : axisObject.csvYAxisData[i].toFixed(outputPrecision)
+            // Ternary operator determining if the value is NaN. The data table
+            // will show nothing if that's the case.
+            [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' :
+            axisObject.csvYAxisData[i].toFixed(outputPrecision)
           });
         }
       }
@@ -159,8 +168,10 @@ export class ChartComponent implements OnInit, OnDestroy {
           // Push the object into the attributeTable.
           this.attributeTable.push({
             [column1Name]: xAxisLabels[i],
-            // Ternary operator determining if the value is NaN. The data table will show nothing if that's the case.
-            [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' : axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
+            // Ternary operator determining if the value is NaN. The data table
+            // will show nothing if that's the case.
+            [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' :
+            axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
           });
         }
       }
@@ -176,7 +187,8 @@ export class ChartComponent implements OnInit, OnDestroy {
         for (let i = 0; i < this.attributeTable.length; i++) {
           foundIndex = xAxisLabels.findIndex(element => element === this.attributeTable[i][column1Name]);
           if (foundIndex !== -1) {
-            this.attributeTable[i][displayedUnits] = isNaN(axisObject.csvYAxisData[foundIndex]) ? '' : axisObject.csvYAxisData[foundIndex].toFixed(outputPrecision);
+            this.attributeTable[i][displayedUnits] = isNaN(axisObject.csvYAxisData[foundIndex]) ? '' :
+            axisObject.csvYAxisData[foundIndex].toFixed(outputPrecision);
             continue;
           } else {
             this.attributeTable[i][displayedUnits] = '';
@@ -190,14 +202,16 @@ export class ChartComponent implements OnInit, OnDestroy {
           if (xAxisLabels[i] < this.attributeTable[startCount][column1Name]) {
             this.attributeTable.splice(startCount, 0, { 
               [column1Name]: xAxisLabels[i],
-              [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' : axisObject.csvYAxisData[i].toFixed(outputPrecision)
+              [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' :
+              axisObject.csvYAxisData[i].toFixed(outputPrecision)
             })
             startCount++;
 
           } else if (xAxisLabels[i] > this.attributeTable[this.attributeTable.length - endCount][column1Name]) {
             this.attributeTable.push({
               [column1Name]: xAxisLabels[i],
-              [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' : axisObject.csvYAxisData[i].toFixed(outputPrecision)
+              [displayedUnits]: isNaN(axisObject.csvYAxisData[i]) ? '' :
+              axisObject.csvYAxisData[i].toFixed(outputPrecision)
             })
             endCount++;
           }
@@ -209,7 +223,8 @@ export class ChartComponent implements OnInit, OnDestroy {
           foundIndex = xAxisLabels.findIndex(element => element === this.attributeTable[i][column1Name]);
           if (foundIndex !== -1) {
             this.attributeTable[i][displayedUnits] =
-            isNaN(axisObject.plotlyYAxisData[foundIndex]) ? '' : axisObject.plotlyYAxisData[foundIndex].toFixed(outputPrecision);
+            isNaN(axisObject.plotlyYAxisData[foundIndex]) ? '' :
+            axisObject.plotlyYAxisData[foundIndex].toFixed(outputPrecision);
             continue;
           } else {
             this.attributeTable[i][displayedUnits] = '';
@@ -224,14 +239,16 @@ export class ChartComponent implements OnInit, OnDestroy {
           if (xAxisLabels[i] < this.attributeTable[startCount][column1Name]) {
             this.attributeTable.splice(startCount, 0, { 
               [column1Name]: xAxisLabels[i],
-              [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' : axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
+              [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' :
+              axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
             })
             startCount++;
 
           } else if (xAxisLabels[i] > this.attributeTable[this.attributeTable.length - endCount][column1Name]) {
             this.attributeTable.push({
               [column1Name]: xAxisLabels[i],
-              [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' : axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
+              [displayedUnits]: isNaN(axisObject.plotlyYAxisData[i]) ? '' :
+              axisObject.plotlyYAxisData[i].toFixed(outputPrecision)
             })
             endCount++;
           }
@@ -520,7 +537,8 @@ export class ChartComponent implements OnInit, OnDestroy {
   * Contains at least one result array with its index in the graphTemplate data
   * array.
   */
-  private makeDelimitedPlotlyObject(delimitedData: any, graphData: IM.GraphData, index: number): IM.PopulateGraph {
+  private makeDelimitedPlotlyObject(delimitedData: any, graphData: IM.GraphData,
+    index: number): IM.PopulateGraph {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     // These two are the string representing the keys in the current result.
@@ -604,10 +622,10 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     // 
-     var xAxisLabels: string[] = this.chartService.getDates(
+    var xAxisLabels: string[] = this.chartService.getDates(
       timeSeries.getDate1().toString(),
       timeSeries.getDate2().toString(),
-      timeSeries);
+      timeSeries);    
 
     var start = timeSeries.getDate1().getYear() + "-" +
       this.chartService.zeroPad(timeSeries.getDate1().getMonth(), 2);
@@ -686,15 +704,20 @@ export class ChartComponent implements OnInit, OnDestroy {
   * subscriptions to prevent memory leaks.
   */
   ngOnDestroy(): void {
-    if (this.allResultsSub$) {
-      this.allResultsSub$.unsubscribe();
+    if (this.allResultsSub) {
+      this.allResultsSub.unsubscribe();
     }
-    if (this.initialResultsSub$) {
-      this.initialResultsSub$.unsubscribe()
+    if (this.datastoreSub) {
+      this.datastoreSub.unsubscribe();
+    }
+    if (this.initialResultsSub) {
+      this.initialResultsSub.unsubscribe()
     }
     if (this.updateResultsSub) {
       this.updateResultsSub.unsubscribe();
     }
+    // Reset the datastoreDataSubject back to default null.
+    this.commonService.datastoreDataSubject.next(null);
   }
 
   /**
@@ -711,49 +734,71 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     // Iterate over all graphData objects in the graph template file.
     graphData.forEach((graphData) => {
-      var dataObservable = this.dsManager.getDatastoreData(this.commonService, graphData.properties.TSID);
-      allDataObservables.push(dataObservable);
+      var datastoreData = this.dsManager.getDatastoreData(this.commonService, graphData.properties.TSID);
+      // If the datastoreData is an observable, it was made from a datastore that
+      // does not require it to make an additional async call before creating and
+      // returning the Observable<TS>, and can be added to the array.
+      if (datastoreData instanceof Observable) {
+        allDataObservables.push(datastoreData);
+      }
     });
 
-    this.allResultsSub$ = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
+    // By default, subscribe to the datastoreDataSubject in case an extra async
+    // datastore is used.
+    this.datastoreSub = this.commonService.datastoreDataSubject$.subscribe((datastoreResult: Observable<TS>) => {
 
-      this.TSArrayOGResultRef = allResults;
-
-      allResults.forEach((result: any, i: number) => {
-
-        // Check for any errors.
-        if (result.error) {
-          console.error('Graph Template file: Graph object in position ' + (i + 1) +
-            ' from the data array has errored. If this chart object does not have an ' +
-            'eventHandler, ${} properties are not allowed in the path to the data.');
-          chartError = true;
-          return;
-        }
-
-        var TSID = this.commonService.parseTSID(graphData[i].properties.TSID);
-        var datastore = this.dsManager.getDatastore(TSID.datastore);
-
-        switch (datastore.type) {
-          case IM.DatastoreType.delimited:
-            allGraphObjects.push(this.makeDelimitedPlotlyObject(result, graphData[i], i));
-            break;
-          case IM.DatastoreType.dateValue:
-          case IM.DatastoreType.stateMod:
-            this.isTSFile = true;
-            allGraphObjects.push(this.makeTSPlotlyObject(result, graphData[i], i));
-            break;
-        }
-      });
-
-      if (chartError === true) {
-        this.setChartError = true;
-        return;
-      } else {
-        this.setChartError = false;
+      // The subject will be null on initialization.
+      if (datastoreResult !== null) {
+        allDataObservables.push(datastoreResult);
       }
 
-      this.createPlotlyGraph(allGraphObjects);
+      // Once an observable for each data object in the graph file has been made,
+      // the forkJoin can be performed.
+      if (allDataObservables.length === graphData.length) {
+
+        this.allResultsSub = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
+          this.TSArrayOGResultRef = allResults;
+    
+          allResults.forEach((result: any, i: number) => {
+    
+            // Check for any errors.
+            if (result.error) {
+              console.error('Graph Template file: Graph object in position ' + (i + 1) +
+                ' from the data array has errored. If this chart object does not have an ' +
+                'eventHandler, ${} properties are not allowed in the path to the data.');
+              chartError = true;
+              return;
+            }
+    
+            var TSID = this.commonService.parseTSID(graphData[i].properties.TSID);
+            var datastore = this.dsManager.getDatastore(TSID.datastore);
+    
+            switch (datastore.type) {
+              case IM.DatastoreType.delimited:
+                allGraphObjects.push(this.makeDelimitedPlotlyObject(result, graphData[i], i));
+                break;
+              case IM.DatastoreType.dateValue:
+              case IM.DatastoreType.stateMod:
+              case IM.DatastoreType.ColoradoHydroBaseRest:
+                this.isTSFile = true;
+                allGraphObjects.push(this.makeTSPlotlyObject(result, graphData[i], i));
+                break;
+            }
+          });
+    
+          if (chartError === true) {
+            this.setChartError = true;
+            return;
+          } else {
+            this.setChartError = false;
+          }
+    
+          this.createPlotlyGraph(allGraphObjects);
+        });
+      }
     });
+
+    
   }
 
   /**
@@ -914,7 +959,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   */
   private setupForWidget(): void {
 
-    this.initialResultsSub$ = this.commonService.getJSONData(
+    this.initialResultsSub = this.commonService.getJSONData(
       this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
     ).subscribe({
 

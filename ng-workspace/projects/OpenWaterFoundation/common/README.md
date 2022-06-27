@@ -42,13 +42,12 @@ as the default version of `0.0.1`.
     Using GitHub semantic versioning is highly advised. In-depth information can be found at the
     [semver GitHub account](https://github.com/semver/semver/blob/master/semver.md).
 
-3. Follow the instructions under [Building the Common Library](#building-the-common-library)
-above.
+3. Follow the instructions under [Building the Common Library](#building-the-common-library) above.
 
 4. `cd` into the `dist/OpenWaterFoundation/common` folder.
 
 5. Authenticate to GitHub Packages/npm by logging in to the GitHub Packages registry by using
-the command
+the command:
 
     ```
     npm login --registry=https://npm.pkg.github.com --scope=OWNER
@@ -58,7 +57,8 @@ the command
     prompts will display:
 
       * **Username** - GitHub username. This must be all lower case or it will ask again.
-      * **Password** - GitHub account personal access token with `repo` and `read:packages` access permissions.
+      * **Password** - GitHub account personal access token with `repo` and `read:packages`
+      access permissions.
       * **Email** - GitHub email address.
   
     A successful login will show something similar to

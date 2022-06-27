@@ -145,7 +145,7 @@ export class TS {
   source.  Sometimes the comments are created on the fly to generate a standard
   header (e.g., describe drainage area).
   */
-  _comments: any[];
+  _comments: any[] = [];
 
   /**
   List of metadata about data flags.  This provides a description about flags
@@ -331,6 +331,31 @@ export class TS {
     // Data flags...
 
     this._has_data_flags = ts._has_data_flags;
+  }
+
+  /**
+  Add a String to the comments associated with the time series (e.g., station remarks).
+  @param comment Comment string to add.
+  */
+  addToComments(comment: string): void {
+    if (comment !== null) {
+      this._comments.push(comment);
+    }
+  }
+
+  /**
+  Add a list of String to the comments associated with the time series (e.g., station remarks).
+  @param comments Comments strings to add.
+  */
+  addArrayToComments(comments: string[]): void {
+    if (comments === null) {
+      return;
+    }
+    for (var comment of comments) {
+      if (comment !== null) {
+        this._comments.push(comment);
+      }
+    }
   }
 
   /**
@@ -569,20 +594,15 @@ export class TS {
   }
 
   /**
-
-
-
-*/
-/**
- * Return the data value for a date.
- * @param date Date corresponding to the data value.
- * @return The data value associated with a date.  This should be overridden in
- * derived classes (always returns the missing data value here).
- */
-public getDataValue( date: DateTime ): number {
-  console.warn( 3, "TS.getDataValue", "TS.getDataValue is a virtual function, redefine in derived classes" );
-	return this._missing;
-}
+   * Return the data value for a date.
+   * @param date Date corresponding to the data value.
+   * @return The data value associated with a date.  This should be overridden in
+   * derived classes (always returns the missing data value here).
+   */
+  public getDataValue( date: DateTime ): number {
+    console.warn( 3, "TS.getDataValue", "TS.getDataValue is a virtual function, redefine in derived classes" );
+    return this._missing;
+  }
 
   /**
   Return the data interval base.
@@ -679,7 +699,7 @@ public getDataValue( date: DateTime ): number {
   public getDate1(): DateTime {
     if ( this._date1 === null ) {
       return null;
-    }    
+    }
     return DateTime.copyConstructor ( this._date1 );
   }
 

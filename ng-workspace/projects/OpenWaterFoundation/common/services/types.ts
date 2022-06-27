@@ -1,6 +1,7 @@
 // The interfaces and enums below are typed for use throughout the common library
 // as well as the ability to be utilized by outside consuming applications.
 
+import { DateTime }        from "@OpenWaterFoundation/common/util/time";
 import { BehaviorSubject } from "rxjs";
 
 // ENUM
@@ -17,7 +18,7 @@ export enum ChartDisplayType {
 export enum DatastoreType {
   delimited = 'owf.datastore.delimited',
   dateValue = 'owf.datastore.datevalue',
-  json = 'owf.datastore.json',
+  ColoradoHydroBaseRest = 'owf.datastore.ColoradoHydroBaseRest',
   stateMod = 'owf.datastore.statemod'
 }
 
@@ -150,6 +151,8 @@ export interface AppConfig {
   favicon?: string;
   dataUnitsPath?: string;
   googleAnalyticsTrackingId?: string;
+  apiKey?: string;
+  standaloneMap?: StandaloneMap;
   version?: string;
   datastores?: Datastore[];
   mainMenu?: MainMenu[];
@@ -301,6 +304,9 @@ export interface MainMenu {
   name?: string;
   action?: string;
   enabled?: any;
+  dashboardFile?: string;
+  markdownFile?: string;
+  mapProject?: string;
   tooltip?: string;
   url?: string;
   visible?: any;
@@ -311,8 +317,11 @@ export interface MainMenu {
 export interface SubMenu {
   name?:  string;
   action?:  string;
+  id?: string;
   enabled?: any;
+  dashboardFile?: string;
   mapProject?: string;
+  markdownFile?: string;
   separatorBefore?: any;
   doubleSeparatorBefore?: any;
   tooltip?: string;
@@ -673,6 +682,92 @@ export interface TSID {
   path?: string;
 }
 
+///////////////////////////// Telemetry Station \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+export interface TelStation {
+  abbrev: string;
+  contrArea: number;
+  county: string;
+  dataSource: string;
+  dataSourceAbbrev: string;
+  division: number;
+  drainArea: number;
+  flagA: string;
+  flagB: string;
+  gnisId: string;
+  huc10: string;
+  latitude: number;
+  locationAccuracy: string;
+  longitude: number;
+  measDateTime: any;
+  measValue: any;
+  modified: any;
+  moreInformation: string;
+  parameter: string;
+  stage: number;
+  stationName: string;
+  stationPorEnd: any;
+  stationPorStart: any;
+  stationStatus: string;
+  stationType: string;
+  streamMile: number;
+  structureType: string;
+  thirdParty: boolean;
+  units: string;
+  usgsStationId: string;
+  utmX: number;
+  utmY: number;
+  waterDistrict: number;
+  waterSource: string;
+  wdid: string;
+}
+
+export interface TelStationDataType {
+  abbrev: string;
+  contrArea: number;
+  county: string;
+  dataSource: string;
+  dataSourceAbbrev: string;
+  division: number;
+  drainArea: number;
+  gnisId: string;
+  huc10: string;
+  latdecdeg: number;
+  locationAccuracy: string;
+  longdecdeg: number;
+  modified: any;
+  parameter: string;
+  parameterPorEnd: any;
+  parameterPorStart: any;
+  parameterUnit: string;
+  stationName: string;
+  stationStatus: string;
+  stationType: string;
+  streamMile: number;
+  structureType: string;
+  thirdParty: boolean;
+  timeStep?: string;
+  usgsStationId: string;
+  utmX: number;
+  utmY: number;
+  waterDistrict: number;
+  waterSource: string;
+  wdid: string;
+}
+
+export interface TelTimeSeries {
+  abbrev: string;
+  flagA: string;
+  flagB: string;
+  measCount: number;
+  measDate?: any;
+  measDateTime?: any;
+  measUnit: string;
+  measValue: number;
+  modified: any;
+  parameter: string;
+}
+
 /////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /**
@@ -699,4 +794,8 @@ export interface ChartDialog {
 export interface ParsedProp {
   foundProps: string[];
   line: string;
+}
+
+export interface StandaloneMap {
+  mapProject: string;
 }

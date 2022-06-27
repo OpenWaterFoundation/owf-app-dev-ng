@@ -183,7 +183,8 @@ export class DashboardService {
       maxOp = IM.Operator.ltet;
     }
 
-    // The following two if, else if statements are done if only a number is given as valueMin and valueMax.
+    // The following two if, else if statements are done if only a number is given
+    // as valueMin and valueMax.
     // If the line.valueMin is an integer or float.
     // if (MapUtil.isInt(line.valueMin)) {
     //   valueMin = parseInt(line.valueMin);

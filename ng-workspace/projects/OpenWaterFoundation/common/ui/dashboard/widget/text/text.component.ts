@@ -36,7 +36,7 @@ export class TextComponent implements OnDestroy{
   text: string;
   /** The subscription for the text retrieval. To be unsubscribed when this component
    * instance is destroyed. */
-  textSub$: Subscription;
+  textSub: Subscription;
   /** The attribute provided to this component when created, e.g.
    *   <widget-text [textWidget]="widget"></widget-text> */
   @Input() textWidget: IM.TextWidget;
@@ -91,7 +91,7 @@ export class TextComponent implements OnDestroy{
     if (this.textWidget.contentType.toLowerCase() === 'markdown') {
       this.isMarkdown = true;
 
-      this.textSub$ = this.commonService.getPlainText(this.fullDataPath)
+      this.textSub = this.commonService.getPlainText(this.fullDataPath)
       .subscribe((text: string) => {
         this.text = this.commonService.sanitizeDoc(text, IM.Path.dbP);
       });
@@ -100,7 +100,7 @@ export class TextComponent implements OnDestroy{
     else if (this.textWidget.contentType.toLowerCase() === 'html') {
       this.isHTML = true;
 
-      this.textSub$ = this.commonService.getPlainText(this.fullDataPath)
+      this.textSub = this.commonService.getPlainText(this.fullDataPath)
       .subscribe((text: string) => {
         document.getElementById('textHTMLDiv').innerHTML = text;
       });
@@ -126,8 +126,8 @@ export class TextComponent implements OnDestroy{
    * Called once, before the instance is destroyed.
    */
   ngOnDestroy(): void {
-    if (this.textSub$) {
-      this.textSub$.unsubscribe();
+    if (this.textSub) {
+      this.textSub.unsubscribe();
     }
   }
 

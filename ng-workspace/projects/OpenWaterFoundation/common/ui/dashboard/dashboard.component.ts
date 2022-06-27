@@ -21,9 +21,11 @@ export class DashboardComponent implements OnDestroy {
   /** The dashboard configuration object read in from the JSON file. */
   dashboardConf: IM.DashboardConf;
   /** Subscription used when reading in the dashboard configuration file. */
-  dashboardConfigPathSub$: Subscription;
-
-  routeSub$: Subscription;
+  dashboardConfigPathSub: Subscription;
+  /**
+   * 
+   */
+  routeSub: Subscription;
 
 
   /**
@@ -74,11 +76,11 @@ export class DashboardComponent implements OnDestroy {
    */
   ngOnInit(): void {
 
-    this.routeSub$ = this.route.paramMap.subscribe((paramMap) => {
+    this.routeSub = this.route.paramMap.subscribe((paramMap) => {
       var id = paramMap.get('id');
       var dashboardConfigPath = this.commonService.getDashboardConfigPathFromId(id);
   
-      this.dashboardConfigPathSub$ = this.commonService
+      this.dashboardConfigPathSub = this.commonService
       .getJSONData(this.commonService.getAppPath() + dashboardConfigPath)
       .subscribe((dashboardConfig: IM.DashboardConf) => {
   
@@ -93,8 +95,8 @@ export class DashboardComponent implements OnDestroy {
    * Called once, before the instance is destroyed.
    */
   ngOnDestroy(): void {
-    if (this.dashboardConfigPathSub$) {
-      this.dashboardConfigPathSub$.unsubscribe();
+    if (this.dashboardConfigPathSub) {
+      this.dashboardConfigPathSub.unsubscribe();
     }
   }
 

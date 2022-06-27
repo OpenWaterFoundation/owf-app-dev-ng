@@ -20,8 +20,8 @@ export class DatastoreManager {
   private readonly builtInDatastores: IM.Datastore[] = [
     {
       name: "ColoradoHydroBaseRest",
-      type: "owf.datastore.json",
-      rootUrl: 'https://dwr.state.co.us/Rest/GET/api/v2/',
+      type: "owf.datastore.ColoradoHydroBaseRest",
+      rootUrl: 'https://dwr.state.co.us/Rest/GET/api/v2',
       aliases: []
     },
     {
@@ -46,6 +46,8 @@ export class DatastoreManager {
   /**
    * 
    */
+  createdDatastores = {};
+  /** An array of user-provided datastores from the `app-config.json` file. */
   private userDatastores: IM.Datastore[] = [];
   /** The singleton instance of this MapLayerManager class. */
   private static instance: DatastoreManager;
@@ -64,11 +66,12 @@ export class DatastoreManager {
   }
 
   /**
-   * @param service The OWF service for fetching data.
+   * Determines what datastore is being used, and calls 
+   * @param service The OWF service for fetching data using async HTTP calls.
    * @param TSID The full TSID string.
    * @returns The data from the requested Datastore as an observable.
    */
-  public getDatastoreData(service: OwfCommonService, TSID: string): Observable<any> {
+  public getDatastoreData(service: OwfCommonService, TSID: string): any {
     // Parse the TSID string into the TSID object.
     var fullTSID = service.parseTSID(TSID);
     var datastore = this.getDatastore(fullTSID.datastore);
@@ -80,8 +83,8 @@ export class DatastoreManager {
         return DateValueDatastore.readTimeSeries(service, datastore, fullTSID);
       case IM.DatastoreType.stateMod:
         return StateModDatastore.readTimeSeries(service, datastore, fullTSID);
-      case IM.DatastoreType.json:
-        return ColoradoHydroBaseRestDatastore.getData(service, datastore, fullTSID);
+      case IM.DatastoreType.ColoradoHydroBaseRest:
+        return new ColoradoHydroBaseRestDatastore(service, datastore.rootUrl).getAsyncData(fullTSID);
       case 'unknown':
       default:
         console.error("Unsupported datastore '" + fullTSID.datastore + "'.");
@@ -131,6 +134,13 @@ export class DatastoreManager {
       type: 'unknown',
       rootUrl: 'unknown'
     };
+  }
+
+  public initializeDatastores(): void {
+
+    // Create and initialize the ColoradoHydroBaseRestDatastore instance.
+    // this.createdDatastores['ColoradoHydroBaseRestDatastore'] =
+    // new ColoradoHydroBaseRestDatastore()
   }
 
   /**
