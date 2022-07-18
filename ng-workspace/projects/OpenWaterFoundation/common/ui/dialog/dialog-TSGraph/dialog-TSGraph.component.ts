@@ -26,7 +26,7 @@ import { WindowManager,
 export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
   /** The array of objects to pass to the tstable component for data table creation. */
-  public attributeTable: any[] = [];
+  attributeTable: any[] = [];
   /** Object that will be assigned by data passed up from the Chart component, and
    * used to create a TSTable dialog. */
   attributeTableParams: IM.AttributeTableParams;
@@ -34,66 +34,66 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   chartDialog: IM.ChartDialog;
   /** A string representing the chartPackage property given (or not) from a popup
    * configuration file. */
-  public chartPackage: string;
+  chartPackage: string;
   /** A string containing the name to be passed to the TSTableComponent's first
    * column name: DATE or DATE / TIME. */
-  public dateTimeColumnName: string;
+  dateTimeColumnName: string;
   /** The graph template object retrieved from the popup configuration file property
    * resourcePath. */
-  public graphTemplate: any;
+  graphTemplate: any;
   /** The name of the download file for the dialog-tstable component. */
   private downloadFileName: string;
   /** The object containing all of the layer's feature properties. */
-  public featureProperties: any;
+  featureProperties: any;
   /** Subscription to be unsubscribed to at component destruction to prevent memory
    * leaks.*/
   private forkJoinSub$: Subscription;
   /** The absolute or relative path to the data file used to populate the graph
    * being created. */
-  public graphFilePath: string;
+  graphFilePath: string;
   /** A string representing the documentation retrieved from the txt, md, or html
    * file to be displayed for a layer. */
-  public mainTitleString: string;
+  mainTitleString: string;
   /** Used as a path resolver and contains the path to the map configuration that
    * is using this TSGraphComponent. To be set in the app service for relative paths. */
-  public mapConfigPath: string;
+  mapConfigPath: string;
   /** The array of TS objects that was originally read in using the StateMod or DateValue
    * Java converted code. Used as a reference in the dialog-tstable component for
    * downloading to the user's local machine. */
-  public TSArrayOGResultRef: TS[];
+  TSArrayOGResultRef: TS[];
   /** The string representing the TSID before the first tilde (~) in the graph template
    * object. Used to help create a unique graph ID. */
-  public TSIDLocation: string;
+  TSIDLocation: string;
   /** An array containing the value header names after the initial DATE / TIME
    * header. To be passed to dialog-tstable for downloading files. */
-  public valueColumns: string[] = [];
+  valueColumns: string[] = [];
   /** A string representing the button ID of the button clicked to open this dialog. */
-  public windowID: string;
+  windowID: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
 
 
   /**
-   * @constructor for the DialogTSGraph Component.
+   * @constructor For the DialogTSGraph Component.
    * @param commonService Reference to the top level service OwfCommonService.
    * @param dialog Reference to the service that creates Mat dialogs.
    * @param dialogRef Reference to this DialogTSGraphComponent.
-   * @param dataObject The incoming templateGraph object containing data about from the graph template file.
+   * @param matDialogData The incoming templateGraph object containing data about
+   * from the graph template file.
    */
-  constructor(private commonService: OwfCommonService,
-              private dialog: MatDialog,
-              private dialogRef: MatDialogRef<DialogTSGraphComponent>,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any) {
+  constructor(private commonService: OwfCommonService, private dialog: MatDialog,
+  private dialogRef: MatDialogRef<DialogTSGraphComponent>,
+  @Inject(MAT_DIALOG_DATA) matDialogData: any) {
 
-    this.windowID = dataObject.data.windowID;
-    this.featureProperties = dataObject.data.featureProperties;
-    this.chartPackage = dataObject.data.chartPackage;
-    this.downloadFileName = dataObject.data.downloadFileName ? dataObject.data.downloadFileName : undefined;
-    this.graphTemplate = dataObject.data.graphTemplate;
-    this.graphFilePath = dataObject.data.graphFilePath;
-    this.mapConfigPath = dataObject.data.mapConfigPath;
-    this.TSIDLocation = dataObject.data.TSIDLocation;
+    this.windowID = matDialogData.windowID;
+    this.featureProperties = matDialogData.featureProperties;
+    this.chartPackage = matDialogData.chartPackage;
+    this.downloadFileName = matDialogData.downloadFileName ? matDialogData.downloadFileName : undefined;
+    this.graphTemplate = matDialogData.graphTemplate;
+    this.graphFilePath = matDialogData.graphFilePath;
+    this.mapConfigPath = matDialogData.mapConfigPath;
+    this.TSIDLocation = matDialogData.TSIDLocation;
   }
 
 
@@ -117,7 +117,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-  public onClose(): void {
+  onClose(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }
@@ -127,7 +127,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * is clicked on in the dialog that opens a new map, make sure to close the dialog
    * and remove it from the window manager.
    */
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     if (this.forkJoinSub$) {
       this.forkJoinSub$.unsubscribe();
     }

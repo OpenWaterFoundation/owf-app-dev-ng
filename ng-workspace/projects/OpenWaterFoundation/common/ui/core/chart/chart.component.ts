@@ -744,12 +744,17 @@ export class ChartComponent implements OnInit, OnDestroy {
     });
 
     // By default, subscribe to the datastoreDataSubject in case an extra async
-    // datastore is used.
+    // datastore is used. Its next method is called from the HydroBase datastore.
     this.datastoreSub = this.commonService.datastoreDataSubject$.subscribe((datastoreResult: Observable<TS>) => {
 
       // The subject will be null on initialization.
       if (datastoreResult !== null) {
         allDataObservables.push(datastoreResult);
+      }
+      // If there is one more observable than there are graphData objects, then
+      // another dialog with a HydroBase graph is open; remove it.
+      if (allDataObservables.length === (graphData.length + 1)) {
+        allDataObservables.pop();
       }
 
       // Once an observable for each data object in the graph file has been made,
@@ -758,9 +763,9 @@ export class ChartComponent implements OnInit, OnDestroy {
 
         this.allResultsSub = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
           this.TSArrayOGResultRef = allResults;
-    
+
           allResults.forEach((result: any, i: number) => {
-    
+
             // Check for any errors.
             if (result.error) {
               console.error('Graph Template file: Graph object in position ' + (i + 1) +
@@ -769,10 +774,10 @@ export class ChartComponent implements OnInit, OnDestroy {
               chartError = true;
               return;
             }
-    
+
             var TSID = this.commonService.parseTSID(graphData[i].properties.TSID);
             var datastore = this.dsManager.getDatastore(TSID.datastore);
-    
+
             switch (datastore.type) {
               case IM.DatastoreType.delimited:
                 allGraphObjects.push(this.makeDelimitedPlotlyObject(result, graphData[i], i));

@@ -31,11 +31,12 @@ export class DialogD3Component implements OnInit {
 
 
   constructor(public dialogRef: MatDialogRef<DialogD3Component>,
-              private commonService: OwfCommonService,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any) {
-    this.d3Prop = dataObject.data.d3Prop;
-    this.geoLayer = dataObject.data.geoLayer;
-    this.windowID = dataObject.data.windowID;
+  private commonService: OwfCommonService,
+  @Inject(MAT_DIALOG_DATA) public matDialogData: any) {
+
+    this.d3Prop = matDialogData.d3Prop;
+    this.geoLayer = matDialogData.geoLayer;
+    this.windowID = matDialogData.windowID;
   }
 
 

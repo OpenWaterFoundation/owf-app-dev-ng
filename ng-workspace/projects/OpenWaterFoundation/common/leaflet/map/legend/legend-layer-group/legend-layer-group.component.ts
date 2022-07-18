@@ -435,8 +435,48 @@ export class LegendLayerGroupComponent implements AfterViewInit {
     }
   }
 
-  toggleLayerTest($event: any, geoLayerId: string): void {
+  // /**
+  //  * 
+  //  * @param $event 
+  //  * @param geoLayerViewGroup 
+  //  */
+  // toggleLayerTest($event: any, geoLayerViewGroup: IM.GeoLayerViewGroup, geoLayerView: IM.GeoLayerView): void {
 
-  }
+  //   this.isChecked = !this.isChecked;
+  //   console.log($event);
+  //   // Obtain the MapLayerItem for this layer.
+  //   var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayerView.geoLayerId);
+  //   // If the layer hasn't been added to the map yet, layerItem will be null. Keep the checked attribute set to false so that
+  //   // nothing is done when the toggle button is clicked.
+  //   if (layerItem === null) {
+  //     (<HTMLInputElement>document.getElementById(geoLayerView.geoLayerId + "-slider")).checked = false;
+  //     return;
+  //   }
+  //   let checked = (<HTMLInputElement>document.getElementById(geoLayerView.geoLayerId + "-slider")).checked;
+
+  //   if (!checked) {
+  //     layerItem.removeItemLeafletLayerFromMainMap(this.mainMap);
+  //   }
+  //   // If checked
+  //   else {
+  //     // Check to see if the layer has already been added to the Leaflet map. If it has, add the layer again. If it hasn't
+  //     // (because of not being initially selected) use the addTo method on the layer and add to the map using the MapLayerItem
+  //     if (layerItem.isAddedToMainMap()) {
+  //       layerItem.addItemLeafletLayerToMainMap(this.mainMap);
+  //       if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
+  //         this.mapLayerManager.toggleOffOtherLayersOnMainMap(geoLayerView.geoLayerId,
+  //           this.mainMap, geoLayerViewGroup.geoLayerViewGroupId);
+  //       }
+  //     } else {
+  //       layerItem.initItemLeafletLayerToMainMap(this.mainMap);
+  //       if (layerItem.getItemSelectBehavior().toUpperCase() === 'SINGLE') {
+  //         this.mapLayerManager.toggleOffOtherLayersOnMainMap(geoLayerView.geoLayerId,
+  //           this.mainMap, geoLayerViewGroup.geoLayerViewGroupId);
+  //       }
+  //     }
+  //     // When the slider is checked again, re-sort the layers so layer order is preserved.
+  //     this.mapLayerManager.setLayerOrder();
+  //   }
+  // }
 
 }
