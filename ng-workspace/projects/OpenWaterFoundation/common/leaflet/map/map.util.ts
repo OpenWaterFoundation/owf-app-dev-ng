@@ -75,7 +75,7 @@ export class MapUtil {
           if (MapUtil.operators[valueObj.minOp](sp.feature.properties[sp.symbol.classificationAttribute], valueObj.valueMin) &&
               //               |---operator---||--------------------------a----------------------------|  |--------b-------|
               MapUtil.operators[valueObj.maxOp](sp.feature.properties[sp.symbol.classificationAttribute], valueObj.valueMax)) {
-
+            
             // Don't need to convert hex to RGB because Leaflet will take care it.
             return {
               color: this.verify(line.color, IM.Style.color),
@@ -1300,14 +1300,14 @@ export class MapUtil {
 
   /**
    * Confirms that the given style option is correct, and if not, given a default so the map can still be displayed
-   * @param styleProp
+   * @param styleProperty
    * @param style 
    */
-  public static verify(styleProp: any, style: IM.Style): any {
+  public static verify(styleProperty: any, style: IM.Style): any {
     // The property exists, so return it to be used in the style
     // TODO: jpkeahey 2020.06.15 - Maybe check to see if it's a correct property?
-    if (styleProp) {
-      return styleProp;
+    if (styleProperty) {
+      return styleProperty;
     }
     // The property does not exist, so return a default value.
     else {

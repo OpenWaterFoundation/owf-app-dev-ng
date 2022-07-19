@@ -62,20 +62,20 @@ export class DialogDocComponent implements OnInit, OnDestroy {
 
   constructor(public commonService: OwfCommonService,
               public dialogRef: MatDialogRef<DialogDocComponent>,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any) {
+              @Inject(MAT_DIALOG_DATA) public matDialogData: any) {
+                console.log('matDialogData:', matDialogData);
+    this.doc = matDialogData.doc;
+    this.docPath = matDialogData.docPath;
+    this.fullMarkdownPath = matDialogData.fullMarkdownPath;
+    this.geoId = matDialogData.geoId;
+    this.geoName = matDialogData.geoName;
 
-    this.doc = dataObject.data.doc;
-    this.docPath = dataObject.data.docPath;
-    this.fullMarkdownPath = dataObject.data.fullMarkdownPath;
-    this.geoId = dataObject.data.geoId;
-    this.geoName = dataObject.data.geoName;
+    if (matDialogData.docText) this.docText = true;
+    else if (matDialogData.docMarkdown) this.docMarkdown = true;
+    else if (matDialogData.docHtml) this.docHTML = true;
 
-    if (dataObject.data.docText) this.docText = true;
-    else if (dataObject.data.docMarkdown) this.docMarkdown = true;
-    else if (dataObject.data.docHtml) this.docHTML = true;
-
-    this.mapConfigPath = dataObject.data.mapConfigPath;
-    this.windowID = dataObject.data.windowID;
+    this.mapConfigPath = matDialogData.mapConfigPath;
+    this.windowID = matDialogData.windowID;
   }
 
 

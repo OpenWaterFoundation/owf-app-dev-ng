@@ -10,7 +10,7 @@
         <li>
           <a href="#home" role="tab" matTooltip="Main tools"
               matTooltipShowDelay="750" data-cy="sidebar-home">
-            <i class="fa fa-bars active"></i>
+            <i class="fa fa-map active"></i>
           </a>
         </li>
         <!-- Autopan button (4 directional arrows) -->
@@ -73,14 +73,10 @@
                 *ngIf="geoLayerViewGroup.properties.isBackground === undefined || geoLayerViewGroup.properties.isBackground === 'false'; else background">
 
                 <div>
-                  <legend-layer-group [geoLayerViewGroup]="geoLayerViewGroup"
-                                      [allFeatures]="allFeatures"
-                                      [categorizedLayerColors]="categorizedLayerColors"
-                                      [eventActions]="eventActions"
-                                      [graduatedLayerColors]="graduatedLayerColors"
-                                      [lastRefresh]="lastRefresh"
-                                      [layerClassificationInfo]="layerClassificationInfo"
-                                      [mainMap]="mainMap">
+                  <legend-layer-group [allFeatures]="allFeatures" [categorizedLayerColors]="categorizedLayerColors"
+                                      [eventActions]="eventActions" [geoLayerViewGroup]="geoLayerViewGroup"
+                                      [graduatedLayerColors]="graduatedLayerColors" [lastRefresh]="lastRefresh"
+                                      [layerClassificationInfo]="layerClassificationInfo" [mainMap]="mainMap">
                   </legend-layer-group>
                 </div>
 

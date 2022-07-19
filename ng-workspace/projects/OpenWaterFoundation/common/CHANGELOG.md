@@ -10,6 +10,23 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.8.0 (2022-07-19) #
+
+### Bug Fixes ###
+
+* Fixed a graduated layer legend shape bug that wouldn't show the shape.
+
+### Refactoring ###
+
+* The InfoMapper code was changed to become more mobile friendly. A mobile menu
+will display if the window size is smaller than a certain amount of pixels.
+
+### Features / Enhancements ###
+
+* Added the ability to change what shape and shape size will be shown on the map
+and legend through properties in a classification file.
+* The application is now more mobile friendly.
+
 # 3.7.0 #
 
 ### Refactoring ###

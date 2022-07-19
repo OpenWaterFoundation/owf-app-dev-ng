@@ -9,6 +9,8 @@ import { ActivatedRoute,
 import { MatDialog,
           MatDialogRef,
           MatDialogConfig }        from '@angular/material/dialog';
+import { BreakpointObserver,
+          Breakpoints }            from '@angular/cdk/layout';
 
 import { DialogD3Component,
           DialogDocComponent,
@@ -21,8 +23,10 @@ import { DialogD3Component,
 import { forkJoin,
           timer,
           Observable,
-          Subscription }           from 'rxjs';
-import { take }                    from 'rxjs/operators';
+          Subscription, 
+          Subject }                from 'rxjs';
+import { take,
+          takeUntil }              from 'rxjs/operators';
 
 import { OwfCommonService }        from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
@@ -74,6 +78,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public count = 1;
   /** Used to indicate which background layer is currently displayed on the map. */
   public currentBackgroundLayer: string;
+  /**
+   * 
+   */
+  currentScreenSize: string;
+  /**
+   * 
+   */
+  destroyed = new Subject<void>();
   /** The number of seconds since the last layer refresh. */
   public elapsedSeconds = 0;
   /** An object containing any event actions with their id as the key and the action
@@ -159,11 +171,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param actRoute Used for getting the parameter 'id' passed in by the url and from
   * the router.
   */
-  constructor(public commonService: OwfCommonService,
-              public dialog: MatDialog,
-              private actRoute: ActivatedRoute,
-              private route: Router) {
+  constructor(private actRoute: ActivatedRoute, private breakpointObserver: BreakpointObserver,
+    public commonService: OwfCommonService, public dialog: MatDialog, private route: Router) {
+
     if (window['Cypress']) window['MapComponent'] = this;
+
+    breakpointObserver.observe([
+      Breakpoints.XSmall,
+      Breakpoints.Small,
+      Breakpoints.Medium,
+      Breakpoints.Large,
+      Breakpoints.XLarge,
+    ])
+    .pipe(takeUntil(this.destroyed))
+    .subscribe((result: any) => {
+      for (const query of Object.keys(result.breakpoints)) {
+        if (result.breakpoints[query]) {
+          this.currentScreenSize = query;
+        }
+      }
+    });
   }
 
 
@@ -804,7 +831,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                       pointToLayer: (feature: any, latlng: any) => {
                         // Create a shapemarker layer.
                         if (geoLayer.geometryType.toUpperCase().includes('POINT') &&
-                          !symbol.properties.symbolImage && !symbol.properties.builtinSymbolImage) {
+                        !symbol.properties.symbolImage && !symbol.properties.builtinSymbolImage) {
+
                           return L.shapeMarker(latlng, MapUtil.addStyle({
                             feature: feature,
                             geoLayer: geoLayer,
@@ -1319,6 +1347,34 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * Creates a dialog config object and sets its width & height properties based
+   * on the current screen size.
+   * @returns An object to be used for creating a dialog with its initial, min, and max
+   * height and width conditionally.
+   */
+   private createDialogConfig(dialogConfigData: any): MatDialogConfig {
+
+    var isMobile = (this.currentScreenSize === Breakpoints.XSmall ||
+      this.currentScreenSize === Breakpoints.Small);
+
+    return {
+      data: dialogConfigData,
+      // This stops the dialog from containing a backdrop, which means the background
+      // opacity is set to 0, and the entire InfoMapper is still navigable while
+      // having the dialog open. This way, you can have multiple dialogs open at
+      // the same time.
+      hasBackdrop: false,
+      panelClass: ['custom-dialog-container', 'mat-elevation-z24'],
+      height: isMobile ? "90vh" : "700px",
+      width: isMobile ? "100vw" : "910px",
+      minHeight: isMobile ? "90vh" : "400px",
+      minWidth: isMobile ? "100vw" : "610px",
+      maxHeight: isMobile ? "90vh" : "70vh",
+      maxWidth: isMobile ? "100vw" : "95vw"
+    }
+  }
+
+  /**
   * Asynchronously creates a raster layer on the Leaflet map.
   * @param geoLayer The geoLayer object from the map configuration file
   * @param symbol The Symbol data object from the geoLayerView
@@ -1621,6 +1677,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.mainMap.closePopup();
     // Destroy the map and all attached event listeners.
     this.mainMap.remove();
+    // Finish up with the Subject observing for screen changes.
+    this.destroyed.next();
+    this.destroyed.complete();
   }
 
   /**
@@ -1634,24 +1693,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const dialogConfig = new MatDialogConfig();
-      dialogConfig.data = {
-        d3Prop: d3Prop,
-        geoLayer: geoLayer,
-        windowID: windowID
-      }
-        
-      var dialogRef: MatDialogRef<DialogD3Component, any> = this.dialog.open(DialogD3Component, {
-        data: dialogConfig,
-        hasBackdrop: false,
-        panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
-        height: "650px",
-        width: "815px",
-        minHeight: "650px",
-        minWidth: "615px",
-        maxHeight: "100vh",
-        maxWidth: "100vw"
-      });
+    var dialogConfigData = {
+      d3Prop: d3Prop,
+      geoLayer: geoLayer,
+      windowID: windowID
+    }
+      
+    var dialogRef: MatDialogRef<DialogD3Component, any> = this.dialog.open(
+      DialogD3Component, this.createDialogConfig(dialogConfigData));
 
     this.windowManager.addWindow(windowID, WindowType.D3);
   }
@@ -1676,36 +1725,27 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     else if (docPath.includes('.html')) html = true;
 
     this.commonService.getPlainText(this.commonService.buildPath(IM.Path.dP, [docPath]), IM.Path.dP)
-      .pipe(take(1))
-      .subscribe((doc: any) => {
+    .pipe(take(1))
+    .subscribe((doc: any) => {
 
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.data = {
-          doc: doc,
-          docPath: docPath,
-          docText: text,
-          docMarkdown: markdown,
-          docHtml: html,
-          fullMarkdownPath: this.commonService.getFullMarkdownPath(),
-          geoId: geoId,
-          geoName: geoName,
-          mapConfigPath: this.commonService.getMapConfigPath(),
-          windowID: windowID
-        }
+      var dialogConfigData = {
+        doc: doc,
+        docPath: docPath,
+        docText: text,
+        docMarkdown: markdown,
+        docHtml: html,
+        fullMarkdownPath: this.commonService.getFullMarkdownPath(),
+        geoId: geoId,
+        geoName: geoName,
+        mapConfigPath: this.commonService.getMapConfigPath(),
+        windowID: windowID
+      }
 
-        var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
-          data: dialogConfig,
-          hasBackdrop: false,
-          panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
-          height: "725px",
-          width: "700px",
-          minHeight: "240px",
-          minWidth: "550px",
-          maxHeight: "90vh",
-          maxWidth: "90vw"
-        });
-        this.windowManager.addWindow(windowID, WindowType.DOC);
-      });
+      var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
+        DialogDocComponent, this.createDialogConfig(dialogConfigData));
+
+      this.windowManager.addWindow(windowID, WindowType.DOC);
+    });
   }
 
   /**
@@ -1842,12 +1882,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param graphFilePath The file path to the current graph that needs to be read
   */
   private openTSGraphDialog(graphTemplate: IM.GraphTemplate, graphFilePath: string, TSIDLocation: string,
-    chartPackage: string, featureProperties: any, downloadFileName?: string, windowID?: string): void {
+  chartPackage: string, featureProperties: any, downloadFileName?: string, windowID?: string): void {
 
-    // Create a MatDialogConfig object to pass to the DialogTSGraphComponent for
-    // the graph that will be shown.
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = {
+    var dialogConfigData = {
       windowID: windowID,
       chartPackage: chartPackage,
       featureProperties: featureProperties,
@@ -1856,22 +1893,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       mapConfigPath: this.commonService.getMapConfigPath(),
       // This cool piece of code uses quite a bit of syntactic sugar. It dynamically
       // sets the saveFile based on the condition that saveFile is defined, using
-      // the spread operator. More information was found here:
+      // the spread operator. More information here:
       // https://medium.com/@oprearocks/what-do-the-three-dots-mean-in-javascript-bc5749439c9a
       ...(downloadFileName && { downloadFileName: downloadFileName }),
       TSIDLocation: TSIDLocation
     }
-    const dialogRef: MatDialogRef<DialogTSGraphComponent, any> = this.dialog.open(DialogTSGraphComponent, {
-      data: dialogConfig,
-      hasBackdrop: false,
-      panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
-      height: "700px",
-      width: "910px",
-      minHeight: "400px",
-      minWidth: "610px",
-      maxHeight: "70vh",
-      maxWidth: "95vw"
-    });
+
+    const dialogRef: MatDialogRef<DialogTSGraphComponent, any> = this.dialog.open(
+      DialogTSGraphComponent, this.createDialogConfig(dialogConfigData));
 
   }
 
@@ -1894,6 +1923,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       resourcePath: resourcePath,
       text: text
     }
+
     const dialogRef: MatDialogRef<DialogTextComponent, any> = this.dialog.open(DialogTextComponent, {
       data: dialogConfig,
       // This stops the dialog from containing a backdrop, which means the background
