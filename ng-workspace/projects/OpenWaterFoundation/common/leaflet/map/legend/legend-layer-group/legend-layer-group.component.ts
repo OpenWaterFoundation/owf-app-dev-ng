@@ -336,13 +336,14 @@ export class LegendLayerGroupComponent implements AfterViewInit {
    * @param styleType A string representing 
    * @returns A style object for the legend shape.
    */
-  styleInnerShape(symbolProperties: any, styleType: string): Object {
+  styleInnerShape(styleType: string, symbolProperties: any): Object {
+
     switch (styleType) {
       // Graduated classificationType map configuration property.
       case 'g':
         return {
           fill: MapUtil.verify(symbolProperties.fillColor, IM.Style.fillColor),
-          fillOpacity: MapUtil.verify(symbolProperties.fillOpacity, IM.Style.fillOpacity),
+          fillOpacity: MapUtil.verify(symbolProperties.fillOpacity, IM.Style.fillOpacity)
         }
     }
   }

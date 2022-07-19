@@ -831,7 +831,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                       pointToLayer: (feature: any, latlng: any) => {
                         // Create a shapemarker layer.
                         if (geoLayer.geometryType.toUpperCase().includes('POINT') &&
-                          !symbol.properties.symbolImage && !symbol.properties.builtinSymbolImage) {
+                        !symbol.properties.symbolImage && !symbol.properties.builtinSymbolImage) {
+
                           return L.shapeMarker(latlng, MapUtil.addStyle({
                             feature: feature,
                             geoLayer: geoLayer,

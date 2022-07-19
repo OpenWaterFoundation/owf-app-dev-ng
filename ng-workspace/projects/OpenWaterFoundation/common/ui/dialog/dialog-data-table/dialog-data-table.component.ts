@@ -234,7 +234,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   /**
    * Query the Geocodio API with the provided user address and add a Selected layer
    * to the Leaflet map if found in a polygon.
-   * @param filterValue The search value entered in by a user.
+   * @param filterAddress The search value entered in by a user.
    */
   private filterByAddress(filterAddress: string): void {
     // Replace all spaces and commas with URI-encoded characters using regex.
