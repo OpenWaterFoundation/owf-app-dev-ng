@@ -343,7 +343,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
       case 'g':
         return {
           fill: MapUtil.verify(symbolProperties.fillColor, IM.Style.fillColor),
-          fillOpacity: MapUtil.verify(symbolProperties.fillOpacity, IM.Style.fillOpacity)
+          fillOpacity: MapUtil.verify(symbolProperties.fillOpacity, IM.Style.fillOpacity),
         }
     }
   }
