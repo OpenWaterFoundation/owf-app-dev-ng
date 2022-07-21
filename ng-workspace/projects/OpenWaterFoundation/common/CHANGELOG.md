@@ -10,6 +10,23 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.8.1 (2022-07-21) #
+
+### Bug Fixes ###
+
+* Fixed a bug that was not displaying the Doc Dialog content.
+* Fixed a bug where a map layer's refresh subscription was only unsubscribed
+from if the map component was destroyed. This meant if a user navigated from
+map to map, the subscription would continue to run the refresh code. Changed
+the unsubscribe to happen in the resetMapVariables method.
+
+### Features / Enhancements ###
+
+* Removed the geoLayerView name tooltip that would show the last time the layer
+was refreshed and added text below the layer so it can be seen. Will display the
+time to the nearest minute when the whole page was first loaded, then will update
+to the refresh interval after that.
+
 # 3.8.0 (2022-07-19) #
 
 ### Bug Fixes ###

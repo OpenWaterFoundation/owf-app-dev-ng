@@ -38,9 +38,13 @@ export class OwfCommonService {
   public chartTemplateObject: Object;
   /** Absolute path to the dashboard configuration file. Used for relative paths. */
   public dashboardConfigPath: string;
-
+  /**
+   * 
+   */
   datastoreDataSubject = new BehaviorSubject<any>(null);
-
+  /**
+   * 
+   */
   datastoreDataSubject$: Observable<any> = this.datastoreDataSubject.asObservable();
   /** An array of DataUnit objects that each contain the precision for different
    * types of data, from degrees to mile per hour. Read from the application config

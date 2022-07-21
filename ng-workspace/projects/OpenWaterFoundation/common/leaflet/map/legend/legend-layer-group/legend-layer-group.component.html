@@ -41,14 +41,8 @@
     class="layer-control-container">
 
       <div class="layer-control">
-        <div *ngIf="geoLayerView.properties.refreshInterval !== ''"
-        class="layer-title"
-        matTooltip="Time since last refresh: {{lastRefresh[geoLayerView.geoLayerId]}}"
-        matTooltipPosition="above">
-          {{geoLayerView.name}}
-        </div>
 
-        <div *ngIf="geoLayerView.properties.refreshInterval === ''" class="layer-title">
+        <div class="layer-title">
           {{geoLayerView.name}}
         </div>
 
@@ -153,6 +147,7 @@
 
       <!-- Check to see if the geoLayerSymbol is missing to display a default symbol in the legend. -->
       <div *ngIf="'noSymbol' | symbolCheck : geoLayerView.geoLayerSymbol : layerClassificationInfo; else symbolExists"
+      class="no-symbol-container"
       id="all-symbols-{{geoLayerView.geoLayerId}}">
         <svg class="layer-icon" width="18" height="18">
           <rect width="18" height="18" [ngStyle]="styleOuterShape('sm')"/>
@@ -160,7 +155,7 @@
       </div>
       <ng-template #symbolExists>
 
-        <div id="all-symbols-{{geoLayerView.geoLayerId}}">
+        <div id="all-symbols-{{geoLayerView.geoLayerId}}" class="single-symbol-container">
           <!-- SINGLE SYMBOL -->
           <div *ngIf="'SINGLESYMBOL' | symbolCheck : geoLayerView.geoLayerSymbol">
           <!-- <div *ngIf="geoLayerView.geoLayerSymbol.classificationType.toUpperCase() === 'SINGLESYMBOL'"> -->
@@ -328,6 +323,10 @@
             [matTooltipShowDelay]="250" data-cy="badPath">warning</mat-icon>
           </div>
 
+        </div>
+
+        <div *ngIf="lastRefresh[geoLayerView.geoLayerId]" class="refresh-container">
+          Data last refreshed at {{lastRefresh[geoLayerView.geoLayerId]}}.
         </div>
       </ng-template>
       <!-- Check if the layer is the only one, or the last one. If not, draw the
