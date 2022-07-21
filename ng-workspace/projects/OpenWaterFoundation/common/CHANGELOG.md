@@ -10,6 +10,16 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.8.2 (2022-07-21) #
+
+### Features / Enhancements ###
+
+* Updated the refresh information legend layer information line to become hidden/visible
+whenever the layer's slide toggle button is clicked.
+* Made a toggled off layer smaller in the sidebar legend to help with real estate.
+* Updated how the refresh information date/time string is displayed based on how
+long the interval is.
+
 # 3.8.1 (2022-07-21) #
 
 ### Bug Fixes ###

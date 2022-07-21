@@ -88,7 +88,6 @@ toggle button. */
 .layer-control {
   font-size: 12px;
   height: 100%;
-  padding-bottom: 14px;
 }
 
 /* Sets the legend layer group font family and size for consistency. */
@@ -220,6 +219,7 @@ the map configuration JSON file. Transitions from 'black' to whitesmoke.   */
 .no-symbol-container,
 .single-symbol-container {
   min-height: 30px;
+  padding-top: 14px;
 }
 
 /* The container for displaying a layer's refresh time. */

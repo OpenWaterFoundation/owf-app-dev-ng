@@ -51,7 +51,7 @@ export class MapLayerItem {
    * Sets the given Marker to this LayerItem's @var addressMarker so it can be attached for layer toggling.
    * @param addressMarker The Marker to be added to this LayerItem.
    */
-  public addAddressMarker(addressMarker: any): void {
+  addAddressMarker(addressMarker: any): void {
     this.addressMarker = addressMarker;
   }
 
@@ -60,7 +60,7 @@ export class MapLayerItem {
    * layer's description and symbol, and turns the slide toggle from off to checked
    * @param mainMap The reference to the Leaflet map object
    */
-  public addItemLeafletLayerToMainMap(mainMap: any): void {
+  addItemLeafletLayerToMainMap(mainMap: any): void {
     mainMap.addLayer(this.leafletLayer);
     // Check to see if a selected layer exists and add it to the map as well.
     if (this.selectedLayer) {
@@ -72,13 +72,15 @@ export class MapLayerItem {
     }
     this.displayed = true;
 
-    (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = true;
-    let description = jQuery("#description-" + this.layerItemGeoLayerId);
-    description.css('visibility', 'visible');
-    description.css('height', '100%');
-    let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
-    symbols.css('visibility', 'visible');
-    symbols.css('height', '100%');
+    // (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = true;
+    // let description = jQuery("#description-" + this.layerItemGeoLayerId);
+    // description.css('visibility', 'visible');
+    // description.css('height', '100%');
+    // let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
+    // symbols.css('visibility', 'visible');
+    // symbols.css('height', '100%');
+
+    this.toggleSlider('on');
   }
 
   /**
@@ -86,7 +88,7 @@ export class MapLayerItem {
    * @param leafletLayer The leaflet layer to be added to this LayerItem.
    * @param mainMap The leaflet map that the layer will be added to.
    */
-  public addLeafletLayer(leafletLayer: any, mainMap: any): void {
+  addLeafletLayer(leafletLayer: any, mainMap: any): void {
     this.leafletLayer = leafletLayer;
     mainMap.addLayer(this.leafletLayer);
   }
@@ -95,7 +97,7 @@ export class MapLayerItem {
    * 
    * @param selectedLayer The geoJSON created Leaflet layer to be added to the layer item.
    */
-  public addSelectedLayerToMainMap(selectedLayer: any, mainMap: any): void {
+  addSelectedLayerToMainMap(selectedLayer: any, mainMap: any): void {
     this.selectedLayer = selectedLayer;
     this.selectedLayer.addTo(mainMap);
   }
@@ -103,39 +105,39 @@ export class MapLayerItem {
   /**
    * @returns This MapLayerItem's geoLayerViewGroupId that it came from
    */
-  public getItemGeoLayerViewGroupId(): string {
+  getItemGeoLayerViewGroupId(): string {
     return this.layerItemViewGroupId;
   }
 
   /**
    * @returns This MapLayerItem's Leaflet layer
    */
-  public getItemLeafletLayer(): any {
+  getItemLeafletLayer(): any {
     return this.leafletLayer;
   }
 
   /**
    * @returns This Item's selectBehavior.
    */
-  public getItemSelectBehavior(): string {
+  getItemSelectBehavior(): string {
     return this.selectBehavior;
   }
 
   /**
    * @returns The currently displayed selected geoJson layer.
    */
-  public getSelectedLayer(): any {
+  getSelectedLayer(): any {
     return this.selectedLayer;
   }
 
   /**
    * @returns Whether this LayerItem has any currently shown selected highlight layers or markers.
    */
-  public hasAnySelectedLayers(): boolean {
+  hasAnySelectedLayers(): boolean {
     return (this.selectedLayer || this.addressMarker) ? true : false;
   }
 
-  public hasSelectedLayer(): boolean {
+  hasSelectedLayer(): boolean {
     return this.selectedLayer ? true : false;
   }
 
@@ -174,7 +176,7 @@ export class MapLayerItem {
    * of setting the @var addedToMainMap to true.
    * @param mainMap The reference to the Leaflet map object
    */
-  public initItemLeafletLayerToMainMap(mainMap: any): void {
+  initItemLeafletLayerToMainMap(mainMap: any): void {
     if (this.leafletLayer.rasters) {
       this.leafletLayer.setZIndex(999);
     }
@@ -190,47 +192,48 @@ export class MapLayerItem {
     this.addedToMainMap = true;
     this.displayed = true;
 
-    (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = true;
-    let description = jQuery("#description-" + this.layerItemGeoLayerId);
-    description.css('visibility', 'visible');
-    description.css('height', '100%');
-    let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
-    symbols.css('visibility', 'visible');
-    symbols.css('height', '100%');
+    // (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = true;
+    // let description = jQuery("#description-" + this.layerItemGeoLayerId);
+    // description.css('visibility', 'visible');
+    // description.css('height', '100%');
+    // let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
+    // symbols.css('visibility', 'visible');
+    // symbols.css('height', '100%');
+    this.toggleSlider('on');
   }
 
   /**
    * @returns whether this layer item has been added to the Leaflet map for the first time
    */
-  public isAddedToMainMap(): boolean {
+  isAddedToMainMap(): boolean {
     return this.addedToMainMap;
   }
 
   /**
    * @returns A boolean of whether this layer item is currently being displayed on the Leaflet map.
    */
-  public isDisplayedOnMainMap(): boolean {
+  isDisplayedOnMainMap(): boolean {
     return this.displayed;
   }
 
   /**
    * @returns A boolean of whether this Item's leaflet layer is a raster layer.
    */
-  public isRasterLayer(): boolean {
+  isRasterLayer(): boolean {
     return this.isRaster;
   }
 
   /**
    * @returns A boolean of whether this Item's leaflet layer is a vector layer.
    */
-  public isVectorLayer(): boolean {
+  isVectorLayer(): boolean {
     return this.isVector;
   }
 
   /**
    * @returns whether this layer item has the selectedInitial property set to true (undefined is defaulted to true) or false.
    */
-  public isSelectInitial(): boolean {
+  isSelectInitial(): boolean {
     return this.selectInitial;
   }
 
@@ -239,7 +242,7 @@ export class MapLayerItem {
    * exists, treats the removal of the selected layer(s) as hidden on the map, keeping them in the layerItem.
    * @param mainMap The Leaflet map object reference.
    */
-  public removeAllSelectedLayers(mainMap: any, hide?: any): void {
+  removeAllSelectedLayers(mainMap: any, hide?: any): void {
     // Check to see if a selected layer exists and remove it from the map.
     if (this.selectedLayer) {      
       mainMap.removeLayer(this.selectedLayer);
@@ -260,20 +263,62 @@ export class MapLayerItem {
    * of the layer in the side bar, and toggles the slide toggle button from checked to off.
    * @param mainMap The reference to the Leaflet map object.
    */
-  public removeItemLeafletLayerFromMainMap(mainMap: any): void {
+  removeItemLeafletLayerFromMainMap(mainMap: any): void {
     // Remove the main layer associated with this LayerItem.
     mainMap.removeLayer(this.leafletLayer);
     // Check to see if a selected layer exists and remove it from the map.
     this.removeAllSelectedLayers(mainMap, 'hide');
     this.displayed = false;
 
-    (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = false;
+    // (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = false;
+    // let description = jQuery("#description-" + this.layerItemGeoLayerId);
+    // description.css('visibility', 'hidden');
+    // description.css('height', 0);
+    // let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
+    // symbols.css('visibility', 'hidden');
+    // symbols.css('height', 0);
+    this.toggleSlider('off');
+  }
+
+  /**
+   * Toggles the slider for the layer, and either hides or shows the layer's info.
+   * Default is toggle off.
+   * @param toggle String describing whether the slider is being toggled on or
+   * off.
+   */
+  private toggleSlider(toggle: string): void {
+
+    var checked: boolean;
+    var visibility: string;
+    var height: string;
+    var minHeight: string;
+
+    if (toggle === 'on') {
+      checked = true;
+      visibility = 'visible';
+      height = '100%';
+      minHeight = '30px';
+    } else if (toggle === 'off') {
+      checked = false;
+      visibility = 'hidden';
+      height = '0';
+      minHeight = '0px';
+    }
+
+    (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = checked;
+
     let description = jQuery("#description-" + this.layerItemGeoLayerId);
-    description.css('visibility', 'hidden');
-    description.css('height', 0);
+    description.css('visibility', visibility);
+    description.css('height', height);
+
     let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
-    symbols.css('visibility', 'hidden');
-    symbols.css('height', 0);
+    symbols.css('visibility', visibility);
+    symbols.css('height', height);
+    symbols.css('min-height', minHeight);
+
+    let refreshInfo = jQuery("#refresh-info-" + this.layerItemGeoLayerId);
+    refreshInfo.css('visibility', visibility);
+    refreshInfo.css('height', height);
   }
 
 }
