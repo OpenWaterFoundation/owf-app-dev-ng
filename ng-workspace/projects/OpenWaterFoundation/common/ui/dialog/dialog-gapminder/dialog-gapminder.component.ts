@@ -2262,36 +2262,36 @@ export class DialogGapminderComponent implements OnInit {
     else if (docPath.includes('.html')) html = true;
 
     this.commonService.getPlainText(this.commonService.buildPath(IM.Path.gP, [docPath]), IM.Path.dP)
-      .pipe(take(1))
-      .subscribe((doc: any) => {
+    .pipe(take(1))
+    .subscribe((doc: any) => {
 
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.data = {
-          doc: doc,
-          docPath: docPath,
-          docText: text,
-          docMarkdown: markdown,
-          docHtml: html,
-          fullMarkdownPath: this.commonService.getFullMarkdownPath(),
-          geoId: this.geoLayer.geoLayerId,
-          geoName: this.geoLayer.name,
-          mapConfigPath: this.commonService.getMapConfigPath(),
-          windowID: windowID
-        }
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.data = {
+        doc: doc,
+        docPath: docPath,
+        docText: text,
+        docMarkdown: markdown,
+        docHtml: html,
+        fullMarkdownPath: this.commonService.getFullMarkdownPath(),
+        geoId: this.geoLayer.geoLayerId,
+        geoName: this.geoLayer.name,
+        mapConfigPath: this.commonService.getMapConfigPath(),
+        windowID: windowID
+      }
 
-        var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
-          data: dialogConfig,
-          hasBackdrop: false,
-          panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
-          height: "725px",
-          width: "700px",
-          minHeight: "240px",
-          minWidth: "550px",
-          maxHeight: "90vh",
-          maxWidth: "90vw"
-        });
-        this.windowManager.addWindow(windowID, WindowType.DOC);
+      var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
+        data: dialogConfig,
+        hasBackdrop: false,
+        panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
+        height: "725px",
+        width: "700px",
+        minHeight: "240px",
+        minWidth: "550px",
+        maxHeight: "90vh",
+        maxWidth: "90vw"
       });
+      this.windowManager.addWindow(windowID, WindowType.DOC);
+    });
   }
 
   /**

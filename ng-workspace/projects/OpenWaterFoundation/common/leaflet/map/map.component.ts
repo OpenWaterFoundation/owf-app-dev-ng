@@ -145,7 +145,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public projectVersion: Observable<any>;
   /** The refresh subscription. Used with the rxjs timer, and unsubscribed on component
    * destruction. */
-  private refreshSub = new Subscription();
+  private refreshSub = null;
   /** The activatedRoute subscription, unsubscribed to on component destruction. */
   private actRouteSub = <any>Subscription;
   /** Boolean showing if the URL given for a layer is currently unavailable. */
@@ -354,7 +354,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         if (isNaN(refreshInterval)) {
         } else {
           this.refreshLayer(refreshOffset, refreshInterval, geoLayer, IM.RefreshType.tile,
-            null, null, leafletBackgroundLayer);
+            null, leafletBackgroundLayer);
         }
   
       }
@@ -791,7 +791,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // returned a number.
                 if (!isNaN(refreshInterval)) {
                   this.refreshLayer(refreshOffset, refreshInterval, geoLayer, IM.RefreshType.image,
-                                      geoLayerView, symbol);
+                                      geoLayerView);
                 }
               }
             }
@@ -1522,7 +1522,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (isNaN(refreshInterval)) {
       } else {
         this.refreshLayer(refreshOffset, refreshInterval, geoLayer,
-                          IM.RefreshType.raster, geoLayerView, symbol);
+                          IM.RefreshType.raster, geoLayerView);
       }
 
     }
@@ -1742,7 +1742,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }
 
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
-        DialogDocComponent, this.createDialogConfig(dialogConfigData));
+        DialogDocComponent, this.createDialogConfig(dialogConfigData)
+      );
 
       this.windowManager.addWindow(windowID, WindowType.DOC);
     });
@@ -1947,17 +1948,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * @param geoLayer The geoLayer object from the map configuration file.
    */
   private refreshLayer(refreshOffset: number, refreshInterval: number, geoLayer: IM.GeoLayer,
-                        refreshType: IM.RefreshType, geoLayerView?: IM.GeoLayerView, symbol?: IM.GeoLayerSymbol,
-                        bgLayer?: any): void {
+  refreshType: IM.RefreshType, geoLayerView?: IM.GeoLayerView, bgLayer?: any): void {
+
+    // The initial time the layer was created. To be shown so users know this layer
+    // will be refreshed.
+    this.lastRefresh[geoLayer.geoLayerId] = new Date(Date.now()).toLocaleTimeString([], {
+      hour: '2-digit', minute: '2-digit'
+    });
     
     // Wait the refreshInterval, then keep waiting by the refreshInterval from then on.
     const delay = timer(refreshOffset, refreshInterval);
     // Adds each refresh subscription after the first as child subscriptions
     // (in case of multiple refreshing layers), so when unsubscribing occurs
     // at component destruction, all are unsubscribed from.
+    this.refreshSub = new Subscription();
     this.refreshSub.add(delay.subscribe(() => {
       // Update the MatTooltip date display string on the sidebar geoLayerView name.
-      this.lastRefresh[geoLayer.geoLayerId] = new Date(Date.now()).toTimeString().split(" ")[0];
+      this.lastRefresh[geoLayer.geoLayerId] = new Date(Date.now()).toLocaleTimeString([], {
+        hour: '2-digit', minute: '2-digit'
+      });
+
       // Refresh a vector layer.
       if (refreshType === IM.RefreshType.vector) {
         this.commonService.getJSONData(
@@ -1975,6 +1985,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           this.elapsedSeconds = 0;
         });
       }
+
       // Refresh a raster layer.
       else if (refreshType === IM.RefreshType.raster) {
         // First remove the raster layer.
@@ -1986,6 +1997,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         .then((response: any) => response.arrayBuffer())
         .then((arrayBuffer: any) => {
           parseGeoRaster(arrayBuffer).then((georaster: any) => {
+
+            const symbol = geoLayerView.geoLayerSymbol;
+            
             // The classificationFile attribute exists in the map configuration
             // file, so use that file path for Papaparse.
             if (symbol && symbol.properties.classificationFile) {
@@ -2055,12 +2069,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           });
         });
       }
-      // Refresh a tile layer.
+
+      // Refresh a tile (background) layer.
       else if (refreshType === IM.RefreshType.tile) {
         bgLayer.redraw();
       }
+
       // Refresh an image layer.
       else if (refreshType === IM.RefreshType.image) {
+
+        const symbol = geoLayerView.geoLayerSymbol;
         this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
 
         var imageLayer = L.imageOverlay(
@@ -2080,8 +2098,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-  * Refreshes and/or re-initializes map global variables when a new map component
-  * instance is created.
+  * Refreshes, re-initializes, and unsubscribes from necessary subscriptions being
+  * used by map variables when a new map component instance is created.
   */
   private resetMapVariables(): void {
     // First clear the map
@@ -2104,6 +2122,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // won't be called if another menu in the InfoMapper is clicked on and changed
     // to another map.
     this.count = 1;
+
+    // If the previous map had at least one layer that refreshes, the refresh
+    // subscription will need to be unsubscribed from when navigated away.
+    if (this.refreshSub) {
+      this.refreshSub.unsubscribe();
+    }
   }
 
   /**

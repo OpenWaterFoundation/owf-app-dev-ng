@@ -2,26 +2,31 @@ import { AfterViewInit,
           Component,
           EventEmitter,
           Input, 
-          Output }                   from '@angular/core';
+          Output }                    from '@angular/core';
 
 import { MatDialog,
           MatDialogConfig,
-          MatDialogRef }             from '@angular/material/dialog';
+          MatDialogRef }              from '@angular/material/dialog';
+import { BreakpointObserver,
+          Breakpoints }               from '@angular/cdk/layout';
 
-import { take }                      from 'rxjs/operators';
+import { take,
+          takeUntil }                 from 'rxjs/operators';
+import { Subject }                    from 'rxjs';
 
-import { OwfCommonService }          from '@OpenWaterFoundation/common/services';
-import * as IM                       from '@OpenWaterFoundation/common/services';
+import { OwfCommonService }           from '@OpenWaterFoundation/common/services';
+import * as IM                        from '@OpenWaterFoundation/common/services';
 import { DialogDataTableComponent,
           DialogDocComponent, 
           DialogGalleryComponent, 
-          DialogPropertiesComponent} from '@OpenWaterFoundation/common/ui/dialog';
+          DialogPropertiesComponent } from '@OpenWaterFoundation/common/ui/dialog';
 import { WindowManager,
-          WindowType }               from '@OpenWaterFoundation/common/ui/window-manager';
+          WindowType }                from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapLayerItem,
-          MapLayerManager }          from '@OpenWaterFoundation/common/ui/layer-manager';
-import { MapUtil }                   from '../../map.util';
-import * as Papa                     from 'papaparse';
+          MapLayerManager }           from '@OpenWaterFoundation/common/ui/layer-manager';
+import { MapUtil }                    from '../../map.util';
+import * as Papa                      from 'papaparse';
+
 
 
 @Component({
@@ -42,6 +47,14 @@ export class LegendLayerGroupComponent implements AfterViewInit {
    * name followed by color for each feature in the Leaflet layer to be shown in
    * the sidebar. */
   @Input() categorizedLayerColors: any;
+  /**
+   * 
+   */
+  currentScreenSize: string;
+  /**
+   * 
+   */
+  destroyed = new Subject<void>();
   /** An object containing any event actions with their id as the key and the action
    * object itself as the value. */
   @Input() eventActions: any;
@@ -75,8 +88,26 @@ export class LegendLayerGroupComponent implements AfterViewInit {
    * @param commonService The reference to the injected Common library.
    * @param dialog The reference to the MatDialog service.
    */
-  constructor(public commonService: OwfCommonService,
-              public dialog: MatDialog) {}
+  constructor(private breakpointObserver: BreakpointObserver,
+  public commonService: OwfCommonService,
+  public dialog: MatDialog) {
+
+    breakpointObserver.observe([
+      Breakpoints.XSmall,
+      Breakpoints.Small,
+      Breakpoints.Medium,
+      Breakpoints.Large,
+      Breakpoints.XLarge,
+    ])
+    .pipe(takeUntil(this.destroyed))
+    .subscribe((result: any) => {
+      for (const query of Object.keys(result.breakpoints)) {
+        if (result.breakpoints[query]) {
+          this.currentScreenSize = query;
+        }
+      }
+    });
+  }
 
   /**
    * Called right after the constructor.
@@ -103,6 +134,34 @@ export class LegendLayerGroupComponent implements AfterViewInit {
    */
   clickIconButtonOnly($event: MouseEvent): void {
     $event.stopPropagation();
+  }
+
+  /**
+   * Creates a dialog config object and sets its width & height properties based
+   * on the current screen size.
+   * @returns An object to be used for creating a dialog with its initial, min, and max
+   * height and width conditionally.
+   */
+  private createDialogConfig(dialogConfigData: any): MatDialogConfig {
+
+    var isMobile = (this.currentScreenSize === Breakpoints.XSmall ||
+      this.currentScreenSize === Breakpoints.Small);
+
+    return {
+      data: dialogConfigData,
+      // This stops the dialog from containing a backdrop, which means the background
+      // opacity is set to 0, and the entire InfoMapper is still navigable while
+      // having the dialog open. This way, you can have multiple dialogs open at
+      // the same time.
+      hasBackdrop: false,
+      panelClass: ['custom-dialog-container', 'mat-elevation-z24'],
+      height: isMobile ? "90vh" : "700px",
+      width: isMobile ? "100vw" : "910px",
+      minHeight: isMobile ? "90vh" : "400px",
+      minWidth: isMobile ? "100vw" : "610px",
+      maxHeight: isMobile ? "90vh" : "70vh",
+      maxWidth: isMobile ? "100vw" : "95vw"
+    }
   }
 
   /**
@@ -159,36 +218,28 @@ export class LegendLayerGroupComponent implements AfterViewInit {
     else if (docPath.includes('.html')) { html = true; }
 
     this.commonService.getPlainText(this.commonService.buildPath(IM.Path.dP, [docPath]), IM.Path.dP)
-      .pipe(take(1))
-      .subscribe((doc: any) => {
+    .pipe(take(1))
+    .subscribe((doc: any) => {
 
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.data = {
-          doc: doc,
-          docPath: docPath,
-          docText: text,
-          docMarkdown: markdown,
-          docHtml: html,
-          fullMarkdownPath: this.commonService.getFullMarkdownPath(),
-          geoId: geoId,
-          geoName: geoName,
-          mapConfigPath: this.commonService.getMapConfigPath(),
-          windowID: windowID
-        }
+      var dialogConfigData = {
+        doc: doc,
+        docPath: docPath,
+        docText: text,
+        docMarkdown: markdown,
+        docHtml: html,
+        fullMarkdownPath: this.commonService.getFullMarkdownPath(),
+        geoId: geoId,
+        geoName: geoName,
+        mapConfigPath: this.commonService.getMapConfigPath(),
+        windowID: windowID
+      }
 
-        var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
-          data: dialogConfig,
-          hasBackdrop: false,
-          panelClass: ['custom-dialog-container', 'mat-elevation-z20'],
-          height: "725px",
-          width: "700px",
-          minHeight: "240px",
-          minWidth: "550px",
-          maxHeight: "90vh",
-          maxWidth: "90vw"
-        });
-        this.windowManager.addWindow(windowID, WindowType.DOC);
-      });
+      var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
+        DialogDocComponent, this.createDialogConfig(dialogConfigData)
+      );
+
+      this.windowManager.addWindow(windowID, WindowType.DOC);
+    });
   }
 
   /**

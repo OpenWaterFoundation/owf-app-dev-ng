@@ -63,7 +63,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   constructor(public commonService: OwfCommonService,
               public dialogRef: MatDialogRef<DialogDocComponent>,
               @Inject(MAT_DIALOG_DATA) public matDialogData: any) {
-                console.log('matDialogData:', matDialogData);
+
     this.doc = matDialogData.doc;
     this.docPath = matDialogData.docPath;
     this.fullMarkdownPath = matDialogData.fullMarkdownPath;

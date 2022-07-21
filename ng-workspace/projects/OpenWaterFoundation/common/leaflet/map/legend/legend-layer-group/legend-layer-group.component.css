@@ -217,6 +217,18 @@ the map configuration JSON file. Transitions from 'black' to whitesmoke.   */
   background-color: #016dc5;
 }
 
+.no-symbol-container,
+.single-symbol-container {
+  min-height: 30px;
+}
+
+/* The container for displaying a layer's refresh time. */
+.refresh-container {
+  background-color: #e9e9e9;
+  border-radius: 10px;
+  padding: 0px 5px;
+}
+
 /* Slider inside of the switch. */
 .slider {
   position: absolute;
