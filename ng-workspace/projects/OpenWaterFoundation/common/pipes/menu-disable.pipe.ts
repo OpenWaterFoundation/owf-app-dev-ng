@@ -30,6 +30,7 @@ export class MenuDisablePipe implements PipeTransform {
             description.style.height = '0';
             symbols.style.visibility = 'hidden';
             symbols.style.height = '0';
+            symbols.style.minHeight = '0';
           }
           // Set up the mutation observer
           var observer = new MutationObserver(function (mutations, me) {

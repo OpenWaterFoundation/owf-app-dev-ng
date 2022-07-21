@@ -1952,9 +1952,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     // The initial time the layer was created. To be shown so users know this layer
     // will be refreshed.
-    this.lastRefresh[geoLayer.geoLayerId] = new Date(Date.now()).toLocaleTimeString([], {
-      hour: '2-digit', minute: '2-digit'
-    });
+    this.setRefreshDateTime(geoLayer, refreshInterval);
     
     // Wait the refreshInterval, then keep waiting by the refreshInterval from then on.
     const delay = timer(refreshOffset, refreshInterval);
@@ -1963,10 +1961,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // at component destruction, all are unsubscribed from.
     this.refreshSub = new Subscription();
     this.refreshSub.add(delay.subscribe(() => {
+
       // Update the MatTooltip date display string on the sidebar geoLayerView name.
-      this.lastRefresh[geoLayer.geoLayerId] = new Date(Date.now()).toLocaleTimeString([], {
-        hour: '2-digit', minute: '2-digit'
-      });
+      this.setRefreshDateTime(geoLayer, refreshInterval);
 
       // Refresh a vector layer.
       if (refreshType === IM.RefreshType.vector) {
@@ -2208,6 +2205,30 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       childList: true,
       subtree: true
     });
+  }
+
+  /**
+   * Sets the refresh DateTime formatting based on if the provided refresh interval
+   * is less than or equal to 1 hour.
+   * @param geoLayer The geoLayer from the map configuration file.
+   * @param refreshInterval The refreshInterval from the map configuration file.
+   */
+  private setRefreshDateTime(geoLayer: IM.GeoLayer, refreshInterval: any): void {
+
+    var refreshDateTime: string;
+
+    if (refreshInterval <= 3600000) {
+      refreshDateTime = new Date(Date.now()).toLocaleTimeString([], {
+        hour: '2-digit', minute: '2-digit'
+      });
+    } else {
+      var dateTime = new Date(Date.now());
+
+      refreshDateTime = dateTime.toLocaleTimeString([], {hour: 'numeric', minute: 'numeric'}) +
+      ', ' + dateTime.toLocaleString([], {month: 'long', day: 'numeric'});
+    }
+
+    this.lastRefresh[geoLayer.geoLayerId] = refreshDateTime;
   }
   
 }

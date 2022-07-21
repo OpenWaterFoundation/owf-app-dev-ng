@@ -325,7 +325,8 @@
 
         </div>
 
-        <div *ngIf="lastRefresh[geoLayerView.geoLayerId]" class="refresh-container">
+        <div *ngIf="lastRefresh[geoLayerView.geoLayerId]" class="refresh-container"
+        id="refresh-info-{{geoLayerView.geoLayerId}}">
           Data last refreshed at {{lastRefresh[geoLayerView.geoLayerId]}}.
         </div>
       </ng-template>
