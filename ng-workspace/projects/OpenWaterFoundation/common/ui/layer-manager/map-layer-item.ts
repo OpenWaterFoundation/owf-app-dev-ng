@@ -72,15 +72,7 @@ export class MapLayerItem {
     }
     this.displayed = true;
 
-    // (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = true;
-    // let description = jQuery("#description-" + this.layerItemGeoLayerId);
-    // description.css('visibility', 'visible');
-    // description.css('height', '100%');
-    // let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
-    // symbols.css('visibility', 'visible');
-    // symbols.css('height', '100%');
-
-    this.toggleSlider('on');
+    this.toggleLayerSlider('on');
   }
 
   /**
@@ -192,14 +184,7 @@ export class MapLayerItem {
     this.addedToMainMap = true;
     this.displayed = true;
 
-    // (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = true;
-    // let description = jQuery("#description-" + this.layerItemGeoLayerId);
-    // description.css('visibility', 'visible');
-    // description.css('height', '100%');
-    // let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
-    // symbols.css('visibility', 'visible');
-    // symbols.css('height', '100%');
-    this.toggleSlider('on');
+    this.toggleLayerSlider('on');
   }
 
   /**
@@ -270,55 +255,25 @@ export class MapLayerItem {
     this.removeAllSelectedLayers(mainMap, 'hide');
     this.displayed = false;
 
-    // (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = false;
-    // let description = jQuery("#description-" + this.layerItemGeoLayerId);
-    // description.css('visibility', 'hidden');
-    // description.css('height', 0);
-    // let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
-    // symbols.css('visibility', 'hidden');
-    // symbols.css('height', 0);
-    this.toggleSlider('off');
+    this.toggleLayerSlider('off');
   }
 
   /**
-   * Toggles the slider for the layer, and either hides or shows the layer's info.
-   * Default is toggle off.
+   * Toggles the slider for the layer.
    * @param toggle String describing whether the slider is being toggled on or
    * off.
    */
-  private toggleSlider(toggle: string): void {
+  private toggleLayerSlider(toggle: string): void {
 
     var checked: boolean;
-    var visibility: string;
-    var height: string;
-    var minHeight: string;
 
     if (toggle === 'on') {
       checked = true;
-      visibility = 'visible';
-      height = '100%';
-      minHeight = '30px';
     } else if (toggle === 'off') {
       checked = false;
-      visibility = 'hidden';
-      height = '0';
-      minHeight = '0px';
     }
 
     (<HTMLInputElement>document.getElementById(this.layerItemGeoLayerId + "-slider")).checked = checked;
-
-    let description = jQuery("#description-" + this.layerItemGeoLayerId);
-    description.css('visibility', visibility);
-    description.css('height', height);
-
-    let symbols = jQuery("#all-symbols-" + this.layerItemGeoLayerId);
-    symbols.css('visibility', visibility);
-    symbols.css('height', height);
-    symbols.css('min-height', minHeight);
-
-    let refreshInfo = jQuery("#refresh-info-" + this.layerItemGeoLayerId);
-    refreshInfo.css('visibility', visibility);
-    refreshInfo.css('height', height);
   }
 
 }

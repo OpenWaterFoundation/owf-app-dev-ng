@@ -17,44 +17,16 @@ export class MenuDisablePipe implements PipeTransform {
 
     // Selected Initial check.
     if (geoLayerId) {
-      // If the geoLayerId is given, than the disableType is given as well, so check
-      // if it's toggleCheck for whether the toggle button is toggled off or on.
+      // Slider toggleCheck if toggled on (true) or off (null).
       if (pipeType === 'toggleCheck') {
         if (value === undefined || value.toUpperCase() === 'TRUE') {
           return true;
         } else if (value.toUpperCase() === 'FALSE') {
-  
-          // Callback executed when the description and symbols elements are found
-          function handleCanvas(description: HTMLElement, symbols: HTMLElement) { 
-            description.style.visibility = 'hidden';
-            description.style.height = '0';
-            symbols.style.visibility = 'hidden';
-            symbols.style.height = '0';
-            symbols.style.minHeight = '0';
-          }
-          // Set up the mutation observer
-          var observer = new MutationObserver(function (mutations, me) {
-            // `mutations` is an array of mutations that occurred
-            // `me` is the MutationObserver instance
-            let description = document.getElementById('description-' + geoLayerId);
-            let symbols = document.getElementById('all-symbols-' + geoLayerId);
-  
-            if (description && symbols) {
-              handleCanvas(description, symbols);
-              me.disconnect(); // stop observing
-              return;
-            }
-          });
-          // Start observing
-          observer.observe(document, {
-            childList: true,
-            subtree: true
-          });
-        } 
-
+          return null;
+        }
       }
-      // If the disableType second argument is dataTableCheck, check the layer information from the MapLayerManager to see if it
-      // is currently being displayed on the map.
+      // If the disableType second argument is dataTableCheck, check the layer information
+      // from the MapLayerManager to see if it is currently being displayed on the map.
       else if (pipeType === 'dataTableCheck') {
         let isDisplayed = this.mapLayerManager.getMapLayerItem(value).isDisplayedOnMainMap();
         if (isDisplayed === true) {

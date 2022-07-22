@@ -10,6 +10,15 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.8.3 (2022-07-22) #
+
+### Bug Fixes ###
+
+* Fixed a bug that wouldn't hide a sidebar legend element by default when the
+`selectedInitial` map config property was set to false. Removed convoluted and
+difficult to read code and replaced with basic Angular code to streamline the
+process, and make any other additions in the future much easier.
+
 # 3.8.2 (2022-07-21) #
 
 ### Features / Enhancements ###
