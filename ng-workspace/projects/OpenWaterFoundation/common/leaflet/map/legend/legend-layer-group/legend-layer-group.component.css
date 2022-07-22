@@ -21,6 +21,29 @@ if an extra long description string is provided. */
   min-height: 30px;
 }
 
+/* Ensures the geoLayerViewGroup expansion header is the correct color. */
+.expansion-header {
+  background-color: #9DB66B !important;
+}
+
+/* Without setting the color, a mouse hover will default to white. */
+.expansion-header:hover {
+  background-color: #9DB66B !important;
+}
+
+/* Default styling for every regular geoLayerView expansion header title.  */
+.expansion-header-title {
+  flex-grow: 1000 !important;
+  color: white !important;
+  font-size: medium !important;
+}
+
+/* Added to the expansion header title if the "docPath" property is provided in
+the map configuration JSON file. */
+.expansion-header-title-doc {
+  padding-top: 10px !important;
+}
+
 /* Unused. */
 .fa-building {
   vertical-align: middle;
@@ -54,6 +77,22 @@ clicked. */
   padding-right: 5%;
 }
 
+/* Changes the amount of pixels surrounding the <hr> divider class that separates
+each geoLayerView in the legend. */
+.geoLayerView-divider {
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+/* Styles the warning symbol to let the user know something went wrong with layer
+creation. */
+.geoLayerView-status {
+  width: 10%;
+  color: red;
+  display: inline-block;
+  vertical-align: middle;
+}
+
 /* On bootstrap button hover, transitions the nested info circle icon from black
 to near white. */
 .geoMap-info-circle:hover .fa-info-circle {
@@ -75,6 +114,12 @@ least 30px in height. */
 /* The legend graduated layer symbol svg. */
 .graduated-symbol {
   display: inline-block;
+}
+
+/* Makes the container with the layer info invisible and sets the height to 0. */
+.hide-layer-info {
+  visibility: hidden;
+  height: 0;
 }
 
 /* Positions the geoLayerViewGroup and geoLayerView Font Awesome info circle icons. */
@@ -151,36 +196,6 @@ the geoLayerView contains visualizations. */
   width: 10%;
 }
 
-/* Ensures the geoLayerViewGroup expansion header is the correct color. */
-.expansion-header {
-  background-color: #9DB66B !important;
-}
-
-/* Without setting the color, a mouse hover will default to white. */
-.expansion-header:hover {
-  background-color: #9DB66B !important;
-}
-
-/* Default styling for every regular geoLayerView expansion header title.  */
-.expansion-header-title {
-  flex-grow: 1000 !important;
-  color: white !important;
-  font-size: medium !important;
-}
-
-/* Added to the expansion header title if the "docPath" property is provided in
-the map configuration JSON file. */
-.expansion-header-title-doc {
-  padding-top: 10px !important;
-}
-
-/* Changes the amount of pixels surrounding the <hr> divider class that separates
-each geoLayerView in the legend. */
-.geoLayerView-divider {
-  margin-top: 8px;
-  margin-bottom: 4px;
-}
-
 /* Overrides the Angular Material padding for the Expansion Panel body. */
 .mat-expansion-panel-body {
   padding: 5px 10px !important;
@@ -229,6 +244,12 @@ the map configuration JSON file. Transitions from 'black' to whitesmoke.   */
   padding: 0px 5px;
 }
 
+/* Makes the container with the layer info visible. */
+.show-layer-info {
+  visibility: visible;
+  height: 100%;
+}
+
 /* Slider inside of the switch. */
 .slider {
   position: absolute;
@@ -267,12 +288,4 @@ the map configuration JSON file. Transitions from 'black' to whitesmoke.   */
 /* Rounded slider when toggled off. */
 .slider.round:before {
   border-radius: 50%;
-}
-
-/*  */
-.geoLayerView-status {
-  width: 10%;
-  color: red;
-  display: inline-block;
-  vertical-align: middle;
 }
