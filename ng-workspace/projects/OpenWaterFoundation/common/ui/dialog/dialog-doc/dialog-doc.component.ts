@@ -8,6 +8,8 @@ import { MatDialogRef,
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
 
+import { faXmark }          from '@fortawesome/free-solid-svg-icons';
+
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
 
 
@@ -58,8 +60,16 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
+  /** All used icons in the DialogDocComponent. */
+  faXmark = faXmark;
   
 
+  /**
+   * 
+   * @param commonService 
+   * @param dialogRef 
+   * @param matDialogData 
+   */
   constructor(public commonService: OwfCommonService,
               public dialogRef: MatDialogRef<DialogDocComponent>,
               @Inject(MAT_DIALOG_DATA) public matDialogData: any) {

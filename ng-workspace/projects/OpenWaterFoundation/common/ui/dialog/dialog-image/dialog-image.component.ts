@@ -6,6 +6,8 @@ import { Component,
 import { MatDialogRef,
           MAT_DIALOG_DATA }  from '@angular/material/dialog';
 
+import { faXmark }           from '@fortawesome/free-solid-svg-icons';
+
 import { WindowManager }     from '@OpenWaterFoundation/common/ui/window-manager';
 
 @Component({
@@ -29,6 +31,8 @@ export class DialogImageComponent implements OnInit {
    public mapConfigPath: string;
   /** The windowManager instance for managing the opening and closing of windows throughout the InfoMapper. */
   public windowManager: WindowManager = WindowManager.getInstance();
+
+  faXmark = faXmark;
 
 
   /**

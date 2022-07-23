@@ -26,7 +26,7 @@
             [matTooltipShowDelay]="750"
             matTooltipPosition="after"
             data-cy="geoLayerViewGroupInformation">
-              <i class="fa fa-info-circle fa-2x info-circle"></i>
+              <fa-icon class="fa-icon" [icon]=faInfoCircle size="2xl"></fa-icon>
               Information
             </button>
           </mat-menu>
@@ -70,7 +70,7 @@
             (click)="openDocDialog(geoLayerView.properties.docPath, geoLayerView.geoLayerViewId, geoLayerView.name)"
             [disabled]="geoLayerView.properties.docPath | menuDisable"
             attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-information">
-              <i class="fa fa-info-circle fa-2x info-circle"></i>
+              <fa-icon class="fa-icon" [icon]=faInfoCircle size="2xl"></fa-icon>
               Information
             </button>
             <!-- TODO: jpkeahey 2020.10.30 - Uncomment out to try disabling the data table button when
@@ -80,7 +80,7 @@
             (click)="openDataTableDialog(geoLayerView)"
             [hidden]="allFeatures[geoLayerView.geoLayerId] | menuDisable"
             attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-data-table">
-              <i class="fa fa-table fa-2x"></i>
+              <fa-icon class="fa-icon" [icon]=faTable size="2xl"></fa-icon>
               Data Table & Search
             </button>
 
@@ -88,7 +88,7 @@
             (click)="openImageGalleryDialogFromKebab(geoLayerView.geoLayerId, geoLayerView)"
             [hidden]="geoLayerView.properties.imageGalleryEventActionId | menuDisable"
             attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-image-gallery">
-              <i class="fa fa-picture-o fa-2x"></i>
+              <fa-icon class="fa-icon" [icon]=faImage size="2xl"></fa-icon>
               Image Gallery
             </button>
 
@@ -97,7 +97,7 @@
             [disabled]="allFeatures[geoLayerView.geoLayerId] | menuDisable"
             [hidden]="geoLayerView.properties.imageBounds | menuDisable : 'imageCheck'"
             attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-properties">
-              <i class="fa fa-list fa-2x"></i>
+              <fa-icon class="fa-icon" [icon]=faList size="2xl"></fa-icon>
               Properties
             </button>
             <!-- [disabled]="mainMap | menuDisable : 'selectedCheck' : geoLayerView.geoLayerId" -->
@@ -110,7 +110,7 @@
             matTooltipPosition="after"
             matTooltipShowDelay="750"
             attr.data-cy="{{geoLayerView.geoLayerId}}-kebab-clear-selection">
-              <i class="fa fa-dot-circle-o fa-2x"></i>
+              <fa-icon class="fa-icon" [icon]=faCircleDot size="2xl"></fa-icon>
               Clear Selection
             </button>
 

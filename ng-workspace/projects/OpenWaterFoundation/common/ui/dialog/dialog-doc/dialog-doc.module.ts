@@ -7,6 +7,8 @@ import { DragDropModule }     from '@angular/cdk/drag-drop';
 import { MatButtonModule }    from '@angular/material/button';
 import { MatDialogModule }    from '@angular/material/dialog';
 
+import { FontAwesomeModule }  from '@fortawesome/angular-fontawesome';
+
 import { DialogDocComponent } from './dialog-doc.component';
 
 @NgModule({
@@ -16,6 +18,7 @@ import { DialogDocComponent } from './dialog-doc.component';
   imports: [
     CommonModule,
     DragDropModule,
+    FontAwesomeModule,
     MatButtonModule,
     MatDialogModule,
     ShowdownModule.forRoot({

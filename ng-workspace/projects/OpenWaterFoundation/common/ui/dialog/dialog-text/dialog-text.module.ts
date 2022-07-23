@@ -7,6 +7,8 @@ import { MatDialogModule }     from '@angular/material/dialog';
 import { MatFormFieldModule }  from '@angular/material/form-field';
 import { MatTooltipModule }    from '@angular/material/tooltip';
 
+import { FontAwesomeModule }   from '@fortawesome/angular-fontawesome';
+
 import { DialogTextComponent } from './dialog-text.component';
 
 
@@ -18,6 +20,7 @@ import { DialogTextComponent } from './dialog-text.component';
   imports: [
     CommonModule,
     DragDropModule,
+    FontAwesomeModule,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,

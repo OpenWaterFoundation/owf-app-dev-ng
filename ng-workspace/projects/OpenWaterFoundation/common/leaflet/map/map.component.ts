@@ -28,6 +28,10 @@ import { forkJoin,
 import { take,
           takeUntil }              from 'rxjs/operators';
 
+import { faCaretLeft,
+          faInfoCircle,
+          faLayerGroup }           from '@fortawesome/free-solid-svg-icons';
+
 import { OwfCommonService }        from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
           MapLayerItem }           from '@OpenWaterFoundation/common/ui/layer-manager';
@@ -161,6 +165,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public showRefresh: boolean = true;
   /** The windowManager instance; To create, maintain, and remove multiple open dialogs. */
   public windowManager: WindowManager = WindowManager.getInstance();
+  /** All used icons in the MapComponent. */
+  faLayerGroup = faLayerGroup;
+  faInfoCircle = faInfoCircle;
+  faCaretLeft = faCaretLeft;
 
 
   /**

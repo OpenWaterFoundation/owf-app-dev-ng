@@ -9,8 +9,8 @@
         <!-- Main menu button (Hamburger Icon) -->
         <li>
           <a href="#home" role="tab" matTooltip="Main tools"
-              matTooltipShowDelay="750" data-cy="sidebar-home">
-            <i class="fa fa-map active"></i>
+          matTooltipShowDelay="750" data-cy="sidebar-home">
+            <fa-icon [icon]=faLayerGroup size="lg"></fa-icon>
           </a>
         </li>
         <!-- Autopan button (4 directional arrows) -->
@@ -26,7 +26,7 @@
         <li>
           <a href="#information" role="tab" matTooltip="Help / About" matTooltipShowDelay="750"
             matTooltipPosition="right" data-cy="sidebar-information">
-            <i class="fa fa-info-circle"></i>
+            <fa-icon [icon]=faInfoCircle size="lg"></fa-icon>
           </a>
         </li>
         <!-- <li>
@@ -50,14 +50,14 @@
               <button class="btn geoMap-info-circle"
                 (click)="openDocDialog(geoMapDocPath, mapConfig.geoMaps[0].geoMapId, geoMapName)"
                 matTooltip="Click to view map documentation" [matTooltipShowDelay]="750">
-                <i class="fa fa-info-circle fa-lg"></i>
+                  <fa-icon [icon]=faInfoCircle size="lg"></fa-icon>
               </button>
             </div>
           </div>
 
-          <span matTooltip="Close sidebar" [matTooltipShowDelay]="750" class="leaflet-sidebar-close"
-            data-cy="sidebar-close">
-            <i class="fa fa-caret-left"></i>
+          <span matTooltip="Close sidebar" [matTooltipShowDelay]="750"
+          class="leaflet-sidebar-close" data-cy="sidebar-close">
+            <fa-icon [icon]=faCaretLeft size="lg"></fa-icon>
           </span>
 
         </h1>
@@ -116,7 +116,9 @@
       <div class="leaflet-sidebar-pane" id="information">
         <h1 class="leaflet-sidebar-header">
           Help / About
-          <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
+          <span class="leaflet-sidebar-close">
+            <fa-icon [icon]=faCaretLeft size="lg"></fa-icon>
+          </span>
         </h1>
         <div id="information-tab">
 

@@ -6,6 +6,8 @@ import { MatDialogRef,
 
 import * as d3              from 'd3';
 
+import { faXmark }          from '@fortawesome/free-solid-svg-icons';
+
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
@@ -28,6 +30,8 @@ export class DialogD3Component implements OnInit {
   private svg: any;
   private windowID: string;
   public windowManager: WindowManager = WindowManager.getInstance();
+  /** All used icons in the DialogD3Component. */
+  faXmark = faXmark;
 
 
   constructor(public dialogRef: MatDialogRef<DialogD3Component>,

@@ -11,6 +11,8 @@ import { Subscription }           from 'rxjs';
 
 import { DialogTSTableComponent } from '../dialog-tstable/dialog-tstable.component';
 
+import { faXmark }                from '@fortawesome/free-solid-svg-icons';
+
 import { TS }                     from '@OpenWaterFoundation/common/ts';
 import { OwfCommonService }       from '@OpenWaterFoundation/common/services';
 import * as IM                    from '@OpenWaterFoundation/common/services';
@@ -72,6 +74,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
+
+  faXmark = faXmark;
 
 
   /**
