@@ -1,9 +1,11 @@
 import { Component,
           Input, 
-          OnInit}           from '@angular/core';
+          OnInit}                from '@angular/core';
 
-import * as IM              from '../types';
-import { StaticStructures } from '../static-structures';
+import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+
+import * as IM                   from '../types';
+import { StaticStructures }      from '../static-structures';
 
 
 @Component({
@@ -20,7 +22,8 @@ export class ErrorComponent implements OnInit {
   @Input('errorTypes') errorTypes: string[];
   /** The offending widget object. */
   @Input('widget') widget: IM.DashboardWidget;
-
+  /** All used icons in the ErrorComponent. */
+  faTriangleExclamation = faTriangleExclamation;
 
   /**
   * @constructor The Error widget component constructor.

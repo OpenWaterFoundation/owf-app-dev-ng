@@ -14,6 +14,13 @@ import { take,
           takeUntil }                 from 'rxjs/operators';
 import { Subject }                    from 'rxjs';
 
+import { faCircleDot,
+          faImage }                   from '@fortawesome/free-regular-svg-icons';
+
+import { faInfoCircle,
+          faList,
+          faTable }                   from '@fortawesome/free-solid-svg-icons';
+
 import { OwfCommonService }           from '@OpenWaterFoundation/common/services';
 import * as IM                        from '@OpenWaterFoundation/common/services';
 import { DialogDataTableComponent,
@@ -81,6 +88,12 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
   /** The windowManager instance; To create, maintain, and remove multiple open dialogs. */
   windowManager: WindowManager = WindowManager.getInstance();
+  /** All used icons in the LegendLayerGroupComponent. */
+  faCircleDot = faCircleDot;
+  faImage = faImage;
+  faInfoCircle = faInfoCircle;
+  faList = faList;
+  faTable = faTable;
 
 
   /**

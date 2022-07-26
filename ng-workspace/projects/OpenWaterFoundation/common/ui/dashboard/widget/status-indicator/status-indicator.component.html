@@ -13,19 +13,19 @@
       <div class="icon-and-data-container">
   
         <div *ngIf="passingIndicator" class="indicator-icon">
-          <i class="fa fa-check fa-5x" aria-hidden="true"></i>
+          <fa-icon class="fa-check" [icon]="faCheck" size="5x"></fa-icon>
         </div>
   
         <div *ngIf="warningIndicator" class="indicator-icon">
-          <i class="fa fa-exclamation fa-5x" aria-hidden="true"></i>
+          <fa-icon class="fa-exclamation" [icon]="faExclamation" size="5x"></fa-icon>
         </div>
   
         <div *ngIf="failureIndicator" class="indicator-icon">
-          <i class="fa fa-times fa-5x" aria-hidden="true"></i>
+          <fa-icon class="fa-x-mark" [icon]="faXmark" size="5x"></fa-icon>
         </div>
 
         <div *ngIf="unknownIndicator" class="indicator-icon">
-          <i class="fa fa-question fa-5x" aria-hidden="true"></i>
+          <fa-icon class="fa-question" [icon]="faQuestion" size="5x"></fa-icon>
         </div>
     
         <p class="indicator-data"
@@ -39,11 +39,11 @@
       <div class="change-icon-and-info-container">
 
         <div *ngIf="changeDec" class="change-icon">
-          <i class="fa fa-caret-down fa-2x change-icon-neutral" aria-hidden="true"></i>
+          <fa-icon class="change-icon-neutral" [icon]="faCaretDown" size="xl"></fa-icon>
         </div>
   
         <div *ngIf="changeInc" class="change-icon">
-          <i class="fa fa-caret-up fa-2x change-icon-neutral" aria-hidden="true"></i>
+          <fa-icon class="change-icon-neutral" [icon]="faCaretUp" size="xl"></fa-icon>
         </div>
   
         <p class="change-info"

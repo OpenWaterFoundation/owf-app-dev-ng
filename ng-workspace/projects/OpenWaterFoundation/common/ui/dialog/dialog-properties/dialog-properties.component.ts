@@ -9,6 +9,8 @@ import { MatDialogRef,
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import { DialogService }    from '../dialog.service';
 
+import { faXmark }          from '@fortawesome/free-solid-svg-icons';
+
 import { MapLayerManager,
           MapLayerItem }    from '@OpenWaterFoundation/common/ui/layer-manager';
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
@@ -56,6 +58,8 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
   public windowID: string;
   /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
+  /** All used icons in the DialogPropertiesComponent. */
+  faXmark = faXmark;
   
 
   /**

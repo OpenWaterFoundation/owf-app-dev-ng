@@ -18,26 +18,26 @@ export class OwfCommonService {
 
   /** Object that holds the application configuration contents from the `app-config.json`
    * file. */
-  public appConfig: IM.AppConfig;
+  appConfig: IM.AppConfig;
   /** The hard-coded string of the name of the application configuration file. It
    * is readonly, because it must be named app-config.json by the user. */
-  public readonly appConfigFile: string = 'app-config.json';
+  readonly appConfigFile: string = 'app-config.json';
   /** The hard-coded name of a deployed application configuration file. Similar to
    * app-config.json, it must be named app-config-minimal.json by the user in the
    * assets/app-default folder. */
-  public readonly appMinFile: string = 'app-config-minimal.json';
+  readonly appMinFile: string = 'app-config-minimal.json';
   /** A string representing the path to the correct assets directory for the InfoMapper.
    * The InfoMapper assumes a user will supply their own user-defined config files
    * under assets/app. If not, this string will be changed to 'assets/app-default'
    * and the default InfoMapper set up will be used instead. */
-  public appPath: string = 'assets/app/';
+  appPath: string = 'assets/app/';
   /** Object containing a geoLayerId as the key and a boolean representing whether
    * the given geoLayer has been given a bad path as the value. */
-  public badPath = {};
+  badPath = {};
    /** Object containing the contents from the graph template configuration file. */
-  public chartTemplateObject: Object;
+  chartTemplateObject: Object;
   /** Absolute path to the dashboard configuration file. Used for relative paths. */
-  public dashboardConfigPath: string;
+  dashboardConfigPath: string;
   /**
    * 
    */
@@ -49,54 +49,66 @@ export class OwfCommonService {
   /** An array of DataUnit objects that each contain the precision for different
    * types of data, from degrees to mile per hour. Read from the application config
    * file top level property dataUnitsPath. */
-  public dataUnits: any[];
+  dataUnits: any[];
   /** The hard-coded string of the path to the default icon path that will be used
    * for the website if none is given. */
-  public readonly defaultFaviconPath = 'assets/app-default/img/OWF-Logo-Favicon-32x32.ico';
+  readonly defaultFaviconPath = 'assets/app-default/img/OWF-Logo-Favicon-32x32.ico';
   /** The absolute path to a gapminder configuration file and used for relative paths. */
-  public gapminderConfigPath = '';
+  gapminderConfigPath = '';
   /** NOTE: Not currently in use. */
-  public highlighted = new BehaviorSubject(false);
+  highlighted = new BehaviorSubject(false);
   /** NOTE: Not currently in use. */
-  public highlightedData = this.highlighted.asObservable();
+  highlightedData = this.highlighted.asObservable();
+  /** Constant for the Font Awesome house with chimney SVG path. */
+  private readonly constHouseChimneySVGPath = 'M511.8 287.6L512.5 447.7C512.5 ' +
+  '450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 ' +
+  '512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 ' +
+  '512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 ' +
+  '366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 ' +
+  '123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 ' +
+  '359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 ' +
+  '3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 ' +
+  '2.004 309.5 7.014L416 100.7V64C416 46.33 430.3 32 448 32H480C497.7 32 512 46.33 ' +
+  '512 64V185L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5C575.8 273.5 '+
+  '560.8 287.6 543.8 287.6L511.8 287.6z';
   /** The boolean representing if a favicon path has been provided by the user. */
-  public FAVICON_SET = false;
+  FAVICON_SET = false;
   /** The path to the user-provided favicon .ico file. */
-  public faviconPath: string;
+  faviconPath: string;
   /** A string representing the path leading up to the geoJson file that was read in. */
-  public geoJSONBasePath: string = '';
+  geoJSONBasePath: string = '';
   /** The layer's geoMapId property from the top level map configuration file. */
-  public geoMapID: string;
+  geoMapID: string;
   /** The string representing a user's google tracking ID, set in the upper level
    * application config file. */
-  public googleAnalyticsTrackingId = '';
+  googleAnalyticsTrackingId = '';
   /** Boolean showing whether the google tracking ID has been set for the InfoMapper. */
-  public googleAnalyticsTrackingIdSet = false;
+  googleAnalyticsTrackingIdSet = false;
   /** The file path as a string obtained from a graph template file that shows where
    * the graph data file can be found. */
-  public graphFilePath: string;
+  graphFilePath: string;
   /** Contains all information before the first tilde (~) in the TSID from the graph
    * template file. */
-  public graphTSID: string;
+  graphTSID: string;
   /** Boolean showing whether the default home content page has been initialized. */
-  public homeInit = true;
+  homeInit = true;
   /** The string representing the current selected markdown path's full path starting
    * from the @var appPath */
-  public fullMarkdownPath: string;
+  fullMarkdownPath: string;
   /** Contains any layer geoLayerId's of a layer that has run into a critical error. */
-  public layerError = {};
+  layerError = {};
   /** Array to hold maps that have already been created by the user so that they
    * don't have to be created from scratch every time. */
-  public leafletMapArray: any[] = [];
+  leafletMapArray: any[] = [];
   /** The object that holds the map configuration contents from the map configuration
    * file for a Leaflet map. */
-  public mapConfig: any;
+  mapConfig: any;
   /** Array of geoLayerId's in the correct geoLayerView order, retrieved from the
    * geoMap. The order in which each layer should be displayed in on the map and
    * side bar legend. */
-  public mapConfigLayerOrder: string[] = [];
+  mapConfigLayerOrder: string[] = [];
   /** A string representing the path to the map configuration file. */
-  public mapConfigPath: string = '';
+  mapConfigPath: string = '';
   /**
    * 
    */
@@ -107,24 +119,32 @@ export class OwfCommonService {
   readonly mapConfig$ = this._mapConfig.asObservable();
   private mapConfigTest = {};
   /** Object containing the original style for a given feature. */
-  public originalFeatureStyle: any;
+  originalFeatureStyle: any;
   /** Object containing a layer's geoLayerId as the key, and a boolean showing whether
    * the URL for the layer is not currently working or does not exist. */
-  public serverUnavailable: {} = {};
+  serverUnavailable: {} = {};
 
   
   /**
    * @constructor OWFCommonService.
    * @param http The reference to the HttpClient class for HTTP requests.
    */
-  constructor(public http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
+
+  /**
+   * Returns the constant SVG path string for drawing the Font Awesome 6 house with
+   * a chimney icon.
+   */
+  get houseChimneySVGPath(): string {
+    return this.constHouseChimneySVGPath;
+  }
 
   /**
    * 
    * @param geoLayerId The layer's geoLayerId to be added to the layerError array
    */
-   public addLayerError(geoLayerId: string): void {
+   addLayerError(geoLayerId: string): void {
     this.layerError[geoLayerId] = true;
   }
 
@@ -136,7 +156,7 @@ export class OwfCommonService {
    * @param arg An optional array for arguments needed to build the path, e.g. a
    * filename or geoLayerId.
    */
-  public buildPath(pathType: string, arg?: any[]): string {
+  buildPath(pathType: string, arg?: any[]): string {
     // If a URL is given as the path that needs to be built, just return it so the
     // http GET request can be performed.
     if (arg) {
@@ -196,7 +216,7 @@ export class OwfCommonService {
    * @param path The path represented as a string, for a URL or local path.
    * @param formatType The string describing how long the formatted string can be.
    */
-  public condensePath(path: string, formatType?: string): string {
+  condensePath(path: string, formatType?: string): string {
     if (path.startsWith('https') || path.startsWith('http') || path.startsWith('www')) {
       switch (formatType) {
         case 'table':
@@ -219,7 +239,7 @@ export class OwfCommonService {
     }
   }
 
-  public featureHighlighted(highlighted: boolean): any {
+  featureHighlighted(highlighted: boolean): any {
     return this.highlighted.next(highlighted);
   }
 
@@ -230,7 +250,7 @@ export class OwfCommonService {
    * @param pathType A string representing the type of path being formatted, so
    * the correct handling can be used.
    */
-  public formatPath(path: string, pathType: string): string {
+  formatPath(path: string, pathType: string): string {
 
     switch (pathType) {
       case IM.Path.cP:
@@ -289,7 +309,7 @@ export class OwfCommonService {
    * @param featureProperties The object containing all features and values for a
    * feature; for replacing ${property} notation.
    */
-  public formatSaveFileName(saveFileName: string, saveFileType: IM.SaveFileType,
+  formatSaveFileName(saveFileName: string, saveFileType: IM.SaveFileType,
     featureProperties?: any): string {
 
     var warning = 'Undefined detected in the save file name. Confirm "saveFile" ' +
@@ -344,7 +364,7 @@ export class OwfCommonService {
    * or the default 'assets/app-default/' for the upper level assets path if none
    * is given.
    */
-  public getAppPath(): string {
+  getAppPath(): string {
     return this.appPath;
   }
 
@@ -353,7 +373,7 @@ export class OwfCommonService {
    * exists and is set to true or false. Show or hide the background layers depending
    * which one is present, and false by default (hiding the layers).
    */
-  public getBackgroundExpanded(): boolean {
+  getBackgroundExpanded(): boolean {
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
         if (geoLayerViewGroup.properties.isBackground === 'true') {
@@ -370,7 +390,7 @@ export class OwfCommonService {
   /**
    * @returns An array of all background geoLayerViewGroup objects.
    */
-  public getBackgroundGeoLayerViewGroups(): any[] {
+  getBackgroundGeoLayerViewGroups(): any[] {
     let allBackgroundGeoLayerViewGroups = [];
 
     for (let geoMap of this.mapConfig.geoMaps) {
@@ -387,7 +407,7 @@ export class OwfCommonService {
    * @returns The background layer geoLayerView that matches the provided @var id.
    * @param id The geoLayerId that needs to be matched
    */
-  public getBkgdGeoLayerViewFromId(id: string) {
+  getBkgdGeoLayerViewFromId(id: string) {
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
         if (geoLayerViewGroup.properties.isBackground === 'true') {
@@ -404,7 +424,7 @@ export class OwfCommonService {
   /**
    * @returns An array of geoLayers containing each background layer as an object
    */
-  public getBackgroundLayers(): any[] {
+  getBackgroundLayers(): any[] {
     let backgroundLayers: any[] = [];
     this.mapConfig.geoMaps[0].geoLayers.forEach((geoLayer: any) => {
       if (geoLayer.properties.isBackground === 'true')
@@ -416,7 +436,7 @@ export class OwfCommonService {
   /**
    * @returns true no matter what for some reason...
    */
-  public getBackgroundLayersMapControl(): boolean {
+  getBackgroundLayersMapControl(): boolean {
     return true;
   }
 
@@ -426,7 +446,7 @@ export class OwfCommonService {
    * @param geoLayerId The geoLayerId used as the key in the @var badPath to find
    * the correct layer's path.
    */
-  public getBadPath(geoLayerId: string): string {
+  getBadPath(geoLayerId: string): string {
     var splitPath = this.badPath[geoLayerId][1].split('/');
     for (let i in splitPath) {
       if (splitPath[i] === '..') {
@@ -445,7 +465,7 @@ export class OwfCommonService {
   /**
    * @returns the chart template JSON file read earlier as an object
    */
-  public getChartTemplateObject(): Object {
+  getChartTemplateObject(): Object {
     return this.chartTemplateObject;
   }
 
@@ -456,7 +476,7 @@ export class OwfCommonService {
    * geoLayerId.
    * @param id The geoLayerId to compare with.
    */
-  public getContentPathFromId(id: string) {
+  getContentPathFromId(id: string) {
     for (let i = 0; i < this.appConfig.mainMenu.length; i++) {
       if (this.appConfig.mainMenu[i].menus) {
         for (let menu = 0; menu < this.appConfig.mainMenu[i].menus.length; menu++) {
@@ -481,14 +501,14 @@ export class OwfCommonService {
     }
   }
 
-  public getDashboardConfigPath(): string { return this.dashboardConfigPath; }
+  getDashboardConfigPath(): string { return this.dashboardConfigPath; }
 
   /**
    * 
    * @param id 
    * @returns 
    */
-   public getDashboardConfigPathFromId(id: string): string {
+   getDashboardConfigPathFromId(id: string): string {
     var dashboardPathExt: string;
     var splitDashboardPath: string[];
     var dashboardPath = '';
@@ -521,14 +541,14 @@ export class OwfCommonService {
   /**
    * @returns The array of DataUnits from the DATAUNIT file.
    */
-  public getDataUnitArray(): any[] { return this.dataUnits; }
+  getDataUnitArray(): any[] { return this.dataUnits; }
 
   /**
    * Goes through each geoMap, geoLayerViewGroup, and geoLayerView in a geoMapProject
    * and returns the FIRST occurrence of a background layer that has the selectedInitial
    * property set to true, effectively getting the default background layer.
    */
-  public getDefaultBackgroundLayer(): string {
+  getDefaultBackgroundLayer(): string {
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
         if (geoLayerViewGroup.properties.isBackground &&
@@ -549,7 +569,7 @@ export class OwfCommonService {
    * @returns An array of the three provided ExtentInitial numbers to be used for
    * initial map creation.
    */
-  public getExtentInitial(): number[] {
+  getExtentInitial(): number[] {
     // Make sure to do some error handling for incorrect input.
     if (!this.mapConfig.geoMaps[0].properties.extentInitial) {
       console.error("Map Configuration property '" +
@@ -591,7 +611,7 @@ export class OwfCommonService {
    * is being created.
    * @returns The path (minus the assets/app/) to the map configuration file.
    */
-  public getFullMapConfigPath(id: string, standalone?: string, configPath?: string): string {
+  getFullMapConfigPath(id: string, standalone?: string, configPath?: string): string {
     
     // Create a standalone map if standalone is defined.
     if (standalone === 'app') {
@@ -669,13 +689,13 @@ export class OwfCommonService {
   /**
    * @returns The current selected markdown path's full path starting from the @var appPath.
    */
-  public getFullMarkdownPath(): string { return this.fullMarkdownPath; }
+  getFullMarkdownPath(): string { return this.fullMarkdownPath; }
 
   /**
    * @returns The path to the Gapminder config path. Is an empty string if no path
    * was previously set.
    */
-  public getGapminderConfigPath(): string { return this.gapminderConfigPath; }
+  getGapminderConfigPath(): string { return this.gapminderConfigPath; }
 
   /**
    * Goes through each geoLayer in the GeoMapProject and if one matches with the
@@ -683,7 +703,7 @@ export class OwfCommonService {
    * @param id The geoLayerId of the layerView to be compared with the geoLayerId
    * of the geoLayer.
    */
-  public getGeometryType(id: string): string {
+  getGeometryType(id: string): string {
     for (let geoLayer of this.mapConfig.geoMaps[0].geoLayers) {
       if (geoLayer.geoLayerId === id) {
         return geoLayer.geometryType;
@@ -697,13 +717,13 @@ export class OwfCommonService {
    * When prepended with the @var appPath, shows the full path the application
    * needs to find any GeoJson file.
    */
-  public getGeoJSONBasePath(): string { return this.geoJSONBasePath; }
+  getGeoJSONBasePath(): string { return this.geoJSONBasePath; }
 
   /**
    * @returns a geoLayer object in the geoMapProject whose geoLayerId matches the @param id
    * @param id The geoLayerId to be matched with
    */
-  public getGeoLayerFromId(id: string): any {
+  getGeoLayerFromId(id: string): any {
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayer of geoMap.geoLayers) {
         if (geoLayer.geoLayerId === id) {
@@ -717,7 +737,7 @@ export class OwfCommonService {
   /**
    * @returns A reversed array of all geoLayer objects in the geoMapProject.
    */
-  public getGeoLayers(): any[] {
+  getGeoLayers(): any[] {
     let geoLayers: any[] = [];
     this.mapConfig.geoMaps.forEach((geoMap: any) => {
       geoMap.geoLayers.forEach((geoLayer: any) => {
@@ -735,7 +755,7 @@ export class OwfCommonService {
    * a map layer to the front of the map. This will ultimately put the layers in
    * the correct order with the first group on top, and subsequent groups below.
    */
-  public getGeoLayerViewGroupIdOrder(): string[] {
+  getGeoLayerViewGroupIdOrder(): string[] {
     var allGeoLayerViewGroups: string[] = [];
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
@@ -753,7 +773,7 @@ export class OwfCommonService {
    * matches the given @param geoLayerId.
    * @param geoLayerId The geoLayerId to match with.
    */
-  public getGeoLayerViewEventHandler(geoLayerId: string): IM.EventHandler[] {
+  getGeoLayerViewEventHandler(geoLayerId: string): IM.EventHandler[] {
 
     var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
 
@@ -774,7 +794,7 @@ export class OwfCommonService {
    * Return the geoLayerView that matches the given geoLayerId.
    * @param id The given geoLayerId to match with.
    */
-   public getGeoLayerView(id: string) {
+   getGeoLayerView(id: string) {
 
     for (let geoMap of this.mapConfig.geoMaps) {
       for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
@@ -791,19 +811,19 @@ export class OwfCommonService {
   /**
    * @returns The FIRST geoMap docPath property.
    */
-  public getGeoMapDocPath(): string {
+  getGeoMapDocPath(): string {
     return this.getMapConfig().geoMaps[0].properties.docPath;
   }
 
   /**
    * @returns The geoMapId property from the FIRST geoMap in the map configuration.
    */
-  public getGeoMapID(): string { return this.geoMapID; }
+  getGeoMapID(): string { return this.geoMapID; }
 
   /**
    * @returns The name attribute to the FIRST geoMap in the geoMapProject.
    */
-  public getGeoMapName(): string {
+  getGeoMapName(): string {
     if (this.mapConfig) {
       if (this.mapConfig.geoMaps[0].name.length < 30) {
         return this.mapConfig.geoMaps[0].name;
@@ -816,12 +836,12 @@ export class OwfCommonService {
    * @returns The file path as a string obtained from a graph template file that
    * shows where the graph data file can be found.
    */
-  public getGraphFilePath(): string { return this.graphFilePath; }
+  getGraphFilePath(): string { return this.graphFilePath; }
 
   /**
    * @returns The homePage property in the app-config file without the first '/' slash.
    */
-  public getHomePage(): string {
+  getHomePage(): string {
     if (this.appConfig.homePage) {
       if (this.appConfig.homePage[0] === '/')
         return this.appConfig.homePage.substring(1);
@@ -837,7 +857,7 @@ export class OwfCommonService {
    * @param path The path or URL to the file needed to be read.
    * @returns The JSON retrieved from the host as an Observable.
    */
-  public getJSONData(path: string, type?: string, id?: string): Observable<any> {
+  getJSONData(path: string, type?: string, id?: string): Observable<any> {
     // This creates an options object with the optional headers property to add
     // headers to the request. This could solve some CORS issues, but is not completely
     // tested yet.
@@ -855,21 +875,21 @@ export class OwfCommonService {
   /**
    * @returns An array of the geoLayerViewGroups from the FIRST geoMap.
    */
-  public getGeoLayerViewGroups(): any[] {
+  getGeoLayerViewGroups(): any[] {
     return this.mapConfig.geoMaps[0].geoLayerViewGroups;
   }
 
   /**
    * @returns The array of layer marker data, such as size, color, icon, etc.
    */
-  public getLayerMarkerData(): void { return this.mapConfig.layerViewGroups; }
+  getLayerMarkerData(): void { return this.mapConfig.layerViewGroups; }
 
   /**
    * NOTE: This function is not currently being used, as it's being used by functions
    * in map.component.ts that have not been implemented yet.
    * @param id The given geoLayerId to match with
    */
-  public getLayerFromId(id: string) {
+  getLayerFromId(id: string) {
     let dataLayers: any = this.mapConfig.dataLayers;
     let layer: any = null;
     dataLayers.forEach((l: any) => {
@@ -884,23 +904,23 @@ export class OwfCommonService {
    * @returns The layerError object, which contains any layer geoLayerId's of a
    * layer that has run into a critical error.
    */
-  public getLayerError(): any { return this.layerError; }
+  getLayerError(): any { return this.layerError; }
 
   /**
    * @returns The entire @var mapConfig object obtained from the map configuration
    * file. Essentially the geoMapProject.
    */
-  public getMapConfig() { return this.mapConfig; }
+  getMapConfig() { return this.mapConfig; }
 
   /**
    * @returns The relative path to the map configuration file for the application
    */
-  public getMapConfigPath(): string { return this.mapConfigPath; }
+  getMapConfigPath(): string { return this.mapConfigPath; }
 
   /**
    * @returns the style object containing the original properties for a given feature
    */
-  public getOriginalFeatureStyle(): any { return this.originalFeatureStyle; }
+  getOriginalFeatureStyle(): any { return this.originalFeatureStyle; }
 
   /**
    * Read data asynchronously from a file or URL and return it as plain text.
@@ -909,7 +929,7 @@ export class OwfCommonService {
    * handling and messaging.
    * @param id Optional app-config id to help determine where exactly an error occurred.
    */
-  public getPlainText(path: string, type?: string, id?: string): Observable<any> {
+  getPlainText(path: string, type?: string, id?: string): Observable<any> {
     // This next line is important, as it tells our response that it needs to return
     // plain text, not a default JSON object.
     const obj: Object = { responseType: 'text' as 'text' };
@@ -923,14 +943,14 @@ export class OwfCommonService {
   /**
    * @returns The upper level geoMapProject properties object.
    */
-  public getProperties(): {} { return this.mapConfig.properties; }
+  getProperties(): {} { return this.mapConfig.properties; }
 
   /**
    * Returns the geoLayerView's refreshInterval property, converted to a number
    * if it can be, and 0 if not.
    * @param geoLayerId The geoLayerId to match with.
    */
-  public getRefreshInterval(geoLayerId: string): number {
+  getRefreshInterval(geoLayerId: string): number {
     // Obtain the refreshInterval string and convert to upper case.
     var rawInterval: string = this.getGeoLayerView(geoLayerId).properties.refreshInterval.toUpperCase();
     var splitInterval = rawInterval.split(' ');
@@ -971,7 +991,7 @@ export class OwfCommonService {
    * @param refreshInterval 
    * @returns The offset in milliseconds, and 0 if none is given.
    */
-  public getRefreshOffset(geoLayerId: string, refreshInterval: number): number {
+  getRefreshOffset(geoLayerId: string, refreshInterval: number): number {
     var rawOffset = this.getGeoLayerView(geoLayerId).properties.refreshOffset;
     var refreshOffset = 0;
 
@@ -1019,7 +1039,7 @@ export class OwfCommonService {
    * with @param id.
    * @param id The geoLayerId to match with.
    */
-  public getSymbolDataFromID(id: string): any {
+  getSymbolDataFromID(id: string): any {
     var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
     var geoLayerViewRet: any;
 
@@ -1112,7 +1132,7 @@ export class OwfCommonService {
    * has been given a bad path.
    * @param geoLayerId The geoLayerId from the layer to match to.
    */
-  public isBadPath(geoLayerId: string): boolean { 
+  isBadPath(geoLayerId: string): boolean { 
     if (this.badPath) {
       return this.badPath[geoLayerId];
     } else return false;
@@ -1123,7 +1143,7 @@ export class OwfCommonService {
    * is unavailable to be shown on the map.
    * @param geoLayerId The geoLayerId from the layer to match to.
    */
-  public isServerUnavailable(geoLayerId: string): boolean {
+  isServerUnavailable(geoLayerId: string): boolean {
     if (this.serverUnavailable[geoLayerId] === true) {
       // this.addLayerError(geoLayerId);
       return this.serverUnavailable[geoLayerId];
@@ -1134,7 +1154,7 @@ export class OwfCommonService {
    * @returns true if the given property to be displayed in the Mat Table cell is a URL.
    * @param property The Mat Table cell property to check
    */
-  public isURL(property: any): boolean {
+  isURL(property: any): boolean {
     if (typeof property === 'string') {
       if (property.startsWith('http://') || property.startsWith('https://') ||
       property.startsWith('www.')) {
@@ -1158,7 +1178,7 @@ export class OwfCommonService {
    * (foundProps): An array of all found properties in the line in the order they were found,
    * and (line): The line with all ${property} notation properly converted.
    */
-  public obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any,
+  obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any,
   labelProp?: boolean, countFoundProps?: boolean): any {
 
     var allFoundProps: string[] = [];
@@ -1311,7 +1331,7 @@ export class OwfCommonService {
    * @returns An object with at least the TSIDLocation and datastore, and the path
    * to the datastore file if given.
    */
-   public parseTSID(fullTSID: any): IM.TSID {
+   parseTSID(fullTSID: any): IM.TSID {
 
     // Depending on whether it's a full TSID used in the graph template file, determine
     // what the file path of the StateMod file is. (TSIDLocation~/path/to/filename.stm OR
@@ -1365,7 +1385,7 @@ export class OwfCommonService {
   /**
    * Resets the @var mapConfigLayerOrder when a new map is created
    */
-  public resetMapConfigLayerOrder(): void { this.mapConfigLayerOrder = []; }
+  resetMapConfigLayerOrder(): void { this.mapConfigLayerOrder = []; }
 
   /**
    * Run the appropriate PropFunction function that needs to be called on the ${} property value
@@ -1374,7 +1394,7 @@ export class OwfCommonService {
    * function needs to be called.
    * @param args The optional arguments found in the parens of the PropFunction as a string
    */
-  public runPropFunction(featureValue: string, propFunction: IM.PropFunction, args?: string): string {
+  runPropFunction(featureValue: string, propFunction: IM.PropFunction, args?: string): string {
     switch (propFunction) {
       case IM.PropFunction.toMixedCase:
         var featureArray = featureValue.toLowerCase().split(' ');
@@ -1414,7 +1434,7 @@ export class OwfCommonService {
    * `![Waldo](full/path/to/markdown/file/waldo.png)`.
    * @param doc The documentation string retrieved from the markdown file.
    */
-  public sanitizeDoc(doc: string, pathType: IM.Path): string {
+  sanitizeDoc(doc: string, pathType: IM.Path): string {
     // Needed for a smaller scope when replacing the image links.
     var _this = this;
     // If anywhere in the documentation there exists  ![any amount of text](
@@ -1455,20 +1475,20 @@ export class OwfCommonService {
    * @param appConfig The entire application configuration read in from the app-config
    * .file as an object
    */
-  public setAppConfig(appConfig: IM.AppConfig): void { this.appConfig = appConfig; }
+  setAppConfig(appConfig: IM.AppConfig): void { this.appConfig = appConfig; }
 
   /**
    * No configuration file was detected from the user, so the 'assets/app-default/'
    * path is set.
    * @param path The default assets path to set the @var appPath to
    */
-  public setAppPath(path: string): void { this.appPath = path; }
+  setAppPath(path: string): void { this.appPath = path; }
 
   /**
    *cs, or possibly creates the badPath object with the geo
    * @param geoLayerId The geoLayerId from the geoLayer where the bad path was set
    */
-  public setBadPath(path: string, geoLayerId: string): void {
+  setBadPath(path: string, geoLayerId: string): void {
     this.badPath[geoLayerId] = [true, path];
   }
 
@@ -1478,7 +1498,7 @@ export class OwfCommonService {
    * @param graphTemplateObject The graph template object obtained from the graph
    * template file.
    */
-  public setChartTemplateObject(graphTemplateObject: Object): void {
+  setChartTemplateObject(graphTemplateObject: Object): void {
     this.chartTemplateObject = graphTemplateObject;
   }
 
@@ -1486,20 +1506,20 @@ export class OwfCommonService {
    * Sets the @var dataUnits array to the passed in dataUnits from the nav-bar
    * @param dataUnits The array of DataUnits to set the service @var dataUnits to
    */
-  public setDataUnitsArr(dataUnits: any[]): void { this.dataUnits = dataUnits; }
+  setDataUnitsArr(dataUnits: any[]): void { this.dataUnits = dataUnits; }
 
   /**
    * 
    * @param path 
    */
-  public setFullMarkdownPath(path: string) { this.fullMarkdownPath = path; }
+  setFullMarkdownPath(path: string) { this.fullMarkdownPath = path; }
 
   /**
    * Sets @var gapminderConfigPath to the supplied absolute path. Used for using
    * relative paths from the Gapminder configuration file path.
    * @param configPath The absolute path to the Gapminder configuration file.
    */
-  public setGapminderConfigPath(configPath: string): void {
+  setGapminderConfigPath(configPath: string): void {
     this.gapminderConfigPath = configPath.substring(0, configPath.lastIndexOf('/') + 1);
   }
 
@@ -1507,7 +1527,7 @@ export class OwfCommonService {
    * Sets the @var graphFilePath to the given path
    * @param path The path given in the graph template file TSID
    */
-  public setGraphFilePath(path: string): void {
+  setGraphFilePath(path: string): void {
     this.graphFilePath = path;
   }
 
@@ -1528,7 +1548,7 @@ export class OwfCommonService {
   /**
    * Sets the @var geoMapID to the layer's geoMapId property.
    */
-  public setGeoMapID(geoMapId: string): void { 
+  setGeoMapID(geoMapId: string): void { 
     this.geoMapID = geoMapId;
   }
 
@@ -1536,11 +1556,11 @@ export class OwfCommonService {
    * Sets the @var mapConfig to the object obtained from the map configuration file
    * @param mapConfig The entire map configuration object to set to
    */
-  public setMapConfig(mapConfig: any): void {
+  setMapConfig(mapConfig: any): void {
     this.mapConfig = mapConfig;
   }
 
-  public setMapConfigTest(mapConfig: any): void {
+  setMapConfigTest(mapConfig: any): void {
     this._mapConfig.next(Object.assign(this.mapConfigTest, mapConfig))
   }
 
@@ -1549,7 +1569,7 @@ export class OwfCommonService {
    * geoLayerId in the order they are given, so the InfoMapper knows the order in
    * which they should be draw on the Leaflet map.
    */
-  public getMapConfigLayerOrder(): string[] {
+  getMapConfigLayerOrder(): string[] {
     var layerArray: string[] = [];
 
     for (let geoMap of this.mapConfig.geoMaps) {
@@ -1573,7 +1593,7 @@ export class OwfCommonService {
    * application.
    * @param path The path to set to.
    */
-  public setMapConfigPath(path: string): void { this.mapConfigPath = path; }
+  setMapConfigPath(path: string): void { this.mapConfigPath = path; }
 
   /**
    * 
@@ -1593,7 +1613,7 @@ export class OwfCommonService {
    * Sets the @var originalFeatureStyle to the style object from the feature passed in.
    * @param style The style object of the feature to be saved
    */
-  public setOriginalFeatureStyle(style: any): void { this.originalFeatureStyle = style; }
+  setOriginalFeatureStyle(style: any): void { this.originalFeatureStyle = style; }
 
   /**
    * Sets the amount of time in milliseconds for the rxjs timer function to wait before
@@ -1639,7 +1659,7 @@ export class OwfCommonService {
    * Sets the @var serverUnavailable with a key of @var geoLayerId to true.
    * @param geoLayerId The geoLayerId to compare to while creating the side bar
    */
-  public setServerUnavailable(geoLayerId: string): void {
+  setServerUnavailable(geoLayerId: string): void {
     this.serverUnavailable[geoLayerId] = true;
   }
 
@@ -1647,6 +1667,6 @@ export class OwfCommonService {
    * Sets the @var graphTSID to the given tsid.
    * @param tsid The tsid to set to
    */
-  public setTSIDLocation(tsid: string): void { this.graphTSID = tsid; }
+  setTSIDLocation(tsid: string): void { this.graphTSID = tsid; }
 
 }

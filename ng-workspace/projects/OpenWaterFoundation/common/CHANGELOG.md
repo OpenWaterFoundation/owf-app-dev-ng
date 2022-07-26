@@ -10,6 +10,18 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.9.0 (2022-07-26) #
+
+### Features / Enhancements ###
+
+* Updated Font Awesome from version 4.7.0 to 6.1.1, and in the process changed the
+way the icons are imported & used by the Common package. They are brought into
+each module and component as necessary, instead of bringing all icons in from the
+`angular.json` scripts array. Since only the icons used are imported, this should
+help ease computational strain, although it is probably imperceivable to the naked
+eye. A Git tag (`before-loc-strategy-update`) has been created after this update,
+as it is before a major application location strategy change.
+
 # 3.8.3 (2022-07-22) #
 
 ### Bug Fixes ###

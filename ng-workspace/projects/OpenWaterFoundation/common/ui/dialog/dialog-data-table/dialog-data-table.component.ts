@@ -5,7 +5,6 @@
           OnInit,
           Output }                      from '@angular/core';
 import { MatDialog,
-          MatDialogConfig,
           MatDialogRef,
           MAT_DIALOG_DATA }             from '@angular/material/dialog';
 import { SelectionModel }               from '@angular/cdk/collections';
@@ -15,6 +14,9 @@ import bbox                             from '@turf/bbox';
 
 import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
 import * as FileSaver                   from 'file-saver';
+
+import { faXmark,
+          faMagnifyingGlassPlus }       from '@fortawesome/free-solid-svg-icons';
 
 import { OwfCommonService }             from '@OpenWaterFoundation/common/services';
 import * as IM                          from '@OpenWaterFoundation/common/services';
@@ -124,6 +126,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
+  /** All used icons in the DialogDataTableComponent. */
+  faXmark = faXmark;
+  faMagnifyingGlassPlus = faMagnifyingGlassPlus;
 
 
   /**
@@ -133,10 +138,10 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * @param dataObject The object containing data passed from the Component that created this Dialog.
    */
   constructor(private dialogService: DialogService,
-              public commonService: OwfCommonService,
-              public dialog: MatDialog,
-              public dialogRef: MatDialogRef<DialogDataTableComponent>,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any) {
+  public commonService: OwfCommonService,
+  public dialog: MatDialog,
+  public dialogRef: MatDialogRef<DialogDataTableComponent>,
+  @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
     this.attributeTable = new TableVirtualScrollDataSource(dataObject.data.allFeatures.features);
     this.attributeTableOriginal = JSON.parse(JSON.stringify(dataObject.data.allFeatures.features));

@@ -11,6 +11,8 @@ import { MatProgressBarModule }           from '@angular/material/progress-bar';
 import { MatSlideToggleModule }           from '@angular/material/slide-toggle';
 import { MatTooltipModule }               from '@angular/material/tooltip';
 
+import { FontAwesomeModule }              from '@fortawesome/angular-fontawesome';
+
 import { PipesModule }                    from '@OpenWaterFoundation/common/pipes';
 
 import { LegendLayerGroupComponent }      from './legend-layer-group.component';
@@ -24,6 +26,8 @@ import { LegendLayerGroupComponent }      from './legend-layer-group.component';
     LegendLayerGroupComponent
   ],
   imports: [
+    FontAwesomeModule,
+    
     FormsModule,
     
     CommonModule,

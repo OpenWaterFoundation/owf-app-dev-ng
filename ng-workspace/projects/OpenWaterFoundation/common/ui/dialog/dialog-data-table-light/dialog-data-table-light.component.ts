@@ -11,6 +11,8 @@ import { SelectionModel }               from '@angular/cdk/collections';
 import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
 import * as FileSaver                   from 'file-saver';
 
+import { faXmark }                      from '@fortawesome/free-solid-svg-icons';
+
 import { OwfCommonService }             from '@OpenWaterFoundation/common/services';
 import * as IM                          from '@OpenWaterFoundation/common/services';
 import { WindowManager }                from '@OpenWaterFoundation/common/ui/window-manager';
@@ -78,6 +80,8 @@ export class DialogDataTableLightComponent implements OnInit {
   public windowID: string;
   /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
+  /** All used icons in the DialogDataTableLightComponent. */
+  faXmark = faXmark;
 
 
   /**

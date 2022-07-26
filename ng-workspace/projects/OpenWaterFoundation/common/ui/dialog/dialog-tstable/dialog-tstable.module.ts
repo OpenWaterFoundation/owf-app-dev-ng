@@ -14,6 +14,8 @@ import { PipesModule }              from '@OpenWaterFoundation/common/pipes';
 import { TableVirtualScrollModule } from 'ng-table-virtual-scroll';
 import { ScrollingModule }          from '@angular/cdk/scrolling';
 
+import { FontAwesomeModule }        from '@fortawesome/angular-fontawesome';
+
 import { DialogTSTableComponent }   from './dialog-tstable.component';
 
 @NgModule({
@@ -23,6 +25,7 @@ import { DialogTSTableComponent }   from './dialog-tstable.component';
   imports: [
     CommonModule,
     DragDropModule,
+    FontAwesomeModule,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,

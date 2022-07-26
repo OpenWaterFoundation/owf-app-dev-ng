@@ -1,9 +1,10 @@
-import { NgModule }         from '@angular/core';
-import { CommonModule }     from '@angular/common';
+import { NgModule }          from '@angular/core';
+import { CommonModule }      from '@angular/common';
 
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatTooltipModule }  from '@angular/material/tooltip';
 
-import { ErrorComponent }   from './error.component';
+import { ErrorComponent }    from './error.component';
 
 
 @NgModule({
@@ -15,6 +16,8 @@ import { ErrorComponent }   from './error.component';
   ],
   imports: [
     CommonModule,
+
+    FontAwesomeModule,
 
     MatTooltipModule
   ]

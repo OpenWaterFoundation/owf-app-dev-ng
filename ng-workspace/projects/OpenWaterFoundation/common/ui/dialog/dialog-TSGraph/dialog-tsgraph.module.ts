@@ -9,6 +9,8 @@ import { ShowdownModule }           from 'ngx-showdown';
 
 import { ChartModule }              from '@OpenWaterFoundation/common/ui/core';
 
+import { FontAwesomeModule }        from '@fortawesome/angular-fontawesome';
+
 import { DialogTSGraphComponent }   from './dialog-TSGraph.component';
 
 
@@ -22,6 +24,7 @@ import { DialogTSGraphComponent }   from './dialog-TSGraph.component';
     ChartModule,
 
     DragDropModule,
+    FontAwesomeModule,
     MatButtonModule,
     MatDialogModule,
     ShowdownModule

@@ -10,7 +10,7 @@
     </div>
     <!-- The close button on the upper right part of the dialog -->
     <button mat-button (click)="onClose()" class="upper-dialog-close-button">
-      <i class="fa fa-times" aria-hidden="true"></i>
+      <fa-icon [icon]="faXmark" size="xl"></fa-icon>
     </button>
   </div>
 
@@ -85,28 +85,26 @@
             <div id="buttons">
               <button type="button" id="play" class="btn btn-default btn-md" (click)="playButton()" title="Play">
                 <span class="glyphicon glyphicon-play"></span>
-                <i class="fa fa-play"></i>
+                <fa-icon [icon]="faPlay" size="lg"></fa-icon>
               </button>
               <button type="button" id="pause" class="btn btn-default btn-md" (click)="pauseButton()" title="Pause"
                 disabled="true">
                 <span class="glyphicon glyphicon-pause"></span>
-                <i class="fa fa-pause"></i>
+                <fa-icon [icon]="faPause" size="lg"></fa-icon>
               </button>
               <button type="button" id="replay" class="btn btn-default btn-md" (click)="replayButton()" title="Replay">
                 <span class="glyphicon glyphicon-repeat"></span>
-                <!-- <i class="fa fa-reply" aria-hidden="true"></i> -->
-                <i class="fa fa-repeat"></i>
-
+                <fa-icon [icon]="faRepeat" size="lg"></fa-icon>
               </button>
               <button type="button" id="back" class="btn btn-default btn-md" (click)="backButton()" title="Back"
                 disabled="true">
                 <span class="glyphicon glyphicon-menu-left"></span>
-                <i class="fa fa-step-backward"></i>
+                <fa-icon [icon]="faBackwardStep" size="lg"></fa-icon>
               </button>
               <button type="button" id="forward" class="btn btn-default btn-md" (click)="forwardButton()"
                 title="Forward">
                 <span class="glyphicon glyphicon-menu-right"></span>
-                <i class="fa fa-step-forward"></i>
+                <fa-icon [icon]="faForwardStep" size="lg"></fa-icon>
               </button>
               &nbsp; &nbsp;
               <p class="controls"> Speed: </p>

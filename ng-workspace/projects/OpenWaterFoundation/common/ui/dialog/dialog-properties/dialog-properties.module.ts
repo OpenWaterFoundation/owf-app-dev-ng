@@ -5,6 +5,8 @@ import { MatTooltipModule }          from '@angular/material/tooltip';
 
 import { ShowdownModule }            from 'ngx-showdown';
 
+import { FontAwesomeModule }         from '@fortawesome/angular-fontawesome';
+
 import { DialogPropertiesComponent } from './dialog-properties.component';
 import { DragDropModule }            from '@angular/cdk/drag-drop';
 import { MatButtonModule }           from '@angular/material/button';
@@ -18,6 +20,7 @@ import { MatDialogModule }           from '@angular/material/dialog';
   imports: [
     CommonModule,
     DragDropModule,
+    FontAwesomeModule,
     MatButtonModule,
     MatDialogModule, 
     MatTooltipModule,

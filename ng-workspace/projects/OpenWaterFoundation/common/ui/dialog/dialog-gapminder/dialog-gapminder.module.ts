@@ -7,6 +7,8 @@ import { FormsModule }              from '@angular/forms';
 import { MatButtonModule }          from '@angular/material/button';
 import { MatDialogModule }          from '@angular/material/dialog';
 
+import { FontAwesomeModule }      from '@fortawesome/angular-fontawesome';
+
 import { PipesModule }              from '@OpenWaterFoundation/common/pipes';
 
 import { NgSelect2Module }          from 'ng-select2';
@@ -20,6 +22,7 @@ import { DialogGapminderComponent } from './dialog-gapminder.component';
   imports: [
     CommonModule,
     DragDropModule,
+    FontAwesomeModule,
     FormsModule,
     MatButtonModule,
     MatDialogModule,

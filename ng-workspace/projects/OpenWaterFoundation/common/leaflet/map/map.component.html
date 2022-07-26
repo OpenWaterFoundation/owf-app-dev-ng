@@ -9,14 +9,10 @@
         <!-- Main menu button (Hamburger Icon) -->
         <li>
           <a href="#home" role="tab" matTooltip="Main tools"
-              matTooltipShowDelay="750" data-cy="sidebar-home">
-            <i class="fa fa-map active"></i>
+          matTooltipShowDelay="750" data-cy="sidebar-home">
+            <fa-icon [icon]='faLayerGroup' size="lg"></fa-icon>
           </a>
         </li>
-        <!-- Autopan button (4 directional arrows) -->
-        <!-- <li><a matTooltip="Autopan tools" href="#autopan" role="tab"><i class="fa fa-arrows"></i></a></li> -->
-        <!---Information Button (i)-->
-        <!-- <li><a matTooltip="Help / About" href="#information" role="tab"><i class="fa fa-info-circle"></i></a></li> -->
       </ul>
 
       <!-- Bottom Aligned Tabs -->
@@ -26,13 +22,14 @@
         <li>
           <a href="#information" role="tab" matTooltip="Help / About" matTooltipShowDelay="750"
             matTooltipPosition="right" data-cy="sidebar-information">
-            <i class="fa fa-info-circle"></i>
+            <fa-icon [icon]=faInfoCircle size="lg"></fa-icon>
           </a>
         </li>
         <!-- <li>
           <a matTooltip="External link to project on GitHub"
                 href="https://github.com/nickpeihl/leaflet-sidebar-v2">
-            <i class="fa fa-github"></i>
+            THIS NEEDS @fortawesome/free-brands-svg-icons NPM PACKAGE!!!
+            <fa-icon [icon]=faGithub size="lg"></fa-icon>
           </a>
         </li> -->
       </ul>
@@ -50,14 +47,14 @@
               <button class="btn geoMap-info-circle"
                 (click)="openDocDialog(geoMapDocPath, mapConfig.geoMaps[0].geoMapId, geoMapName)"
                 matTooltip="Click to view map documentation" [matTooltipShowDelay]="750">
-                <i class="fa fa-info-circle fa-lg"></i>
+                  <fa-icon [icon]=faInfoCircle size="lg"></fa-icon>
               </button>
             </div>
           </div>
 
-          <span matTooltip="Close sidebar" [matTooltipShowDelay]="750" class="leaflet-sidebar-close"
-            data-cy="sidebar-close">
-            <i class="fa fa-caret-left"></i>
+          <span matTooltip="Close sidebar" [matTooltipShowDelay]="750"
+          class="leaflet-sidebar-close" data-cy="sidebar-close">
+            <fa-icon [icon]=faCaretLeft size="lg"></fa-icon>
           </span>
 
         </h1>
@@ -95,28 +92,13 @@
 
       </div>
 
-      <!-- The side bar information to be displayed when an anchor tag is clicked -->
-      <!-- This used to be for the autopan anchor tag -->
-      <!-- <div class="leaflet-sidebar-pane" id="autopan">
-        <h1 class="leaflet-sidebar-header">
-          autopan
-          <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
-        </h1>
-        <p>
-          <code>Leaflet.control.sidebar( autopan: true )</code>
-          makes sure that the map center always stays visible.
-        </p>
-        <p>
-          The autopan behavior is responsive as well.
-          Try opening and closing the sidebar from this pane!
-        </p>
-      </div> -->
-
       <!-- The Help / About sidebar. Can turn into its own separate component.  -->
       <div class="leaflet-sidebar-pane" id="information">
         <h1 class="leaflet-sidebar-header">
           Help / About
-          <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
+          <span class="leaflet-sidebar-close">
+            <fa-icon [icon]=faCaretLeft size="lg"></fa-icon>
+          </span>
         </h1>
         <div id="information-tab">
 
@@ -146,7 +128,7 @@
     </div>
   </div>
 
-  <!-- Create the Leaflet map here -->
+  <!-- Create the Leaflet map here. -->
   <div id="mapID"></div>
 
 </div>

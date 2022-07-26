@@ -28,6 +28,11 @@ import { forkJoin,
 import { take,
           takeUntil }              from 'rxjs/operators';
 
+import { faCaretLeft,
+          faHouseChimney,
+          faInfoCircle,
+          faLayerGroup }           from '@fortawesome/free-solid-svg-icons';
+
 import { OwfCommonService }        from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
           MapLayerItem }           from '@OpenWaterFoundation/common/ui/layer-manager';
@@ -41,6 +46,7 @@ import * as Papa                   from 'papaparse';
 import * as GeoRasterLayer         from 'georaster-layer-for-leaflet';
 import geoblaze                    from 'geoblaze';
 import parseGeoRaster              from 'georaster';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 /** The globally used L object for Leaflet object creation and manipulation. */
 declare var L: any;
 
@@ -161,6 +167,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public showRefresh: boolean = true;
   /** The windowManager instance; To create, maintain, and remove multiple open dialogs. */
   public windowManager: WindowManager = WindowManager.getInstance();
+  /** All used icons in the MapComponent. */
+  faCaretLeft = faCaretLeft;
+  faInfoCircle = faInfoCircle;
+  faLayerGroup = faLayerGroup;
 
 
   /**
@@ -172,7 +182,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * the router.
   */
   constructor(private actRoute: ActivatedRoute, private breakpointObserver: BreakpointObserver,
-    public commonService: OwfCommonService, public dialog: MatDialog, private route: Router) {
+  public commonService: OwfCommonService, public dialog: MatDialog, private route: Router) {
 
     if (window['Cypress']) window['MapComponent'] = this;
 
@@ -425,11 +435,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       _this.mainMap.getZoom().toFixed(1) + '</div>';
     };
 
-    // Add home and zoom in/zoom out control to the top right corner
-    L.Control.zoomHome({
-      position: 'topright',
-      zoomHomeTitle: 'Zoom to initial extent'
-    }).addTo(this.mainMap);
+    // Add home & zoom in/zoom out control to the map.
+    this.createZoomHomeControl();
 
     // Show the lat and lang of mouse position in the bottom left corner
     var mousePosition = L.control.mousePosition({
@@ -1541,11 +1548,111 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Add panels dynamically to the sidebar.
     // sidebar.addPanel({
     //     id:   'testPane',
-    //     tab:  '<i class="fa fa-gear"></i>',
+    //     tab:  '<fa-icon [icon]=faGear size="lg"></fa-icon>',
     //     title: 'Settings',
     //     pane: '<div class="leaflet-sidebar-pane" id="home"></div>'
     // });    
     this.addInfoToSidebar();
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  private createZoomHomeControl(): any {
+
+    var _this = this;
+
+    L.Control.ZoomHome = L.Control.Zoom.extend({
+      options: {
+          position: 'topleft',
+          zoomInText: '+',
+          zoomInTitle: 'Zoom in',
+          zoomOutText: '-',
+          zoomOutTitle: 'Zoom out',
+          zoomHomeIcon: '\uf008',
+          zoomHomeTitle: 'Home',
+          homeCoordinates: null,
+          homeZoom: null
+      },
+
+      onAdd: function (map: any) {
+          var controlName = 'leaflet-control-zoomhome',
+              container = L.DomUtil.create('div', controlName + ' leaflet-bar'),
+              options = this.options;
+
+          if (options.homeCoordinates === null) {
+              options.homeCoordinates = map.getCenter();
+          }
+          if (options.homeZoom === null) {
+              options.homeZoom = map.getZoom();
+          }
+
+          this._zoomInButton = this._createButton(options.zoomInText, options.zoomInTitle,
+          controlName + '-in', container, this._zoomIn.bind(this));
+          
+          var zoomHomeText = '<svg height="18" width="18" viewBox="0 0 512 512" ' +
+          'xmlns="http://www.w3.org/2000/svg"><path d="' +
+          _this.commonService.houseChimneySVGPath + '"></path></svg>';
+
+          this._zoomHomeButton = this._createButton(zoomHomeText, options.zoomHomeTitle,
+              controlName + '-home', container, this._zoomHome.bind(this));
+          this._zoomOutButton = this._createButton(options.zoomOutText, options.zoomOutTitle,
+              controlName + '-out', container, this._zoomOut.bind(this));
+
+          this._updateDisabled();
+          map.on('zoomend zoomlevelschange', this._updateDisabled, this);
+
+          return container;
+      },
+
+      setHomeBounds: function (bounds) {
+          if (bounds === undefined) {
+              bounds = this._map.getBounds();
+          } else {
+              if (typeof bounds.getCenter !== 'function') {
+                  bounds = L.latLngBounds(bounds);
+              }
+          }
+          this.options.homeZoom = this._map.getBoundsZoom(bounds);
+          this.options.homeCoordinates = bounds.getCenter();
+      },
+
+      setHomeCoordinates: function (coordinates) {
+          if (coordinates === undefined) {
+              coordinates = this._map.getCenter();
+          }
+          this.options.homeCoordinates = coordinates;
+      },
+
+      setHomeZoom: function (zoom) {
+          if (zoom === undefined) {
+              zoom = this._map.getZoom();
+          }
+          this.options.homeZoom = zoom;
+      },
+
+      getHomeZoom: function () {
+          return this.options.homeZoom;
+      },
+
+      getHomeCoordinates: function () {
+          return this.options.homeCoordinates;
+      },
+
+      _zoomHome: function (e) {
+          this._map.closePopup();
+          this._map.setView(this.options.homeCoordinates, this.options.homeZoom);
+      }
+    });
+
+    L.control.zoomHome = function(opt: any) {
+      return new L.Control.ZoomHome(opt)
+    }
+    L.control.zoomHome({
+      position: 'topright',
+      zoomHomeTitle: 'Zoom to initial extent'
+    }).addTo(this.mainMap);
   }
 
   /**

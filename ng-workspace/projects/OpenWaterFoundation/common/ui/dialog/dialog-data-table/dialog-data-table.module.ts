@@ -18,6 +18,8 @@ import { TableVirtualScrollModule } from 'ng-table-virtual-scroll';
 import { ScrollingModule }          from '@angular/cdk/scrolling';
 import { ShowdownModule }           from 'ngx-showdown';
 
+import { FontAwesomeModule }        from '@fortawesome/angular-fontawesome';
+
 import { DialogDataTableComponent } from './dialog-data-table.component';
 
 
@@ -28,6 +30,7 @@ import { DialogDataTableComponent } from './dialog-data-table.component';
   imports: [
     CommonModule,
     DragDropModule,
+    FontAwesomeModule,
     FormsModule,
     MatButtonModule,
     MatButtonToggleModule,

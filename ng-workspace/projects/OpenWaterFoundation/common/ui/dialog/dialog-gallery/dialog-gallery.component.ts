@@ -9,6 +9,8 @@ import { NgxGalleryOptions,
           NgxGalleryImage,
           NgxGalleryAnimation} from 'ngx-gallery-9';
 
+import { faXmark }             from '@fortawesome/free-solid-svg-icons';
+
 import { OwfCommonService }    from '@OpenWaterFoundation/common/services';
 import { WindowManager }       from '@OpenWaterFoundation/common/ui/window-manager';
 
@@ -55,6 +57,8 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
+  /** All used icons in the DialogGalleryComponent. */
+  faXmark = faXmark;
 
 
   /**

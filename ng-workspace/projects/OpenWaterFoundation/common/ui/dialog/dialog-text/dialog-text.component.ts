@@ -1,12 +1,14 @@
 import { Component,
           OnInit,
           Inject, 
-          OnDestroy}          from '@angular/core';
+          OnDestroy}        from '@angular/core';
 import { MatDialogRef,
           MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
+
+import { faXmark }          from '@fortawesome/free-solid-svg-icons';
 
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
 
@@ -34,7 +36,8 @@ export class DialogTextComponent implements OnInit, OnDestroy {
   public windowID: string;
   /** The windowManager instance for managing the opening and closing of windows throughout the InfoMapper. */
   public windowManager: WindowManager = WindowManager.getInstance();
-
+  /** All used icons in the DialogTextComponent. */
+  faXmark = faXmark;
 
   /**
    * 

@@ -14,6 +14,7 @@
 /*  */
 .change-icon {
   margin-right: 10px;
+  margin-top: 4px;
 }
 
 /*  */
@@ -56,7 +57,7 @@
 }
 
 /* Failure font awesome icon. */
-.fa-times {
+.fa-x-mark {
   color: rgb(247, 0, 0);
 }
 

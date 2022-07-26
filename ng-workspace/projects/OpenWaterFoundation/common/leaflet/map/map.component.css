@@ -5,6 +5,19 @@
   border: 0px;
 }
 
+/* Common Properties: ALL required to make icons render reliably. More info for
+this icon pseudo-element and any other icon pseudo-element can be found at
+https://fontawesome.com/docs/web/add-icons/pseudo-elements#set-pseudo-elements-to-display-to-none. */
+.icon::before {
+  display: none;
+}
+
+/* Individual Icons for displaying using Unicode. */
+.house-chimney::before {
+  font: var(--fa-font-solid);
+  content: "\e3af";
+}
+
 /* Styles a default image layer feature's label. */
 .feature-label {
   background:rgb(129, 0, 0);
@@ -128,6 +141,16 @@ line-break points, such as dashes '-'. */
 .upper-left-map-info-small-divider {
   margin-top: 2px;
   margin-bottom: 2px;
+}
+
+.leaflet-control-zoomhome a {
+  font: bold 18px "Lucida Console",Monaco,monospace;
+}
+
+a.leaflet-control-zoomhome-in,
+a.leaflet-control-zoomhome-out {
+font-size: 1.5em;
+line-height: 26px;
 }
 
 /* ID's */

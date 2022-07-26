@@ -8,6 +8,8 @@ import { MatTooltipModule }            from '@angular/material/tooltip';
 // The shared pipes secondary entry point for the common library.
 import { PipesModule }                 from '@OpenWaterFoundation/common/pipes';
 
+import { FontAwesomeModule }           from '@fortawesome/angular-fontawesome';
+
 import { MapComponent }                from './map.component';
 import { LegendBackgroundGroupModule } from './legend/legend-background-group/legend-background-group.module';
 import { LegendLayerGroupModule }      from './legend/legend-layer-group/legend-layer-group.module';
@@ -24,6 +26,8 @@ import { LegendLayerGroupModule }      from './legend/legend-layer-group/legend-
     CommonModule,
     BrowserAnimationsModule,
     BrowserModule,
+
+    FontAwesomeModule,
 
     MatSlideToggleModule,
     MatTooltipModule,

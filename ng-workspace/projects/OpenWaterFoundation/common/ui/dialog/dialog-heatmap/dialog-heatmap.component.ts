@@ -11,6 +11,8 @@ import { forkJoin,
 
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
 
+import { faXmark }          from '@fortawesome/free-solid-svg-icons';
+
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
 import { StateModTS }       from '@OpenWaterFoundation/common/dwr/statemod';
@@ -45,6 +47,8 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
+  /** All used icons in the DialogHeatmapComponent. */
+  faXmark = faXmark;
 
   constructor(public dialogRef: MatDialogRef<DialogHeatmapComponent>,
               @Inject(MAT_DIALOG_DATA) public dataObject: any,
