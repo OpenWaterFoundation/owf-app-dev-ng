@@ -10,6 +10,13 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 3.9.1 (2022-07-26) #
+
+### Bug Fixes ###
+
+* Fixed a sizing issue for displaying the house with a chimney Font Awesome icon
+on the Zoom Home Leaflet control.
+
 # 3.9.0 (2022-07-26) #
 
 ### Features / Enhancements ###

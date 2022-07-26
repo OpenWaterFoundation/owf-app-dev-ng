@@ -1591,7 +1591,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           this._zoomInButton = this._createButton(options.zoomInText, options.zoomInTitle,
           controlName + '-in', container, this._zoomIn.bind(this));
           
-          var zoomHomeText = '<svg height="18" width="18" viewBox="0 0 512 512" ' +
+          var zoomHomeText = '<svg height="15" width="20" viewBox="0 0 512 512" ' +
           'xmlns="http://www.w3.org/2000/svg"><path d="' +
           _this.commonService.houseChimneySVGPath + '"></path></svg>';
 
