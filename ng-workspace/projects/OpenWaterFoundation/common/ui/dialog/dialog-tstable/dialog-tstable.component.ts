@@ -8,6 +8,8 @@ import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
 
 import * as FileSaver                   from 'file-saver';
 
+import { faXmark }                      from '@fortawesome/free-solid-svg-icons';
+
 import { OwfCommonService }             from '@OpenWaterFoundation/common/services';
 import * as IM                          from '@OpenWaterFoundation/common/services';
 
@@ -52,7 +54,8 @@ export class DialogTSTableComponent implements OnInit, OnDestroy {
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
-
+  /** All used icons in the DialogTSTableComponent. */
+  faXmark = faXmark;
 
   /**
    * 

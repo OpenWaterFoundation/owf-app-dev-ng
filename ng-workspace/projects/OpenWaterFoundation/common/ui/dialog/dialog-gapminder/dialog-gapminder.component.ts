@@ -13,6 +13,13 @@ import { take }                          from 'rxjs/operators';
 import { OwfCommonService }              from '@OpenWaterFoundation/common/services';
 import * as IM                           from '@OpenWaterFoundation/common/services';
 
+import { faBackwardStep,
+          faForwardStep,
+          faPlay,
+          faPause,
+          faRepeat,
+          faXmark }                      from '@fortawesome/free-solid-svg-icons';
+
 import { DialogDataTableLightComponent } from '../dialog-data-table-light/dialog-data-table-light.component';
 import { DialogDocComponent }            from '../dialog-doc/dialog-doc.component';
 import { Properties }                    from './js/gapminder-util/properties';
@@ -83,6 +90,13 @@ export class DialogGapminderComponent implements OnInit {
   public windowID: string;
   /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
+  /** All used icons in the DialogGapminderComponent. */
+  faBackwardStep = faBackwardStep;
+  faForwardStep = faForwardStep;
+  faPlay = faPlay;
+  faPause = faPause;
+  faRepeat = faRepeat;
+  faXmark = faXmark;
 
 
   /**

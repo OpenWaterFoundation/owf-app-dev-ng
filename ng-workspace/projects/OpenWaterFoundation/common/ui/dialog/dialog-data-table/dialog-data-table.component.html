@@ -16,7 +16,7 @@
             (click)="onClose()"
             class="upper-dialog-close-button"
             attr.data-cy="{{geoLayer.geoLayerId}}-data-table-upper-close">
-      <i class="fa fa-times" aria-hidden="true"></i>
+      <fa-icon [icon]="faXmark" size="xl"></fa-icon>
     </button>
   </div>
   <!------------------------------------------------------------------------------------------------------------------------------>
@@ -150,7 +150,7 @@
                 [disabled]="searchType | zoomDisable : addressMarkerDisplayed : 'address-zoom'"
                 [hidden]="geoLayer.geometryType | zoomDisable : 'null' : 'address-radio'"
                 attr.data-cy="{{geoLayer.geoLayerId}}-zoom-to-address">
-          <i class="fa fa-search-plus fa-2x"></i>
+          <fa-icon class="fa-mag-glass-plus" [icon]="faMagnifyingGlassPlus" size="2xl"></fa-icon>
           Zoom to address
         </button>
         <button mat-menu-item
@@ -158,7 +158,7 @@
                 (click)="zoomToFeatures()"
                 [disabled]="selectedLayer | zoomDisable : geoLayer.geoLayerId : 'selected-layers'"
                 attr.data-cy="{{geoLayer.geoLayerId}}-zoom-to-feature">
-          <i class="fa fa-search-plus fa-2x"></i>
+          <fa-icon class="fa-mag-glass-plus" [icon]="faMagnifyingGlassPlus" size="2xl"></fa-icon>
           Zoom to selected features
         </button>
       </mat-menu>

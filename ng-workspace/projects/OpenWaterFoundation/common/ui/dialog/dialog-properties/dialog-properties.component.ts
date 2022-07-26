@@ -58,7 +58,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
   public windowID: string;
   /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
   public windowManager: WindowManager = WindowManager.getInstance();
-
+  /** All used icons in the DialogPropertiesComponent. */
   faXmark = faXmark;
   
 

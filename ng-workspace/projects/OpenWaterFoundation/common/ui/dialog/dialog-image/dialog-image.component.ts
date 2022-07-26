@@ -31,7 +31,7 @@ export class DialogImageComponent implements OnInit {
    public mapConfigPath: string;
   /** The windowManager instance for managing the opening and closing of windows throughout the InfoMapper. */
   public windowManager: WindowManager = WindowManager.getInstance();
-
+  /** All used icons in the DialogImageComponent. */
   faXmark = faXmark;
 
 

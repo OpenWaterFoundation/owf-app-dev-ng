@@ -74,7 +74,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
-
+  /** All used icons in the DialogTSGraphComponent. */
   faXmark = faXmark;
 
 

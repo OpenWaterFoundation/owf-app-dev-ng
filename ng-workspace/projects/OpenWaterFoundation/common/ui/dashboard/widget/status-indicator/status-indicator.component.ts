@@ -1,13 +1,22 @@
 import { Component,
-          Input }           from '@angular/core';
+          Input }            from '@angular/core';
+
+import { forkJoin,
+          Observable,
+          Subscription }     from 'rxjs';
+
+import { faCaretDown,
+          faCaretUp,
+          faCheck,
+          faExclamation,
+          faQuestion,
+          faXmark }    from '@fortawesome/free-solid-svg-icons';
 
 import { EventService,
           OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
-import { DashboardService } from '../../dashboard.service';
-import { forkJoin,
-          Observable,
-          Subscription }    from 'rxjs';
+import * as IM               from '@OpenWaterFoundation/common/services';
+import { DashboardService }  from '../../dashboard.service';
+
 
 
 @Component({
@@ -74,7 +83,13 @@ export class StatusIndicatorComponent {
   unknownIndicator: boolean;
   /** Displays a yellow exclamation icon in the widget if set to true. */
   warningIndicator: boolean;
-  
+  /** All used icons in the StatusIndicatorComponent. */
+  faCaretDown = faCaretDown;
+  faCaretUp = faCaretUp;
+  faCheck = faCheck;
+  faExclamation = faExclamation;
+  faQuestion = faQuestion;
+  faXmark = faXmark;
 
 
   /**
