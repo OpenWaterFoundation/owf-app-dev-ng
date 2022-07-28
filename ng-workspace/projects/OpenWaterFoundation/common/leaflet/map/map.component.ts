@@ -29,7 +29,6 @@ import { take,
           takeUntil }              from 'rxjs/operators';
 
 import { faCaretLeft,
-          faHouseChimney,
           faInfoCircle,
           faLayerGroup }           from '@fortawesome/free-solid-svg-icons';
 
@@ -46,7 +45,6 @@ import * as Papa                   from 'papaparse';
 import * as GeoRasterLayer         from 'georaster-layer-for-leaflet';
 import geoblaze                    from 'geoblaze';
 import parseGeoRaster              from 'georaster';
-import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 /** The globally used L object for Leaflet object creation and manipulation. */
 declare var L: any;
 
@@ -60,43 +58,41 @@ declare var L: any;
 export class MapComponent implements AfterViewInit, OnDestroy {
   
   /** All features of a geoLayerView. Usually a FeatureCollection. */
-  public allFeatures: {} = {};
+  allFeatures: {} = {};
   /** Template input property used by consuming applications or websites for passing
    * the path to the app configuration file. */
   @Input('app-config') appConfigStandalonePath: any;
   /** Application version. */
-  public appVersion: string;
+  appVersion: string;
   /** Array of background map groups from the map config file. Used for displaying
    * background maps in the sidebar panel. */
-  public backgroundMapGroups = [];
+  backgroundMapGroups = [];
   /** Accesses container ref in order to add and remove background layer components
    * dynamically. */
-  public backgroundViewContainerRef: ViewContainerRef;
+  backgroundViewContainerRef: ViewContainerRef;
   /** Boolean showing if the path given to some file is incorrect. */
-  public badPath = false;
+  badPath = false;
   /** Object that holds the base maps that populates the leaflet sidebar. */
-  public baseMaps: {} = {};
+  baseMaps: {} = {};
   /** A categorized configuration object with the geoLayerId as key and a list of
    * name followed by color for each feature in the Leaflet layer to be shown in
    * the sidebar. */
-  public categorizedLayerColors = {};
+  categorizedLayerColors = {};
   /** Test variable for divIcon. */
-  public count = 1;
+  count = 1;
   /** Used to indicate which background layer is currently displayed on the map. */
-  public currentBackgroundLayer: string;
-  /**
-   * 
-   */
+  currentBackgroundLayer: string;
+  /** Represents the current screen size. Used for dialog's to determine if they
+   * should be shown for desktop or mobile screens. */
   currentScreenSize: string;
-  /**
-   * 
-   */
+  /** Subject that is completed when this component is destroyed. The breakpoint
+   * observer will stop listening to screen size at that time. */
   destroyed = new Subject<void>();
   /** The number of seconds since the last layer refresh. */
-  public elapsedSeconds = 0;
+  elapsedSeconds = 0;
   /** An object containing any event actions with their id as the key and the action
    * object itself as the value. */
-  public eventActions: {} = {};
+  eventActions: {} = {};
   /** For the Leaflet map's config file subscription object so it can be closed on
    * this component's destruction. */
   private forkJoinSub = <any>Subscription;
@@ -104,26 +100,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    *     key  : geoLayerId
    *     value: object with style properties
    * For displaying a graduated symbol in the Leaflet legend. */
-  public graduatedLayerColors = {};
+  graduatedLayerColors = {};
   /** Global value to access container ref in order to add and remove sidebar info
    * components dynamically. */
-  public infoViewContainerRef: ViewContainerRef;
+  infoViewContainerRef: ViewContainerRef;
   /** Represents the Date string since the last time a layer was updated. */
-  public lastRefresh = {};
+  lastRefresh = {};
   /** Object containing a layer geoLayerId as the ID, and an object of properties
    * set by a user-defined classification file. */
-  public layerClassificationInfo = {};
+  layerClassificationInfo = {};
   /** Class variable to access container ref in order to add and remove map layer
    * component dynamically. */
-  public layerViewContainerRef: ViewContainerRef;
+  layerViewContainerRef: ViewContainerRef;
   /** Object that contains each geoLayerViewGroupId as the key, and a boolean describing
    * whether the group's legend expansion panel is open or closed. */
-  public backgroundLegendExpansion = {};
+  backgroundLegendExpansion = {};
   /** Global value to access container ref in order to add and remove symbol descriptions
    * components dynamically. */
-  public legendSymbolsViewContainerRef: ViewContainerRef;
+  legendSymbolsViewContainerRef: ViewContainerRef;
   /** The reference for the Leaflet map. */
-  public mainMap: any;
+  mainMap: any;
   /** Template input property used by consuming applications or websites for passing
    * the path to the app configuration file. */
   @Input('map-config') mapConfigStandalonePath: string;
@@ -132,41 +128,41 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /** Determines whether the map config file path was correct, found, and read in.
    * If true, the map will be displayed. If false, the 404 div will let the user
    * know there was an issue with the URL/path to the */
-  public mapFilePresent: boolean;
+  mapFilePresent: boolean;
   /** A variable to keep track of whether or not the leaflet map has already been
    * initialized. This is useful for resetting the page and clearing the map using
    * map.remove() which can only be called on a previously initialized map. */
-  public mapInitialized: boolean = false;
+  mapInitialized: boolean = false;
   /** The current map's ID from the app configuration file. */
-  public mapID: string;
+  mapID: string;
   /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
    * objects with Leaflet layers and other layer data for displaying, ordering, and
    * highlighting. */
-  public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
+  mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
   /** The MapManger singleton instance, that will keep a certain number of Leaflet
    * map instances, so a new map won't have to be created every time the same map
    * button is clicked. NOT IN USE. */
-  public mapManager: MapManager = MapManager.getInstance();
+  mapManager: MapManager = MapManager.getInstance();
   /** InfoMapper project version. */
-  public projectVersion: Observable<any>;
+  projectVersion: Observable<any>;
   /** The refresh subscription. Used with the rxjs timer, and unsubscribed on component
    * destruction. */
   private refreshSub = null;
   /** The activatedRoute subscription, unsubscribed to on component destruction. */
   private actRouteSub = <any>Subscription;
   /** Boolean showing if the URL given for a layer is currently unavailable. */
-  public serverUnavailable = false;
+  serverUnavailable = false;
   /** Boolean to indicate whether the sidebar has been initialized. Don't need to
    * waste time/resources initializing sidebar twice, but rather edit the information
    * in the already initialized sidebar. */
-  public sidebarInitialized: boolean = false;
+  sidebarInitialized: boolean = false;
   /** An array to hold sidebar background layer components to easily remove later,
    * when resetting the sidebar. NOTE: Might be able to remove. */
-  public sidebarBackgroundLayers: any[] = [];
+  sidebarBackgroundLayers: any[] = [];
   /** Boolean of whether or not refresh is displayed. */
-  public showRefresh: boolean = true;
+  showRefresh: boolean = true;
   /** The windowManager instance; To create, maintain, and remove multiple open dialogs. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the MapComponent. */
   faCaretLeft = faCaretLeft;
   faInfoCircle = faInfoCircle;
@@ -175,18 +171,22 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   /**
   * @constructor Creates the Map Component instance.
+  * @param actRoute Used for getting the parameter 'id' passed in by the url and from
+  * the router.
+  * @param breakpointObserver Angular provided utility for checking the matching
+  * state of @media queries.
   * @param commonService A reference to the common library service.
   * @param dialog A reference to the MatDialog for creating and displaying a popup
   * dialog with a chart.
-  * @param actRoute Used for getting the parameter 'id' passed in by the url and from
-  * the router.
+  * @param route A service that provides navigation among views and URL manipulation
+  * capabilities.
   */
   constructor(private actRoute: ActivatedRoute, private breakpointObserver: BreakpointObserver,
   public commonService: OwfCommonService, public dialog: MatDialog, private route: Router) {
 
     if (window['Cypress']) window['MapComponent'] = this;
 
-    breakpointObserver.observe([
+    this.breakpointObserver.observe([
       Breakpoints.XSmall,
       Breakpoints.Small,
       Breakpoints.Medium,
@@ -203,6 +203,41 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+
+  /**
+   * @returns All geoLayerViewGroups from the FIRST geoMap.
+   */
+  get allGeoLayerViewGroups(): any {
+    return this.commonService.getGeoLayerViewGroups();
+  }
+
+  /**
+   * @returns The geoMap docPath property from the FIRST geoMap.
+   */
+  get geoMapDocPath(): string {
+    return this.commonService.getGeoMapDocPath();
+  }
+
+  /**
+   * @returns The geoMapId property from the FIRST geoMap.
+   */
+  get geoMapId(): string {
+    return this.commonService.getGeoMapID();
+  }
+
+  /**
+   * @returns The name property from the FIRST geoMap.
+   */
+  get geoMapName(): string {
+    return this.commonService.getGeoMapName();
+  }
+
+  /**
+   * Returns the map configuration object from the OWF Common Service.
+   */
+  get mapConfig(): any {
+    return this.commonService.getMapConfig();
+  }
 
   /**
   * Add content to the info tab of the sidebar dynamically. Following the example
@@ -253,13 +288,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         }
       }
     }
-  }
-
-  /**
-   * @returns All geoLayerViewGroups from the FIRST geoMap.
-   */
-  get allGeoLayerViewGroups(): any {
-    return this.commonService.getGeoLayerViewGroups();
   }
 
   /**
@@ -342,33 +370,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private buildMap(): void {
 
     this.mapInitialized = true;
-    var _this = this;
 
-    // Create background layers from the configuration file.
-    let backgroundLayers: any[] = this.commonService.getBackgroundLayers();
-    // Iterate over each background layer, create them using tileLayer, and add
-    // them to the baseMaps class object.
-    backgroundLayers.forEach((geoLayer: IM.GeoLayer) => {
-      let leafletBackgroundLayer = L.tileLayer(geoLayer.sourcePath, {
-        attribution: geoLayer.properties.attribution,
-        maxZoom: geoLayer.properties.zoomLevelMax ? parseInt(geoLayer.properties.zoomLevelMax) : 18
-      });
-      this.baseMaps[this.commonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId).name] = leafletBackgroundLayer;
-
-      var bkgdGeoLayerView = this.commonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId);
-      
-      if (bkgdGeoLayerView.properties.refreshInterval) {
-        var refreshInterval = this.commonService.getRefreshInterval(bkgdGeoLayerView.geoLayerId);
-        var refreshOffset = this.commonService.getRefreshOffset(bkgdGeoLayerView.geoLayerId, refreshInterval);
-        // Check if the parsing was successful. 
-        if (isNaN(refreshInterval)) {
-        } else {
-          this.refreshLayer(refreshOffset, refreshInterval, geoLayer, IM.RefreshType.tile,
-            null, leafletBackgroundLayer);
-        }
-  
-      }
-    });
+    this.createMapBackgroundLayers();
 
     // Create a Leaflet Map and set the default layers.
     this.mainMap = L.map('mapID', {
@@ -398,84 +401,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.setBackgroundLayer(backgroundLayer.name);
     });
 
-    // Get the map name from the config file.
-    let mapName: string = this.commonService.getGeoMapName();
-    // Create the control on the Leaflet map
-    var mapTitle = L.control({ position: 'topleft' });
-    // Add the title to the map in a div whose class name is 'info'
-    mapTitle.onAdd = function () {
-      this._div = L.DomUtil.create('div', 'upper-left-map-info');
-      this._div.id = 'title-card';
-      this.update();
-      return this._div;
-    };
-    // When the title-card is created, have it say this
-    mapTitle.update = function () {
-      this._div.innerHTML = ('<h4>' + mapName + '</h4>');
-    };
-    mapTitle.addTo(this.mainMap);
-
-    // Display the zoom level on the map
-    let mapZoom = L.control({ position: 'bottomleft' });
-    mapZoom.onAdd = function () {
-      // Have Leaflet create a div with the class name zoomInfo
-      this._container = L.DomUtil.create('div', 'zoomInfo');
-      // When the map is created for the first time, call update to display zoom.
-      this.update();
-      // On subsequent zoom events (at the end of the zoom) update the innerHTML
-      // again, and round to tenths.
-      _this.mainMap.on('zoomend', function () {
-        this._container.innerHTML = '<div id="zoomInfo">Zoom Level: ' +
-        _this.mainMap.getZoom().toFixed(1) + '</div>';
-      }, this);
-      return this._container;
-    };
-    mapZoom.update = function () {
-      this._container.innerHTML = '<div id="zoomInfo">Zoom Level: ' +
-      _this.mainMap.getZoom().toFixed(1) + '</div>';
-    };
-
-    // Add home & zoom in/zoom out control to the map.
-    this.createZoomHomeControl();
-
-    // Show the lat and lang of mouse position in the bottom left corner
-    var mousePosition = L.control.mousePosition({
-      position: 'bottomleft',
-      lngFormatter: (num: number) => {
-        let direction = (num < 0) ? 'W' : 'E';
-        let formatted = Math.abs(num).toFixed(6) + '&deg ' + direction;
-        return formatted;
-      },
-      latFormatter: (num: number) => {
-        let direction = (num < 0) ? 'S' : 'N';
-        let formatted = Math.abs(num).toFixed(6) + '&deg ' + direction;
-        return formatted;
-      }
-    });
-
-    // The next three lines of code makes sure that each control in the bottom
-    // left is created on the map in a specific order.
-    this.mainMap.addControl(mousePosition);
-    this.mainMap.addControl(mapZoom);
-    // Bottom Left corner control that shows the scale in km and miles of the map.
-    L.control.scale({ position: 'bottomleft', imperial: true }).addTo(this.mainMap);
-
-    updateTitleCard();
-    /**
-    * Updates the title card in the top left corner of the map.
-    */
-    function updateTitleCard(): void {
-      let div = L.DomUtil.get('title-card');
-      let instruction: string = "Move over or click on a feature for more information";
-      let divContents: string = "";
-
-      divContents = ('<h4 id="geoLayerView">' + mapName + '</h4>' + '<p id="point-info"></p>');
-      if (instruction != "") {
-        divContents += ('<hr class="upper-left-map-info-divider"/>' + '<p id="instructions"><i>' +
-        instruction + '</i></p>');
-      }
-      div.innerHTML = divContents;
-    }
+    this.createMapTitle();
+    this.createMapTitleInitial();
+    this.createMapBottomLeftControls();
 
     var geoLayerViewGroups: IM.GeoLayerViewGroup[] = this.commonService.getGeoLayerViewGroups();
 
@@ -1556,10 +1484,142 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * 
-   * @returns 
+   * Creates all background (tile) layers on the Leaflet map by using properties
+   * from the map configuration layer.
    */
-  private createZoomHomeControl(): any {
+  private createMapBackgroundLayers(): void {
+
+    // Create background layers from the configuration file.
+    let backgroundLayers: any[] = this.commonService.getBackgroundLayers();
+    // Iterate over each background layer, create them using tileLayer, and add
+    // them to the baseMaps class object.
+    backgroundLayers.forEach((geoLayer: IM.GeoLayer) => {
+      let leafletBackgroundLayer = L.tileLayer(geoLayer.sourcePath, {
+        attribution: geoLayer.properties.attribution,
+        maxZoom: geoLayer.properties.zoomLevelMax ? parseInt(geoLayer.properties.zoomLevelMax) : 18
+      });
+      this.baseMaps[this.commonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId).name] = leafletBackgroundLayer;
+
+      var bkgdGeoLayerView = this.commonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId);
+      
+      if (bkgdGeoLayerView.properties.refreshInterval) {
+        var refreshInterval = this.commonService.getRefreshInterval(bkgdGeoLayerView.geoLayerId);
+        var refreshOffset = this.commonService.getRefreshOffset(bkgdGeoLayerView.geoLayerId, refreshInterval);
+        // Check if the parsing was successful. 
+        if (isNaN(refreshInterval)) {
+        } else {
+          this.refreshLayer(refreshOffset, refreshInterval, geoLayer, IM.RefreshType.tile,
+            null, leafletBackgroundLayer);
+        }
+  
+      }
+    });
+  }
+
+  /**
+   * Creates all Leaflet Controls in the bottom left corner of the map and ensures
+   * that they're drawn in the correct order.
+   */
+  private createMapBottomLeftControls() : void {
+
+    var _this = this;
+
+    // Display the zoom level on the map.
+    let mapZoom = L.control({ position: 'bottomleft' });
+    mapZoom.onAdd = function () {
+      // Have Leaflet create a div with the class name zoomInfo.
+      this._container = L.DomUtil.create('div', 'zoomInfo');
+      // When the map is created for the first time, call update to display zoom.
+      this.update();
+      // On subsequent zoom events (at the end of the zoom) update the innerHTML
+      // again, and round to tenths.
+      _this.mainMap.on('zoomend', function () {
+        this._container.innerHTML = '<div id="zoomInfo">Zoom Level: ' +
+        _this.mainMap.getZoom().toFixed(1) + '</div>';
+      }, this);
+      return this._container;
+    };
+    mapZoom.update = function () {
+      this._container.innerHTML = '<div id="zoomInfo">Zoom Level: ' +
+      _this.mainMap.getZoom().toFixed(1) + '</div>';
+    };
+
+    // Add home & zoom in/zoom out control to the map.
+    this.createMapZoomHomeControl();
+
+    // Show the lat and lang of mouse position in the bottom left corner.
+    var mousePosition = L.control.mousePosition({
+      position: 'bottomleft',
+      lngFormatter: (num: number) => {
+        let direction = (num < 0) ? 'W' : 'E';
+        let formatted = Math.abs(num).toFixed(6) + '&deg ' + direction;
+        return formatted;
+      },
+      latFormatter: (num: number) => {
+        let direction = (num < 0) ? 'S' : 'N';
+        let formatted = Math.abs(num).toFixed(6) + '&deg ' + direction;
+        return formatted;
+      }
+    });
+
+    // Add each control in the desired order. From top to bottom on the map:
+    //   Scale
+    //   Map zoom level
+    //   Mouse Position / Coordinates
+    this.mainMap.addControl(mousePosition);
+    this.mainMap.addControl(mapZoom);
+    // Bottom Left corner control that shows the scale in km and miles of the map.
+    L.control.scale({ position: 'bottomleft', imperial: true }).addTo(this.mainMap);
+  }
+
+  /**
+   * Creates the div that displays the Map title and layer feature information
+   */
+  private createMapTitle(): void {
+
+    var _this = this;
+
+    // Create the control on the Leaflet map
+    var mapTitle = L.control({ position: 'topleft' });
+    // Add the title to the map in a div whose class name is 'info'
+    mapTitle.onAdd = function () {
+      this._div = L.DomUtil.create('div', 'upper-left-map-info');
+      this._div.id = 'title-card';
+      this.update();
+      return this._div;
+    };
+    // When the title-card is created, have it say this
+    mapTitle.update = function () {
+      this._div.innerHTML = ('<h4>' + _this.commonService.getGeoMapName() + '</h4>');
+    };
+    mapTitle.addTo(this.mainMap);
+  }
+
+  /**
+   * 
+   */
+  private createMapTitleInitial(): void {
+
+    let div = L.DomUtil.get('title-card');
+    let instruction: string = "Move over or click on a feature for more information";
+    let divContents: string = "";
+
+    divContents = ('<h4 id="geoLayerView">' + this.commonService.getGeoMapName() +
+    '</h4>' + '<p id="point-info"></p>');
+
+    if (instruction != "") {
+      divContents += ('<hr class="upper-left-map-info-divider"/>' + '<p id="instructions"><i>' +
+      instruction + '</i></p>');
+    }
+    div.innerHTML = divContents;
+  }
+
+  /**
+   * Creates the ZoomHome control by extending the Leaflet Zoom class. Displays
+   * a '+' for zooming in, '-' for zooming out, and a house Font Awesome icon in
+   * the upper right section of the map.
+   */
+  private createMapZoomHomeControl(): void {
 
     var _this = this;
 
@@ -1666,27 +1726,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * @returns The geoMap docPath property from the FIRST geoMap.
-   */
-  get geoMapDocPath(): string {
-    return this.commonService.getGeoMapDocPath();
-  }
-
-  /**
-   * @returns The geoMapId property from the FIRST geoMap.
-   */
-  get geoMapId(): string {
-    return this.commonService.getGeoMapID();
-  }
-
-  /**
-   * @returns The name property from the FIRST geoMap.
-   */
-  get geoMapName(): string {
-    return this.commonService.getGeoMapName();
-  }
-
-  /**
    * Initialize a map for a full application if no parameter is given, or for a
    * standalone map if the true boolean is provided.
    */
@@ -1719,13 +1758,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // Create the map.
       this.buildMap();
     });
-  }
-
-  /**
-   * Returns the map configuration object from the OWF Common Service.
-   */
-  get mapConfig(): any {
-    return this.commonService.getMapConfig();
   }
 
   /**

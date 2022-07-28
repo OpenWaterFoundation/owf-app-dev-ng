@@ -38,13 +38,11 @@ export class OwfCommonService {
   chartTemplateObject: Object;
   /** Absolute path to the dashboard configuration file. Used for relative paths. */
   dashboardConfigPath: string;
-  /**
-   * 
-   */
+  /** Subject updated by a datastore if it requires its own async operation during
+   * datastore creation or other task it needs to perform. Consuming component
+   * would subscribe to it and run when the datastore logic has completed. */
   datastoreDataSubject = new BehaviorSubject<any>(null);
-  /**
-   * 
-   */
+  /** The datastoreDataSubject to be passed as an Observable for subscribing to. */
   datastoreDataSubject$: Observable<any> = this.datastoreDataSubject.asObservable();
   /** An array of DataUnit objects that each contain the precision for different
    * types of data, from degrees to mile per hour. Read from the application config
@@ -102,7 +100,7 @@ export class OwfCommonService {
   leafletMapArray: any[] = [];
   /** The object that holds the map configuration contents from the map configuration
    * file for a Leaflet map. */
-  mapConfig: any;
+  mapConfig: IM.GeoMapProject;
   /** Array of geoLayerId's in the correct geoLayerView order, retrieved from the
    * geoMap. The order in which each layer should be displayed in on the map and
    * side bar legend. */
@@ -875,29 +873,8 @@ export class OwfCommonService {
   /**
    * @returns An array of the geoLayerViewGroups from the FIRST geoMap.
    */
-  getGeoLayerViewGroups(): any[] {
+  getGeoLayerViewGroups(): IM.GeoLayerViewGroup[] {
     return this.mapConfig.geoMaps[0].geoLayerViewGroups;
-  }
-
-  /**
-   * @returns The array of layer marker data, such as size, color, icon, etc.
-   */
-  getLayerMarkerData(): void { return this.mapConfig.layerViewGroups; }
-
-  /**
-   * NOTE: This function is not currently being used, as it's being used by functions
-   * in map.component.ts that have not been implemented yet.
-   * @param id The given geoLayerId to match with
-   */
-  getLayerFromId(id: string) {
-    let dataLayers: any = this.mapConfig.dataLayers;
-    let layer: any = null;
-    dataLayers.forEach((l: any) => {
-      if (l.geoLayerId === id) {
-        layer = l;
-      }
-    })
-    return layer;
   }
 
   /**
@@ -986,7 +963,7 @@ export class OwfCommonService {
   }
 
   /**
-   * Obtain and parse the refreshOffset property from the geoLayerView. 
+   * Obtain and parse the refreshOffset property from the geoLayerView.
    * @param geoLayerId 
    * @param refreshInterval 
    * @returns The offset in milliseconds, and 0 if none is given.
@@ -1560,6 +1537,10 @@ export class OwfCommonService {
     this.mapConfig = mapConfig;
   }
 
+  /**
+   * 
+   * @param mapConfig 
+   */
   setMapConfigTest(mapConfig: any): void {
     this._mapConfig.next(Object.assign(this.mapConfigTest, mapConfig))
   }
