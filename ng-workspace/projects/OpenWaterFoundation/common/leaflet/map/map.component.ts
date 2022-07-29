@@ -25,7 +25,8 @@ import { forkJoin,
           Observable,
           Subscription, 
           Subject }                from 'rxjs';
-import { take,
+import { first,
+          take,
           takeUntil }              from 'rxjs/operators';
 
 import { faCaretLeft,
@@ -145,9 +146,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   mapManager: MapManager = MapManager.getInstance();
   /** InfoMapper project version. */
   projectVersion: Observable<any>;
-  /** The refresh subscription. Used with the rxjs timer, and unsubscribed on component
-   * destruction. */
-  private refreshSub = null;
   /** The activatedRoute subscription, unsubscribed to on component destruction. */
   private actRouteSub = <any>Subscription;
   /** Boolean showing if the URL given for a layer is currently unavailable. */
@@ -1779,7 +1777,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       // Standalone Map for website embedding.
       if (this.appConfigStandalonePath) {
-        this.commonService.getJSONData(this.appConfigStandalonePath).subscribe((appConfig: any) => {
+        this.commonService.getJSONData(this.appConfigStandalonePath)
+        .subscribe((appConfig: any) => {
+
           this.commonService.setAppConfig(appConfig);
           this.initMapSettings('app');
         });
@@ -1803,9 +1803,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     if (this.forkJoinSub) {
       this.forkJoinSub.unsubscribe();
-    }
-    if (this.refreshSub) {
-      this.refreshSub.unsubscribe();
     }
     if (this.mapConfigSub) {
       this.mapConfigSub.unsubscribe();
@@ -2098,8 +2095,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Adds each refresh subscription after the first as child subscriptions
     // (in case of multiple refreshing layers), so when unsubscribing occurs
     // at component destruction, all are unsubscribed from.
-    this.refreshSub = new Subscription();
-    this.refreshSub.add(delay.subscribe(() => {
+      delay.pipe(takeUntil(this.destroyed)).subscribe(() => {
 
       // Update the MatTooltip date display string on the sidebar geoLayerView name.
       this.setRefreshDateTime(geoLayer, refreshInterval);
@@ -2108,7 +2104,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (refreshType === IM.RefreshType.vector) {
         this.commonService.getJSONData(
           this.commonService.buildPath(IM.Path.gLGJP, [geoLayer.sourcePath])
-        ).subscribe((geoJsonData: any) => {
+        ).pipe(first()).subscribe((geoJsonData: any) => {
 
           // Use the Map Layer Manager to remove all layers from the Leaflet layer,
           // and then add the new data back. This way, the layer will still be
@@ -2230,7 +2226,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this.mapLayerManager.setLayerOrder();
       }
       
-    }));
+    })
+    // );
   }
 
   /**
@@ -2261,9 +2258,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     // If the previous map had at least one layer that refreshes, the refresh
     // subscription will need to be unsubscribed from when navigated away.
-    if (this.refreshSub) {
-      this.refreshSub.unsubscribe();
-    }
+    this.destroyed.next();
+    this.destroyed.complete();
+    this.destroyed = new Subject<void>();
   }
 
   /**

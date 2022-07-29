@@ -1650,4 +1650,31 @@ export class OwfCommonService {
    */
   setTSIDLocation(tsid: string): void { this.graphTSID = tsid; }
 
+  /**
+   * 
+   * @param mapID 
+   * @returns 
+   */
+  validMapConfigMapID(mapID: string): boolean {
+
+    for (let mainMenu of this.appConfig.mainMenu) {
+      // If subMenus exist.
+      if (mainMenu.menus) {
+        for (let subMenu of mainMenu.menus) {
+          if (subMenu.id === mapID) {
+            return true;
+          }
+        }
+      }
+      // If no subMenus exist.
+      else {
+        if (mainMenu.id === mapID) {
+          return true;
+        }
+      }
+      
+    }
+    return false;
+  }
+
 }

@@ -1,6 +1,8 @@
 import { Component,
           OnInit }      from '@angular/core';
 
+import { first }        from 'rxjs/operators';
+
 import { AppService }   from '../app.service';
 
 import { ElementCache } from '../ElementCache';
@@ -48,7 +50,7 @@ export class HomeComponent implements OnInit {
    * contents.
    */
   private convertMarkdownToHTML(): void {
-    this.appService.getPlainText('assets/README.md').subscribe((markdownFile: string) => {
+    this.appService.getPlainText('assets/README.md').pipe(first()).subscribe((markdownFile: string) => {
       this.cache.setNewElement('home-element', markdownFile);
       this.showdownHTML = markdownFile;
     });

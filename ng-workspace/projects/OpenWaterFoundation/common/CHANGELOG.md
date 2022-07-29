@@ -10,6 +10,31 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 4.0.0 (2022-0x-xx) #
+
+### Bug Fixes ###
+
+* Fixed a memory leak where the RXJS timer subscription was not correctly being
+unsubscribed from. This kept running the code in the `refreshLayer` method, and
+throwing an error because code in the scope was not set up for it to be running.
+
+### Features / Enhancements ###
+
+* Changed the InfoMapper application location strategy from `HashLocationStrategy`
+to `PathLocationStrategy`. This was not done in the library itself, but was nonetheless
+a large update and prompted the following changes.
+
+* Added a "404" page for URLs that would request a component to be created from
+the library, but would be a bad URL. For example,
+
+  ```
+  test.openwaterfoundation.org/map/garbage
+  ```
+  The InfoMapper would call the Map Component to be created from this library, but
+  would see there is no map ID (in this example) named "garbage". This is not a
+  top level 404 page, and so the Map Component would need to call its own. All components
+  in the library now calls its own (Map, Dashboard, etc.).
+
 # 3.9.1 (2022-07-26) #
 
 ### Bug Fixes ###
