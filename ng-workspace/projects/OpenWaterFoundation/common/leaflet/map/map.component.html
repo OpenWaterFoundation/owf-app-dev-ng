@@ -1,134 +1,140 @@
-<div id="map-container">
-  <!-- Optionally define the sidebar content via HTML markup -->
-  <div id="sidebar" class="leaflet-sidebar collapsed">
-
-    <!-- Nav Tabs -->
-    <div class="leaflet-sidebar-tabs">
-      <!-- Top Aligned Tabs -->
-      <ul role="tablist">
-        <!-- Main menu button (Hamburger Icon) -->
-        <li>
-          <a href="#home" role="tab" matTooltip="Main tools"
-          matTooltipShowDelay="750" data-cy="sidebar-home">
-            <fa-icon [icon]='faLayerGroup' size="lg"></fa-icon>
-          </a>
-        </li>
-      </ul>
-
-      <!-- Bottom Aligned Tabs -->
-      <!-- The Help / About anchor that opens up the appropriate portion of the side bar. The commented out line below is an
-      example of another anchor that could be added -->
-      <ul role="tablist">
-        <li>
-          <a href="#information" role="tab" matTooltip="Help / About" matTooltipShowDelay="750"
-            matTooltipPosition="right" data-cy="sidebar-information">
-            <fa-icon [icon]=faInfoCircle size="lg"></fa-icon>
-          </a>
-        </li>
-        <!-- <li>
-          <a matTooltip="External link to project on GitHub"
-                href="https://github.com/nickpeihl/leaflet-sidebar-v2">
-            THIS NEEDS @fortawesome/free-brands-svg-icons NPM PACKAGE!!!
-            <fa-icon [icon]=faGithub size="lg"></fa-icon>
-          </a>
-        </li> -->
-      </ul>
-
-    </div>
-
-    <!-- Panel content -->
-    <div class="leaflet-sidebar-content">
-      <div class="leaflet-sidebar-pane" id="home">
-        <h1 class="leaflet-sidebar-header">
-          <div *ngIf="geoMapName" class="geoMap-title">{{geoMapName}}</div>
-
-          <div *ngIf="mapConfig">
-            <div *ngIf="geoMapDocPath" class="geoMap-doc-button">
-              <button class="btn geoMap-info-circle"
-                (click)="openDocDialog(geoMapDocPath, mapConfig.geoMaps[0].geoMapId, geoMapName)"
-                matTooltip="Click to view map documentation" [matTooltipShowDelay]="750">
-                  <fa-icon [icon]=faInfoCircle size="lg"></fa-icon>
-              </button>
-            </div>
-          </div>
-
-          <span matTooltip="Close sidebar" [matTooltipShowDelay]="750"
-          class="leaflet-sidebar-close" data-cy="sidebar-close">
-            <fa-icon [icon]=faCaretLeft size="lg"></fa-icon>
-          </span>
-
-        </h1>
-
-        <br>
-
-        <div class="accordion" id="sidebar-accordion">
-
-          <div *ngIf="mapConfig">
-            <div *ngFor="let geoLayerViewGroup of allGeoLayerViewGroups">
-
-              <div
-                *ngIf="geoLayerViewGroup.properties.isBackground === undefined || geoLayerViewGroup.properties.isBackground === 'false'; else background">
-
-                <div>
-                  <legend-layer-group [allFeatures]="allFeatures" [categorizedLayerColors]="categorizedLayerColors"
-                                      [eventActions]="eventActions" [geoLayerViewGroup]="geoLayerViewGroup"
-                                      [graduatedLayerColors]="graduatedLayerColors" [lastRefresh]="lastRefresh"
-                                      [layerClassificationInfo]="layerClassificationInfo" [mainMap]="mainMap">
-                  </legend-layer-group>
-                </div>
-
+<div *ngIf="validMapID === true" class="show-map-container">
+  <div id="map-container">
+    <!-- Optionally define the sidebar content via HTML markup -->
+    <div id="sidebar" class="leaflet-sidebar collapsed">
+  
+      <!-- Nav Tabs -->
+      <div class="leaflet-sidebar-tabs">
+        <!-- Top Aligned Tabs -->
+        <ul role="tablist">
+          <!-- Main menu button (Hamburger Icon) -->
+          <li>
+            <a href="#home" role="tab" matTooltip="Main tools"
+            matTooltipShowDelay="750" data-cy="sidebar-home">
+              <fa-icon [icon]='faLayerGroup' size="lg"></fa-icon>
+            </a>
+          </li>
+        </ul>
+  
+        <!-- Bottom Aligned Tabs -->
+        <!-- The Help / About anchor that opens up the appropriate portion of the side bar. The commented out line below is an
+        example of another anchor that could be added -->
+        <ul role="tablist">
+          <li>
+            <a href="#information" role="tab" matTooltip="Help / About" matTooltipShowDelay="750"
+              matTooltipPosition="right" data-cy="sidebar-information">
+              <fa-icon [icon]=faInfoCircle size="lg"></fa-icon>
+            </a>
+          </li>
+          <!-- <li>
+            <a matTooltip="External link to project on GitHub"
+                  href="https://github.com/nickpeihl/leaflet-sidebar-v2">
+              THIS NEEDS @fortawesome/free-brands-svg-icons NPM PACKAGE!!!
+              <fa-icon [icon]=faGithub size="lg"></fa-icon>
+            </a>
+          </li> -->
+        </ul>
+  
+      </div>
+  
+      <!-- Panel content -->
+      <div class="leaflet-sidebar-content">
+        <div class="leaflet-sidebar-pane" id="home">
+          <h1 class="leaflet-sidebar-header">
+            <div *ngIf="geoMapName" class="geoMap-title">{{geoMapName}}</div>
+  
+            <div *ngIf="mapConfig">
+              <div *ngIf="geoMapDocPath" class="geoMap-doc-button">
+                <button class="btn geoMap-info-circle"
+                  (click)="openDocDialog(geoMapDocPath, mapConfig.geoMaps[0].geoMapId, geoMapName)"
+                  matTooltip="Click to view map documentation" [matTooltipShowDelay]="750">
+                    <fa-icon [icon]=faInfoCircle size="lg"></fa-icon>
+                </button>
               </div>
-
-              <ng-template #background>
-                <legend-background-group [geoLayerViewGroup]="geoLayerViewGroup"
-                                          (callSelectBackgroundLayer)="selectBackgroundLayer($event)">
-                </legend-background-group>
-              </ng-template>
-
             </div>
+  
+            <span matTooltip="Close sidebar" [matTooltipShowDelay]="750"
+            class="leaflet-sidebar-close" data-cy="sidebar-close">
+              <fa-icon [icon]=faCaretLeft size="lg"></fa-icon>
+            </span>
+  
+          </h1>
+  
+          <br>
+  
+          <div class="accordion" id="sidebar-accordion">
+  
+            <div *ngIf="mapConfig">
+              <div *ngFor="let geoLayerViewGroup of allGeoLayerViewGroups">
+  
+                <div
+                  *ngIf="geoLayerViewGroup.properties.isBackground === undefined || geoLayerViewGroup.properties.isBackground === 'false'; else background">
+  
+                  <div>
+                    <legend-layer-group [allFeatures]="allFeatures" [categorizedLayerColors]="categorizedLayerColors"
+                                        [eventActions]="eventActions" [geoLayerViewGroup]="geoLayerViewGroup"
+                                        [graduatedLayerColors]="graduatedLayerColors" [lastRefresh]="lastRefresh"
+                                        [layerClassificationInfo]="layerClassificationInfo" [mainMap]="mainMap">
+                    </legend-layer-group>
+                  </div>
+  
+                </div>
+  
+                <ng-template #background>
+                  <legend-background-group [geoLayerViewGroup]="geoLayerViewGroup"
+                                            (callSelectBackgroundLayer)="selectBackgroundLayer($event)">
+                  </legend-background-group>
+                </ng-template>
+  
+              </div>
+            </div>
+  
           </div>
-
+  
         </div>
-
-      </div>
-
-      <!-- The Help / About sidebar. Can turn into its own separate component.  -->
-      <div class="leaflet-sidebar-pane" id="information">
-        <h1 class="leaflet-sidebar-header">
-          Help / About
-          <span class="leaflet-sidebar-close">
-            <fa-icon [icon]=faCaretLeft size="lg"></fa-icon>
-          </span>
-        </h1>
-        <div id="information-tab">
-
-          <p>
-            <b>Application {{appVersion}}</b>
-          </p>
-
-          <p>
-            <b>InfoMapper {{(projectVersion | async)?.version}}</b><br>
-            Developed by the Open Water Foundation<br>
-            The InfoMapper displays spatial data and related information.<br><br>
-
-            Copyright 2018-2022 Open Water Foundation<br><br>
-
-            License GPLv3+: GNU GPL version 3 or later<br><br>
-
-            There is ABSOLUTELY NO WARRANTY; for details see the
-            'Disclaimer of Warranty' section of the GPLv3 license in the LICENSE file.
-            This is free software: you are free to change and redistribute it
-            under the conditions of the GPLv3 license in the LICENSE file.
-          </p>
-
+  
+        <!-- The Help / About sidebar. Can turn into its own separate component.  -->
+        <div class="leaflet-sidebar-pane" id="information">
+          <h1 class="leaflet-sidebar-header">
+            Help / About
+            <span class="leaflet-sidebar-close">
+              <fa-icon [icon]=faCaretLeft size="lg"></fa-icon>
+            </span>
+          </h1>
+          <div id="information-tab">
+  
+            <p>
+              <b>Application {{appVersion}}</b>
+            </p>
+  
+            <p>
+              <b>InfoMapper {{(projectVersion | async)?.version}}</b><br>
+              Developed by the Open Water Foundation<br>
+              The InfoMapper displays spatial data and related information.<br><br>
+  
+              Copyright 2018-2022 Open Water Foundation<br><br>
+  
+              License GPLv3+: GNU GPL version 3 or later<br><br>
+  
+              There is ABSOLUTELY NO WARRANTY; for details see the
+              'Disclaimer of Warranty' section of the GPLv3 license in the LICENSE file.
+              This is free software: you are free to change and redistribute it
+              under the conditions of the GPLv3 license in the LICENSE file.
+            </p>
+  
+          </div>
+  
         </div>
-
+  
       </div>
-
     </div>
+  
+    <!-- Create the Leaflet map here. -->
+    <div id="mapID"></div>
+  
   </div>
+</div>
 
-  <!-- Create the Leaflet map here. -->
-  <div id="mapID"></div>
-
+<div *ngIf="validMapID === false">
+  <common-not-found pageType="Map"></common-not-found>
 </div>

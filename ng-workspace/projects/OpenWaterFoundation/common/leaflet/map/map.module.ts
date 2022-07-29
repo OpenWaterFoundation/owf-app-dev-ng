@@ -10,6 +10,8 @@ import { PipesModule }                 from '@OpenWaterFoundation/common/pipes';
 
 import { FontAwesomeModule }           from '@fortawesome/angular-fontawesome';
 
+import { NotFoundModule }              from '@OpenWaterFoundation/common/services';
+
 import { MapComponent }                from './map.component';
 import { LegendBackgroundGroupModule } from './legend/legend-background-group/legend-background-group.module';
 import { LegendLayerGroupModule }      from './legend/legend-layer-group/legend-layer-group.module';
@@ -31,6 +33,8 @@ import { LegendLayerGroupModule }      from './legend/legend-layer-group/legend-
 
     MatSlideToggleModule,
     MatTooltipModule,
+
+    NotFoundModule,
 
     PipesModule,
     

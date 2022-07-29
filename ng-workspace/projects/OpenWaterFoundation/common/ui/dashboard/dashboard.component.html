@@ -50,3 +50,7 @@
   </mat-grid-list>
 
 </div>
+
+<div *ngIf="!dashboardConf" class="dashboard-error">
+  <common-not-found pageType="Dashboard"></common-not-found>
+</div>

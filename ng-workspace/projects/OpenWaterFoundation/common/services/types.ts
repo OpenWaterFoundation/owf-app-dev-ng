@@ -158,7 +158,7 @@ export interface AppConfig {
   mainMenu?: MainMenu[];
 }
 
-////////////////////////////// GEOMAPPROJECT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//////////////////////// GEOMAPPROJECT / MAP CONFIG \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /** The GeoMapProject JSON object created by the GeoProcessor. */
 export interface GeoMapProject {
@@ -211,6 +211,7 @@ export interface GeoLayerViewGroup {
   description?: string;
   properties?: {
     docPath?: string;
+    expandedInitial?: string;
     isBackground?: string;
     selectBehavior?: string;
     selectedInitial?: string;
@@ -228,6 +229,7 @@ export interface GeoLayerView {
     imageBounds?: string;
     imageGalleryEventActionId?: string;
     refreshInterval?: string;
+    refreshOffset?: string;
     selectedInitial?: string;
   },
   geoLayerSymbol?: GeoLayerSymbol;
@@ -246,6 +248,7 @@ export interface GeoLayerSymbol {
     fillColor?: string;
     fillOpacity?: string;
     imageAnchorPoint?: string;
+    labelText?: string;
     /** Path to the image to be shown in the map legend. */
     legendImagePath?: string;
     opacity?: string;

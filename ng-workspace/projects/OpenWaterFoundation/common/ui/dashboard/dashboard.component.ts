@@ -1,14 +1,15 @@
 import { Component,
-          OnDestroy }       from '@angular/core';
-import { ActivatedRoute }   from '@angular/router';
+          OnDestroy }        from '@angular/core';
+import { ActivatedRoute }    from '@angular/router';
 
-import { Subscription }     from 'rxjs';
+import { Subscription }      from 'rxjs';
+import { first }             from 'rxjs/operators';
 
 import { EventService,
           OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import * as IM               from '@OpenWaterFoundation/common/services';
 
-import { DashboardService } from './dashboard.service';
+import { DashboardService }  from './dashboard.service';
 
 
 @Component({
@@ -20,8 +21,6 @@ export class DashboardComponent implements OnDestroy {
 
   /** The dashboard configuration object read in from the JSON file. */
   dashboardConf: IM.DashboardConf;
-  /** Subscription used when reading in the dashboard configuration file. */
-  dashboardConfigPathSub: Subscription;
   /**
    * 
    */
@@ -78,14 +77,20 @@ export class DashboardComponent implements OnDestroy {
 
     this.routeSub = this.route.paramMap.subscribe((paramMap) => {
       var id = paramMap.get('id');
+      if (this.commonService.validMapConfigMapID(id) === false) {
+        return;
+      }
       var dashboardConfigPath = this.commonService.getDashboardConfigPathFromId(id);
   
-      this.dashboardConfigPathSub = this.commonService
-      .getJSONData(this.commonService.getAppPath() + dashboardConfigPath)
-      .subscribe((dashboardConfig: IM.DashboardConf) => {
+      this.commonService.getJSONData(this.commonService.getAppPath() + dashboardConfigPath)
+      .pipe(first()).subscribe((dashboardConfig: IM.DashboardConf) => {
   
         this.checkDashboardConfig(dashboardConfig);
         this.dashboardConf = dashboardConfig;
+
+        if (!this.dashboardConf) {
+          return;
+        }
         this.eventService.createListenedToWidgets(dashboardConfig);
       });
     });
@@ -95,9 +100,7 @@ export class DashboardComponent implements OnDestroy {
    * Called once, before the instance is destroyed.
    */
   ngOnDestroy(): void {
-    if (this.dashboardConfigPathSub) {
-      this.dashboardConfigPathSub.unsubscribe();
-    }
+    
   }
 
   /**

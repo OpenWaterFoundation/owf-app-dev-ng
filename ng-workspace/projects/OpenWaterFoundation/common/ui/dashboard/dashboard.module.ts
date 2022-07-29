@@ -13,8 +13,10 @@ import { StatusIndicatorModule } from './widget/status-indicator/status-indicato
 import { TextModule }            from './widget/text/text.module';
 import { TitleModule }           from './widget/title/title.module';
 
+import { ErrorModule,
+          NotFoundModule }       from '@OpenWaterFoundation/common/services';
+
 import { DashboardComponent }    from './dashboard.component';
-import { ErrorModule }           from '@OpenWaterFoundation/common/services';
 
 
 @NgModule({
@@ -32,6 +34,7 @@ import { ErrorModule }           from '@OpenWaterFoundation/common/services';
     MapModule,
 
     ErrorModule,
+    NotFoundModule,
 
     ChartWidgetModule,
     DiagnosticsModule,
