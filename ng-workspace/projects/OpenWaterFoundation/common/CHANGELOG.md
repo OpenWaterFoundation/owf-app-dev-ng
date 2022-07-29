@@ -10,19 +10,25 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
-# 4.0.0 (2022-0x-xx) #
+# 4.0.0 (2022-07-29) #
 
 ### Bug Fixes ###
 
 * Fixed a memory leak where the RXJS timer subscription was not correctly being
 unsubscribed from. This kept running the code in the `refreshLayer` method, and
 throwing an error because code in the scope was not set up for it to be running.
+* Fixed some small bugs that appeared with the new implementation of the 404
+routing described below. Set Subscriptions to null and initialized them right
+before they need to be used. The conditional checking for truthiness in the component
+destruction will work as expected. Note that the goal is to remove all class variable
+subscriptions and replace with automatic unsubscribes from RXJS operators in the
+future.
 
 ### Features / Enhancements ###
 
 * Changed the InfoMapper application location strategy from `HashLocationStrategy`
 to `PathLocationStrategy`. This was not done in the library itself, but was nonetheless
-a large update and prompted the following changes.
+a large update and prompted the changes below.
 
 * Added a "404" page for URLs that would request a component to be created from
 the library, but would be a bad URL. For example,
@@ -34,6 +40,12 @@ the library, but would be a bad URL. For example,
   would see there is no map ID (in this example) named "garbage". This is not a
   top level 404 page, and so the Map Component would need to call its own. All components
   in the library now calls its own (Map, Dashboard, etc.).
+
+  The following sections of the InfoMapper have robust bad URL and not found protocol:
+  * Top level 404, e.g. `data.openwaterfoundation.org/bad-url`
+  * `/content-page/bad-markdownFile-id`
+  * `/dashboard/bad-id`
+  * `/map/bad-id`
 
 # 3.9.1 (2022-07-26) #
 

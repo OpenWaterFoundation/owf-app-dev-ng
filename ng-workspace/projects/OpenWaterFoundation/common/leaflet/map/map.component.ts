@@ -96,7 +96,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   eventActions: {} = {};
   /** For the Leaflet map's config file subscription object so it can be closed on
    * this component's destruction. */
-  private forkJoinSub = <any>Subscription;
+  private forkJoinSub = null;
   /** An object of Style-like objects containing:
    *     key  : geoLayerId
    *     value: object with style properties
@@ -125,7 +125,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * the path to the app configuration file. */
   @Input('map-config') mapConfigStandalonePath: string;
   /** The map configuration subscription, unsubscribed to on component destruction. */
-  private mapConfigSub = <any>Subscription;
+  private mapConfigSub = null;
   /** Determines whether the map config file path was correct, found, and read in.
    * If true, the map will be displayed. If false, the 404 div will let the user
    * know there was an issue with the URL/path to the */
@@ -147,7 +147,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /** InfoMapper project version. */
   projectVersion: Observable<any>;
   /** The activatedRoute subscription, unsubscribed to on component destruction. */
-  private actRouteSub = <any>Subscription;
+  private actRouteSub = null;
   /** Boolean showing if the URL given for a layer is currently unavailable. */
   serverUnavailable = false;
   /** Boolean to indicate whether the sidebar has been initialized. Don't need to
@@ -161,6 +161,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   showRefresh: boolean = true;
   /** The windowManager instance; To create, maintain, and remove multiple open dialogs. */
   windowManager: WindowManager = WindowManager.getInstance();
+  /**
+   * 
+   */
+  validMapID: boolean;
   /** All used icons in the MapComponent. */
   faCaretLeft = faCaretLeft;
   faInfoCircle = faInfoCircle;
@@ -471,6 +475,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           }
           // Use forkJoin to go through the array and be able to subscribe to every
           // element and get the response back in the results array when finished.
+          this.forkJoinSub = <any>Subscription;
           this.forkJoinSub = forkJoin(asyncData).subscribe((results) => {
             // The scope of this does not reach the leaflet event functions.
             var _this = this;
@@ -1737,6 +1742,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Get AND sets the map config path and geoJson path for relative path use.
     this.commonService.getFullMapConfigPath(this.mapID, standalone, configPath);
 
+    this.mapConfigSub = <any>Subscription;
     this.mapConfigSub = this.commonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
     .subscribe((mapConfig: any) => {
       // this.commonService.setGeoMapID(mapConfig.geoMaps[0].geoMapId);
@@ -1765,6 +1771,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     // When the parameters in the URL are changed the map will refresh and load
     // according to new configuration data.
+    this.actRouteSub = <any>Subscription;
     this.actRouteSub = this.actRoute.paramMap.subscribe((paramMap) => {
 
       if (!this.route.url.toLowerCase().includes('/map/') &&
@@ -1774,6 +1781,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       this.resetMapVariables();
       this.mapID = paramMap.get('id');
+      this.validMapID = this.commonService.validMapConfigMapID(this.mapID);
+
+      if (this.validMapID === false) {
+        return;
+      }
 
       // Standalone Map for website embedding.
       if (this.appConfigStandalonePath) {
@@ -1807,12 +1819,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (this.mapConfigSub) {
       this.mapConfigSub.unsubscribe();
     }
-    // If a popup is open on the map and a Content Page button is clicked on, then
-    // this Map Component will be destroyed. Instead of resetting the map variables,
-    // close the popup before the map is destroyed.
-    this.mainMap.closePopup();
-    // Destroy the map and all attached event listeners.
-    this.mainMap.remove();
+
+    if (this.mainMap) {
+      // If a popup is open on the map and a Content Page button is clicked on, then
+      // this Map Component will be destroyed. Instead of resetting the map variables,
+      // close the popup before the map is destroyed.
+      this.mainMap.closePopup();
+      // Destroy the map and all attached event listeners.
+      this.mainMap.remove();
+    }
+    
     // Finish up with the Subject observing for screen changes.
     this.destroyed.next();
     this.destroyed.complete();

@@ -1,3 +1,11 @@
+/* TAGS */
+
+a.leaflet-control-zoomhome-in,
+a.leaflet-control-zoomhome-out {
+  font-size: 1.5em;
+  line-height: 26px;
+}
+
 /* CLASSES */
 
 /* Styles a default image layer feature's label. */
@@ -98,16 +106,26 @@ or added by a user for other information to be displayed at all times on the map
 	margin-left:7px !important;
 }
 
-/* Overrides the Angular Material padding for the Expansion Panel body. */
-.mat-expansion-panel-body {
-  padding: 5px 10px !important;
-}
-
 /* Wraps a URL in the Leaflet popup automatically when it becomes long enough to
 be wider than the popup width. Otherwise, it will only break the line at default
 line-break points, such as dashes '-'. */
 .leaflet-popup-wrap {
   word-wrap: break-word;
+}
+
+.leaflet-control-zoomhome a {
+  font: bold 18px "Lucida Console",Monaco,monospace;
+}
+
+/* Overrides the Angular Material padding for the Expansion Panel body. */
+.mat-expansion-panel-body {
+  padding: 5px 10px !important;
+}
+
+/*  */
+.show-map-container {
+  height: 100%;
+  width: 100%;
 }
 
 /* Div that displays layer feature information in the upper left part of the map. */
@@ -141,16 +159,6 @@ line-break points, such as dashes '-'. */
 .upper-left-map-info-small-divider {
   margin-top: 2px;
   margin-bottom: 2px;
-}
-
-.leaflet-control-zoomhome a {
-  font: bold 18px "Lucida Console",Monaco,monospace;
-}
-
-a.leaflet-control-zoomhome-in,
-a.leaflet-control-zoomhome-out {
-font-size: 1.5em;
-line-height: 26px;
 }
 
 /* ID's */
