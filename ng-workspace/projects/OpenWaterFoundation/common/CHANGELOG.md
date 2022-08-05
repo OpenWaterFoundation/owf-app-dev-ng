@@ -10,6 +10,21 @@ Optional elements to be added to each package version are as follows:
 
 These elements will only be added if they are applicable for the new version.
 
+# 4.0.2 #
+
+### Bug Fixes ###
+
+* Added in some more robust testing for the `No Map Container Found` issue. More
+console messages will be displayed as well for this version.
+
+# 4.0.1 #
+
+### Bug Fixes ###
+
+* Added some small changes and a console message to hopefully fix or at the very
+least help debug an inconsistent error when deployed for the Poudre basin InfoMapper
+application. A good foundation for debugging messages for all components was made.
+
 # 4.0.0 (2022-07-29) #
 
 ### Bug Fixes ###

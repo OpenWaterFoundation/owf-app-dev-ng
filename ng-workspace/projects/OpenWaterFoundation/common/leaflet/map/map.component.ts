@@ -86,6 +86,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /** Represents the current screen size. Used for dialog's to determine if they
    * should be shown for desktop or mobile screens. */
   currentScreenSize: string;
+
+  debugFlag: string = null;
   /** Subject that is completed when this component is destroyed. The breakpoint
    * observer will stop listening to screen size at that time. */
   destroyed = new Subject<void>();
@@ -363,18 +365,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.graduatedLayerColors[geoLayerId] = lineArr;
   }
 
-  /**
-  * The entry point and main foundation for building the Leaflet map using the data
-  * from the configuration file. Contains the building and positioning of the map,
-  * raster and/or vector layers on the map and all necessary Leaflet functions for the
-  * creation and styling of shapes, polygons and images on the map (among other options).
-  */
   private buildMap(): void {
-
-    this.mapInitialized = true;
-
-    this.createMapBackgroundLayers();
-
     // Create a Leaflet Map and set the default layers.
     this.mainMap = L.map('mapID', {
       layers: [this.baseMaps[this.commonService.getDefaultBackgroundLayer()]],
@@ -896,10 +887,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             }
 
             /**
-             * Adds event listeners to each feature in the Leaflet layer. 
-             * @param feature The feature object and all its properties in the layer.
-             * @param layer The reference to the layer object the feature comes from.
-             */
+            * Adds event listeners to each feature in the Leaflet layer. 
+            * @param feature The feature object and all its properties in the layer.
+            * @param layer The reference to the layer object the feature comes from.
+            */
             function onEachFeature(feature: any, layer: any): void {
               // If the geoLayerView has its own custom events, use them here
               if (eventHandlers.length > 0) {
@@ -1259,10 +1250,57 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         }
       }
     });
-    
+
     // If the sidebar has not already been initialized once then do so.
     if (this.sidebarInitialized == false) { this.createSidebar(); }
   } // END OF MAP BUILDING.
+
+  /**
+  * The entry point and main foundation for building the Leaflet map using the data
+  * from the configuration file. Contains the building and positioning of the map,
+  * raster and/or vector layers on the map and all necessary Leaflet functions for the
+  * creation and styling of shapes, polygons and images on the map (among other options).
+  */
+  private checkIfMapContainerExists(): void {
+
+    this.mapInitialized = true;
+
+    this.createMapBackgroundLayers();
+
+    console.log('Leaflet map div:', L.DomUtil.get('mapID'));
+
+    var mapContainerFound = new Subject<void>();
+    var secondsTicked = 0;
+    
+    /**
+     * This might be needed because of the ngIf I added to the top of the Map
+     * component's template file. Try testing without it.
+     */
+    timer(0, 1000).pipe(takeUntil(mapContainerFound)).subscribe(() => {
+      if (L.DomUtil.get('mapID')) {
+
+        // if (this.debugFlag === 'true') {
+        console.log('Map container found as ', L.DomUtil.get('mapID'));
+        // }
+        mapContainerFound.next();
+        mapContainerFound.complete();
+        this.buildMap();
+        
+      } else {
+
+        secondsTicked += 1;
+        if (secondsTicked === 10) {
+          console.log('No map div container found. Exiting.');
+          mapContainerFound.next();
+          mapContainerFound.complete();
+        } else {
+          // if (this.debugFlag === 'true') {
+          console.log('Map container not found. Trying again.');
+          // }
+        }
+      }
+    });
+  }
 
   /**
    * Unused.
@@ -1760,7 +1798,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // Add components to the sidebar.
       this.addLayerToSidebar(mapConfig);
       // Create the map.
-      this.buildMap();
+      this.checkIfMapContainerExists();
     });
   }
 
@@ -1773,6 +1811,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // according to new configuration data.
     this.actRouteSub = <any>Subscription;
     this.actRouteSub = this.actRoute.paramMap.subscribe((paramMap) => {
+
+      this.debugFlag = this.actRoute.snapshot.queryParamMap.get('debug');
 
       if (!this.route.url.toLowerCase().includes('/map/') &&
       !this.appConfigStandalonePath && !this.mapConfigStandalonePath) {
