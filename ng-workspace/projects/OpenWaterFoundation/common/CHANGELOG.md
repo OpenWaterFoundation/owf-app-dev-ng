@@ -12,12 +12,12 @@ These elements will only be added if they are applicable for the new version.
 
 # 4.0.2 #
 
-### Bug Fixes ###
+### Bug Fixes (2022-08-05) ###
 
 * Added in some more robust testing for the `No Map Container Found` issue. More
 console messages will be displayed as well for this version.
 
-# 4.0.1 #
+# 4.0.1 (2022-08-05) #
 
 ### Bug Fixes ###
 
