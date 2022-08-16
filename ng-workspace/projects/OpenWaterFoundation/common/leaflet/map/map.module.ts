@@ -25,9 +25,9 @@ import { LegendLayerGroupModule }      from './legend/legend-layer-group/legend-
     MapComponent
   ],
   imports: [
-    CommonModule,
     BrowserAnimationsModule,
     BrowserModule,
+    CommonModule,
 
     FontAwesomeModule,
 

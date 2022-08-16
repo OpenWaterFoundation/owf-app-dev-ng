@@ -10,6 +10,7 @@ mat-grid-list {
 /* Div container displayed if/when the DashboardConf object is created. Must be
 set to 100% for each of the tiles to show up. */
 .dashboard-container {
+  margin-top: 64px;
   height: 100%;
 }
 

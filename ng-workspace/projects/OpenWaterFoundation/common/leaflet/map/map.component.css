@@ -122,8 +122,9 @@ line-break points, such as dashes '-'. */
   padding: 5px 10px !important;
 }
 
-/*  */
+/* Div to be displayed if the correct app config object ID is given in the URL. */
 .show-map-container {
+  margin-top: 64px;
   height: 100%;
   width: 100%;
 }

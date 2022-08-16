@@ -8,11 +8,30 @@ Optional elements to be added to each package version are as follows:
 * Performance Improvements
 * Breaking Changes
 
-These elements will only be added if they are applicable for the new version.
+These elements will only be added if they are applicable for the new version. New
+versions will have the date of deployment after the version number, and will contain
+X's if the version is not yet released.
 
-# 4.0.2 #
+# 4.1.2 (2022-08-XX) #
 
-### Bug Fixes (2022-08-05) ###
+### Bug Fixes ###
+
+* Fixed a bug where data tables did not truncate long non-breakable strings
+in its table's cells. The fixed component's were:
+  * `DialogDataTableComponent`
+  * `DialogDataTableLightComponent`
+  * `DialogTSTableComponent`
+
+### Features / Enhancements ###
+
+* Added the first iteration of the Common Logger for printing debugging messages
+to the console. Depending on debugLevel, different amounts of messages are printed.
+The way it is used now will probably be changed/updated in the future.
+* 
+
+# 4.0.2 (2022-08-05) #
+
+### Bug Fixes ###
 
 * Added in some more robust testing for the `No Map Container Found` issue. More
 console messages will be displayed as well for this version.

@@ -25,7 +25,10 @@ export class DashboardComponent implements OnDestroy {
    * 
    */
   routeSub: Subscription;
-
+  /**
+   * 
+   */
+  validDashboardId: boolean;
 
   /**
    * 
@@ -76,11 +79,13 @@ export class DashboardComponent implements OnDestroy {
   ngOnInit(): void {
 
     this.routeSub = this.route.paramMap.subscribe((paramMap) => {
-      var id = paramMap.get('id');
-      if (this.commonService.validMapConfigMapID(id) === false) {
+
+      var dashboardId = paramMap.get('id');
+      this.validDashboardId = this.commonService.validID(dashboardId);
+      if (this.validDashboardId === false) {
         return;
       }
-      var dashboardConfigPath = this.commonService.getDashboardConfigPathFromId(id);
+      var dashboardConfigPath = this.commonService.getDashboardConfigPathFromId(dashboardId);
   
       this.commonService.getJSONData(this.commonService.getAppPath() + dashboardConfigPath)
       .pipe(first()).subscribe((dashboardConfig: IM.DashboardConf) => {

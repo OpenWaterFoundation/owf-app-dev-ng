@@ -456,7 +456,7 @@ export class MapUtil {
    */
   public static createSingleBandRaster(georaster: any, result: any, symbol: IM.GeoLayerSymbol): any {
     var geoRasterLayer = new GeoRasterLayer({
-      debugLevel: 2,
+      debugLevel: 0,
       georaster,
       // Sets the color and opacity of each cell in the raster layer.
       pixelValuesToColorFn: (values: any) => {
@@ -549,7 +549,7 @@ export class MapUtil {
     }
 
     // var geoRasterLayer = new GeoRasterLayer({
-    //   debugLevel: 2,
+    //   debugLevel: 0,
     //   georaster,
     //   // Create a custom drawing scheme for the raster layer. This might overwrite pixelValuesToColorFn().
     //   customDrawFunction: ({ context, values, x, y, width, height }) => {

@@ -5,6 +5,7 @@ import { AfterViewInit,
           ViewContainerRef,
           ViewEncapsulation }      from '@angular/core';
 import { ActivatedRoute,
+          ParamMap,
           Router }                 from '@angular/router';
 import { MatDialog,
           MatDialogRef,
@@ -33,7 +34,8 @@ import { faCaretLeft,
           faInfoCircle,
           faLayerGroup }           from '@fortawesome/free-solid-svg-icons';
 
-import { OwfCommonService }        from '@OpenWaterFoundation/common/services';
+import { CommonLoggerService,
+          OwfCommonService }       from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
           MapLayerItem }           from '@OpenWaterFoundation/common/ui/layer-manager';
 import { WindowManager,
@@ -86,8 +88,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /** Represents the current screen size. Used for dialog's to determine if they
    * should be shown for desktop or mobile screens. */
   currentScreenSize: string;
-
+  /** Can be set to `true` if the debug query parameter is given for debugging purposes,
+   * otherwise will be null. */
   debugFlag: string = null;
+  /** Can be set to
+   * * `trace` - Will show all logging messages in the application. Meant for
+   * in-depth debugging.
+   * * `warn` - Will display any warning messages throughout the application. For
+   * less in-depth debugging. */
+  debugLevelFlag: string = null;
   /** Subject that is completed when this component is destroyed. The breakpoint
    * observer will stop listening to screen size at that time. */
   destroyed = new Subject<void>();
@@ -182,11 +191,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param commonService A reference to the common library service.
   * @param dialog A reference to the MatDialog for creating and displaying a popup
   * dialog with a chart.
-  * @param route A service that provides navigation among views and URL manipulation
+  * @param router A service that provides navigation among views and URL manipulation
   * capabilities.
   */
   constructor(private actRoute: ActivatedRoute, private breakpointObserver: BreakpointObserver,
-  public commonService: OwfCommonService, public dialog: MatDialog, private route: Router) {
+  public commonService: OwfCommonService, public dialog: MatDialog, private router: Router,
+  private logger: CommonLoggerService) {
 
     if (window['Cypress']) window['MapComponent'] = this;
 
@@ -488,8 +498,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
             // Prints out how many features each geoLayerView contains. Helpful for debugging.
             if (this.allFeatures[geoLayer.geoLayerId]) {
-              console.log(geoLayerView.name, 'contains', this.allFeatures[geoLayer.geoLayerId].features.length,
-                (this.allFeatures[geoLayer.geoLayerId].features.length === 1 ? 'feature.' : 'features.'));
+              var message = geoLayerView.name + ' contains ' +
+              this.allFeatures[geoLayer.geoLayerId].features.length +
+              (this.allFeatures[geoLayer.geoLayerId].features.length === 1 ? ' feature.' : ' features.');
+
+              this.logger.print('info', 'MapComponent.buildMap - ' + message);
             }
 
             var eventObject: any = {};
@@ -1267,7 +1280,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.createMapBackgroundLayers();
 
-    console.log('Leaflet map div:', L.DomUtil.get('mapID'));
+    this.logger.print('trace', 'MapComponent.checkIfMapContainerExists - Leaflet map container div: ',
+    this.debugFlag, this.debugLevelFlag);
+    this.logger.print('trace', L.DomUtil.get('mapID'), this.debugFlag, this.debugLevelFlag);
 
     var mapContainerFound = new Subject<void>();
     var secondsTicked = 0;
@@ -1279,9 +1294,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     timer(0, 1000).pipe(takeUntil(mapContainerFound)).subscribe(() => {
       if (L.DomUtil.get('mapID')) {
 
-        // if (this.debugFlag === 'true') {
-        console.log('Map container found as ', L.DomUtil.get('mapID'));
-        // }
+        this.logger.print('trace', 'MapComponent.checkIfMapContainerExists - Leaflet map container found:',
+        this.debugFlag, this.debugLevelFlag);
+        this.logger.print('trace', L.DomUtil.get('mapID'), this.debugFlag, this.debugLevelFlag);
+
         mapContainerFound.next();
         mapContainerFound.complete();
         this.buildMap();
@@ -1290,13 +1306,17 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
         secondsTicked += 1;
         if (secondsTicked === 10) {
-          console.log('No map div container found. Exiting.');
+
+          this.logger.print('warn',
+          'MapComponent.checkIfMapContainerExists - No Leaflet map container found after 10 tries. Exiting.',
+          this.debugFlag, this.debugLevelFlag);
+
           mapContainerFound.next();
           mapContainerFound.complete();
         } else {
-          // if (this.debugFlag === 'true') {
-          console.log('Map container not found. Trying again.');
-          // }
+          this.logger.print('trace',
+          'MapComponent.checkIfMapContainerExists - Leaflet map container not found. Trying again.',
+          this.debugFlag, this.debugLevelFlag);
         }
       }
     });
@@ -1464,7 +1484,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               }
               context.fillRect(x, y, width, height);
             },
-            debugLevel: 2,
+            debugLevel: 0,
             georaster: georaster,
             opacity: 0.7
           });
@@ -1810,18 +1830,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // When the parameters in the URL are changed the map will refresh and load
     // according to new configuration data.
     this.actRouteSub = <any>Subscription;
-    this.actRouteSub = this.actRoute.paramMap.subscribe((paramMap) => {
+    this.actRouteSub = this.actRoute.paramMap.subscribe((paramMap: ParamMap) => {
 
       this.debugFlag = this.actRoute.snapshot.queryParamMap.get('debug');
+      this.debugLevelFlag = this.actRoute.snapshot.queryParamMap.get('debugLevel');
 
-      if (!this.route.url.toLowerCase().includes('/map/') &&
+      if (!this.router.url.toLowerCase().includes('/map/') &&
       !this.appConfigStandalonePath && !this.mapConfigStandalonePath) {
         return;
       }
 
       this.resetMapVariables();
       this.mapID = paramMap.get('id');
-      this.validMapID = this.commonService.validMapConfigMapID(this.mapID);
+      this.validMapID = this.commonService.validID(this.mapID);
 
       if (this.validMapID === false) {
         return;
@@ -2239,7 +2260,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                   }
                   context.fillRect(x, y, width, height);
                 },
-                debugLevel: 2,
+                debugLevel: 0,
                 georaster: georaster,
                 opacity: 0.7
               });

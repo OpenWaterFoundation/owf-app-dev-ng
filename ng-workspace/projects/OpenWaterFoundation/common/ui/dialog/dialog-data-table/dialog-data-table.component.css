@@ -3,8 +3,9 @@
 /* Styles the menu options in the vertical dots menu in the side bar */
 button.mat-menu-item {
   outline: none;
-  /* Overrides the width of the button in the menu. otherwise the default max-width is quite short, and will cut off
-  even a short name of the button, such as 'Data Table' */
+  /* Overrides the width of the button in the menu. otherwise the default max-width
+  is quite short, and will cut off even a short name of the button, such as 'Data
+  Table'. */
   width: 200px !important;
   padding: 0px 8px 0px 8px;
 }
@@ -19,7 +20,7 @@ mat-radio-button.option {
   margin: 5px 10px 0px 0px;
 }
 
-/* Table width for the Mat Table */
+/* Table width for the Mat Table. */
 table {
   width: 100%;
   table-layout: fixed;
@@ -65,10 +66,11 @@ th.mat-header-cell {
   border-color: rgb(155, 155, 155);
 }
 
-/* The div surrounding the Mat Table so scrolling will occur if the table is large enough, and it doesn't
-take up too much space vertically in the Dialog. The draggable <h1> is 5% of the Dialog height, so this
-<div> can be technically 95%. Making it 95% is just slightly too big and creates some problems, maybe
-due to the way the table is drawn, but shrinking it slightly to 94.5% is doable */
+/* The div surrounding the Mat Table so scrolling will occur if the table is large
+enough, and it doesn't take up too much space vertically in the Dialog. The draggable
+<h1> is 5% of the Dialog height, so this <div> can be technically 95%. Making it
+95% is just slightly too big and creates some problems, maybe due to the way the
+table is drawn, but shrinking it slightly to 94.5% is doable */
 .dialog-content {
   height: 94.5%;
   width: 100%;
@@ -95,7 +97,8 @@ due to the way the table is drawn, but shrinking it slightly to 94.5% is doable 
   background-color: #c2c1c1;
 }
 
-/* Div class that takes up 5.5% of the height of the dialog and is gray to differentiate itself from the dialog content */
+/* Div class that takes up 5.5% of the height of the dialog and is gray to differentiate
+itself from the dialog content */
 .drag-header-main {
   background-color: #e6e6e6;
   height: 40px;
@@ -109,8 +112,9 @@ due to the way the table is drawn, but shrinking it slightly to 94.5% is doable 
 }
 
 .filter-not-found-cell {
-  /* This is needed for the virtual scrolling to handle correctly. Tells the height of each cell in the table
-  to be 48 pixels, which should be the pixels, but for some reason something is overriding it */
+  /* This is needed for the virtual scrolling to handle correctly. Tells the height
+  of each cell in the table to be 48 pixels, which should be the pixels, but for
+  some reason something is overriding it. */
   height: 48px;
   /*      Top Right Bot Left */
   padding: 0 8px 0 8px;
@@ -146,24 +150,36 @@ due to the way the table is drawn, but shrinking it slightly to 94.5% is doable 
   border-right: 1px;
   border-right-color: rgba(0, 0, 0, 0.25);
   border-right-style: dotted;
-  /* This is needed for the virtual scrolling to handle correctly. Tells the height of each cell in the table
-  to be 48 pixels, which should be the pixels, but for some reason something is overriding it */
+  /* This is needed for the virtual scrolling to handle correctly. Tells the height
+  of each cell in the table to be 48 pixels, which should be the pixels, but for
+  some reason something is overriding it */
   height: 48px;
   /*      Top Right Bot Left */
   padding: 0 8px 0 8px;
   text-align: right;
 }
 
+/* Set the contents of the table cell to the left. Used for strings. Hide long
+non-breakable strings.*/
 .mat-cell.left {
   text-align: left;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* Set the contents of the table cell to the right. Used for numbers. Hide long
+non-breakable strings. */
 .mat-cell.right {
   text-align: right !important;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* If the Material Table cell is a URL, treat it differently than a regular string or number. The bottom three options
-will hide the rest of a long string in a fixed-layout table, and won't wrap, creating the desired cell style */
+/* If the Material Table cell is a URL, treat it differently than a regular string
+or number. The bottom three options will hide the rest of a long string in a
+fixed-layout table, and won't wrap, creating the desired cell style */
 .mat-cell.url {
   text-align: left;
 

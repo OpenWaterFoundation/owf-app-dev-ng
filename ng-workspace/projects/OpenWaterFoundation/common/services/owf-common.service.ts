@@ -1651,24 +1651,27 @@ export class OwfCommonService {
   setTSIDLocation(tsid: string): void { this.graphTSID = tsid; }
 
   /**
-   * 
-   * @param mapID 
-   * @returns 
+   * Iterates over all mainMenu and subMenu objects in the application configuration
+   * file and determines if the id property matches the provided Id given in the
+   * URL.
+   * @param urlId Id from the URL.
+   * @returns True if the Id present in the current URL matches an Id from the app
+   * config file, and false if not.
    */
-  validMapConfigMapID(mapID: string): boolean {
+  validID(urlId: string): boolean {
 
     for (let mainMenu of this.appConfig.mainMenu) {
       // If subMenus exist.
       if (mainMenu.menus) {
         for (let subMenu of mainMenu.menus) {
-          if (subMenu.id === mapID) {
+          if (subMenu.id === urlId) {
             return true;
           }
         }
       }
       // If no subMenus exist.
       else {
-        if (mainMenu.id === mapID) {
+        if (mainMenu.id === urlId) {
           return true;
         }
       }

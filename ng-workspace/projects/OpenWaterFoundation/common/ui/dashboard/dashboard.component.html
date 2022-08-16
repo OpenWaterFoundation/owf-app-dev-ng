@@ -1,4 +1,4 @@
-<div *ngIf="dashboardConf" class="dashboard-container">
+<div *ngIf="validDashboardId === true && dashboardConf" class="dashboard-container">
 
   <mat-grid-list [cols]="dashboardConf.layout.columns" rowHeight="fit" 
   [gutterSize]="dashboardConf.layout.gutterSize ? dashboardConf.layout.gutterSize : 1"
@@ -51,6 +51,6 @@
 
 </div>
 
-<div *ngIf="!dashboardConf" class="dashboard-error">
+<div *ngIf="validDashboardId === false" class="dashboard-error">
   <common-not-found pageType="Dashboard"></common-not-found>
 </div>
