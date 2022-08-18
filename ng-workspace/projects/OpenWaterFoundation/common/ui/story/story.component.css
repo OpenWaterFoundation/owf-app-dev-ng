@@ -7,14 +7,12 @@
   justify-content: center;
 }
 
-.fp-slidesNav {
-  display: flex;
-  justify-content: center;
+/*  */
+.section-content {
+  height: 100%;
 }
 
-/* ID's */
-
 /*  */
-#fullpage {
-  margin-top: 64px;
+#fp-nav.fp-right {
+  right: 0px !important;
 }

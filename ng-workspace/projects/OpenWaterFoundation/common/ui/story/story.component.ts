@@ -3,7 +3,8 @@ import { Component,
           OnInit }             from '@angular/core';
 import { ActivatedRoute,
           ParamMap }           from '@angular/router';
-import { Subject,
+import { first,
+          Subject,
           takeUntil }          from 'rxjs';
 
 import { options,
@@ -11,6 +12,7 @@ import { options,
 
 import { CommonLoggerService,
           OwfCommonService }   from '@OpenWaterFoundation/common/services';
+import * as IM                 from '@OpenWaterFoundation/common/services';
 
 @Component({
   selector: 'common-lib-story',
@@ -19,7 +21,9 @@ import { CommonLoggerService,
 })
 export class StoryComponent implements OnInit, OnDestroy {
 
+  /** Options for fullpage creation. */
   config: options;
+  /** Reference for the main fullpage object. */
   fullpageAPI: fullpage_api;
   /** Subject that is completed when this component is destroyed. The breakpoint
    * observer will stop listening to screen size at that time. */
@@ -33,27 +37,47 @@ export class StoryComponent implements OnInit, OnDestroy {
     * * `warn` - Will display any warning messages throughout the application. For
     * less in-depth debugging. */
   debugLevelFlag: string = null;
+  /**
+   * 
+   */
+  storyConf: IM.StoryConf;
+  /**
+   * 
+   */
+  validStoryId: boolean;
 
 
+  /**
+   * Constructor for the Story Component.
+   * @param actRoute Provides access to information about a route associated with
+   * a component that is loaded in an outlet.
+   * @param logger Reference to the Common library logger service.
+   */
   constructor(private actRoute: ActivatedRoute, private commonService: OwfCommonService,
-  private logger: CommonLoggerService) {
+  private logger: CommonLoggerService) { }
 
-    // for more details on config options please visit fullPage.js docs
+
+  /**
+   * Set the config options that will be given to 
+   */
+  createFullpageOptions(): void {
     this.config = {
       // Navigation.
-      anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage'],
       navigation: true,
       navigationPosition: 'right',
       slidesNavigation: true,
 
       // Scrolling.
       scrollingSpeed: 600,
+      touchSensitivity: 25,
 
       // Accessibility.
       recordHistory: false,
       
       // Design.
       conrolArrows: false,
+      // Takes care of the extra 64 pixels added because of the navbar.
+      paddingBottom: '64px',
       sectionsColor: ['#B8AE9C', '#348899', '#F2AE72', '#5C832F', '#B8B89F'],
 
       // Custom selectors.
@@ -62,13 +86,6 @@ export class StoryComponent implements OnInit, OnDestroy {
       licenseKey: 'OPEN-SOURCE-GPLV3-LICENSE',
 
       // Events.
-      // fullpage callbacks
-      // afterResize: () => {
-      //   console.log("After resize");
-      // },
-      // afterLoad: (origin, destination, direction) => {
-      //   console.log(origin.index);
-      // }
     };
   }
 
@@ -79,19 +96,49 @@ export class StoryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    this.createFullpageOptions();
+
     this.actRoute.paramMap.pipe(takeUntil(this.destroyed)).subscribe((paramMap: ParamMap) => {
 
       this.debugFlag = this.actRoute.snapshot.queryParamMap.get('debug');
       this.debugLevelFlag = this.actRoute.snapshot.queryParamMap.get('debugLevel');
       this.logger.print('info', 'StoryComponent.ngOnInit - Story component created.');
-      
 
+      var storyId = paramMap.get('id');
+      this.validStoryId = this.commonService.validID(storyId);
+      if (this.validStoryId === false) {
+        return;
+      }
+      
+      this.readStoryConfig(storyId);
     });
   }
   
   ngOnDestroy(): void {
     this.destroyed.next();
     this.destroyed.complete();
+  }
+
+  /**
+   * 
+   * @param storyId 
+   */
+   private readStoryConfig(storyId: string): void {
+    var storyConfigPath = this.commonService.getStoryConfigPathFromId(storyId);
+
+    this.commonService.getJSONData(this.commonService.getAppPath() + storyConfigPath)
+    .pipe(first()).subscribe((storyConfig: IM.StoryConf) => {
+
+      this.storyInit(storyConfig);
+    });
+  }
+
+  /**
+   * 
+   * @param storyConfig 
+   */
+  private storyInit(storyConfig: IM.StoryConf): void {
+    this.storyConf = storyConfig;
   }
 
 }

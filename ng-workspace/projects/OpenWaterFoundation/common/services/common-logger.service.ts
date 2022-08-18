@@ -21,7 +21,7 @@ export class CommonLoggerService {
    * @param debug String where 'true' prints more log messages than just info. Anything
    * else will display info messages.
    * @param debugLevel The minimum log level to be printed. If no logLevel is given,
-   * default is info which is automatically printed.
+   * default is `info` which is automatically printed.
    */
   print(logType: string, content: any, debug?: string, debugLevel?: string): void {
 

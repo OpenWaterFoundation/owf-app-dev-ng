@@ -10,7 +10,7 @@ import { faCaretDown,
           faCheck,
           faExclamation,
           faQuestion,
-          faXmark }    from '@fortawesome/free-solid-svg-icons';
+          faXmark }          from '@fortawesome/free-solid-svg-icons';
 
 import { EventService,
           OwfCommonService } from '@OpenWaterFoundation/common/services';

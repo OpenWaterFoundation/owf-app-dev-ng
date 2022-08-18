@@ -132,8 +132,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   legendSymbolsViewContainerRef: ViewContainerRef;
   /** The reference for the Leaflet map. */
   mainMap: any;
-  /** Template input property used by consuming applications or websites for passing
-   * the path to the app configuration file. */
+  /** Template input property used by consuming applications,websites, or other Angular
+   * modules for passing the path to the map configuration file. */
   @Input('map-config') mapConfigStandalonePath: string;
   /** The map configuration subscription, unsubscribed to on component destruction. */
   private mapConfigSub = null;
@@ -1528,20 +1528,36 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * Creates the sidebar on the left side of the map using `leaflet-sidebar-v2`.
   */
   private createSidebar(): void {
-    this.sidebarInitialized = true;
-    // Create the sidebar instance and add it to the map. 
-    let sidebar = L.control.sidebar({
-      container: 'sidebar'
-    }).addTo(this.mainMap).open('home');
+    this.logger.print('trace', 'MapComponent.createSidebar - Initializing Leaflet map sidebar.',
+    this.debugFlag, this.debugLevelFlag);
 
-    // Add panels dynamically to the sidebar.
-    // sidebar.addPanel({
-    //     id:   'testPane',
-    //     tab:  '<fa-icon [icon]=faGear size="lg"></fa-icon>',
-    //     title: 'Settings',
-    //     pane: '<div class="leaflet-sidebar-pane" id="home"></div>'
-    // });    
+    var _this = this;
+
+    var isMobile = (this.currentScreenSize === Breakpoints.XSmall ||
+    this.currentScreenSize === Breakpoints.Small);
+    
+    // Create the sidebar instance and add it to the map. 
+    var sidebar = L.control.sidebar({
+      container: 'sidebar'
+    });
+    // On initialization check if on a small screen and if the sidebar has already
+    // been initialized, add it to the map, and either open it or keep it closed.
+    if (isMobile === true && !_this.sidebarInitialized) {
+      this.logger.print('trace',
+      'MapComponent.createSidebar - Mobile screen size of either XSmall or Small detected. Keeping sidebar closed.',
+      this.debugFlag, this.debugLevelFlag);
+
+      sidebar.addTo(this.mainMap);
+    } else {
+      this.logger.print('trace',
+      'MapComponent.createSidebar - Desktop screen size detected. Opening sidebar.',
+      this.debugFlag, this.debugLevelFlag);
+
+      sidebar.addTo(this.mainMap).open('home');
+    }
+    
     this.addInfoToSidebar();
+    this.sidebarInitialized = true;
   }
 
   /**

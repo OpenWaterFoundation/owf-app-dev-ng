@@ -537,6 +537,41 @@ export class OwfCommonService {
   }
 
   /**
+   * 
+   * @param id 
+   * @returns 
+   */
+   getStoryConfigPathFromId(id: string): string {
+    var storyPathExt: string;
+    var splitStoryPath: string[];
+    var storyPath = '';
+
+    for (let mainMenu of this.appConfig.mainMenu) {
+      if (mainMenu.menus) {
+        for (let subMenu of mainMenu.menus) {
+          if (subMenu.id === id) storyPathExt = subMenu.storyFile;
+        }
+      } else {
+        if (mainMenu.id === id) storyPathExt = mainMenu.storyFile;
+      }
+    }
+
+    splitStoryPath = storyPathExt.split('/');
+
+    for (let i = 0; i < splitStoryPath.length - 1; i++) {
+      storyPath += splitStoryPath[i] + '/';
+    }
+
+    storyPath.startsWith('/') ?
+    this.dashboardConfigPath = storyPath.substring(1) :
+    this.dashboardConfigPath = storyPath;
+
+    return storyPathExt.startsWith('/') ?
+    storyPathExt.substring(1) :
+    storyPathExt;
+  }
+
+  /**
    * @returns The array of DataUnits from the DATAUNIT file.
    */
   getDataUnitArray(): any[] { return this.dataUnits; }

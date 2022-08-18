@@ -1,10 +1,11 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule }              from '@angular/core';
+import { CommonModule }          from '@angular/common';
 
 import { AngularFullpageModule } from '@fullpage/angular-fullpage';
 
-import { StoryComponent } from './story.component';
-
+import { MapModule }             from '@OpenWaterFoundation/common/leaflet';
+import { DashboardModule }       from '@OpenWaterFoundation/common/ui/dashboard';
+import { StoryComponent }        from './story.component';
 
 
 @NgModule({
@@ -13,7 +14,10 @@ import { StoryComponent } from './story.component';
   ],
   imports: [
     CommonModule,
-    AngularFullpageModule
+
+    AngularFullpageModule,
+    DashboardModule,
+    MapModule
   ]
 })
 export class StoryModule { }
