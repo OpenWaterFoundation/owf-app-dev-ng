@@ -124,6 +124,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /** Class variable to access container ref in order to add and remove map layer
    * component dynamically. */
   layerViewContainerRef: ViewContainerRef;
+  /** Unique string for this Map component's Leaflet div Id attribute. */
+  leafletMapContainerId: string;
   /** Object that contains each geoLayerViewGroupId as the key, and a boolean describing
    * whether the group's legend expansion panel is open or closed. */
   backgroundLegendExpansion = {};
@@ -254,6 +256,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * Get the unique number for this Leaflet map from the Map Manager.
+   */
+  get newLeafletMapContainerID(): string {
+    return this.mapManager.createUniqueId();
+  }
+
+  /**
   * Add content to the info tab of the sidebar dynamically. Following the example
   * from the Angular documentation found here: https://angular.io/guide/dynamic-component-loader.
   */
@@ -376,8 +385,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   private buildMap(): void {
+
+    this.logger.print('trace', 'MapComponent.buildMap - Creating Leaflet map with id "' +
+    this.leafletMapContainerId + '"', this.debugFlag, this.debugLevelFlag);
     // Create a Leaflet Map and set the default layers.
-    this.mainMap = L.map('mapID', {
+    this.mainMap = L.map(this.leafletMapContainerId, {
       layers: [this.baseMaps[this.commonService.getDefaultBackgroundLayer()]],
       // We're using our own zoom control for the map, so we don't need the default
       zoomControl: false,
@@ -460,7 +472,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // Use the http GET request function and pass it the returned formatted path.
                 asyncData.push(
                   this.commonService.getJSONData(
-                    this.commonService.buildPath(IM.Path.eCP, [event.properties.popupConfigPath]), IM.Path.eCP, this.mapID
+                    this.commonService.buildPath(IM.Path.eCP, [event.properties.popupConfigPath]),
+                    IM.Path.eCP, this.mapID
                   )
                 );
               }
@@ -468,7 +481,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // Use the http GET request function and pass it the returned formatted path.
                 asyncData.push(
                   this.commonService.getJSONData(
-                    this.commonService.buildPath(IM.Path.eCP, [event.properties.eventConfigPath]), IM.Path.eCP, this.mapID
+                    this.commonService.buildPath(IM.Path.eCP, [event.properties.eventConfigPath]),
+                    IM.Path.eCP, this.mapID
                   )
                 );
               }
@@ -1282,7 +1296,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.logger.print('trace', 'MapComponent.checkIfMapContainerExists - Leaflet map container div: ',
     this.debugFlag, this.debugLevelFlag);
-    this.logger.print('trace', L.DomUtil.get('mapID'), this.debugFlag, this.debugLevelFlag);
+    this.logger.print('trace', L.DomUtil.get(this.leafletMapContainerId), this.debugFlag, this.debugLevelFlag);
 
     var mapContainerFound = new Subject<void>();
     var secondsTicked = 0;
@@ -1292,11 +1306,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
      * component's template file. Try testing without it.
      */
     timer(0, 1000).pipe(takeUntil(mapContainerFound)).subscribe(() => {
-      if (L.DomUtil.get('mapID')) {
+      if (L.DomUtil.get(this.leafletMapContainerId)) {
 
         this.logger.print('trace', 'MapComponent.checkIfMapContainerExists - Leaflet map container found:',
         this.debugFlag, this.debugLevelFlag);
-        this.logger.print('trace', L.DomUtil.get('mapID'), this.debugFlag, this.debugLevelFlag);
+        this.logger.print('trace', L.DomUtil.get(this.leafletMapContainerId), this.debugFlag, this.debugLevelFlag);
 
         mapContainerFound.next();
         mapContainerFound.complete();
@@ -1547,11 +1561,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       'MapComponent.createSidebar - Mobile screen size of either XSmall or Small detected. Keeping sidebar closed.',
       this.debugFlag, this.debugLevelFlag);
 
+      this.logger.print('trace',
+      'MapComponent.createSidebar - Adding sidebar to the following map:',
+      this.debugFlag, this.debugLevelFlag);
+      this.logger.print('trace', this.mainMap, this.debugFlag, this.debugLevelFlag);
+
       sidebar.addTo(this.mainMap);
     } else {
       this.logger.print('trace',
       'MapComponent.createSidebar - Desktop screen size detected. Opening sidebar.',
       this.debugFlag, this.debugLevelFlag);
+
+      this.logger.print('trace',
+      'MapComponent.createSidebar - Adding sidebar to the following map:',
+      this.debugFlag, this.debugLevelFlag);
+      this.logger.print('trace', this.mainMap, this.debugFlag, this.debugLevelFlag);
 
       sidebar.addTo(this.mainMap).open('home');
     }
@@ -1819,12 +1843,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.mapConfigSub = <any>Subscription;
     this.mapConfigSub = this.commonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
     .subscribe((mapConfig: any) => {
-      // this.commonService.setGeoMapID(mapConfig.geoMaps[0].geoMapId);
-      // console.log(this.mapManager.mapAlreadyCreated(this.commonService.getGeoMapID()));
 
       // Set the configuration file class variable for the map service.
       this.commonService.setMapConfig(mapConfig);
       this.commonService.setMapConfigTest(mapConfig);
+
+      this.leafletMapContainerId = this.commonService.getGeoMapID()
+
       // Once the mapConfig object is retrieved and set, set the order in which
       // each layer should be displayed. Get an instance of the singleton MapLayerManager
       // class and set the mapConfigLayerOrder variable so it can be used to order

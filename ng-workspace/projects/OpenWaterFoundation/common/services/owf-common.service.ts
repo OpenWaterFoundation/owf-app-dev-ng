@@ -851,7 +851,7 @@ export class OwfCommonService {
   /**
    * @returns The geoMapId property from the FIRST geoMap in the map configuration.
    */
-  getGeoMapID(): string { return this.geoMapID; }
+  getGeoMapID(): string { return this.mapConfig.geoMaps[0].geoMapId; }
 
   /**
    * @returns The name attribute to the FIRST geoMap in the geoMapProject.

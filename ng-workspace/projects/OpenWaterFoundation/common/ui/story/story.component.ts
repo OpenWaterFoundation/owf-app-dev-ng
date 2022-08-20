@@ -68,7 +68,7 @@ export class StoryComponent implements OnInit, OnDestroy {
       slidesNavigation: true,
 
       // Scrolling.
-      scrollingSpeed: 600,
+      scrollingSpeed: 1100,
       touchSensitivity: 25,
 
       // Accessibility.

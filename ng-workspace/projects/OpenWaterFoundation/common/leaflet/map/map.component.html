@@ -130,7 +130,9 @@
     </div>
   
     <!-- Create the Leaflet map here. -->
-    <div id="mapID"></div>
+    <div *ngIf="leafletMapContainerId" [attr.id]="leafletMapContainerId"
+    class="leaflet-map-container"></div>
+    
   
   </div>
 </div>

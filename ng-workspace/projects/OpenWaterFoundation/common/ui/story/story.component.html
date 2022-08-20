@@ -1,17 +1,7 @@
-<div fullpage id="fullpage" [options]="config" (ref)="getRef($event)">
-  <div *ngFor="let page of storyConf.story.chapters.pages" class="section">
-    <dashboard [dashboardConfig]="page"></dashboard>
+<div *ngIf="storyConf">
+  <div fullpage id="fullpage" [options]="config" (ref)="getRef($event)">
+    <div *ngFor="let page of storyConf.story.chapters.pages" class="section">
+      <dashboard [dashboardConfig]="page"></dashboard>
+    </div>
   </div>
-  <!-- <div class="section">
-    <common-map map-config="data-maps/map-configuration-files/point-geometry-map.json"></common-map>    
-  </div>
-	<div class="section">
-    
-  </div>
-	<div class="section">
-    
-	</div>
-	<div class="section">
-    
-  </div> -->
 </div>
