@@ -27,6 +27,26 @@ export class LegendBackgroundGroupComponent implements AfterViewInit {
    */
   constructor(public commonService: OwfCommonService) {}
 
+
+  /**
+   * Check the background geoLayerViewGroup to see if the expandedInitial property
+   * exists and is set to true or false. Show or hide the background layers depending
+   * which one is present, and false by default (hiding the layers).
+   */
+  getBackgroundExpanded(): boolean {
+    if (this.geoLayerViewGroup.properties.isBackground === 'true') {
+      if (this.geoLayerViewGroup.properties.expandedInitial &&
+        this.geoLayerViewGroup.properties.expandedInitial === 'true') {
+          return true;
+        }
+      else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
   /**
    * Called right after the constructor.
    */

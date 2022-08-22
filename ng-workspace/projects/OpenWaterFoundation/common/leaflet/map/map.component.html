@@ -1,7 +1,7 @@
 <div *ngIf="validMapID === true" class="show-map-container">
   <div id="map-container">
     <!-- Optionally define the sidebar content via HTML markup -->
-    <div id="sidebar" class="leaflet-sidebar collapsed">
+    <div [attr.id]="geoMapId + '-sidebar'" class="leaflet-sidebar collapsed">
   
       <!-- Nav Tabs -->
       <div class="leaflet-sidebar-tabs">
@@ -17,12 +17,14 @@
         </ul>
   
         <!-- Bottom Aligned Tabs -->
-        <!-- The Help / About anchor that opens up the appropriate portion of the side bar. The commented out line below is an
-        example of another anchor that could be added -->
+        <!-- The Help / About anchor that opens up the appropriate portion of the
+        side bar. The commented out line below is an example of another anchor that
+        could be added -->
         <ul role="tablist">
           <li>
-            <a href="#information" role="tab" matTooltip="Help / About" matTooltipShowDelay="750"
-              matTooltipPosition="right" data-cy="sidebar-information">
+            <a href="#information" role="tab" matTooltip="Help / About"
+            matTooltipShowDelay="750" matTooltipPosition="right"
+            data-cy="sidebar-information">
               <fa-icon [icon]=faInfoCircle size="lg"></fa-icon>
             </a>
           </li>
@@ -72,9 +74,10 @@
   
                   <div>
                     <legend-layer-group [allFeatures]="allFeatures" [categorizedLayerColors]="categorizedLayerColors"
-                                        [eventActions]="eventActions" [geoLayerViewGroup]="geoLayerViewGroup"
-                                        [graduatedLayerColors]="graduatedLayerColors" [lastRefresh]="lastRefresh"
-                                        [layerClassificationInfo]="layerClassificationInfo" [mainMap]="mainMap">
+                    [eventActions]="eventActions" [geoLayerViewGroup]="geoLayerViewGroup"
+                    [graduatedLayerColors]="graduatedLayerColors" [lastRefresh]="lastRefresh"
+                    [layerClassificationInfo]="layerClassificationInfo" [mainMap]="mainMap"
+                    [mapConfig]="mapConfig">
                     </legend-layer-group>
                   </div>
   
@@ -82,7 +85,7 @@
   
                 <ng-template #background>
                   <legend-background-group [geoLayerViewGroup]="geoLayerViewGroup"
-                                            (callSelectBackgroundLayer)="selectBackgroundLayer($event)">
+                  (callSelectBackgroundLayer)="selectBackgroundLayer($event)">
                   </legend-background-group>
                 </ng-template>
   

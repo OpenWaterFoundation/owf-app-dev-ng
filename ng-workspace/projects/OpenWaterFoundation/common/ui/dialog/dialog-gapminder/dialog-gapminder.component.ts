@@ -2232,7 +2232,6 @@ export class DialogGapminderComponent implements OnInit {
         dialogConfig.data = {
           allFeatures: result.data,
           geoLayer: this.geoLayer,
-          geoMapName: this.commonService.getGeoMapName(),
           mapConfigPath: this.commonService.getMapConfigPath(),
           windowID: windowID
         }

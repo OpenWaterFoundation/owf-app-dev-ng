@@ -41,8 +41,6 @@ export class DialogDataTableLightComponent implements OnInit {
   @Output() featureHighlighted = new EventEmitter<boolean>();
   /** The layer's geoLayer. */
   public geoLayer: any;
-  /** The name of the geoMap the layer resides in. */
-  public geoMapName: string;
   /** Object containing the layer geoLayerId as the ID, and an object of properties
    * set by a user-defined classification file. */
   public layerClassificationInfo: any;
@@ -102,7 +100,6 @@ export class DialogDataTableLightComponent implements OnInit {
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
     // this.displayedColumns.unshift('select');
     this.geoLayer = dataObject.data.geoLayer;
-    this.geoMapName = dataObject.data.geoMapName;
     this.layerClassificationInfo = dataObject.data.layerClassificationInfo;
     // This is needed for testing the library.
     // this.geometryType = 'WKT:Polygon';

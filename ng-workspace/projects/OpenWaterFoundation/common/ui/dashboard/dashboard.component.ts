@@ -40,9 +40,9 @@ export class DashboardComponent implements OnDestroy {
    * Dashboard to be displayed.
    */
   constructor(private commonService: OwfCommonService,
-    private dashboardService: DashboardService,
-    private eventService: EventService,
-    private route: ActivatedRoute) {}
+  private dashboardService: DashboardService,
+  private eventService: EventService,
+  private route: ActivatedRoute) {}
 
 
   /**

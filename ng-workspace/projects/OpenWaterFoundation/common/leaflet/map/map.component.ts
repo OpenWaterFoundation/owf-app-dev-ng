@@ -134,6 +134,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   legendSymbolsViewContainerRef: ViewContainerRef;
   /** The reference for the Leaflet map. */
   mainMap: any;
+  /** The map configuration object read in as this component's map configuration file. */
+  mapConfig: IM.GeoMapProject;
   /** Template input property used by consuming applications,websites, or other Angular
    * modules for passing the path to the map configuration file. */
   @Input('map-config') mapConfigStandalonePath: string;
@@ -167,9 +169,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * waste time/resources initializing sidebar twice, but rather edit the information
    * in the already initialized sidebar. */
   sidebarInitialized: boolean = false;
-  /** An array to hold sidebar background layer components to easily remove later,
-   * when resetting the sidebar. NOTE: Might be able to remove. */
-  sidebarBackgroundLayers: any[] = [];
   /** Boolean of whether or not refresh is displayed. */
   showRefresh: boolean = true;
   /** The windowManager instance; To create, maintain, and remove multiple open dialogs. */
@@ -223,36 +222,36 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /**
    * @returns All geoLayerViewGroups from the FIRST geoMap.
    */
-  get allGeoLayerViewGroups(): any {
-    return this.commonService.getGeoLayerViewGroups();
+  get allGeoLayerViewGroups(): IM.GeoLayerViewGroup[] {
+    return this.mapConfig.geoMaps[0].geoLayerViewGroups;
   }
 
   /**
    * @returns The geoMap docPath property from the FIRST geoMap.
    */
   get geoMapDocPath(): string {
-    return this.commonService.getGeoMapDocPath();
+    return this.mapConfig.geoMaps[0].properties.docPath;
   }
 
   /**
    * @returns The geoMapId property from the FIRST geoMap.
    */
   get geoMapId(): string {
-    return this.commonService.getGeoMapID();
+    if (this.mapConfig) {
+      return this.mapConfig.geoMaps[0].geoMapId;
+    }
   }
 
   /**
    * @returns The name property from the FIRST geoMap.
    */
   get geoMapName(): string {
-    return this.commonService.getGeoMapName();
-  }
-
-  /**
-   * Returns the map configuration object from the OWF Common Service.
-   */
-  get mapConfig(): any {
-    return this.commonService.getMapConfig();
+    if (this.mapConfig) {
+      if (this.mapConfig.geoMaps[0].name.length < 30) {
+        return this.mapConfig.geoMaps[0].name;
+      }
+      else return this.mapConfig.geoMaps[0].name.substring(0, 30) + '...';
+    }
   }
 
   /**
@@ -390,7 +389,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.leafletMapContainerId + '"', this.debugFlag, this.debugLevelFlag);
     // Create a Leaflet Map and set the default layers.
     this.mainMap = L.map(this.leafletMapContainerId, {
-      layers: [this.baseMaps[this.commonService.getDefaultBackgroundLayer()]],
+      layers: [this.baseMaps[this.getDefaultBackgroundLayer()]],
       // We're using our own zoom control for the map, so we don't need the default
       zoomControl: false,
       wheelPxPerZoomLevel: 150,
@@ -398,16 +397,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
 
     // Retrieve the initial extent from the config file and set the map view
-    let extentInitial = this.commonService.getExtentInitial();
+    let extentInitial = this.getExtentInitial();
     this.mainMap.setView([extentInitial[1], extentInitial[0]], extentInitial[2]);
 
     // Set the default layer radio check to true
     this.setDefaultBackgroundLayer();
 
     // Add the background layers to the maps control in the topright
-    if (this.commonService.getBackgroundLayersMapControl()) {
-      L.control.layers(this.baseMaps).addTo(this.mainMap);
-    }
+    L.control.layers(this.baseMaps).addTo(this.mainMap);
 
     // The baselayerchange is fired when the base layer is changed through the layer
     // control. So when a radio button is pressed and the basemap changes, update
@@ -420,7 +417,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.createMapTitleInitial();
     this.createMapBottomLeftControls();
 
-    var geoLayerViewGroups: IM.GeoLayerViewGroup[] = this.commonService.getGeoLayerViewGroups();
+    var geoLayerViewGroups: IM.GeoLayerViewGroup[] = this.allGeoLayerViewGroups;
 
     // Iterate through each geoLayerView in every geoLayerViewGroup, and create
     // & add a Leaflet map layer for them.
@@ -431,9 +428,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
 
           // Obtain the geoLayer for use in creating this Leaflet layer.
-          let geoLayer: IM.GeoLayer = this.commonService.getGeoLayerFromId(geoLayerView.geoLayerId);
+          let geoLayer: IM.GeoLayer = this.getGeoLayerFromId(geoLayerView.geoLayerId);
           // Obtain the symbol data for use in creating this Leaflet layer.
-          let symbol: IM.GeoLayerSymbol = this.commonService.getSymbolDataFromID(geoLayer.geoLayerId);
+          let symbol: IM.GeoLayerSymbol = this.getSymbolDataFromID(geoLayer.geoLayerId);
           // A geoLayerSymbol object was not provided in the geoLayerView, so leave
           // the user an error message and log an error message that one needs to
           // be added to show something other than default styling.
@@ -445,7 +442,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           }
           // Obtain the event handler information from the geoLayerView for use
           // in creating this Leaflet layer.
-          let eventHandlers: IM.EventHandler[] = this.commonService.getGeoLayerViewEventHandler(geoLayer.geoLayerId);
+          let eventHandlers: IM.EventHandler[] = this.getGeoLayerViewEventHandler(geoLayer.geoLayerId);
           var asyncData: Observable<any>[] = [];
 
           // // Displays a web feature service from Esri. 
@@ -647,7 +644,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                       weight: result.data[0].weight
                     };
 
-                    var geoLayerView = this.commonService.getGeoLayerView(geoLayer.geoLayerId);
+                    var geoLayerView = this.getGeoLayerView(geoLayer.geoLayerId);
                     var results = result.data;
 
                     let data = new L.geoJson(this.allFeatures[geoLayer.geoLayerId], {
@@ -741,8 +738,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
               // Check if the image layer needs to be refreshed.
               if (geoLayerView.properties.refreshInterval) {
-                var refreshInterval = this.commonService.getRefreshInterval(geoLayerView.geoLayerId);
-                var refreshOffset = this.commonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
+                var refreshInterval = this.getRefreshInterval(geoLayerView.geoLayerId);
+                var refreshOffset = this.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
                 // Confirm the parsing was successful by checking if getRefreshInterval
                 // returned a number.
                 if (!isNaN(refreshInterval)) {
@@ -808,7 +805,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                           let leafletMarker = L.marker(latlng, { icon: markerIcon });
                           // Determine if there are eventHandlers on this layer
                           // by checking its geoLayerView object.
-                          var geoLayerView = this.commonService.getGeoLayerView(geoLayer.geoLayerId);
+                          var geoLayerView = this.getGeoLayerView(geoLayer.geoLayerId);
 
                           MapUtil.createLayerTooltips(leafletMarker, eventObject, geoLayerView.properties.imageGalleryEventActionId,
                             geoLayerView.geoLayerSymbol.properties.labelText, this.count);
@@ -866,7 +863,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                       let leafletMarker = L.marker(latlng, { icon: markerIcon });
                       // Determine if there are eventHandlers on this layer by
                       // checking its geoLayerView object.
-                      var geoLayerView = this.commonService.getGeoLayerView(geoLayer.geoLayerId);
+                      var geoLayerView = this.getGeoLayerView(geoLayer.geoLayerId);
 
                       MapUtil.createLayerTooltips(leafletMarker, eventObject, geoLayerView.properties.imageGalleryEventActionId,
                         geoLayerView.geoLayerSymbol.properties.labelText, this.count);
@@ -904,8 +901,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             // Refresh a map vector layer based on the refreshInterval property in
             // the map config file. Make sure to check if it is a vector layer.
             if (geoLayerView.properties.refreshInterval && geoLayer.layerType.toUpperCase().includes('VECTOR')) {
-              var refreshInterval = this.commonService.getRefreshInterval(geoLayerView.geoLayerId);
-              var refreshOffset = this.commonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
+              var refreshInterval = this.getRefreshInterval(geoLayerView.geoLayerId);
+              var refreshOffset = this.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
               // Confirm the parsing was successful by checking if getRefreshInterval
               // returned a number.
               if (!isNaN(refreshInterval)) {
@@ -942,7 +939,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                           if (multipleEventsSet === true) {
                             return;
                           } else {
-                            MapUtil.updateFeature(e, geoLayer, geoLayerView);
+                            MapUtil.updateFeature(e, geoLayer, geoLayerView, _this.geoMapId);
                           }
                         },
                         mouseout: function (e: any) {
@@ -950,7 +947,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                             return;
                           } else {
                             if (!feature.geometry.type.toUpperCase().includes('POLYGON')) {
-                              MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.commonService.getGeoMapName());
+                              MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.geoMapName, _this.geoMapId);
                             }
                           }
                         },
@@ -1158,10 +1155,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                         // If a hover event is given, default should be to display
                         // all features.
                         mouseover: function (e: any) {
-                          MapUtil.updateFeature(e, geoLayer, geoLayerView, eventObject['hover-eCP'].layerAttributes);
+                          MapUtil.updateFeature(e, geoLayer, geoLayerView,
+                          _this.geoMapId, eventObject['hover-eCP'].layerAttributes);
                         },
                         mouseout: function (e: any) {
-                          MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.commonService.getGeoMapName());
+                          MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.geoMapName, _this.geoMapId);
                         },
                         click: ((e: any) => {
                           if (multipleEventsSet === true) {
@@ -1200,10 +1198,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                     default:
                       layer.on({
                         mouseover: function (e: any) {
-                          MapUtil.updateFeature(e, geoLayer, geoLayerView);
+                          MapUtil.updateFeature(e, geoLayer, geoLayerView, _this.geoMapId);
                         },
                         mouseout: function (e: any) {
-                          MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.commonService.getGeoMapName());
+                          MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.geoMapName, _this.geoMapId);
                         },
                         click: ((e: any) => {
 
@@ -1232,10 +1230,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // If the map config does NOT have any event handlers at all, use a default.
                 layer.on({
                   mouseover: function (e: any) {
-                    MapUtil.updateFeature(e, geoLayer, geoLayerView);
+                    MapUtil.updateFeature(e, geoLayer, geoLayerView, _this.geoMapId);
                   },
                   mouseout: function (e: any) {
-                    MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.commonService.getGeoMapName());
+                    MapUtil.resetFeature(e, geoLayer, geoLayerView, _this.geoMapName, _this.geoMapId);
                   },
                   click: ((e: any) => {
                     // Create the default HTML property popup.
@@ -1458,12 +1456,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
                 Object.keys(eventObject).forEach((key: any) => {
                   if (key === 'hover-eCP') {
-                    let div = L.DomUtil.get('title-card');
+                    let div = L.DomUtil.get(_this.geoMapId + '-title-card');
                     var originalDivContents: string = div.innerHTML;
 
                     _this.mainMap.on('mousemove', (e: any) => {
                       MapUtil.displayMultipleHTMLRasterCells(e, georaster, geoLayerView, originalDivContents,
-                        layerItem, symbol);
+                        layerItem, symbol, _this.geoMapId);
 
                     });
                   }
@@ -1526,8 +1524,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Check to see if the layer needs to be refreshed. Don't need to check if it's
     // a raster layer, it has to be to get to this code.
     if (geoLayerView.properties.refreshInterval) {
-      var refreshInterval = this.commonService.getRefreshInterval(geoLayerView.geoLayerId);
-      var refreshOffset = this.commonService.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
+      var refreshInterval = this.getRefreshInterval(geoLayerView.geoLayerId);
+      var refreshOffset = this.getRefreshOffset(geoLayerView.geoLayerId, refreshInterval);
       // Check if the parsing was successful. 
       if (isNaN(refreshInterval)) {
       } else {
@@ -1552,11 +1550,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     
     // Create the sidebar instance and add it to the map. 
     var sidebar = L.control.sidebar({
-      container: 'sidebar'
+      container: _this.mapConfig.geoMaps[0].geoMapId + '-sidebar'
     });
     // On initialization check if on a small screen and if the sidebar has already
     // been initialized, add it to the map, and either open it or keep it closed.
-    if (isMobile === true && !_this.sidebarInitialized) {
+    if (isMobile === true && !this.sidebarInitialized) {
       this.logger.print('trace',
       'MapComponent.createSidebar - Mobile screen size of either XSmall or Small detected. Keeping sidebar closed.',
       this.debugFlag, this.debugLevelFlag);
@@ -1591,7 +1589,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private createMapBackgroundLayers(): void {
 
     // Create background layers from the configuration file.
-    let backgroundLayers: any[] = this.commonService.getBackgroundLayers();
+    let backgroundLayers: any[] = this.getBackgroundLayers();
     // Iterate over each background layer, create them using tileLayer, and add
     // them to the baseMaps class object.
     backgroundLayers.forEach((geoLayer: IM.GeoLayer) => {
@@ -1599,13 +1597,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         attribution: geoLayer.properties.attribution,
         maxZoom: geoLayer.properties.zoomLevelMax ? parseInt(geoLayer.properties.zoomLevelMax) : 18
       });
-      this.baseMaps[this.commonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId).name] = leafletBackgroundLayer;
+      this.baseMaps[this.getBackgroundGeoLayerViewFromId(geoLayer.geoLayerId).name] = leafletBackgroundLayer;
 
-      var bkgdGeoLayerView = this.commonService.getBkgdGeoLayerViewFromId(geoLayer.geoLayerId);
+      var bkgdGeoLayerView = this.getBackgroundGeoLayerViewFromId(geoLayer.geoLayerId);
       
       if (bkgdGeoLayerView.properties.refreshInterval) {
-        var refreshInterval = this.commonService.getRefreshInterval(bkgdGeoLayerView.geoLayerId);
-        var refreshOffset = this.commonService.getRefreshOffset(bkgdGeoLayerView.geoLayerId, refreshInterval);
+        var refreshInterval = this.getRefreshInterval(bkgdGeoLayerView.geoLayerId);
+        var refreshOffset = this.getRefreshOffset(bkgdGeoLayerView.geoLayerId, refreshInterval);
         // Check if the parsing was successful. 
         if (isNaN(refreshInterval)) {
         } else {
@@ -1685,13 +1683,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Add the title to the map in a div whose class name is 'info'
     mapTitle.onAdd = function () {
       this._div = L.DomUtil.create('div', 'upper-left-map-info');
-      this._div.id = 'title-card';
+      this._div.id = _this.geoMapId + '-title-card';
       this.update();
       return this._div;
     };
     // When the title-card is created, have it say this
     mapTitle.update = function () {
-      this._div.innerHTML = ('<h4>' + _this.commonService.getGeoMapName() + '</h4>');
+      this._div.innerHTML = ('<h4>' + _this.geoMapName + '</h4>');
     };
     mapTitle.addTo(this.mainMap);
   }
@@ -1701,11 +1699,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private createMapTitleInitial(): void {
 
-    let div = L.DomUtil.get('title-card');
+    let div = L.DomUtil.get(this.geoMapId + '-title-card');
     let instruction: string = "Move over or click on a feature for more information";
     let divContents: string = "";
 
-    divContents = ('<h4 id="geoLayerView">' + this.commonService.getGeoMapName() +
+    divContents = ('<h4 id="geoLayerView">' + this.geoMapName +
     '</h4>' + '<p id="point-info"></p>');
 
     if (instruction != "") {
@@ -1819,11 +1817,290 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /**
   * Unused.
   */
-  public findFromAddress() {
+  findFromAddress() {
     var testAddress = 'https://api.geocod.io/v1.6/geocode' +
     '?q=1109+N+Highland+St%2c+Arlington+VA&api_key=e794ffb42737727f9904673702993bd96707bf6';
     this.commonService.getJSONData(testAddress).subscribe((address: any) => {
     });
+  }
+
+  /**
+   * @returns The background layer geoLayerView that matches the provided @var id.
+   * @param id The geoLayerId that needs to be matched
+   */
+  private getBackgroundGeoLayerViewFromId(id: string) {
+    for (let geoMap of this.mapConfig.geoMaps) {
+      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
+        if (geoLayerViewGroup.properties.isBackground === 'true') {
+          for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
+            if (geoLayerView.geoLayerId === id) {
+              return geoLayerView;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * @returns An array of geoLayers containing each background layer as an object
+   */
+  private getBackgroundLayers(): any[] {
+    let backgroundLayers: any[] = [];
+    
+    for (let geoMap of this.mapConfig.geoMaps) {
+      geoMap.geoLayers.forEach((geoLayer: any) => {
+        if (geoLayer.properties.isBackground === 'true')
+          backgroundLayers.push(geoLayer);
+      });
+    }
+    return backgroundLayers;
+  }
+
+  /**
+   * Goes through each geoMap, geoLayerViewGroup, and geoLayerView in a geoMapProject
+   * and returns the FIRST occurrence of a background layer that has the selectedInitial
+   * property set to true, effectively getting the default background layer.
+   */
+  private getDefaultBackgroundLayer(): string {
+    for (let geoMap of this.mapConfig.geoMaps) {
+      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
+        if (geoLayerViewGroup.properties.isBackground &&
+          geoLayerViewGroup.properties.isBackground.toUpperCase() === 'TRUE') {
+          for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
+            if (geoLayerView.properties.selectedInitial &&
+              geoLayerView.properties.selectedInitial.toUpperCase() === 'TRUE') {
+              return geoLayerView.name;
+            }
+          }
+        }
+      }
+    }
+    return '';
+  }
+
+  /**
+   * @returns An array of the three provided ExtentInitial numbers to be used for
+   * initial map creation.
+   */
+  private getExtentInitial(): number[] {
+    // Make sure to do some error handling for incorrect input.
+    if (!this.mapConfig.geoMaps[0].properties.extentInitial) {
+      console.error("Map Configuration property '" +
+        this.mapConfig.geoMaps[0].properties.extentInitial +
+        "' is incorrectly formatted. Confirm property is extentInitial." +
+        "Setting ZoomLevel to '[0, 0], 0' for world-wide view")
+      // Return a default array with all 0's so it's quite obvious the map created
+      // is not intended.
+      return [0, 0, 0];
+    }
+    var finalExtent: number[];
+    let extentInitial: string = this.mapConfig.geoMaps[0].properties.extentInitial;
+    let splitInitial: string[] = extentInitial.split(':');
+
+    if (splitInitial[0] === 'ZoomLevel' && splitInitial[1].split(',').length !== 3)
+      console.error("ZoomLevel inputs of " + splitInitial[1] + " is incorrect. " +
+      "Usage for a ZoomLevel property is 'ZoomLevel:Longitude, Latitude, Zoom Level'");
+
+    try {
+      // Try to convert all strings in the split array to numbers to return as a
+      // number array for the initial extent.
+      finalExtent = splitInitial[1].split(',').map(x => +x);
+    } catch (e) {
+      console.error(e.message);
+      console.error('Latitude, Longitude and Zoom Level must all be integer or decimal numbers');
+      console.error('Setting ZoomLevel to \'[0, 0], 0\' for world-wide view');
+      return [0, 0, 0];
+    }
+    return finalExtent;
+  }
+
+  /**
+   * @returns a geoLayer object in the geoMapProject whose geoLayerId matches the @param id
+   * @param id The geoLayerId to be matched with
+   */
+  private getGeoLayerFromId(id: string): any {
+    for (let geoMap of this.mapConfig.geoMaps) {
+      for (let geoLayer of geoMap.geoLayers) {
+        if (geoLayer.geoLayerId === id) {
+          return geoLayer;
+        }
+      }
+    }
+    return '';
+  }
+
+  /**
+   * Return the geoLayerView that matches the given geoLayerId.
+   * @param id The given geoLayerId to match with.
+   */
+  private getGeoLayerView(id: string) {
+
+    for (let geoMap of this.mapConfig.geoMaps) {
+      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
+        for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
+          if (geoLayerView.geoLayerId === id) {
+            return geoLayerView;
+          }
+        }
+      }
+   }
+    return null;
+  }
+
+  /**
+   * @returns an array of eventHandler objects from the geoLayerView whose geoLayerId
+   * matches the given @param geoLayerId.
+   * @param geoLayerId The geoLayerId to match with.
+   */
+  private getGeoLayerViewEventHandler(geoLayerId: string): IM.EventHandler[] {
+
+    var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
+
+    for (let geoLayerViewGroup of geoLayerViewGroups) {
+      if (!geoLayerViewGroup.properties.isBackground ||
+        geoLayerViewGroup.properties.isBackground === 'false') {
+        for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
+          if (geoLayerView.geoLayerId === geoLayerId) {
+            return geoLayerView.eventHandlers;
+          }
+        }
+      }
+    }
+    return [];
+  }
+
+  /**
+   * Iterates over each geoLayerViewGroup in the geoMap and pushes each geoLayerView's
+   * geoLayerId in the order they are given, so the InfoMapper knows the order in
+   * which they should be draw on the Leaflet map.
+   */
+  private getMapConfigLayerOrder(): string[] {
+    var layerArray: string[] = [];
+
+    for (let geoMap of this.mapConfig.geoMaps) {
+      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
+        if (!geoLayerViewGroup.properties.isBackground ||
+        geoLayerViewGroup.properties.isBackground === 'false') {
+          for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
+            layerArray.push(geoLayerView.geoLayerId);
+          }
+        }
+      }
+    }
+    // Reverse the array here, since we'll start on the layer that should be at
+    // the bottom, bring it to the front of Leaflet map, move on to the layer that
+    // should be on top of the bottom layer, bring it to the front, and so on.
+    return layerArray.reverse();
+  }
+
+  /**
+   * Returns the geoLayerView's refreshInterval property, converted to a number
+   * if it can be, and 0 if not.
+   * @param geoLayerId The geoLayerId to match with.
+   */
+  getRefreshInterval(geoLayerId: string): number {
+    // Obtain the refreshInterval string and convert to upper case.
+    var rawInterval: string = this.getGeoLayerView(geoLayerId).properties.refreshInterval.toUpperCase();
+    var splitInterval = rawInterval.split(' ');
+    var refreshInterval = 0;
+
+    // Iterate over each spaced item in the string and insert each number in the
+    // delayArr in the order HR, MIN, SEC.
+    for (var elem of splitInterval) {
+      if (elem.includes('H')) {
+        var hours = elem.split('H')[0];
+        refreshInterval += (+hours * 3600000)
+      } else if (elem.includes('MIN')) {
+        var minutes = elem.split('MIN')[0];
+        refreshInterval += (+minutes * 60000)
+      } else if (elem.includes("SEC")) {
+        var seconds = elem.split('SEC')[0];
+        refreshInterval += (+seconds * 1000)
+      } else if (!isNaN(+elem)) {
+        // The refreshInterval string is attempted to be converted to a number.
+        // The + is successful if the string contains only numeric characters, including
+        // periods, otherwise it returns NaN. Return the number given as seconds.
+        refreshInterval += (+elem * 1000);
+      }
+    }
+
+    if (refreshInterval < 30000) {
+      console.error('Refresh interval is less than 30 seconds, and must be greater. ' +
+      'Skipping layer refresh');
+      return NaN;
+    }
+
+    return refreshInterval;
+  }
+
+  /**
+   * Obtain and parse the refreshOffset property from the geoLayerView.
+   * @param geoLayerId 
+   * @param refreshInterval 
+   * @returns The offset in milliseconds, and 0 if none is given.
+   */
+  getRefreshOffset(geoLayerId: string, refreshInterval: number): number {
+    var rawOffset = this.getGeoLayerView(geoLayerId).properties.refreshOffset;
+    var refreshOffset = 0;
+
+    // If no offset is given, use the refresh interval and start from midnight.
+    if (!rawOffset) {
+      return this.setRefreshOffset(refreshInterval);
+    }
+    // If refreshOffset is given, use it starting at midnight to determine the offset.
+    else {
+      // Obtain the refreshOffset string and convert to upper case.
+      var rawOffset = rawOffset.toUpperCase();
+      var splitOffset = rawOffset.split(' ');
+
+      // Iterate over each spaced item in the string and insert each number in the
+      // delayArr in the order HR, MIN, SEC.
+      for (var elem of splitOffset) {
+        if (elem.includes('H')) {
+          var hours = elem.split('H')[0];
+          refreshOffset += (+hours * 3600000);
+        } else if (elem.includes('MIN')) {
+          var minutes = elem.split('MIN')[0];
+          refreshOffset += (+minutes * 60000);
+        } else if (elem.includes("SEC")) {
+          var seconds = elem.split('SEC')[0];
+          refreshOffset += (+seconds * 1000);
+        } else if (!isNaN(+elem)) {
+          // See comment for this line in refreshInterval() above.
+          refreshOffset += (+elem * 1000);
+        }
+      }
+      // If the offset is greater than 24 hours, let user know it must be less,
+      // and run the default.
+      if (refreshOffset > 86400000) {
+        console.error('Refresh interval is greater than 24 hours, and must be less. ' +
+        'Setting offset to midnight.');
+        return this.setRefreshOffset(refreshInterval);
+      }
+      // Finally, find the offset.
+      return this.setRefreshOffset(refreshInterval, refreshOffset);
+    }
+  }
+
+  /**
+   * @returns A geoLayerSymbol object from the geoLayerView whose geoLayerId matches
+   * with @param id.
+   * @param id The geoLayerId to match with.
+   */
+  private getSymbolDataFromID(id: string): IM.GeoLayerSymbol {
+    var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
+
+    for (let geoLayerViewGroup of geoLayerViewGroups) {
+      for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
+        if (geoLayerView.geoLayerId === id) {
+          return geoLayerView.geoLayerSymbol;
+        }
+      }
+    }
+    return {
+
+    };
   }
 
   /**
@@ -1842,20 +2119,20 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.mapConfigSub = <any>Subscription;
     this.mapConfigSub = this.commonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
-    .subscribe((mapConfig: any) => {
+    .subscribe((mapConfig: IM.GeoMapProject) => {
 
       // Set the configuration file class variable for the map service.
-      this.commonService.setMapConfig(mapConfig);
-      this.commonService.setMapConfigTest(mapConfig);
+      // this.commonService.setMapConfig(mapConfig);
+      this.mapConfig = mapConfig;
 
-      this.leafletMapContainerId = this.commonService.getGeoMapID()
+      this.leafletMapContainerId = this.geoMapId;
 
       // Once the mapConfig object is retrieved and set, set the order in which
       // each layer should be displayed. Get an instance of the singleton MapLayerManager
       // class and set the mapConfigLayerOrder variable so it can be used to order
       // layers instead of the map service
       let mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
-      mapLayerManager.setMapConfigLayerOrder(this.commonService.getMapConfigLayerOrder());
+      mapLayerManager.setMapConfigLayerOrder(this.getMapConfigLayerOrder());
       // Add components to the sidebar.
       this.addLayerToSidebar(mapConfig);
       // Create the map.
@@ -2435,7 +2712,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   private setDefaultBackgroundLayer(): void {
 
-    let defaultName: string = this.commonService.getDefaultBackgroundLayer();
+    let defaultName: string = this.getDefaultBackgroundLayer();
     this.currentBackgroundLayer = defaultName;
 
     // Callback executed when canvas was found.
@@ -2459,6 +2736,46 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       childList: true,
       subtree: true
     });
+  }
+
+  /**
+   * Sets the amount of time in milliseconds for the rxjs timer function to wait before
+   * starting to refresh a layer on the map.
+   * @param refreshInterval The user provided refreshInterval from the map config file.
+   * @param refreshOffset The user provided refreshOffset from the map config file.
+   * @returns The number of milliseconds given to the rxjs timer to wait until the first
+   * refresh is run.
+   */
+   private setRefreshOffset(refreshInterval: number, refreshOffset?: number): number {
+    var d = new Date();
+    d.setHours(0, 0, 0, 0);
+    // The default offset, the most recent midnight.
+    var initial = d.getTime();
+    var now = Date.now();
+    // Use the user-provided refreshOffset to determine the offset needed to wait.
+    if (refreshOffset) {
+      var fullOffset = initial + refreshOffset;
+      if (fullOffset - now < 15000) {
+        fullOffset += refreshInterval;
+      }
+
+      return fullOffset - now;
+    }
+    // Use the refreshInterval to determine the offset.
+    else {
+      // Add the interval from midnight until it passes the time 'now'.
+      while (initial < now) {
+        initial += refreshInterval;
+      }
+      // If the offset is less than 15 seconds, add one more interval so the layer has
+      // been completely loaded.
+      if (initial - now < 15000) {
+        initial += refreshInterval;
+      }
+
+      return initial - now;
+    }
+    
   }
 
   /**

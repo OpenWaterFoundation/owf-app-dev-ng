@@ -82,8 +82,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public geoLayer: any;
   /** The layer's geoLayerView. */
   public geoLayerView: any;
-  /** The name of the geoMap the layer resides in. */
-  public geoMapName: string;
   /** Object containing the layer geoLayerId as the ID, and an object of properties
    * set by a user-defined classification file. */
   public layerClassificationInfo: any;
@@ -169,7 +167,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     // this.displayedColumns.unshift('select');
     this.geoLayer = dataObject.data.geoLayer;
     this.geoLayerView = dataObject.data.geoLayerView;
-    this.geoMapName = dataObject.data.geoMapName;
     this.layerClassificationInfo = dataObject.data.layerClassificationInfo;
     // This is needed for testing the library.
     // this.geometryType = 'WKT:Polygon';
