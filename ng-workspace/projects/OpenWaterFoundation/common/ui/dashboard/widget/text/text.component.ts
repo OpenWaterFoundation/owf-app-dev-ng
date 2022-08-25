@@ -1,6 +1,8 @@
 import { Component,
+          Inject,
           Input, 
           OnDestroy}        from '@angular/core';
+import { DOCUMENT }         from '@angular/common';
 
 import { Observable,
           Subscription }    from 'rxjs';
@@ -47,7 +49,8 @@ export class TextComponent implements OnDestroy{
    * @param commonService The injected Common library service.
    */
   constructor(private commonService: OwfCommonService,
-    private dashboardService: DashboardService) {}
+    private dashboardService: DashboardService,
+    @Inject(DOCUMENT) private document: Document) {}
 
 
   /**
@@ -119,6 +122,7 @@ export class TextComponent implements OnDestroy{
   ngOnInit(): void {
     this.isTextError$ = this.dashboardService.isTextError;
 
+    this.preventScrollPropagation();
     this.checkWidgetObject();
   }
 
@@ -128,6 +132,33 @@ export class TextComponent implements OnDestroy{
   ngOnDestroy(): void {
     if (this.textSub) {
       this.textSub.unsubscribe();
+    }
+
+    var docMarkdownDiv = this.document.querySelector('#docMarkdownDiv');
+    
+    if (docMarkdownDiv) {
+      docMarkdownDiv.removeEventListener('wheel', this.preventScroll);
+    }
+  }
+
+  /**
+   * 
+   * @param $event 
+   * @returns 
+   */
+  private preventScroll($event: Event): boolean {
+    $event.stopPropagation();
+    return false;
+  }
+
+  /**
+   * 
+   */
+  private preventScrollPropagation(): void {
+    var docMarkdownDiv = this.document.querySelector('#docMarkdownDiv');
+    
+    if (docMarkdownDiv) {
+      docMarkdownDiv.addEventListener('wheel', this.preventScroll, { passive: false });
     }
   }
 

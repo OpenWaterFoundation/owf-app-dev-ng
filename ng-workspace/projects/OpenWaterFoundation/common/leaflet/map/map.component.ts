@@ -403,9 +403,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Set the default layer radio check to true
     this.setDefaultBackgroundLayer();
 
-    // Add the background layers to the maps control in the topright
-    L.control.layers(this.baseMaps).addTo(this.mainMap);
-
     // The baselayerchange is fired when the base layer is changed through the layer
     // control. So when a radio button is pressed and the basemap changes, update
     // the currentBackgroundLayer and check the radio button.
@@ -413,9 +410,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.setBackgroundLayer(backgroundLayer.name);
     });
 
-    this.createMapTitle();
+    this.addMapTitle();
     this.createMapTitleInitial();
-    this.createMapBottomLeftControls();
+    this.addAllMapControls();
 
     var geoLayerViewGroups: IM.GeoLayerViewGroup[] = this.allGeoLayerViewGroups;
 
@@ -1546,7 +1543,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     var _this = this;
 
     var isMobile = (this.currentScreenSize === Breakpoints.XSmall ||
-    this.currentScreenSize === Breakpoints.Small);
+    this.currentScreenSize === Breakpoints.Small ||
+    this.currentScreenSize === Breakpoints.Medium);
     
     // Create the sidebar instance and add it to the map. 
     var sidebar = L.control.sidebar({
@@ -1616,50 +1614,23 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Creates all Leaflet Controls in the bottom left corner of the map and ensures
-   * that they're drawn in the correct order.
+   * Creates all Leaflet Controls on the map and ensures that they're drawn in the
+   * correct order.
    */
-  private createMapBottomLeftControls() : void {
+  private addAllMapControls(): void {
 
-    var _this = this;
+    // Add background layers to the map in the topright.
+    L.control.layers(this.baseMaps).addTo(this.mainMap);
+    // Add home & zoom in/zoom out to the map in the topright.
+    this.addZoomHomeControl();
 
-    // Display the zoom level on the map.
-    let mapZoom = L.control({ position: 'bottomleft' });
-    mapZoom.onAdd = function () {
-      // Have Leaflet create a div with the class name zoomInfo.
-      this._container = L.DomUtil.create('div', 'zoomInfo');
-      // When the map is created for the first time, call update to display zoom.
-      this.update();
-      // On subsequent zoom events (at the end of the zoom) update the innerHTML
-      // again, and round to tenths.
-      _this.mainMap.on('zoomend', function () {
-        this._container.innerHTML = '<div id="zoomInfo">Zoom Level: ' +
-        _this.mainMap.getZoom().toFixed(1) + '</div>';
-      }, this);
-      return this._container;
-    };
-    mapZoom.update = function () {
-      this._container.innerHTML = '<div id="zoomInfo">Zoom Level: ' +
-      _this.mainMap.getZoom().toFixed(1) + '</div>';
-    };
+    // Create the zoom level control.
+    var mapZoom = this.createZoomLevelControl();
+    // Create the lat and long of the mouse position.
+    var mousePosition = this.createMousePositionControl();
+    // Bottom Left corner control that shows the scale in km and miles of the map.
+    var mapScale = L.control.scale({ position: 'bottomleft', imperial: true });
 
-    // Add home & zoom in/zoom out control to the map.
-    this.createMapZoomHomeControl();
-
-    // Show the lat and lang of mouse position in the bottom left corner.
-    var mousePosition = L.control.mousePosition({
-      position: 'bottomleft',
-      lngFormatter: (num: number) => {
-        let direction = (num < 0) ? 'W' : 'E';
-        let formatted = Math.abs(num).toFixed(6) + '&deg ' + direction;
-        return formatted;
-      },
-      latFormatter: (num: number) => {
-        let direction = (num < 0) ? 'S' : 'N';
-        let formatted = Math.abs(num).toFixed(6) + '&deg ' + direction;
-        return formatted;
-      }
-    });
 
     // Add each control in the desired order. From top to bottom on the map:
     //   Scale
@@ -1667,14 +1638,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     //   Mouse Position / Coordinates
     this.mainMap.addControl(mousePosition);
     this.mainMap.addControl(mapZoom);
-    // Bottom Left corner control that shows the scale in km and miles of the map.
-    L.control.scale({ position: 'bottomleft', imperial: true }).addTo(this.mainMap);
+    this.mainMap.addControl(mapScale);
   }
 
   /**
-   * Creates the div that displays the Map title and layer feature information
+   * Creates the div that displays the Map title and layer feature information.
    */
-  private createMapTitle(): void {
+  private addMapTitle(): void {
 
     var _this = this;
 
@@ -1695,7 +1665,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * 
+   * Initializes the content of the topleft title card div area.
    */
   private createMapTitleInitial(): void {
 
@@ -1706,7 +1676,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     divContents = ('<h4 id="geoLayerView">' + this.geoMapName +
     '</h4>' + '<p id="point-info"></p>');
 
-    if (instruction != "") {
+    if (instruction !== "") {
       divContents += ('<hr class="upper-left-map-info-divider"/>' + '<p id="instructions"><i>' +
       instruction + '</i></p>');
     }
@@ -1718,7 +1688,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * a '+' for zooming in, '-' for zooming out, and a house Font Awesome icon in
    * the upper right section of the map.
    */
-  private createMapZoomHomeControl(): void {
+  private addZoomHomeControl(): void {
 
     var _this = this;
 
@@ -1812,6 +1782,57 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       position: 'topright',
       zoomHomeTitle: 'Zoom to initial extent'
     }).addTo(this.mainMap);
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  private createMousePositionControl(): L.Control {
+    
+    var mousePosition = L.control.mousePosition({
+      position: 'bottomleft',
+      lngFormatter: (num: number) => {
+        let direction = (num < 0) ? 'W' : 'E';
+        let formatted = Math.abs(num).toFixed(6) + '&deg ' + direction;
+        return formatted;
+      },
+      latFormatter: (num: number) => {
+        let direction = (num < 0) ? 'S' : 'N';
+        let formatted = Math.abs(num).toFixed(6) + '&deg ' + direction;
+        return formatted;
+      }
+    });
+    return mousePosition;
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  private createZoomLevelControl(): L.Control {
+    var _this = this;
+
+    let mapZoom = L.control({ position: 'bottomleft' });
+    mapZoom.onAdd = function() {
+      // Have Leaflet create a div with the class name zoomInfo.
+      this._container = L.DomUtil.create('div', 'zoomInfo');
+      // When the map is created for the first time, call update to display zoom.
+      this.update();
+      // On subsequent zoom events (at the end of the zoom) update the innerHTML
+      // again, and round to tenths.
+      _this.mainMap.on('zoomend', function () {
+        this._container.innerHTML = '<div id="zoomInfo">Zoom Level: ' +
+        _this.mainMap.getZoom().toFixed(1) + '</div>';
+      }, this);
+      return this._container;
+    };
+    mapZoom.update = function () {
+      this._container.innerHTML = '<div id="zoomInfo">Zoom Level: ' +
+      _this.mainMap.getZoom().toFixed(1) + '</div>';
+    };
+
+    return mapZoom;
   }
 
   /**

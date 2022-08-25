@@ -27,7 +27,9 @@ in its table's cells. The fixed component's were:
 * Added the first iteration of the Common Logger for printing debugging messages
 to the console. Depending on debugLevel, different amounts of messages are printed.
 The way it is used now will probably be changed/updated in the future.
-* 
+* Added the first iteration of the Story component. This is essentially a story
+map that can be added as either a main or sub menu to the InfoMapper, and utilizes
+the Dashboard component and its widgets for data layout.
 
 # 4.0.2 (2022-08-05) #
 
