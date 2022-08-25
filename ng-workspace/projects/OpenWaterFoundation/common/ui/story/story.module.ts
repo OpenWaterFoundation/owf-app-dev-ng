@@ -1,6 +1,7 @@
 import { NgModule }              from '@angular/core';
 import { CommonModule }          from '@angular/common';
 
+import { MatButtonModule }       from '@angular/material/button';
 import { AngularFullpageModule } from '@fullpage/angular-fullpage';
 
 import { MapModule }             from '@OpenWaterFoundation/common/leaflet';
@@ -17,7 +18,8 @@ import { StoryComponent }        from './story.component';
 
     AngularFullpageModule,
     DashboardModule,
-    MapModule
+    MapModule,
+    MatButtonModule
   ]
 })
 export class StoryModule { }

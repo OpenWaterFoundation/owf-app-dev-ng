@@ -2,7 +2,8 @@ import { Component,
           OnDestroy,
           OnInit }             from '@angular/core';
 import { ActivatedRoute,
-          ParamMap }           from '@angular/router';
+          ParamMap, 
+          Router}              from '@angular/router';
 import { first,
           Subject,
           takeUntil }          from 'rxjs';
@@ -23,6 +24,10 @@ export class StoryComponent implements OnInit, OnDestroy {
 
   /** Options for fullpage creation. */
   config: options;
+  /**
+   * 
+   */
+  currentURL: string;
   /** Reference for the main fullpage object. */
   fullpageAPI: fullpage_api;
   /** Subject that is completed when this component is destroyed. The breakpoint
@@ -54,8 +59,24 @@ export class StoryComponent implements OnInit, OnDestroy {
    * @param logger Reference to the Common library logger service.
    */
   constructor(private actRoute: ActivatedRoute, private commonService: OwfCommonService,
-  private logger: CommonLoggerService) { }
+  private logger: CommonLoggerService, private router: Router) { }
 
+
+  /**
+   * Creates an array of strings with data to used by Fullpage for Story creation.
+   * @param optType String representing the desired option type.
+   * @returns An array of strings connected to the given option type.
+   */
+  private createOptionArray(optType: string): string[] {
+    var optionArray: string[] = [];
+
+    for (let chapter of this.storyConf.story.chapters) {
+      for (let page of chapter.pages) {
+        optionArray.push(page.metadata[optType]);
+      }
+    }
+    return optionArray;
+  }
 
   /**
    * Set the config options that will be given to 
@@ -63,29 +84,26 @@ export class StoryComponent implements OnInit, OnDestroy {
   createFullpageOptions(): void {
     this.config = {
       // Navigation.
+      menu: '#story-menu',
+      anchors: this.createOptionArray('id'),
       navigation: true,
       navigationPosition: 'right',
+      navigationTooltips: this.createOptionArray('title'),
       slidesNavigation: true,
-
       // Scrolling.
-      scrollingSpeed: 1100,
+      scrollingSpeed: 600,
       touchSensitivity: 25,
-
       // Accessibility.
       recordHistory: false,
-      
       // Design.
       conrolArrows: false,
-      // Takes care of the extra 64 pixels added because of the navbar.
+      //   Takes care of the extra 64 pixels added because of the navbar.
       paddingBottom: '64px',
       sectionsColor: ['#B8AE9C', '#348899', '#F2AE72', '#5C832F', '#B8B89F'],
-
       // Custom selectors.
-
       // Misc.
       licenseKey: 'OPEN-SOURCE-GPLV3-LICENSE',
-
-      // Events.
+      // Events...
     };
   }
 
@@ -96,13 +114,13 @@ export class StoryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.createFullpageOptions();
-
     this.actRoute.paramMap.pipe(takeUntil(this.destroyed)).subscribe((paramMap: ParamMap) => {
 
       this.debugFlag = this.actRoute.snapshot.queryParamMap.get('debug');
       this.debugLevelFlag = this.actRoute.snapshot.queryParamMap.get('debugLevel');
       this.logger.print('info', 'StoryComponent.ngOnInit - Story component created.');
+
+      this.currentURL = this.router.url.split('#')[0].substring(1);
 
       var storyId = paramMap.get('id');
       this.validStoryId = this.commonService.validID(storyId);
@@ -139,6 +157,7 @@ export class StoryComponent implements OnInit, OnDestroy {
    */
   private storyInit(storyConfig: IM.StoryConf): void {
     this.storyConf = storyConfig;
+    this.createFullpageOptions();
   }
 
 }

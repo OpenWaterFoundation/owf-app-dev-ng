@@ -1,18 +1,68 @@
 /* CLASSES */
 
-/*  */
+/* Each <a> tag in the story menu navbar. */
+.nav-link {
+  color: #292929;
+  font-size: 16px;
+}
+
+/* Each "page" section currently being shown on the screen. */
 .section {
-  padding: 0px 60px;
+  padding: 60px 60px 0px 0px;
   display: flex;
   justify-content: center;
 }
 
-/*  */
-.section-content {
-  height: 100%;
+/* Div holding all menus for the story, with the exception of the home <a> tag. */
+.story-nav-all-menus-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 69%;
 }
 
-/*  */
-#fp-nav.fp-right {
-  right: 0px !important;
+/* Container around all items in the story navigation bar. */
+.story-nav-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Div holding the home <a> tag. */
+.story-nav-home-container {
+  margin-left: 20px;
+  width: 30%;
+}
+
+/* The Story home button. */
+.story-nav-home {
+  color: #292929;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+/* Div with each li > a menu elements. */
+.story-nav-menu-container {
+  margin: 0px 8px;
+}
+
+/* The unordered list container. */
+.story-nav-ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+/* ID's */
+
+/* The Story navigation bar. */
+#story-nav {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  z-index: 600;
+  width: 100%;
+  height: 60px;
+
+  background-color: #e6e6e6;
 }

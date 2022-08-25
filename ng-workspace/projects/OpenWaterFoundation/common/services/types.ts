@@ -557,9 +557,11 @@ export interface DashboardConf {
 
 /** Dashboard metadata object. */
 export interface DashboardMetadata {
-  version?: string;
   author?: string;
+  id?: string;
   title?: string;
+  tooltip?: string;
+  version?: string;
 }
 
 /** Dashboard layout object. */
@@ -671,14 +673,17 @@ export interface ListenedToWidget {
 /////////////////////////////// STORY CONFIG \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 export interface StoryConf {
-  story: StoryChapters;
+  story: StoryMain;
+}
+
+export interface StoryMain {
+  name: string;
+  chapters: StoryChapters[];
 }
 
 export interface StoryChapters {
-  chapters: StoryPages;
-}
-
-export interface StoryPages {
+  name: string;
+  tooltip?: string;
   pages: DashboardConf[];
 }
 
