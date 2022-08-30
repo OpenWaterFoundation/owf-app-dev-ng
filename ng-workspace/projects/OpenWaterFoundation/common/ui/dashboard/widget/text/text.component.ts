@@ -41,7 +41,7 @@ export class TextComponent implements OnDestroy{
   textSub: Subscription;
   /** The attribute provided to this component when created, e.g.
    *   <widget-text [textWidget]="widget"></widget-text> */
-  @Input() textWidget: IM.TextWidget;
+  @Input('textWidget') textWidget: IM.TextWidget;
   
 
   /**

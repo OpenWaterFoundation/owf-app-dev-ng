@@ -57,7 +57,11 @@ export class OwfCommonService {
   highlighted = new BehaviorSubject(false);
   /** NOTE: Not currently in use. */
   highlightedData = this.highlighted.asObservable();
-  /** Constant for the Font Awesome house with chimney SVG path. */
+  /** SVG 'd' property path for the Font Awesome computer mouse icon. */
+  private readonly constComputerMouseSVGPath = 'M0 352c0 88.38 71.63 160 160 ' +
+  '160h64c88.38 0 160-71.63 160-160V224H0V352zM176 0H160C71.63 0 0 71.62 0 ' +
+  '160v32h176V0zM224 0h-16v192H384V160C384 71.62 312.4 0 224 0z'
+  /** SVG 'd' property path for the Font Awesome house with chimney icon. */
   private readonly constHouseChimneySVGPath = 'M511.8 287.6L512.5 447.7C512.5 ' +
   '450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 ' +
   '512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 ' +
@@ -122,7 +126,14 @@ export class OwfCommonService {
 
 
   /**
-   * Returns the constant SVG path string for drawing the Font Awesome 6 house with
+   * Returns the SVG path string for drawing the Font Awesome 6 computer mouse icon.
+   */
+  get computerMouseSVGPath(): string {
+    return this.constComputerMouseSVGPath;
+  }
+
+  /**
+   * Returns the SVG path string for drawing the Font Awesome 6 house with
    * a chimney icon.
    */
   get houseChimneySVGPath(): string {

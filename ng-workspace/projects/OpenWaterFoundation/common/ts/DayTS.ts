@@ -381,7 +381,7 @@ export class DayTS extends TS {
 
   // 	// Now transfer the data.  To do so, get the
   // 	// old position and then set in the new position.  We are only concerned
-  // 	// with transferring the values for the the old time series that are within the new period...
+  // 	// with transferring the values for the old time series that are within the new period...
 
   // 	int column, row, temp_ts_am1 = temp_ts.getDate1().getAbsoluteMonth();
   // 	boolean internDataFlagStrings = getInternDataFlagStrings();

@@ -118,7 +118,7 @@ export class StoryComponent implements OnInit, OnDestroy {
 
       this.debugFlag = this.actRoute.snapshot.queryParamMap.get('debug');
       this.debugLevelFlag = this.actRoute.snapshot.queryParamMap.get('debugLevel');
-      this.logger.print('info', 'StoryComponent.ngOnInit - Story component created.');
+      this.logger.print('info', 'StoryComponent.ngOnInit - Story initialization.');
 
       this.currentURL = this.router.url.split('#')[0].substring(1);
 

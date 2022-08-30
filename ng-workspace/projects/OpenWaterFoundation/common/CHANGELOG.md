@@ -21,6 +21,13 @@ in its table's cells. The fixed component's were:
   * `DialogDataTableComponent`
   * `DialogDataTableLightComponent`
   * `DialogTSTableComponent`
+* Fixed a bug in the Dashboard Component that would briefly show the 404 page before
+the dashboard was displayed.
+
+### Refactoring ###
+
+* Moved all 
+* Removed a half dozen unused class variables in the Map Component.
 
 ### Features / Enhancements ###
 
@@ -29,7 +36,7 @@ to the console. Depending on debugLevel, different amounts of messages are print
 The way it is used now will probably be changed/updated in the future.
 * Added the first iteration of the Story component. This is essentially a story
 map that can be added as either a main or sub menu to the InfoMapper, and utilizes
-the Dashboard component and its widgets for data layout.
+the Dashboard component and its widgets for data layout and visualization.
 
 # 4.0.2 (2022-08-05) #
 

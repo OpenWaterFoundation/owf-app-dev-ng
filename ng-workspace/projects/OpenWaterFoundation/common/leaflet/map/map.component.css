@@ -129,6 +129,40 @@ line-break points, such as dashes '-'. */
   padding: 5px 10px !important;
 }
 
+.scroll-toggle {
+  height: 30px;
+  width: 30px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 5px;
+  border: rgba(0,0,0,0.3) solid 2px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*  */
+.scroll-toggle .scroll-toggle-tooltip {
+  visibility: hidden;
+  width: 250px;
+  background-color: rgba(0,0,0,0.7);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  /* Position the tooltip. */
+  position: absolute;
+  z-index: 1;
+  top: -15px;
+  right: 150%;
+}
+
+/*  */
+.scroll-toggle:hover .scroll-toggle-tooltip {
+  visibility: visible;
+}
+
 /* Div to be displayed if the correct app config object ID is given in the URL. */
 .show-map-container {
   height: 100%;

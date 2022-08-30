@@ -15,10 +15,10 @@ export class LegendBackgroundGroupComponent implements AfterViewInit {
 
   /** The background geoLayerViewGroup passed as input from the Map Component when
    * this component is created. */
-  @Input() geoLayerViewGroup: any;
+  @Input('geoLayerViewGroup') geoLayerViewGroup: any;
   /** EventEmitter that alerts the Map component (parent) that an update has happened,
    * and sends the selected background's geoLayerView name property. */
-  @Output() callSelectBackgroundLayer = new EventEmitter<any>();
+  @Output('callSelectBackgroundLayer') callSelectBackgroundLayer = new EventEmitter<any>();
 
 
   /**

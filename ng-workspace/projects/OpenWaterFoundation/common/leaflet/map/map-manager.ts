@@ -9,10 +9,6 @@
   /** Object to hold each Leaflet map reference as the value, with the map
    * configuration's geoMapId property as the key. */
   maps: {} = {};
-  /**
-   * 
-   */
-  uniqueId = 0;
 
 
   /**
@@ -33,25 +29,36 @@
   /**
    * Adds a Leaflet map reference to the @var maps object with the unique mapID as the key.
    * @param mapID A string representing the geoMapId from the map configuration file.
-   * @param mapRef The reference to the Map Component's @var mainMap Leaflet map.
+   * @param map The reference to the Map Component's @var mainMap Leaflet map.
    */
-  addMap(mapID: string, mapRef: any): void {
-    this.maps[mapID] = mapRef;
-  }
-
-  /**
-   * 
-   */
-  createUniqueId(): string {
-    return 'mapID' + (this.uniqueId += 1);
+  addMap(mapID: string, map: any): void {
+    this.maps[mapID] = map;
   }
 
   /**
    * @returns A boolean on whether this map has already been created.
    * @param geoMapId The map's geoMapId property from it's configuration file.
    */
-  mapAlreadyCreated(geoMapId: string): boolean {
+  doesMapExist(geoMapId: string): boolean {
     return geoMapId in this.maps;
+  }
+
+  /**
+   * 
+   * @param mapID 
+   */
+  getMap(mapID: string): any {
+
+    if (this.maps[mapID]) {
+      return this.maps[mapID];
+    } else {
+      for (const key in this.maps) {
+        if (key.includes(mapID)) {
+          return this.maps[key];
+        }
+      }
+    }
+    return null;
   }
 
   /**

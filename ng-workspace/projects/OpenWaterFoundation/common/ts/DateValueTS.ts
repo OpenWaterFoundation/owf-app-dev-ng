@@ -714,7 +714,7 @@ All data are reset, except for the identifier, which is assumed to have been set
           return null;
         }
         // Only set the identifier if a new time series.
-        // Otherwise assume the the existing identifier is to be used (e.g., from a file name).
+        // Otherwise assume the existing identifier is to be used (e.g., from a file name).
         ts.setIdentifier(identifier);
         ts.getIdentifier().setInputType("DateValue");
         tslist.push(ts);

@@ -12,9 +12,9 @@ import * as IM              from '@OpenWaterFoundation/common/services';
 })
 export class SidepanelInfoComponent implements OnInit {
 
-  @Input() properties: any;
-  @Input() appVersion: any;
-  @Input() projectVersion: any;
+  @Input('properties') properties: any;
+  @Input('appVersion') appVersion: any;
+  @Input('projectVersion') projectVersion: any;
 
   constructor(private commonService: OwfCommonService) { }
 

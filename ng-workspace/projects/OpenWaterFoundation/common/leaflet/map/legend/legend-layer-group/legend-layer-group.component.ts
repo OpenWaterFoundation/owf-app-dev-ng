@@ -45,15 +45,15 @@ export class LegendLayerGroupComponent implements AfterViewInit {
 
   /** An object with each geoLayerId as the key, and all features of a geoLayerView,
    * usually a FeatureCollection, as the value. */
-  @Input() allFeatures: any;
+  @Input('allFeatures') allFeatures: any;
   /** EventEmitter that alerts the Map component (parent) that an update has happened,
    * and sends the selected background's geoLayerView name property. */
   // TODO: Not being used, can be used for another emitter to the Map Component.
-  @Output() callSelectBackgroundLayer = new EventEmitter<any>();
+  @Output('callSelectBackgroundLayer') callSelectBackgroundLayer = new EventEmitter<any>();
   /** A categorized configuration object with the geoLayerId as key and a list of
    * name followed by color for each feature in the Leaflet layer to be shown in
    * the sidebar. */
-  @Input() categorizedLayerColors: any;
+  @Input('categorizedLayerColors') categorizedLayerColors: any;
   /**
    * 
    */
@@ -64,24 +64,24 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   destroyed = new Subject<void>();
   /** An object containing any event actions with their id as the key and the action
    * object itself as the value. */
-  @Input() eventActions: any;
+  @Input('eventActions') eventActions: any;
   /** The geoLayerViewGroup passed as input from the Map Component when
    * this component is created. */
-  @Input() geoLayerViewGroup: any;
+  @Input('geoLayerViewGroup') geoLayerViewGroup: any;
   /** An object of Style-like objects containing:
    * key  : geoLayerId
    * value: object with style properties
    * For displaying a graduated symbol in the Leaflet legend. */
-  @Input() graduatedLayerColors: any;
+  @Input('graduatedLayerColors') graduatedLayerColors: any;
   /** Boolean test variable for use with Angular Material slide toggle. */
   isChecked = true;
   /** Represents the Date string since the last time a layer was updated. */
-  @Input() lastRefresh: any;
+  @Input('lastRefresh') lastRefresh: any;
   /** Object containing a layer geoLayerId as the ID, and an object of properties
    * set by a user-defined classification file. */
-  @Input() layerClassificationInfo: any;
+  @Input('layerClassificationInfo') layerClassificationInfo: any;
   /** Reference to the Map Component Leaflet map object. */
-  @Input() mainMap: any;
+  @Input('mainMap') mainMap: any;
 
   @Input('mapConfig') mapConfig: IM.GeoMapProject;
   /** The instance of the MapLayerManager, a helper class that manages MapLayerItem

@@ -22,11 +22,15 @@ export class DashboardComponent implements OnDestroy {
 
   /** The dashboard configuration object read in from the JSON file. */
   dashboardConf: IM.DashboardConf;
+  /**
+   * 
+   */
+  displayedInStory = false;
   /** Subscription for updating the route for this component. Unsubscribed to in
    * ngDestroy. */
   routeSub: Subscription;
   /**
-   * 
+   * A dashboard config object passed in from a 
    */
   @Input('dashboardConfig') standaloneDashboardConf: IM.DashboardConf;
   /** `true` if the id in the URL matches an id from the `app-config.json` file.
@@ -102,11 +106,12 @@ export class DashboardComponent implements OnDestroy {
         return;
       }
       
-      // The the dashboard component is being created and used in another component's
+      // The dashboard component is being created and used in another component's
       // template and has provided the dashboardConfig property.
       if (!this.standaloneDashboardConf) {
         this.readDashboardConfig(dashboardId);
       } else {
+        this.displayedInStory = true;
         this.dashboardInit(this.standaloneDashboardConf);
       }
       

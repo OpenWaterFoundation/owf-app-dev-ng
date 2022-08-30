@@ -4,7 +4,6 @@ import { Component,
 
 import { Observable }       from 'rxjs';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 import * as IM              from '@OpenWaterFoundation/common/services';
 import { DashboardService } from '../../dashboard.service';
 
@@ -24,14 +23,13 @@ export class TitleComponent implements OnDestroy{
   isTitleError$: Observable<boolean>;
   /** The widget object provided as an attribute to this component when created, e.g.
    *   <widget-title [titleWidget]="widget"></widget-title> */
-  @Input() titleWidget: IM.TitleWidget;
+  @Input('titleWidget') titleWidget: IM.TitleWidget;
 
   /**
    * 
-   * @param commonService The injected Common library service.
+   * @param dashboardService The injected dashboard service.
    */
-  constructor(private commonService: OwfCommonService,
-    private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService) {}
 
 
   /**

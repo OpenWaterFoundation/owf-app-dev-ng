@@ -402,8 +402,7 @@ export class ChartComponent implements OnInit, OnDestroy {
     }
 
     // Iterate over the config array and add the necessary configuration data into
-    // the data object that will be added to the finalData array. The finalData array
-    // is what's given as the second argument to Plotly.react.
+    // the data object that will be added to the finalData array.
     for (let graphConfig of totalGraphConfig) {
       data = {};
 
@@ -445,7 +444,10 @@ export class ChartComponent implements OnInit, OnDestroy {
       data.y = graphConfig.isCSV ? graphConfig.datasetData : graphConfig.plotlyDatasetData;
 
       colorwayArray.push(graphConfig.datasetBackgroundColor);
-      finalData.push(data);
+      // This is done 
+      if (finalData.length < this.graphTemplate.product.subProducts[0].data.length) {
+        finalData.push(data);
+      }
     }
 
     // Builds the layout object that will be provided for creating the Plotly graph.
@@ -682,7 +684,7 @@ export class ChartComponent implements OnInit, OnDestroy {
     
     this.isChartError$ = this.isChartError;
 
-    switch(this.chartDisplayType) {
+    switch (this.chartDisplayType) {
       case IM.ChartDisplayType.dlg:
         this.setupForDialog();
         break;
@@ -983,7 +985,6 @@ export class ChartComponent implements OnInit, OnDestroy {
           this.setChartError = true;
           return;
         }
-
         this.obtainAndCreateAllGraphs();
       }
     });
