@@ -1,5 +1,6 @@
 <div *ngIf="storyConf">
 
+  <!-- Fullpage main nav menu. -->
   <nav id="story-nav">
     <div class="story-nav-container">
 
@@ -14,8 +15,9 @@
         <ul class="story-nav-ul">
           <div *ngFor="let chapter of storyConf.story.chapters" class="story-nav-menu-container">
             <li class="nav-item">
-              <a mat-button class="nav-link" [attr.href]="currentURL + '#' + chapter.pages[0].metadata.id">
-                {{chapter.pages[0].metadata.title}}
+              <a mat-button class="nav-link" [attr.href]="currentURL + '#' + chapter.pages[0].metadata.id"
+              [matTooltip]="chapter.tooltip" [matTooltipShowDelay]="500" matTooltipPosition="left">
+                {{chapter.name}}
               </a>
             </li>		  
           </div>
@@ -24,6 +26,7 @@
     </div>
   </nav>
 
+  <!-- Fullpage main content. -->
   <div fullpage id="fullpage" [options]="config" (ref)="getRef($event)">
     <!-- Ensures no element is actually put into the DOM. Doing so messes with the
     story creation and functionality. -->

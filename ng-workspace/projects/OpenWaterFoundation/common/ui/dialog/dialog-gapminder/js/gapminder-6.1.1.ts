@@ -12,7 +12,6 @@ export class GapminderViz {
 
   public configPath: string;
 
-
   /**
    * 
    */
@@ -94,7 +93,6 @@ export class GapminderViz {
     // var height = $("#Gapminder").parent().height() - 270;
     var height = 553;
 
-
     /**
      * SVG container margin - responsible for defining the visualization's canvas 
      * ( or the area where the graph and associated bits and pieces are placed)
@@ -112,10 +110,8 @@ export class GapminderViz {
 
     var firstClick = true;
 
-
     // export function gapminder(){
 
-    console.log("timestep: ", properties.TimeStep);
     /**
      * Precision int for the respected time step,
      * TimeStep: 1Year. Returns '1'
@@ -154,7 +150,6 @@ export class GapminderViz {
       $("#DatasetChoicesLabel").remove();
       $("#DatasetChoices").remove();
     }
-
 
     if (properties.DataTableType.toUpperCase() == "CLUSTERIZE") d3.select("#dataTable2").remove();
     if (properties.DataTableType.toUpperCase() == "JQUERY") d3.select("#dataTable1").remove();
@@ -238,13 +233,8 @@ export class GapminderViz {
       // .attr("width", (width + 50))
       .attr("height", height); //This is the height of only the actual chart, making room for elements above and below the chart
 
-    console.log("create svg container: ", svg);
-
-
     //set width to be width of svg container 'box'
     width = $(".box").width(); //Set width to the width of the chart
-
-    console.log("width1: ", width);
 
     /*create a div/svg container for legend*/
     var legend = d3.select("#legend")
@@ -371,8 +361,6 @@ export class GapminderViz {
       .attr("stroke", "#000")	// CSS Styling for dateslider: gives handle a black outline
       .attr("stroke-opacity", "0.5")	// CSS Styling for dateslider: lowers opacity of black outline 
       .attr("stroke-width", "1.25px");	// CSS Styling for dateslider:  sets outline width
-
-
 
     var handleText = slider.insert("text", ".track-overlay")
       .attr("font-size", "10px")
@@ -699,8 +687,6 @@ export class GapminderViz {
 
     add_marker_names(names);
 
-
-
     /**
      * variable creates life for data line (tracer)
      */
@@ -721,7 +707,6 @@ export class GapminderViz {
           .attr("id", "annotationLine")
           .attr("class", "annotationShape")
           .attr('x1', function (d: any) {
-            // console.log("697 d.Properties.x1: ", d.Properties.x1);
 
             return xScale(d.Properties.x1);
           })
@@ -915,7 +900,6 @@ export class GapminderViz {
           return "T" + convert_to_id(d[1][0].color);	//d.values changes to d[1]
         })
         .style("stroke", function (d) {
-          // console.log("tracing color: ", d[1][0].color);	//d.values changes to d[1]
 
           return colorScale(d[1][0].color);	//d.values changes to d[1]
         })
@@ -983,7 +967,6 @@ export class GapminderViz {
     var data = interpolateData(dimensions.dateMin);
     add_dots();
 
-
     //set default speed after all elements have been added
     if (Properties.DefaultSpeed) {
       setSpeed(properties.DefaultSpeed);
@@ -1029,7 +1012,7 @@ export class GapminderViz {
      */
     function mouseover(event: any, d: any) {	// Updated: event passed as first argument to all listeners 
       //dot outline thicker on mouseover 	// bold outline currently only displaying after selection 
-      console.log("mouseover d: ", d);
+
       if (d3.select(this).attr("display") == "true") {
         if (displayAll) {
           d3.selectAll(".dot").style("fill-opacity", .75).attr("stroke-opacity", .5);
@@ -1238,7 +1221,6 @@ export class GapminderViz {
      *Utilizes [select2]{@link https://select2.github.io/} library
      */
     $('select').on('select2:select', function (evt: any) {
-      console.log("dropdown menu event: ", evt);
       var provider = evt.params.data.text;
       d3.select(dot_id_selector(provider))
         .style('stroke', 'yellow')
@@ -1434,7 +1416,6 @@ export class GapminderViz {
      */
     function interpolateData(date) {
 
-
       return json.data.map(function (d) {
         return {
           //X-Axis
@@ -1480,8 +1461,6 @@ export class GapminderViz {
      *Returns an array of dates according to precision units specified in Config file
      */
     function dateArray_function() {
-
-      // console.log("dvar: ", dvar);
 
       var Date1 = new Date(dimensions.dateMin);
       var Date2 = new Date(dimensions.dateMax);
@@ -2143,7 +2122,6 @@ export class GapminderViz {
         .attr("text-anchor", "middle")
         .text(function (d) { return formatDate(d); });
 
-
       handleText.attr("transform", "translate(" + (timeScale(getClosest(currYear)) + ",-7)"));
       //UPDATE LEGEND:
       $("#legend").empty();
@@ -2194,7 +2172,6 @@ export class GapminderViz {
           return 4;
         }
       }).attr("display", "true");
-      // console.log("Dot: ", dot);
       dot.sort(order);
       d3.selectAll("text").style("font-weight", "normal")
       if (tracer) {
@@ -2228,7 +2205,6 @@ export class GapminderViz {
       // }
     }
 
-
     /**
      *Callback Function: Called when clicking Turn Annotations On/ Turn Annotations Off </p>
      *Either displays the annotation shapes on the canvas or hides them
@@ -2249,7 +2225,6 @@ export class GapminderViz {
         elem.innerHTML = "Turn Annotations On";
       }
     }
-
 
     /**
      *Callback Function: Called when clicking on play button </p>
@@ -2353,7 +2328,6 @@ export class GapminderViz {
       }
     }
 
-
     /**
      *Ensures smallest dots are above larger dots
      *
@@ -2363,7 +2337,6 @@ export class GapminderViz {
     function order(a: any, b: any) {
       return radius(b) - radius(a);
     }
-
 
     /**
      *Returns a minimum value for the radius of dots (3.0px)
@@ -2379,10 +2352,6 @@ export class GapminderViz {
     *Displays a tooltip with the annotation information at mouseover event
     */
     function mouseoverAnnotation(event: any, d: any) {
-      console.log("mouseoverAnnotations event : ", event);
-      console.log("mouseoverAnnotations d : ", d);
-      console.log("mouseoverAnnotations d.Annotation  : ", d.Annotation);
-
 
       tip.transition().duration(0);
       tip.style('top', (event.pageY - 20) + 'px')	// d3.event ⇨ (event) 
@@ -2400,7 +2369,6 @@ export class GapminderViz {
 
       displayAll = false;
       var selectedGroup = d;
-      console.log("SelectedGroup: ", selectedGroup);
       if (!selectMultiple) {
         d3.selectAll("path.tracer").style("stroke-opacity", 0);
         d3.selectAll(".dot").style("fill-opacity", ".2").attr("stroke-width", "0").attr("display", "false");

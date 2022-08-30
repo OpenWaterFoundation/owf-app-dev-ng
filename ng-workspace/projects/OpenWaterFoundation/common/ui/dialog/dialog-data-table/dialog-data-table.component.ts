@@ -450,17 +450,12 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     //   if (layer.feature.properties.DISTRICT === 64) {
     //     var copiedLayer = lodash.cloneDeep(layer);
     //     copiedLayer._leaflet_id = --this.selectedLeafletID;
-    //     console.log(layer === copiedLayer);
-    //     console.log(layer);
-    //     console.log(copiedLayer);
     //     copiedLayer.setStyle({
     //       fillOpacity: 0,
     //       color: '#00ffff',
     //       opacity: '0.8',
     //       weight: parseInt(layer.options.weight) + 2
     //     });
-    //     console.log(layer);
-    //     console.log(copiedLayer);
     //     this.selectedLayer.addLayer(copiedLayer);
     //   }
     // });
@@ -478,7 +473,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     //     weight: 4
     // });
     // this.selectedLayer.eachLayer((layer: any) => {
-    //   console.log('selected featureLayer: ', layer);
     // });
 
     // layerItem.addSelectedLayerToMainMap(this.selectedLayer, this.mainMap);

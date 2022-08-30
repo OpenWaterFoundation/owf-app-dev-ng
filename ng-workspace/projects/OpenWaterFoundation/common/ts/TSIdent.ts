@@ -808,7 +808,7 @@ export class TSIdent {
   Set the time series alias.
   @param alias Alias for the time series.
   */
-  setAlias ( alias )
+  setAlias ( alias: string )
   {	if ( alias != null ) {
       this.alias = alias;
     }
@@ -818,7 +818,7 @@ export class TSIdent {
   Set the input name.
   The input name.
   */
-  setInputName ( input_name ) {
+  setInputName ( input_name: string ) {
     if ( input_name != null ) {
       this.input_name = input_name;
     }

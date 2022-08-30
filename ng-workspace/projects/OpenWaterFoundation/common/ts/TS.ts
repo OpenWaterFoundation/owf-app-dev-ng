@@ -1,10 +1,10 @@
-import { TimeInterval }       from '@OpenWaterFoundation/common/util/time';
-import { DateTime }           from '@OpenWaterFoundation/common/util/time';
-import { TSIdent }            from './TSIdent';
+import { TimeInterval } from '@OpenWaterFoundation/common/util/time';
+import { DateTime } from '@OpenWaterFoundation/common/util/time';
+import { TSIdent } from './TSIdent';
 import { TSDataFlagMetadata } from './TSDataFlagMetadata';
-import { TSLimits }           from './TSLimits';
-import { StringUtil }         from '@OpenWaterFoundation/common/util/string';
-import { TSData }             from './TSData';
+import { TSLimits } from './TSLimits';
+import { StringUtil } from '@OpenWaterFoundation/common/util/string';
+import { TSData } from './TSData';
 
 
 export class TS {
@@ -50,7 +50,7 @@ export class TS {
   /**
   The data interval base.  See TimeInterval.HOUR, etc.
   */
-  _data_interval_base: number;	
+  _data_interval_base: number;
 
   /**
   The base interval multiplier (what to multiply _interval_base by to get the
@@ -74,7 +74,7 @@ export class TS {
   Number of data values inclusive of _date1 and _date2.  Set in the
   allocateDataSpace() method.  This is useful for general information.
   */
-  _data_size: any;	
+  _data_size: any;
 
   /**
   Data units.  A list of units and conversions is typically maintained in the DataUnits* classes.
@@ -113,7 +113,7 @@ export class TS {
   name and table (e.g., HydroBase.daily_flow).  This is the actual location read,
   which should not be confused with the TSIdent storage name (which may not be fully expanded).
   */
-  _input_name: string;	
+  _input_name: string;
 
   /**
   Time series identifier, which provides a unique and absolute handle on the time series.
@@ -166,7 +166,7 @@ export class TS {
   Properties for the time series beyond the built-in properties.  For example, location
   information like county and state can be set as a property.
   */
-  private __property_HashMap: Map<String,Object> = null;
+  private __property_HashMap: Map<String, Object> = null;
 
   /**
   The missing data value.  Default for some legacy formats is -999.0 but increasingly Double.NaN is used.
@@ -224,7 +224,7 @@ export class TS {
   Construct a time series and initialize the member data.  Derived classes should
   set the _data_interval_base.
   */
-  constructor () {    
+  constructor() {
     this.TSInit();
   }
 
@@ -237,23 +237,23 @@ export class TS {
     this._input_name = "";
 
     // Need to initialize an empty TSIdent...    
-    this._id = new TSIdent ();
+    this._id = new TSIdent();
     this._legend = "";
     this._extended_legend = "";
     this._data_size = 0;
     // DateTime need to be initialized somehow...
-    this.setDataType( "" );
+    this.setDataType("");
     this._data_interval_base = 0;
     this._data_interval_mult = 1;
     this._data_interval_base_original = 1;
     this._data_interval_mult_original = 0;
-    this.setDescription( "" );
+    this.setDescription("");
     // TODO: jpkeahey 2020.06.09 - Add these in later
     // this._comments = new Vector<String>(2,2);
     // this._genesis = new Vector<String>(2,2);
-    this.setDataUnits( "" );
-    this.setDataUnitsOriginal( "" );
-    this.setMissing ( -999.0 );
+    this.setDataUnits("");
+    this.setDataUnitsOriginal("");
+    this.setMissing(-999.0);
     this._data_limits = new TSLimits();
     this._dirty = true;	// We need to recompute limits when we get the chance
     this._enabled = true;
@@ -263,7 +263,7 @@ export class TS {
 
   /**Add a TSDataFlagMetadata instance to the list maintained with the time series, to explain flag meanings.
   @param dataFlagMetadata instance of TSDataFlagMetadata to add to time series. */
-  public addDataFlagMetadata ( dataFlagMetadata: TSDataFlagMetadata ): void {
+  public addDataFlagMetadata(dataFlagMetadata: TSDataFlagMetadata): void {
     this.__dataFlagMetadataList.push(dataFlagMetadata);
   }
 
@@ -275,18 +275,18 @@ export class TS {
   table that indicates what is NOT copied.  This method may need to be overloaded
   in the future to allow only a partial copy of the header.
   */
-  public copyHeader ( ts: TS ): void {
-    this.setVersion( ts.getVersion() );
-    this.setStatus ( ts.getStatus() );
+  public copyHeader(ts: TS): void {
+    this.setVersion(ts.getVersion());
+    this.setStatus(ts.getStatus());
 
-    this.setInputName ( ts.getInputName() );
+    this.setInputName(ts.getInputName());
 
     // Copy TSIdent...
 
     try {
-      this.setIdentifierTSIdent ( new TSIdent(ts.getIdentifier()) );
+      this.setIdentifierTSIdent(new TSIdent(ts.getIdentifier()));
     }
-    catch ( e ) {
+    catch (e) {
       // Should not happen.
     }
 
@@ -294,32 +294,32 @@ export class TS {
 
     // THIS IS DATA RELATED 13 JUL 1998
     //_data_limits = new TSLimits ( ts.getDataLimits() );
-    this._date1 = new DateTime ( ts.getDate1() );
-    this._date2 = new DateTime ( ts.getDate2() );
-    this._date1_original = new DateTime ( ts.getDate1Original() );
-    this._date2_original = new DateTime ( ts.getDate2Original() );
+    this._date1 = new DateTime(ts.getDate1());
+    this._date2 = new DateTime(ts.getDate2());
+    this._date1_original = new DateTime(ts.getDate1Original());
+    this._date2_original = new DateTime(ts.getDate2Original());
 
-    this.setDataType( ts.getDataType() );
+    this.setDataType(ts.getDataType());
 
     this._data_interval_base = ts.getDataIntervalBase();
     this._data_interval_mult = ts.getDataIntervalMult();
-    this._data_interval_base_original = ts.getDataIntervalBaseOriginal ();
-    this._data_interval_mult_original = ts.getDataIntervalMultOriginal ();
+    this._data_interval_base_original = ts.getDataIntervalBaseOriginal();
+    this._data_interval_mult_original = ts.getDataIntervalMultOriginal();
 
-    this.setDescription( ts.getDescription() );
+    this.setDescription(ts.getDescription());
 
     this._comments = [];
-    this._comments = StringUtil.addListToStringList ( this._comments, ts.getComments() );
+    this._comments = StringUtil.addListToStringList(this._comments, ts.getComments());
     this._genesis = [];
-    this._genesis = StringUtil.addListToStringList ( this._genesis, ts.getGenesis() );
+    this._genesis = StringUtil.addListToStringList(this._genesis, ts.getGenesis());
 
-    this.setDataUnits( ts.getDataUnits() );
-    this.setDataUnitsOriginal( ts.getDataUnitsOriginal() );
+    this.setDataUnits(ts.getDataUnits());
+    this.setDataUnitsOriginal(ts.getDataUnitsOriginal());
 
     // First set the missing data value...
-    this.setMissing( ts.getMissing() );
+    this.setMissing(ts.getMissing());
     // Now set the range itself in case it has been reset...
-    this.setMissingRange ( ts.getMissingRange() );
+    this.setMissingRange(ts.getMissingRange());
 
     // THIS IS DATA RELATED 13 Jul 1998
     //_dirty = true;// We need to recompute limits when we get the chance
@@ -366,8 +366,8 @@ export class TS {
   (e.g., MinuteTS, MonthTS) that are optimized for data storage for different intervals.
   @return 0 if successful allocating memory, non-zero if failure.
   */
-  public allocateDataSpace ( ): number {
-    console.error ( 1, "TS.allocateDataSpace", "TS.allocateDataSpace() is virtual, define in derived classes." );
+  public allocateDataSpace(): number {
+    console.error(1, "TS.allocateDataSpace", "TS.allocateDataSpace() is virtual, define in derived classes.");
     return 1;
   }
 
@@ -384,186 +384,186 @@ export class TS {
   @return true if the data value is missing, false if not.
   @param value Value to check.
   */
-  public isDataMissing ( value: number ): boolean {
-    if ( isNaN(value) ) {
+  public isDataMissing(value: number): boolean {
+    if (isNaN(value)) {
       return true;
     }
-    if ( (value >= this._missingl) && (value <= this._missingu) ) {
+    if ((value >= this._missingl) && (value <= this._missingu)) {
       return true;
     }
     return false;
   }
 
-  public formatLegendBool ( format: string, update_ts: boolean ): string {
+  public formatLegendBool(format: string, update_ts: boolean): string {
 
     var buffer: string = '';
 
     //Message.printStatus ( 2, "", "Legend format is " + format );
     // Loop through the format string and if format strings are found,
     // append to the buffer.  Otherwise, transfer all characters as given.
-    if ( format === null ) {
+    if (format === null) {
       return "";
     }
     var len: number = format.length;
     var c: string;
-    for ( var i = 0; i < len; i++ ) {
+    for (var i = 0; i < len; i++) {
       c = format.charAt(i);
-      if ( c == '%' ) {
+      if (c == '%') {
         // Format modifier.  Get the next character...
         ++i;
-        if ( i >= len ) {
+        if (i >= len) {
           break;
         }
-        c = format.charAt ( i );
-        if ( c == '%' ) {
+        c = format.charAt(i);
+        if (c == '%') {
           // Literal %...
           buffer += c;
         }
-        else if ( c == 'A' ) {
+        else if (c == 'A') {
           // Alias from TSIdent...
           buffer += this._id.getAlias();
         }
-        else if ( c == 'b' ) {
+        else if (c == 'b') {
           // Data interval base...
-          buffer += TimeInterval.getName( this._id.getIntervalBase(),1);
+          buffer += TimeInterval.getName(this._id.getIntervalBase(), 1);
         }
-        else if ( c == 'D' ) {
+        else if (c == 'D') {
           // Description...
           buffer += this._description;
         }
-        else if ( c == 'F' ) {
+        else if (c == 'F') {
           // Full identifier...
           //buffer += _id.getIdentifier() );
           buffer += this._id.toString();
         }
-        else if ( c == 'I' ) {
+        else if (c == 'I') {
           // Full interval...
           buffer += this._id.getInterval();
         }
-            else if ( c == 'i' ) {
-                // Input name...
-                buffer += this._id.getInputName();
-            }
-            else if ( c == 'k' ) {
-                  // Sub source...
-                  buffer += this._id.getSubSource();
-              }
-        else if ( c == 'L' ) {
+        else if (c == 'i') {
+          // Input name...
+          buffer += this._id.getInputName();
+        }
+        else if (c == 'k') {
+          // Sub source...
+          buffer += this._id.getSubSource();
+        }
+        else if (c == 'L') {
           // Full location...
           buffer += this._id.getLocation();
         }
-        else if ( c == 'l' ) {
+        else if (c == 'l') {
           // Main location...
           buffer += this._id.getMainLocation();
         }
-        else if ( c == 'm' ) {
+        else if (c == 'm') {
           // Data interval multiplier...
           buffer += this._id.getIntervalMult();
         }
-        else if ( c == 'p' ) {
+        else if (c == 'p') {
           // Period...
           buffer += "" + this._date1 + " - " + this._date2;
         }
-        else if ( c == 'S' ) {
+        else if (c == 'S') {
           // Full source...
           buffer += this._id.getSource();
         }
-        else if ( c == 's' ) {
+        else if (c == 's') {
           // Main source...
           buffer += this._id.getMainSource();
         }
-        else if ( c == 'U' ) {
+        else if (c == 'U') {
           // Units...
           buffer += this._data_units;
         }
-        else if ( c == 'T' ) {
+        else if (c == 'T') {
           // Data type...
           buffer += this._id.getType();
         }
-        else if ( c == 't' ) {
+        else if (c == 't') {
           // Data main type (reserved for future use - for
           // now return the total)...
           buffer += this._id.getType();
         }
-        else if ( c == 'y' ) {
+        else if (c == 'y') {
           // Data sub type (reserved for future use)...
         }
-        else if ( c == 'w' ) {
+        else if (c == 'w') {
           // Sub-location...
           buffer += this._id.getSubLocation();
         }
-        else if ( c == 'x' ) {
+        else if (c == 'x') {
           // Sub source...
           buffer += this._id.getSubSource();
         }
-        else if ( c == 'Z' ) {
+        else if (c == 'Z') {
           // Scenario...
           buffer += this._id.getScenario();
         }
-        else if ( c == 'z' ) {
+        else if (c == 'z') {
           // Sequence ID (old sequence number)...
           buffer += this._id.getSequenceID();
         }
         else {
-            // No match.  Add the % and the character...
+          // No match. Add the % and the character...
           buffer += "%";
           buffer += c;
         }
       }
       else {
-          // Just add the character...
+        // Just add the character...
         buffer += c;
       }
     }
     //Message.printStatus(2, routine, "After formatLegend(), string is \"" + s2 + "\"" );
-      // Now replace ${ts:Property} strings with properties from the time series
-      // Put the most specific first so it is matched first
-      var startString: string = "${ts:";
-      var startStringLength = 5;
-      var endString = "}";
-      var propO: any;
-      var start = 0; // Start at the beginning of the string
-      var pos2 = 0;
-      var s2: string = buffer;
-      while ( pos2 < s2.length ) {
-          var pos1 = StringUtil.indexOfIgnoreCase(s2, startString, start );
-          if ( pos1 >= 0 ) {
-              // Find the end of the property
-              pos2 = s2.indexOf( endString, pos1 );
-              if ( pos2 > 0 ) {
-                  // Get the property...
-                  var propname = s2.substring(pos1+startStringLength,pos2);
-                  //Message.printStatus(2, routine, "Property=\"" + propname + "\" isTSProp=" + isTsProp + " pos1=" + pos1 + " pos2=" + pos2 );
-                  // By convention if the property is not found, keep the original string so can troubleshoot property issues
-                  var propvalString = s2.substring(pos1,(pos2 + 1));
-                  // Get the property out of the time series
-                  propO = this.getProperty(propname);
-                  if ( propO != null ) {
-                      // This handles conversion of integers to strings
-                      propvalString = "" + propO;
-                  }
-                  // Replace the string and continue to evaluate s2
-                  s2 = s2.substring ( 0, pos1 ) + propvalString + s2.substring (pos2 + 1);
-                  // Next search will be at the end of the expanded string (end delimiter will be skipped in any case)
-                  start = pos1 + propvalString.length;
-              }
-              else {
-                  // No closing character so leave the property string as is and march on...
-                  start = pos1 + startStringLength;
-                  if ( start > s2.length ) {
-                      break;
-                  }
-              }
+    // Now replace ${ts:Property} strings with properties from the time series
+    // Put the most specific first so it is matched first
+    var startString: string = "${ts:";
+    var startStringLength = 5;
+    var endString = "}";
+    var propO: any;
+    var start = 0; // Start at the beginning of the string
+    var pos2 = 0;
+    var s2: string = buffer;
+    while (pos2 < s2.length) {
+      var pos1 = StringUtil.indexOfIgnoreCase(s2, startString, start);
+      if (pos1 >= 0) {
+        // Find the end of the property
+        pos2 = s2.indexOf(endString, pos1);
+        if (pos2 > 0) {
+          // Get the property...
+          var propname = s2.substring(pos1 + startStringLength, pos2);
+          //Message.printStatus(2, routine, "Property=\"" + propname + "\" isTSProp=" + isTsProp + " pos1=" + pos1 + " pos2=" + pos2 );
+          // By convention if the property is not found, keep the original string so can troubleshoot property issues
+          var propvalString = s2.substring(pos1, (pos2 + 1));
+          // Get the property out of the time series
+          propO = this.getProperty(propname);
+          if (propO != null) {
+            // This handles conversion of integers to strings
+            propvalString = "" + propO;
           }
-          else {
-              // No more ${} property strings so done processing properties.
-              // If checking time series properties will then check global properties in next loop
-              break;
+          // Replace the string and continue to evaluate s2
+          s2 = s2.substring(0, pos1) + propvalString + s2.substring(pos2 + 1);
+          // Next search will be at the end of the expanded string (end delimiter will be skipped in any case)
+          start = pos1 + propvalString.length;
+        }
+        else {
+          // No closing character so leave the property string as is and march on...
+          start = pos1 + startStringLength;
+          if (start > s2.length) {
+            break;
           }
+        }
       }
-      if ( update_ts ) {
-          this.setLegend ( buffer );
+      else {
+        // No more ${} property strings so done processing properties.
+        // If checking time series properties will then check global properties in next loop
+        break;
       }
+    }
+    if (update_ts) {
+      this.setLegend(buffer);
+    }
     return s2;
   }
 
@@ -573,16 +573,16 @@ export class TS {
   time series legend data.  See the version that accepts a flag for a description of format characters.
   @param format Format string.
   */
-  public formatLegend ( format: string ): string {
-    return this.formatLegendBool ( format, false );
+  public formatLegend(format: string): string {
+    return this.formatLegendBool(format, false);
   }
 
   /**
   Return the time series alias from the TSIdent.
   @return The alias part of the time series identifier.
   */
-  public getAlias( ): string
-  {	return this._id.getAlias();
+  public getAlias(): string {
+    return this._id.getAlias();
   }
 
   /**
@@ -599,8 +599,8 @@ export class TS {
    * @return The data value associated with a date.  This should be overridden in
    * derived classes (always returns the missing data value here).
    */
-  public getDataValue( date: DateTime ): number {
-    console.warn( 3, "TS.getDataValue", "TS.getDataValue is a virtual function, redefine in derived classes" );
+  public getDataValue(date: DateTime): number {
+    console.warn(3, "TS.getDataValue", "TS.getDataValue is a virtual function, redefine in derived classes");
     return this._missing;
   }
 
@@ -645,8 +645,8 @@ export class TS {
   increase performance).
   @return a TSData for the specified date/time.
   */
-  public getDataPoint ( date: DateTime, tsdata: TSData ): TSData {
-    console.warn( 3, "TS.getDataPoint", "This is a virtual function, redefine in child classes" );
+  public getDataPoint(date: DateTime, tsdata: TSData): TSData {
+    console.warn(3, "TS.getDataPoint", "This is a virtual function, redefine in child classes");
     // Empty point...
     var data: TSData = new TSData();
     return data;
@@ -657,7 +657,7 @@ export class TS {
   Zero will be returned if allocateDataSpace() has not been called.
   @return The number of data points included in the period.
   */
-  public getDataSize( ): number {
+  public getDataSize(): number {
     return this._data_size;
   }
 
@@ -665,12 +665,12 @@ export class TS {
   Return the data type from the TSIdent or an empty string if no TSIdent has been set.
   @return The data type abbreviation.
   */
-  public getDataType( ): string {
-    if ( this._id == null ) {
+  public getDataType(): string {
+    if (this._id == null) {
       return "";
     }
     else {
-        return this._id.getType();
+      return this._id.getType();
     }
   }
 
@@ -679,7 +679,7 @@ export class TS {
   @return The data units.
   @see RTi.Util.IO.DataUnits
   */
-  public getDataUnits( ): string {
+  public getDataUnits(): string {
     return this._data_units;
   }
 
@@ -688,7 +688,7 @@ export class TS {
   @return The data units in the original data.
   @see RTi.Util.IO.DataUnits
   */
-  public getDataUnitsOriginal( ): string {
+  public getDataUnitsOriginal(): string {
     return this._data_units_original;
   }
 
@@ -697,10 +697,10 @@ export class TS {
   @return The first date in the period of record, or null if the date is null.
   */
   public getDate1(): DateTime {
-    if ( this._date1 === null ) {
+    if (this._date1 === null) {
       return null;
     }
-    return DateTime.copyConstructor ( this._date1 );
+    return DateTime.copyConstructor(this._date1);
   }
 
   /**
@@ -709,10 +709,10 @@ export class TS {
   earlier than the time series that is actually read), or null if the date is null.
   */
   public getDate1Original(): DateTime {
-    if ( this._date1_original === null ) {
+    if (this._date1_original === null) {
       return null;
     }
-    return DateTime.copyConstructor ( this._date1_original);
+    return DateTime.copyConstructor(this._date1_original);
   }
 
   /**
@@ -720,10 +720,10 @@ export class TS {
   @return The last date in the period of record, or null if the date is null.
   */
   public getDate2(): DateTime {
-    if ( this._date2 === null ) {
+    if (this._date2 === null) {
       return null;
     }
-    return DateTime.copyConstructor ( this._date2 );
+    return DateTime.copyConstructor(this._date2);
   }
 
   /**
@@ -732,17 +732,17 @@ export class TS {
   later than the time series that is actually read), or null if the date is null.
   */
   public getDate2Original(): DateTime {
-    if ( this._date2_original === null ) {
+    if (this._date2_original === null) {
       return null;
     }
-    return DateTime.copyConstructor ( this._date2_original );
+    return DateTime.copyConstructor(this._date2_original);
   }
 
   /**
   Return the time series description.
   @return The time series description.
   */
-  public getDescription( ): string {
+  public getDescription(): string {
     return this._description;
   }
 
@@ -758,7 +758,7 @@ export class TS {
   Return the genesis information.
   @return The genesis comments.
   */
-  public getGenesis (): string[] {
+  public getGenesis(): string[] {
     return this._genesis;
   }
 
@@ -766,7 +766,7 @@ export class TS {
   Return the input name (file or database table) for the time series.
   @return the input name.
   */
-  public getInputName (): string {
+  public getInputName(): string {
     return this._input_name;
   }
 
@@ -789,7 +789,7 @@ export class TS {
   /** Return the missing data value used for the time series (single value).
   @return The value used for missing data.
   */
-  public getMissing (): number {
+  public getMissing(): number {
     return this._missing;
   }
 
@@ -797,7 +797,7 @@ export class TS {
   @return The range of values for missing data.  The first value is the lowest
   value, the second the highest.  A new array instance is returned.
   */
-  public getMissingRange (): number[] {
+  public getMissingRange(): number[] {
     var missing_range = [];
     missing_range[0] = this._missingl;
     missing_range[1] = this._missingu;
@@ -808,11 +808,11 @@ export class TS {
   @param propertyName name of property being retrieved.
   @return property object corresponding to the property name.
   */
-  public getProperty ( propertyName: string ): any {
-    if ( this.__property_HashMap === null ) {
+  public getProperty(propertyName: string): any {
+    if (this.__property_HashMap === null) {
       return null;
     }
-    return this.__property_HashMap.get ( propertyName );
+    return this.__property_HashMap.get(propertyName);
   }
 
 
@@ -821,7 +821,7 @@ export class TS {
   @return the time series identifier as a TSIdent.
   @see TSIdent
   */
-  public getIdentifier(): TSIdent {	
+  public getIdentifier(): TSIdent {
     return this._id;
   }
 
@@ -838,7 +838,7 @@ export class TS {
   Return whether data flag strings use String.intern().
   @return True if data flag strings use String.intern(), false otherwise.
   */
-  public getInternDataFlagStrings(): boolean {  
+  public getInternDataFlagStrings(): boolean {
     return this._internDataFlagStrings;
   }
 
@@ -847,7 +847,7 @@ export class TS {
   @return The status flag for the time series.  This is a general purpose flag.
   @see #setStatus
   */
-  public getStatus ( ): string {
+  public getStatus(): string {
     return this._status;
   }
 
@@ -855,7 +855,7 @@ export class TS {
   Return the time series input format version.
   @return The time series version, to be used to indicate input file formats.
   */
-  public getVersion (): string {
+  public getVersion(): string {
     return this._version;
   }
 
@@ -872,9 +872,9 @@ export class TS {
   string values are used, then false can be specified so as to not bloat the global String table.
   @return true if data flags are enabled for the time series, after the set.
   */
-  public hasDataFlags ( hasDataFlags: boolean, internDataFlagStrings: boolean ): boolean {
+  public hasDataFlags(hasDataFlags: boolean, internDataFlagStrings: boolean): boolean {
     this._has_data_flags = hasDataFlags;
-      this._internDataFlagStrings = internDataFlagStrings;
+    this._internDataFlagStrings = internDataFlagStrings;
     return this._has_data_flags;
   }
 
@@ -882,9 +882,9 @@ export class TS {
   Set the time series identifier alias.
   @param alias Alias of time series.
   */
-  public setAlias ( alias: string ): void {
-    if ( alias != null ) {
-      this._id.setAlias( alias );
+  public setAlias(alias: string): void {
+    if (alias != null) {
+      this._id.setAlias(alias);
     }
   }
 
@@ -894,12 +894,12 @@ export class TS {
   @param t First date in period.
   @see DateTime
   */
-  public setDate1 ( t: any ): void {
-    if ( t != null ) {
-      this._date1 = DateTime.copyConstructor ( t );
-      if ( this._data_interval_base != TimeInterval.IRREGULAR ) {
-          // For irregular, rely on the DateTime precision
-          this._date1.setPrecisionOne ( this._data_interval_base );
+  public setDate1(t: any): void {
+    if (t != null) {
+      this._date1 = DateTime.copyConstructor(t);
+      if (this._data_interval_base != TimeInterval.IRREGULAR) {
+        // For irregular, rely on the DateTime precision
+        this._date1.setPrecisionOne(this._data_interval_base);
       }
     }
   }
@@ -910,12 +910,12 @@ export class TS {
   @param t First date in period in the original data.
   @see DateTime
   */
-  public setDate1Original( t: any ): void {
-    if ( t != null ) {
-      this._date1_original = DateTime.copyConstructor ( t );
-      if ( this._data_interval_base != TimeInterval.IRREGULAR ) {
-              // For irregular, rely on the DateTime precision
-          this._date1_original.setPrecisionOne ( this._data_interval_base );
+  public setDate1Original(t: any): void {
+    if (t != null) {
+      this._date1_original = DateTime.copyConstructor(t);
+      if (this._data_interval_base != TimeInterval.IRREGULAR) {
+        // For irregular, rely on the DateTime precision
+        this._date1_original.setPrecisionOne(this._data_interval_base);
       }
     }
   }
@@ -926,12 +926,12 @@ export class TS {
   @param t Last date in period.
   @see DateTime
   */
-  public setDate2 ( t: any ): void {
-    if ( t != null ) {
-      this._date2 = DateTime.copyConstructor ( t );
-      if ( this._data_interval_base != TimeInterval.IRREGULAR ) {
-              // For irregular, rely on the DateTime precision
-          this._date2.setPrecisionOne ( this._data_interval_base );
+  public setDate2(t: any): void {
+    if (t != null) {
+      this._date2 = DateTime.copyConstructor(t);
+      if (this._data_interval_base != TimeInterval.IRREGULAR) {
+        // For irregular, rely on the DateTime precision
+        this._date2.setPrecisionOne(this._data_interval_base);
       }
     }
   }
@@ -942,12 +942,12 @@ export class TS {
   @param t Last date in period in the original data.
   @see DateTime
   */
-  public setDate2Original( t: any ): void {
-    if ( t != null ) {
-      this._date2_original = DateTime.copyConstructor ( t );
-      if ( this._data_interval_base != TimeInterval.IRREGULAR ) {
-              // For irregular, rely on the DateTime precision
-          this._date2_original.setPrecisionOne ( this._data_interval_base );
+  public setDate2Original(t: any): void {
+    if (t != null) {
+      this._date2_original = DateTime.copyConstructor(t);
+      if (this._data_interval_base != TimeInterval.IRREGULAR) {
+        // For irregular, rely on the DateTime precision
+        this._date2_original.setPrecisionOne(this._data_interval_base);
       }
     }
   }
@@ -957,7 +957,7 @@ export class TS {
   @param base Base interval (see TimeInterval.*).
   @param mult Base interval multiplier.
   */
-  setDataInterval ( base: number, mult: number ) {
+  setDataInterval(base: number, mult: number) {
     this._data_interval_base = base;
     this._data_interval_mult = mult;
   }
@@ -967,7 +967,7 @@ export class TS {
   @param base Base interval (see TimeInterval.*).
   @param mult Base interval multiplier.
   */
-  setDataIntervalOriginal ( base: number, mult: number ) {
+  setDataIntervalOriginal(base: number, mult: number) {
     this._data_interval_base_original = base;
     this._data_interval_mult_original = mult;
   }
@@ -976,9 +976,9 @@ export class TS {
   Set the data type.
   @param data_type Data type abbreviation.
   */
-  setDataType( data_type: string ) {
-    if ( (data_type != null) && (data_type !== 'undefined') && (this._id != null) ) {      
-      this._id.setType ( data_type );
+  setDataType(data_type: string) {
+    if ((data_type != null) && (data_type !== 'undefined') && (this._id != null)) {
+      this._id.setType(data_type);
     }
   }
 
@@ -987,8 +987,8 @@ export class TS {
   @param data_units Data units abbreviation.
   @see RTi.Util.IO.DataUnits
   */
-  setDataUnits( data_units: string ) {
-    if (( data_units != null ) && (data_units !== 'undefined')) {
+  setDataUnits(data_units: string) {
+    if ((data_units != null) && (data_units !== 'undefined')) {
       this._data_units = data_units;
     }
   }
@@ -998,8 +998,8 @@ export class TS {
   @param units Data units abbreviation.
   @see RTi.Util.IO.DataUnits
   */
-  setDataUnitsOriginal( units: string ) {
-    if ( units != null ) {
+  setDataUnitsOriginal(units: string) {
+    if (units != null) {
       this._data_units_original = units;
     }
   }
@@ -1008,7 +1008,7 @@ export class TS {
   Set the number of data points including the full period.  This should be called by refresh().
   @param data_size Number of data points in the time series.
   */
-  protected setDataSize ( data_size: number ): void {
+  protected setDataSize(data_size: number): void {
     this._data_size = data_size;
   }
 
@@ -1018,9 +1018,9 @@ export class TS {
   @param val Data value for date.
   @see RTi.Util.Time.DateTime
   */
-  public setDataValueTwo ( date: DateTime, val: number ): void {
-    console.error ("TS.setDataValueTwo is " +
-    "virtual and should be redefined in derived classes" );
+  public setDataValueTwo(date: DateTime, val: number): void {
+    console.error("TS.setDataValueTwo is " +
+      "virtual and should be redefined in derived classes");
   }
 
   // TODO SAM 2010-08-03 if flag is null, should it be treated as empty string?  What about append?
@@ -1033,17 +1033,17 @@ export class TS {
   @param duration Duration (seconds) for the data value (specify as 0 if not relevant).
   @see DateTime
   */
-  public setDataValueFour ( date: DateTime, val: number, data_flag: string,	duration: number ): void {
-    console.warn ( "TS.setDataValueFour is " +
-    "virtual and should be implemented in derived classes" );
+  public setDataValueFour(date: DateTime, val: number, data_flag: string, duration: number): void {
+    console.warn("TS.setDataValueFour is " +
+      "virtual and should be implemented in derived classes");
   }
 
   /**
   Set the description.
   @param description Time series description (this is not the comments).
   */
-  public setDescription( description: string ) {
-    if ( description != null ) {
+  public setDescription(description: string) {
+    if (description != null) {
       this._description = description;
     }
   }
@@ -1056,9 +1056,9 @@ export class TS {
   @see TSIdent
   @exception Exception If there is an error setting the identifier.
   */
-  public setIdentifierTSIdent ( id: TSIdent ): void {
-    if ( id != null ) {
-      this._id = new TSIdent ( id );
+  public setIdentifierTSIdent(id: TSIdent): void {
+    if (id != null) {
+      this._id = new TSIdent(id);
     }
   }
 
@@ -1069,9 +1069,9 @@ export class TS {
   @param identifier Time series identifier.
   @exception Exception If there is an error setting the identifier.
   */
-  public setIdentifier( identifier: string ): void {
-    if ( identifier != null ) {
-      this._id.setIdentifier( identifier );
+  public setIdentifier(identifier: string): void {
+    if (identifier != null) {
+      this._id.setIdentifier(identifier);
     }
   }
 
@@ -1082,9 +1082,9 @@ export class TS {
   @param identifier Time series identifier.
   @exception Exception If there is an error setting the identifier.
   */
-  setIdentifierString( identifier: string ) {    
-    if ( identifier != null ) {
-        this._id.setIdentifier( identifier );
+  setIdentifierString(identifier: string) {
+    if (identifier != null) {
+      this._id.setIdentifier(identifier);
     }
   }
 
@@ -1096,17 +1096,17 @@ export class TS {
   @see TSIdent
   @exception Exception If there is an error setting the identifier.
   */
-  public setIdentifierObject ( id: any ): void {
-    if ( id != null ) {
-      this._id = new TSIdent ( id );
+  public setIdentifierObject(id: any): void {
+    if (id != null) {
+      this._id = new TSIdent(id);
     }
   }
 
   /**
   Set the input name (file or database table).
   */
-  public setInputName ( input_name: string ): void {
-    if ( input_name != null ) {
+  public setInputName(input_name: string): void {
+    if (input_name != null) {
       this._input_name = input_name;
     }
   }
@@ -1116,8 +1116,8 @@ export class TS {
   @param legend Time series legend (can be used for labels on graphs, etc.).
   @see #formatLegend
   */
-  public setLegend ( legend: string ): void {
-    if ( legend != null ) {
+  public setLegend(legend: string): void {
+    if (legend != null) {
       this._legend = legend.trim();
     }
   }
@@ -1128,24 +1128,24 @@ export class TS {
   The value is constrained to Double.MAX and Double.Min.
   @param missing Missing data value for time series.
   */
-  setMissing ( missing: number ) {
+  setMissing(missing: number) {
     this._missing = missing;
-    if ( isNaN(missing) ) {
+    if (isNaN(missing)) {
       // Set the bounding limits also just to make sure that values like -999 are not treated as missing.
-        this._missingl = NaN;
-        this._missingu = NaN;
+      this._missingl = NaN;
+      this._missingu = NaN;
       return;
     }
     // TODO: jpkeahey 2020.06.09 - Is MAX_SAFE_INTEGER correct here? It used to be Double.MAX_VALUE for Java
     // Will this value work with Typescript?
-    if ( missing == Number.MAX_SAFE_INTEGER ) {
+    if (missing == Number.MAX_SAFE_INTEGER) {
       this._missingl = missing - .001;
       this._missingu = missing;
     }
     else {
       // Set a range on the missing value check that is slightly on each side of the value
       this._missingl = missing - .001;
-      this. _missingu = missing + .001;
+      this._missingu = missing + .001;
     }
   }
 
@@ -1155,15 +1155,15 @@ export class TS {
   specified, neither of which can be a NaN.
   @param missing Missing data range for time series.
   */
-  public setMissingRange (  missing: number[] ): void {
-    if ( missing === null ) {
+  public setMissingRange(missing: number[]): void {
+    if (missing === null) {
       return;
     }
-    if ( missing.length !== 2 ) {
+    if (missing.length !== 2) {
       return;
     }
-    this._missing = (missing[0] + missing[1])/2.0;
-    if ( missing[0] < missing[1] ) {
+    this._missing = (missing[0] + missing[1]) / 2.0;
+    if (missing[0] < missing[1]) {
       this._missingl = missing[0];
       this._missingu = missing[1];
     }
@@ -1178,19 +1178,19 @@ export class TS {
   @param propertyName name of property being set.
   @param property property object corresponding to the property name.
   */
-  public setProperty ( propertyName: string, property: any ): void {
-    if ( this.__property_HashMap === null ) {
+  public setProperty(propertyName: string, property: any): void {
+    if (this.__property_HashMap === null) {
       this.__property_HashMap = new Map<String, Object>();
     }
-    this.__property_HashMap.set ( propertyName, property );
+    this.__property_HashMap.set(propertyName, property);
   }
 
   /**
   Set the sequence identifier (old sequence number), used with ensembles.
   @param sequenceID sequence identifier for the time series.
   */
-  public setSequenceID ( sequenceID: string ): void {
-    this._id.setSequenceID ( sequenceID );
+  public setSequenceID(sequenceID: string): void {
+    this._id.setSequenceID(sequenceID);
   }
 
   /**
@@ -1202,8 +1202,8 @@ export class TS {
   This feature may be phased out.
   @see #getStatus
   */
-  public setStatus ( status: string ): void {
-    if ( status != null ) {
+  public setStatus(status: string): void {
+    if (status != null) {
       this._status = status;
     }
   }
@@ -1212,8 +1212,8 @@ export class TS {
   Set the time series version, to be used with input file formats.
   @param version Version number for time series file.
   */
-  public setVersion( version: string ): void {
-    if ( version != null ) {
+  public setVersion(version: string): void {
+    if (version != null) {
       this._version = version;
     }
   }

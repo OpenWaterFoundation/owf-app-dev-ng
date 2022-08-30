@@ -110,7 +110,6 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
           //   icon: 'fa fa-dot-circle-o fa-2x',
           //   titleText: 'Select Project',
           //   onClick: (event: Event, index: number) => {
-          //     console.log(event, index);
           //   }
           // }
         ],

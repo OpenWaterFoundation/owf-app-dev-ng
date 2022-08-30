@@ -531,7 +531,6 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   // toggleLayerTest($event: any, geoLayerViewGroup: IM.GeoLayerViewGroup, geoLayerView: IM.GeoLayerView): void {
 
   //   this.isChecked = !this.isChecked;
-  //   console.log($event);
   //   // Obtain the MapLayerItem for this layer.
   //   var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayerView.geoLayerId);
   //   // If the layer hasn't been added to the map yet, layerItem will be null. Keep the checked attribute set to false so that

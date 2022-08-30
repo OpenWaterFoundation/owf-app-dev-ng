@@ -12,7 +12,7 @@ These elements will only be added if they are applicable for the new version. Ne
 versions will have the date of deployment after the version number, and will contain
 X's if the version is not yet released.
 
-# 4.1.2 (2022-08-XX) #
+# 4.1.0 (2022-08-XX) #
 
 ### Bug Fixes ###
 
@@ -23,10 +23,16 @@ in its table's cells. The fixed component's were:
   * `DialogTSTableComponent`
 * Fixed a bug in the Dashboard Component that would briefly show the 404 page before
 the dashboard was displayed.
+* Fixed a bug that would try to create the entire Chart twice when it used the
+Colorado HydroBase datastore.
+* Fixed a bug that prevented the hierarchy of the chart config object from being
+read in the correct order. This caused some bugs when adding certain values to the
+`legendFormat` property.
 
 ### Refactoring ###
 
-* Moved all 
+* Moved all scoped map service calls back into the Map Component for encapsulation
+purposes. 
 * Removed a half dozen unused class variables in the Map Component.
 
 ### Features / Enhancements ###

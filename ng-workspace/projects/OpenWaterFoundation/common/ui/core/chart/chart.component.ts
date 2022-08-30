@@ -36,6 +36,10 @@ export class ChartComponent implements OnInit, OnDestroy {
    * 
    */
   private attributeTable = [];
+  /**
+   * 
+   */
+  allChartDataReceived = false;
   /** Subscription to be unsubscribed to at component destruction to prevent memory
   * leaks.*/
   private allResultsSub: Subscription;
@@ -55,7 +59,9 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** The dataLoading BehaviorSubject as an observable so it can be 'listened' to
   * in the template file and conditionally show HTML as needed. */
   dataLoading$ = this.dataLoading.asObservable();
-
+  /**
+   * 
+   */
   private datastoreSub: Subscription;
   /**
    * 
@@ -85,7 +91,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   /** The array of TS objects that was originally read in using the StateMod or DateValue
   * Java converted code. Used as a reference in the dialog-tstable component for
   * downloading to the user's local machine. */
-  TSArrayOGResultRef: TS[];
+  TSArrayOGResultRef: TS[] = null;
   /** Used to help create a unique graph ID. */
   TSIDLocation: string;
   /** EventEmitter that alerts the Map component (parent) that an update has happened,
@@ -650,14 +656,16 @@ export class ChartComponent implements OnInit, OnDestroy {
     var datePrecision = timeSeries.getDataIntervalBase();
 
     var legendLabel: string;
-    if (graphData.properties.LegendFormat === "Auto") {
-      legendLabel = timeSeries.formatLegend('%A');
-    } else {
+    if (graphData.properties.LegendFormat !== "Auto") {
       legendLabel = timeSeries.formatLegend(graphData.properties.LegendFormat);
+    } else if (this.graphTemplate.product.subProducts[0].properties.LegendFormat !== "Auto") {
+      legendLabel = timeSeries.formatLegend(this.graphTemplate.product.subProducts[0].properties.LegendFormat);
+    } else {
+      legendLabel = timeSeries.formatLegend('%A');
     }
 
     this.addToAttributeTable(xAxisLabels, { plotlyYAxisData: yAxisData },
-      (TSAlias !== '') ? TSAlias : legendLabel, units, index, datePrecision);
+    legendLabel.trim().length !== 0 ? legendLabel : TSAlias, units, index, datePrecision);
 
     // Return the PopulateGraph instance that will be passed to create the Plotly graph.
     return {
@@ -669,7 +677,7 @@ export class ChartComponent implements OnInit, OnDestroy {
       plotlyXAxisLabels: xAxisLabels,
       datasetBackgroundColor: this.chartService.verifyPlotlyProp(backgroundColor, IM.GraphProp.bc),
       graphFileType: 'TS',
-      legendLabel: (TSAlias !== '') ? TSAlias : legendLabel,
+      legendLabel: legendLabel.trim().length !== 0 ? legendLabel : TSAlias,
       lineWidth: this.chartService.verifyPlotlyProp(lineWidth, IM.GraphProp.lw),
       stackGroup: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.sk),
       startDate: start
@@ -763,8 +771,18 @@ export class ChartComponent implements OnInit, OnDestroy {
       // the forkJoin can be performed.
       if (allDataObservables.length === graphData.length) {
 
-        this.allResultsSub = forkJoin(allDataObservables).subscribe((allResults: any[]) => {
+        this.allResultsSub = forkJoin(allDataObservables).subscribe((allResults: TS[]) => {
+
+          if (this.allChartDataReceived === true) {
+            return;
+          }
+
           this.TSArrayOGResultRef = allResults;
+          // If both data structures are the same size, nothing has been added since
+          // observing the last change of allResults.
+          if (this.TSArrayOGResultRef.length === allResults.length) {
+            this.allChartDataReceived = true;
+          }
 
           allResults.forEach((result: any, i: number) => {
 

@@ -69,7 +69,6 @@ export class EventService {
       } else return;
     });
 
-    // console.log('listenedToWidgets:', this.listenedToWidgets);
   }
 
   /**

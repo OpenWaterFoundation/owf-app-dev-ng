@@ -29,7 +29,6 @@ describe('OwfCommonService', () => {
       });
 
       const req = httpTestingController.expectOne('assets/app/data-maps/data-ts/streamflow-graph-template.json');
-      // console.log('Expect the REST method to be GET.');
       expect(req.request.method).toEqual('GET');
       
       req.flush(GRAPH_TEMPLATE);
