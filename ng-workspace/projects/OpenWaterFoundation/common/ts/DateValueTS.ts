@@ -170,15 +170,15 @@ Read a time series from a DateValue format file.
 is responsible for freeing the memory for the time series.
 @param req_ts time series to fill.  If null, return all new time series in the list.
 All data are reset, except for the identifier, which is assumed to have been set in the calling code.
-@param in Reference to open input stream.
+@param dateValueArray Reference to open input stream.
 @param req_date1 Requested starting date to initialize period (or null to read the entire time series).
 @param req_date2 Requested ending date to initialize period (or null to read the entire time series).
-@param units Units to convert to (currently ignored).
+@param req_units Units to convert to (currently ignored).
 @param read_data Indicates whether data should be read.
 @exception Exception if there is an error reading the time series.
 */
   private readTimeSeriesList(req_ts: TS, dateValueArray: any[], req_date1: DateTime,
-    req_date2: DateTime, req_units: string, read_data: boolean): TS[] {
+  req_date2: DateTime, req_units: string, read_data: boolean): TS[] {
 
     var date_str: string, message: string = null, string = "", value, variable;
     var routine: string = "DateValueTS.readTimeSeriesList";
@@ -714,7 +714,7 @@ All data are reset, except for the identifier, which is assumed to have been set
           return null;
         }
         // Only set the identifier if a new time series.
-        // Otherwise assume the the existing identifier is to be used (e.g., from a file name).
+        // Otherwise assume the existing identifier is to be used (e.g., from a file name).
         ts.setIdentifier(identifier);
         ts.getIdentifier().setInputType("DateValue");
         tslist.push(ts);

@@ -9,6 +9,8 @@ export * from './not-found/not-found.module';
 export * from './event.service';
 // Common service.
 export * from './owf-common.service';
+// Common Logger service.
+export * from './common-logger.service';
 // All library types.
 export * from './types';
 // All library static data structures & variables.

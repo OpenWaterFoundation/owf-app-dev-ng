@@ -309,6 +309,7 @@ export interface MainMenu {
   enabled?: any;
   dashboardFile?: string;
   markdownFile?: string;
+  storyFile?: string;
   mapProject?: string;
   tooltip?: string;
   url?: string;
@@ -325,6 +326,7 @@ export interface SubMenu {
   dashboardFile?: string;
   mapProject?: string;
   markdownFile?: string;
+  storyFile?: string;
   separatorBefore?: any;
   doubleSeparatorBefore?: any;
   tooltip?: string;
@@ -555,9 +557,11 @@ export interface DashboardConf {
 
 /** Dashboard metadata object. */
 export interface DashboardMetadata {
-  version?: string;
   author?: string;
+  id?: string;
   title?: string;
+  tooltip?: string;
+  version?: string;
 }
 
 /** Dashboard layout object. */
@@ -666,7 +670,24 @@ export interface ListenedToWidget {
   behaviorSubject: BehaviorSubject<WidgetEvent>
 }
 
-/////////////////////////////// Time Series \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+/////////////////////////////// STORY CONFIG \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+export interface StoryConf {
+  story: StoryMain;
+}
+
+export interface StoryMain {
+  name: string;
+  chapters: StoryChapters[];
+}
+
+export interface StoryChapters {
+  name: string;
+  tooltip?: string;
+  pages: DashboardConf[];
+}
+
+//////////////////////////////// TIME SERIES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /**
  * 

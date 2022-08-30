@@ -45,15 +45,15 @@ export class LegendLayerGroupComponent implements AfterViewInit {
 
   /** An object with each geoLayerId as the key, and all features of a geoLayerView,
    * usually a FeatureCollection, as the value. */
-  @Input() allFeatures: any;
+  @Input('allFeatures') allFeatures: any;
   /** EventEmitter that alerts the Map component (parent) that an update has happened,
    * and sends the selected background's geoLayerView name property. */
   // TODO: Not being used, can be used for another emitter to the Map Component.
-  @Output() callSelectBackgroundLayer = new EventEmitter<any>();
+  @Output('callSelectBackgroundLayer') callSelectBackgroundLayer = new EventEmitter<any>();
   /** A categorized configuration object with the geoLayerId as key and a list of
    * name followed by color for each feature in the Leaflet layer to be shown in
    * the sidebar. */
-  @Input() categorizedLayerColors: any;
+  @Input('categorizedLayerColors') categorizedLayerColors: any;
   /**
    * 
    */
@@ -64,24 +64,26 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   destroyed = new Subject<void>();
   /** An object containing any event actions with their id as the key and the action
    * object itself as the value. */
-  @Input() eventActions: any;
+  @Input('eventActions') eventActions: any;
   /** The geoLayerViewGroup passed as input from the Map Component when
    * this component is created. */
-  @Input() geoLayerViewGroup: any;
+  @Input('geoLayerViewGroup') geoLayerViewGroup: any;
   /** An object of Style-like objects containing:
    * key  : geoLayerId
    * value: object with style properties
    * For displaying a graduated symbol in the Leaflet legend. */
-  @Input() graduatedLayerColors: any;
+  @Input('graduatedLayerColors') graduatedLayerColors: any;
   /** Boolean test variable for use with Angular Material slide toggle. */
   isChecked = true;
   /** Represents the Date string since the last time a layer was updated. */
-  @Input() lastRefresh: any;
+  @Input('lastRefresh') lastRefresh: any;
   /** Object containing a layer geoLayerId as the ID, and an object of properties
    * set by a user-defined classification file. */
-  @Input() layerClassificationInfo: any;
+  @Input('layerClassificationInfo') layerClassificationInfo: any;
   /** Reference to the Map Component Leaflet map object. */
-  @Input() mainMap: any;
+  @Input('mainMap') mainMap: any;
+
+  @Input('mapConfig') mapConfig: IM.GeoMapProject;
   /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
    * objects with Leaflet layers and other layer data for displaying, ordering, and
    * highlighting. */
@@ -186,12 +188,34 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   }
 
   /**
+   * @returns a geoLayer object in the geoMapProject whose geoLayerId matches the @param id
+   * @param id The geoLayerId to be matched with
+   */
+  private getGeoLayerFromId(id: string): any {
+    for (let geoMap of this.mapConfig.geoMaps) {
+      for (let geoLayer of geoMap.geoLayers) {
+        if (geoLayer.geoLayerId === id) {
+          return geoLayer;
+        }
+      }
+    }
+    return '';
+  }
+
+  /**
   * @returns The geometryType of the current geoLayer to determine what shape should
   * be drawn in the legend.
   * @param geoLayerId The current geoLayerId.
   */
   getGeometryType(geoLayerId: string): any {
-    return this.commonService.getGeometryType(geoLayerId);
+    for (let geoMap of this.mapConfig.geoMaps) {
+      for (let geoLayer of geoMap.geoLayers) {
+        if (geoLayer.geoLayerId === geoLayerId) {
+          return geoLayer.geometryType;
+        }
+      }
+    }
+    return 'here';
   }
 
   /**
@@ -268,9 +292,8 @@ export class LegendLayerGroupComponent implements AfterViewInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       allFeatures: this.allFeatures[geoLayerView.geoLayerId],
-      geoLayer: this.commonService.getGeoLayerFromId(geoLayerView.geoLayerId),
+      geoLayer: this.getGeoLayerFromId(geoLayerView.geoLayerId),
       geoLayerView: geoLayerView,
-      geoMapName: this.commonService.getGeoMapName(),
       layerClassificationInfo: this.layerClassificationInfo,
       mapConfigPath: this.commonService.getMapConfigPath(),
       mainMap: this.mainMap
@@ -361,7 +384,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
 
     if (layerItem.isRasterLayer()) {
       dialogConfig.data = {
-        geoLayer: this.commonService.getGeoLayerFromId(geoLayerId),
+        geoLayer: this.getGeoLayerFromId(geoLayerId),
         geoLayerId: geoLayerId,
         geoLayerViewName: geoLayerViewName,
         layerProperties: [],
@@ -369,7 +392,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
       }
     } else {
       dialogConfig.data = {
-        geoLayer: this.commonService.getGeoLayerFromId(geoLayerId),
+        geoLayer: this.getGeoLayerFromId(geoLayerId),
         geoLayerId: geoLayerId,
         geoLayerViewName: geoLayerViewName,
         layerProperties: Object.keys(this.allFeatures[geoLayerId].features[0].properties),
@@ -508,7 +531,6 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   // toggleLayerTest($event: any, geoLayerViewGroup: IM.GeoLayerViewGroup, geoLayerView: IM.GeoLayerView): void {
 
   //   this.isChecked = !this.isChecked;
-  //   console.log($event);
   //   // Obtain the MapLayerItem for this layer.
   //   var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(geoLayerView.geoLayerId);
   //   // If the layer hasn't been added to the map yet, layerItem will be null. Keep the checked attribute set to false so that

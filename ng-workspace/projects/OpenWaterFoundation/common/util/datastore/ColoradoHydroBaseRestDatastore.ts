@@ -1,8 +1,7 @@
 import { Observable }                from 'rxjs/internal/Observable';
 import { BehaviorSubject,
           forkJoin,
-          map,
-          Subject }                  from 'rxjs';
+          map }                      from 'rxjs';
 
 import { TS,
           TSIdent, 
@@ -354,7 +353,7 @@ export class ColoradoHydroBaseRestDatastore {
   or minimally-initialized time series if unable to read.
   */
   readTimeSeries( tsidentString: string, readStart: DateTime, readEnd: DateTime,
-    readData: boolean, props: PropList ): Observable<TS> {
+  readData: boolean, props: PropList ): Observable<TS> {
 
     // Before anything else is done, add to the datastore's array of observables
     // that will need to be read in asynchronously.
@@ -2204,9 +2203,7 @@ export class ColoradoHydroBaseRestDatastore {
 
             // Get the data.
             var value: number = telTSDay.getMeasValue();
-            // console.log('value:', value);
-            // console.log('value is missing:', this.isTimeSeriesValueMissing(value, true));
-            // console.log('date:', date);
+
             if (!this.isTimeSeriesValueMissing(value, true)) {
               ts.setDataValueTwo(date, value);
             }

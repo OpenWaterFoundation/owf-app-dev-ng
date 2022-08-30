@@ -84,10 +84,16 @@ th.mat-header-cell {
 
 .mat-cell.left {
   text-align: left;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mat-cell.right {
   text-align: right !important;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* If the Material Table cell is a URL, treat it differently than a regular string or number. The bottom three options

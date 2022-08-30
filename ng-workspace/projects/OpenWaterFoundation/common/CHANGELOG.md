@@ -8,11 +8,45 @@ Optional elements to be added to each package version are as follows:
 * Performance Improvements
 * Breaking Changes
 
-These elements will only be added if they are applicable for the new version.
+These elements will only be added if they are applicable for the new version. New
+versions will have the date of deployment after the version number, and will contain
+X's if the version is not yet released.
 
-# 4.0.2 #
+# 4.1.0 (2022-08-XX) #
 
-### Bug Fixes (2022-08-05) ###
+### Bug Fixes ###
+
+* Fixed a bug where data tables did not truncate long non-breakable strings
+in its table's cells. The fixed component's were:
+  * `DialogDataTableComponent`
+  * `DialogDataTableLightComponent`
+  * `DialogTSTableComponent`
+* Fixed a bug in the Dashboard Component that would briefly show the 404 page before
+the dashboard was displayed.
+* Fixed a bug that would try to create the entire Chart twice when it used the
+Colorado HydroBase datastore.
+* Fixed a bug that prevented the hierarchy of the chart config object from being
+read in the correct order. This caused some bugs when adding certain values to the
+`legendFormat` property.
+
+### Refactoring ###
+
+* Moved all scoped map service calls back into the Map Component for encapsulation
+purposes. 
+* Removed a half dozen unused class variables in the Map Component.
+
+### Features / Enhancements ###
+
+* Added the first iteration of the Common Logger for printing debugging messages
+to the console. Depending on debugLevel, different amounts of messages are printed.
+The way it is used now will probably be changed/updated in the future.
+* Added the first iteration of the Story component. This is essentially a story
+map that can be added as either a main or sub menu to the InfoMapper, and utilizes
+the Dashboard component and its widgets for data layout and visualization.
+
+# 4.0.2 (2022-08-05) #
+
+### Bug Fixes ###
 
 * Added in some more robust testing for the `No Map Container Found` issue. More
 console messages will be displayed as well for this version.

@@ -43,7 +43,7 @@ export class SelectorComponent {
   dataLoading$ = this.dataLoading.asObservable();
   /** The attribute provided to this component when created, e.g.
    *   <widget-selector [selectorWidget]="widget"></widget-selector> */
-  @Input() selectorWidget: IM.SelectorWidget;
+  @Input('selectorWidget') selectorWidget: IM.SelectorWidget;
   /** The array of feature objects that have been filtered by a user search. To be
    * updated and reflected in the mat-select main widget dropdown. */
   filteredFeatures: any[];

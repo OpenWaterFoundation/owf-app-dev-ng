@@ -15,10 +15,10 @@ export class LegendBackgroundGroupComponent implements AfterViewInit {
 
   /** The background geoLayerViewGroup passed as input from the Map Component when
    * this component is created. */
-  @Input() geoLayerViewGroup: any;
+  @Input('geoLayerViewGroup') geoLayerViewGroup: any;
   /** EventEmitter that alerts the Map component (parent) that an update has happened,
    * and sends the selected background's geoLayerView name property. */
-  @Output() callSelectBackgroundLayer = new EventEmitter<any>();
+  @Output('callSelectBackgroundLayer') callSelectBackgroundLayer = new EventEmitter<any>();
 
 
   /**
@@ -26,6 +26,26 @@ export class LegendBackgroundGroupComponent implements AfterViewInit {
    * @param commonService The reference to the injected Common library.
    */
   constructor(public commonService: OwfCommonService) {}
+
+
+  /**
+   * Check the background geoLayerViewGroup to see if the expandedInitial property
+   * exists and is set to true or false. Show or hide the background layers depending
+   * which one is present, and false by default (hiding the layers).
+   */
+  getBackgroundExpanded(): boolean {
+    if (this.geoLayerViewGroup.properties.isBackground === 'true') {
+      if (this.geoLayerViewGroup.properties.expandedInitial &&
+        this.geoLayerViewGroup.properties.expandedInitial === 'true') {
+          return true;
+        }
+      else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 
   /**
    * Called right after the constructor.

@@ -74,7 +74,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
     var monthData: any[] = [];
     var startDate: DateTime = resultsArray[0].getDate1();
     var endDate: DateTime = resultsArray[0].getDate2();
-    // The DateTime iterator for the the while loop.
+    // The DateTime iterator for the while loop.
     var currentDateIter: DateTime = startDate;
 
     if (resultsArray[0] instanceof MonthTS) {

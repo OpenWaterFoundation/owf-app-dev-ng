@@ -29,7 +29,7 @@
 //   // }
   
 //   // /**
-//   // Add an existing PropList to the the list managed by this class.
+//   // Add an existing PropList to the list managed by this class.
 //   // @param proplist The PropList to add.
 //   // @param replace_if_match If the name of the PropList matches one that is already
 //   // in the list, replace it (true), or add the new list additionally (false).
@@ -61,7 +61,7 @@
 //   // }
   
 //   // /**
-//   // Create and add a PropList to the the list managed by this class.
+//   // Create and add a PropList to the list managed by this class.
 //   // @param listname The name of the list to add.
 //   // @param listformat The format of the property list to add.
 //   // */

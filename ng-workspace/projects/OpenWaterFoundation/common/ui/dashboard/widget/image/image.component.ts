@@ -14,7 +14,7 @@ export class ImageComponent {
 
   /** The attribute provided to this component when created, e.g.
    *   <widget-image [imageWidget]="path/to/image.png"></widget-image> */
-  @Input() imageWidget: IM.ImageWidget;
+  @Input('imageWidget') imageWidget: IM.ImageWidget;
   /** String array representing the type of error that occurred while building this
    * widget. Used by the error widget. */
   errorTypes: string[] = [];

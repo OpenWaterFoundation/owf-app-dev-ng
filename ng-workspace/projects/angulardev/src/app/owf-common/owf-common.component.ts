@@ -64,7 +64,6 @@ export class OwfCommonComponent implements OnInit {
     IM.Path.d3P, ['/data-maps/data-ts/d3-treemap-config.json']))
     .subscribe((d3Config: IM.D3Prop) => {
       d3Config.chartType = IM.D3Chart.treemap;
-      // console.log(d3Config);
     });
 
     var geoLayer = {

@@ -1,4 +1,5 @@
 import { Component,
+          Input,
           OnDestroy }        from '@angular/core';
 import { ActivatedRoute }    from '@angular/router';
 
@@ -24,8 +25,17 @@ export class DashboardComponent implements OnDestroy {
   /**
    * 
    */
+  displayedInStory = false;
+  /** Subscription for updating the route for this component. Unsubscribed to in
+   * ngDestroy. */
   routeSub: Subscription;
-
+  /**
+   * A dashboard config object passed in from a 
+   */
+  @Input('dashboardConfig') standaloneDashboardConf: IM.DashboardConf;
+  /** `true` if the id in the URL matches an id from the `app-config.json` file.
+   * `false` if not, and the 404 page will show. */
+  validDashboardId: boolean;
 
   /**
    * 
@@ -34,16 +44,16 @@ export class DashboardComponent implements OnDestroy {
    * Dashboard to be displayed.
    */
   constructor(private commonService: OwfCommonService,
-    private dashboardService: DashboardService,
-    private eventService: EventService,
-    private route: ActivatedRoute) {}
+  private dashboardService: DashboardService,
+  private eventService: EventService,
+  private route: ActivatedRoute) {}
 
 
   /**
    * Checks if the dashboard configuration was correctly made by confirming the
    * following:
    *   1. All widget name properties are unique.
-   *   2. All widgets contain a type property.
+   *   2. All widgets contain a `type` property.
    *   3. All widget types are currently supported.
    */
   private checkDashboardConfig(dashboardConfig: IM.DashboardConf): void {
@@ -71,36 +81,62 @@ export class DashboardComponent implements OnDestroy {
   }
 
   /**
+   * 
+   */
+  private dashboardInit(dashboardConfig: IM.DashboardConf): void {
+    this.checkDashboardConfig(dashboardConfig);
+    this.dashboardConf = dashboardConfig;
+
+    if (!this.dashboardConf) {
+      return;
+    }
+    this.eventService.createListenedToWidgets(dashboardConfig);
+  }
+
+  /**
    * Called right after the constructor.
    */
   ngOnInit(): void {
 
     this.routeSub = this.route.paramMap.subscribe((paramMap) => {
-      var id = paramMap.get('id');
-      if (this.commonService.validMapConfigMapID(id) === false) {
+
+      var dashboardId = paramMap.get('id');
+      this.validDashboardId = this.commonService.validID(dashboardId);
+      if (this.validDashboardId === false) {
         return;
       }
-      var dashboardConfigPath = this.commonService.getDashboardConfigPathFromId(id);
+      
+      // The dashboard component is being created and used in another component's
+      // template and has provided the dashboardConfig property.
+      if (!this.standaloneDashboardConf) {
+        this.readDashboardConfig(dashboardId);
+      } else {
+        this.displayedInStory = true;
+        this.dashboardInit(this.standaloneDashboardConf);
+      }
+      
   
-      this.commonService.getJSONData(this.commonService.getAppPath() + dashboardConfigPath)
-      .pipe(first()).subscribe((dashboardConfig: IM.DashboardConf) => {
-  
-        this.checkDashboardConfig(dashboardConfig);
-        this.dashboardConf = dashboardConfig;
-
-        if (!this.dashboardConf) {
-          return;
-        }
-        this.eventService.createListenedToWidgets(dashboardConfig);
-      });
+      
     });
   }
 
   /**
    * Called once, before the instance is destroyed.
    */
-  ngOnDestroy(): void {
-    
+  ngOnDestroy(): void { }
+
+  /**
+   * 
+   * @param dashboardId 
+   */
+  private readDashboardConfig(dashboardId: string): void {
+    var dashboardConfigPath = this.commonService.getDashboardConfigPathFromId(dashboardId);
+
+    this.commonService.getJSONData(this.commonService.getAppPath() + dashboardConfigPath)
+    .pipe(first()).subscribe((dashboardConfig: IM.DashboardConf) => {
+
+      this.dashboardInit(dashboardConfig);
+    });
   }
 
   /**

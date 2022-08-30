@@ -4,6 +4,7 @@
           OnDestroy,
           OnInit,
           Output }                      from '@angular/core';
+import { ActivatedRoute }               from '@angular/router';
 import { MatDialog,
           MatDialogRef,
           MAT_DIALOG_DATA }             from '@angular/material/dialog';
@@ -12,19 +13,21 @@ import { SelectionModel }               from '@angular/cdk/collections';
 import booleanPointInPolygon            from '@turf/boolean-point-in-polygon';
 import bbox                             from '@turf/bbox';
 
+import { Subject, takeUntil }                      from 'rxjs';
+
 import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
 import * as FileSaver                   from 'file-saver';
 
 import { faXmark,
           faMagnifyingGlassPlus }       from '@fortawesome/free-solid-svg-icons';
 
-import { OwfCommonService }             from '@OpenWaterFoundation/common/services';
+import { CommonLoggerService,
+          OwfCommonService }            from '@OpenWaterFoundation/common/services';
 import * as IM                          from '@OpenWaterFoundation/common/services';
 import { DialogService }                from '../dialog.service';
 import { WindowManager }                from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapLayerManager,
           MapLayerItem }                from '@OpenWaterFoundation/common/ui/layer-manager';
-
 // import * as L from 'leaflet';
 declare var L: any;
 
@@ -57,8 +60,19 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * 
    */
   public currentLayer: any;
+  /** Can be set to `true` if the debug query parameter is given for debugging purposes,
+   * otherwise will be null. */
+  debugFlag: string = null;
+   /** Can be set to
+    * * `trace` - Will show all logging messages in the application. Meant for
+    * in-depth debugging.
+    * * `warn` - Will display any warning messages throughout the application. For
+    * less in-depth debugging. */
+  debugLevelFlag: string = null;
   /** Used to determine which matInputFilterText option to display. */
   public defaultRadioDisabled = true;
+
+  destroyed = new Subject<void>();
   /** Array containing the names of all header columns in the Material Table. */
   public displayedColumns: string[];
   /** EventEmitter that alerts the Map component (parent) that an update has happened,
@@ -68,8 +82,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   public geoLayer: any;
   /** The layer's geoLayerView. */
   public geoLayerView: any;
-  /** The name of the geoMap the layer resides in. */
-  public geoMapName: string;
   /** Object containing the layer geoLayerId as the ID, and an object of properties
    * set by a user-defined classification file. */
   public layerClassificationInfo: any;
@@ -137,7 +149,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
    * @param dataObject The object containing data passed from the Component that created this Dialog.
    */
-  constructor(private dialogService: DialogService,
+  constructor(private actRoute: ActivatedRoute,
+  private dialogService: DialogService,
+  private logger: CommonLoggerService,
   public commonService: OwfCommonService,
   public dialog: MatDialog,
   public dialogRef: MatDialogRef<DialogDataTableComponent>,
@@ -153,7 +167,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     // this.displayedColumns.unshift('select');
     this.geoLayer = dataObject.data.geoLayer;
     this.geoLayerView = dataObject.data.geoLayerView;
-    this.geoMapName = dataObject.data.geoMapName;
     this.layerClassificationInfo = dataObject.data.layerClassificationInfo;
     // This is needed for testing the library.
     // this.geometryType = 'WKT:Polygon';
@@ -237,85 +250,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Query the Geocodio API with the provided user address and add a Selected layer
-   * to the Leaflet map if found in a polygon.
-   * @param filterAddress The search value entered in by a user.
-   */
-  private filterByAddress(filterAddress: string): void {
-    // Replace all spaces and commas with URI-encoded characters using regex.
-    var encodedAddress = filterAddress.replace(/ /g, '+').replace(/,/g, '%2c');
-    // TODO: jpkeahey 2021.04.14 - This is using an OWF employee API key necessary for the query. What to do?
-    var addressQuery = 'https://api.geocod.io/v1.6/geocode?q=' + encodedAddress + '&api_key=e794ffb42737727f9904673702993bd96707bf6';
-    this.commonService.getJSONData(addressQuery).subscribe((resultJSON: any) => {
-      if (resultJSON.results[0] === undefined) {
-        this.addressLat = -1;
-        this.addressLng = -1;
-      } else {
-        // Set the returned lat and long values so they can be used in the filter
-        // function. From GeoCodIO's documentation, use the first result in the
-        // array, as it will be the most accurate.
-        this.addressLat = resultJSON.results[0].location.lat;
-        this.addressLng = resultJSON.results[0].location.lng;
-      }
-      console.log('GeoCodIO result', resultJSON.results[0]);
-      // Call the filter function for addresses. The user given input itself won't
-      // be used, but this is how the function is called. Set the data rows to show
-      // by using the filtered data.
-      this.attributeTable.filter = filterAddress.trim().toUpperCase();
-      this.matchedRows = this.attributeTable.filteredData.length;
-      
-      // This uses type casting so that a 'correct' GeoJsonObject is created for
-      // the L.geoJSON function.
-      // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37370#issuecomment-577504151
-      var geoJsonObj = {
-        type: "FeatureCollection" as const,
-        bbox: [],
-        features: []
-      };
-
-      // Iterate through each feature in the layer
-      // this.currentLayer.eachLayer((featureLayer: any) => {
-                
-      //   if (booleanPointInPolygon([this.addressLng, this.addressLat], featureLayer.feature.geometry) === true) {
-      //     geoJsonObj.features.push(featureLayer.feature);
-      //   }
-      // });
-
-      // Iterate over the array of filtered features from the data table, and if
-      // the address is found in one, add it to the map and push it into the geoJson
-      // object to be used for selecting and styling the feature it's in.
-      this.attributeTable.filteredData.forEach((feature: any) => {
-        if (booleanPointInPolygon([this.addressLng, this.addressLat], feature.geometry) === true) {
-          // Create and add the Marker and tooltip to the map.
-          var defaultIcon = L.icon({
-            className: 'selectedMarker',
-            iconUrl: 'assets/app/img/default-marker-25x41.png',
-            iconAnchor: [12, 41]
-          });
-          var addressMarker = L.marker([this.addressLat, this.addressLng], { icon: defaultIcon }).addTo(this.mainMap);
-          addressMarker.bindTooltip(resultJSON.results[0].formatted_address, {
-            className: 'address-marker',
-            direction: 'right',
-            permanent: true
-          });
-          // Obtain the MapLayerItem for this layer and the created selected layer to it.
-          var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
-          layerItem.addAddressMarker(addressMarker);
-          this.addressMarkerDisplayed = true;
-          // Add it to the geoJson object.
-          geoJsonObj.features.push(feature);
-        }
-      });
-
-      // Check to see if anything was actually found.
-      if (geoJsonObj.features.length > 0) {
-        // Create the selected layer.
-        this.createSelectedLeafletClass(geoJsonObj);
-      }
-    });
-  }
-
-  /**
    * Creates the polygon or point selected layer to be added to the Leaflet map
    * right on top of the layerItem's original layer.
    * @param geoJsonObj The geoJson object created to be given to the L.geoJSON
@@ -386,6 +320,114 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Query the Geocodio API with the provided user address and add a Selected layer
+   * to the Leaflet map if found in a polygon.
+   * @param filterAddress The search value entered in by a user.
+   */
+  private filterByAddress(filterAddress: string): void {
+    // Replace all spaces and commas with URI-encoded characters using regex.
+    var encodedAddress = filterAddress.replace(/ /g, '+').replace(/,/g, '%2c');
+    // TODO: jpkeahey 2021.04.14 - This is using an OWF employee API key necessary for the query. What to do?
+    var addressQuery = 'https://api.geocod.io/v1.6/geocode?q=' + encodedAddress + '&api_key=e794ffb42737727f9904673702993bd96707bf6';
+    this.commonService.getJSONData(addressQuery).subscribe((resultJSON: any) => {
+      if (resultJSON.results[0] === undefined) {
+        this.addressLat = -1;
+        this.addressLng = -1;
+      } else {
+        // Set the returned lat and long values so they can be used in the filter
+        // function. From GeoCodIO's documentation, use the first result in the
+        // array, as it will be the most accurate.
+        this.addressLat = resultJSON.results[0].location.lat;
+        this.addressLng = resultJSON.results[0].location.lng;
+      }
+      this.logger.print('trace', 'DialogDataTableComponent.filterByAddress - GeoCodIO result:',
+      this.debugFlag, this.debugLevelFlag);
+      this.logger.print('trace', resultJSON.results[0], this.debugFlag, this.debugLevelFlag);
+
+      // Call the filter function for addresses. The user given input itself won't
+      // be used, but this is how the function is called. Set the data rows to show
+      // by using the filtered data.
+      this.attributeTable.filter = filterAddress.trim().toUpperCase();
+      this.matchedRows = this.attributeTable.filteredData.length;
+      
+      // This uses type casting so that a 'correct' GeoJsonObject is created for
+      // the L.geoJSON function.
+      // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37370#issuecomment-577504151
+      var geoJsonObj = {
+        type: "FeatureCollection" as const,
+        bbox: [],
+        features: []
+      };
+
+      // Iterate through each feature in the layer
+      // this.currentLayer.eachLayer((featureLayer: any) => {
+                
+      //   if (booleanPointInPolygon([this.addressLng, this.addressLat], featureLayer.feature.geometry) === true) {
+      //     geoJsonObj.features.push(featureLayer.feature);
+      //   }
+      // });
+
+      // Iterate over the array of filtered features from the data table, and if
+      // the address is found in one, add it to the map and push it into the geoJson
+      // object to be used for selecting and styling the feature it's in.
+      this.attributeTable.filteredData.forEach((feature: any) => {
+        if (booleanPointInPolygon([this.addressLng, this.addressLat], feature.geometry) === true) {
+          // Create and add the Marker and tooltip to the map.
+          var defaultIcon = L.icon({
+            className: 'selectedMarker',
+            iconUrl: 'assets/app/img/default-marker-25x41.png',
+            iconAnchor: [12, 41]
+          });
+          var addressMarker = L.marker([this.addressLat, this.addressLng], { icon: defaultIcon }).addTo(this.mainMap);
+          addressMarker.bindTooltip(resultJSON.results[0].formatted_address, {
+            className: 'address-marker',
+            direction: 'right',
+            permanent: true
+          });
+          // Obtain the MapLayerItem for this layer and the created selected layer to it.
+          var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
+          layerItem.addAddressMarker(addressMarker);
+          this.addressMarkerDisplayed = true;
+          // Add it to the geoJson object.
+          geoJsonObj.features.push(feature);
+        }
+      });
+
+      // Check to see if anything was actually found.
+      if (geoJsonObj.features.length > 0) {
+        // Create the selected layer.
+        this.createSelectedLeafletClass(geoJsonObj);
+      }
+    });
+  }
+
+  /**
+   * By default, go through all the fields in the Attribute Table object and if
+   * they are 'double' numbers, set their precision to 4 decimal places for every
+   * one. Also truncates any URL's, since they tend to be longer and don't play
+   * well with the fixed length of the table columns.
+   */
+   private formatAttributeTable(): void {
+
+    for (let feature of this.attributeTable.data) {
+      for (let property in feature.properties) {
+        // TODO: jpkeahey 2020.09.09 - This conditional will need to be updated,
+        // since there is a special ID number that will return true from this and
+        // will be incorrect. Also, this changes the data; think about making a copy somehow.
+        if (typeof feature.properties[property] === 'number' && !Number.isInteger(feature.properties[property])) {
+          feature.properties[property] = feature.properties[property].toFixed(4);
+        } else if (typeof feature.properties[property] === 'string') {
+          if (feature.properties[property].startsWith('http://') || feature.properties[property].startsWith('https://')) {
+            this.links[feature.properties[property]] = feature.properties[property];
+          } else if (feature.properties[property].startsWith('www')) {
+            // feature.properties[property] = 'http://' + feature.properties[property];
+          }
+        }
+      }
+    }
+  }
+
+  /**
    * Looks through each feature and its properties to determine which should be
    * highlighted on the Leaflet map.
    */
@@ -408,17 +450,12 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     //   if (layer.feature.properties.DISTRICT === 64) {
     //     var copiedLayer = lodash.cloneDeep(layer);
     //     copiedLayer._leaflet_id = --this.selectedLeafletID;
-    //     console.log(layer === copiedLayer);
-    //     console.log(layer);
-    //     console.log(copiedLayer);
     //     copiedLayer.setStyle({
     //       fillOpacity: 0,
     //       color: '#00ffff',
     //       opacity: '0.8',
     //       weight: parseInt(layer.options.weight) + 2
     //     });
-    //     console.log(layer);
-    //     console.log(copiedLayer);
     //     this.selectedLayer.addLayer(copiedLayer);
     //   }
     // });
@@ -436,7 +473,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     //     weight: 4
     // });
     // this.selectedLayer.eachLayer((layer: any) => {
-    //   console.log('selected featureLayer: ', layer);
     // });
 
     // layerItem.addSelectedLayerToMainMap(this.selectedLayer, this.mainMap);
@@ -491,43 +527,18 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.updateFilterAlgorithm();
-    this.formatAttributeTable();
-  }
 
-  /**
-   * By default, go through all the fields in the Attribute Table object and if
-   * they are 'double' numbers, set their precision to 4 decimal places for every
-   * one. Also truncates any URL's, since they tend to be longer and don't play
-   * well with the fixed length of the table columns.
-   */
-  private formatAttributeTable(): void {
+    this.actRoute.paramMap.pipe(takeUntil(this.destroyed)).subscribe(() => {
+      this.debugFlag = this.actRoute.snapshot.queryParamMap.get('debug');
+      this.debugLevelFlag = this.actRoute.snapshot.queryParamMap.get('debugLevel');
+      this.logger.print('trace',
+      'DialogDataTableComponent.ngOnInit - Setting Debug & DebugLevel flags.',
+      this.debugFlag, this.debugLevelFlag);
 
-    for (let feature of this.attributeTable.data) {
-      for (let property in feature.properties) {
-        // TODO: jpkeahey 2020.09.09 - This conditional will need to be updated,
-        // since there is a special ID number that will return true from this and
-        // will be incorrect. Also, this changes the data; think about making a copy somehow.
-        if (typeof feature.properties[property] === 'number' && !Number.isInteger(feature.properties[property])) {
-          feature.properties[property] = feature.properties[property].toFixed(4);
-        } else if (typeof feature.properties[property] === 'string') {
-          if (feature.properties[property].startsWith('http://') || feature.properties[property].startsWith('https://')) {
-            this.links[feature.properties[property]] = feature.properties[property];
-          } else if (feature.properties[property].startsWith('www')) {
-            // feature.properties[property] = 'http://' + feature.properties[property];
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * Closes the Mat Dialog popup when the Close button is clicked, and removes this
-   * dialog's window ID from the windowManager.
-   */
-  public onClose(): void {
-    this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+      this.updateFilterAlgorithm();
+      this.formatAttributeTable();
+    });
+    
   }
 
   /**
@@ -535,7 +546,19 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * link is clicked on in the dialog that opens a new map, make sure to close the
    * dialog and remove it from the window manager.
    */
-  public ngOnDestroy(): void {
+   public ngOnDestroy(): void {
+
+    this.destroyed.next();
+    this.destroyed.complete();
+    this.dialogRef.close();
+    this.windowManager.removeWindow(this.windowID);
+  }
+
+  /**
+   * Closes the Mat Dialog popup when the Close button is clicked, and removes this
+   * dialog's window ID from the windowManager.
+   */
+  public onClose(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }

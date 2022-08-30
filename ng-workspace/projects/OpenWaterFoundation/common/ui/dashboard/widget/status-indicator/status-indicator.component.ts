@@ -10,7 +10,7 @@ import { faCaretDown,
           faCheck,
           faExclamation,
           faQuestion,
-          faXmark }    from '@fortawesome/free-solid-svg-icons';
+          faXmark }          from '@fortawesome/free-solid-svg-icons';
 
 import { EventService,
           OwfCommonService } from '@OpenWaterFoundation/common/services';
@@ -195,8 +195,6 @@ export class StatusIndicatorComponent {
       if (selectEvent === null) {
         return;
       }
-
-      console.log(selectEvent);
     });
   }
 
@@ -344,8 +342,6 @@ export class StatusIndicatorComponent {
         this.processClassifyData(classifyData);
         mainData = allData[1];
       }
-
-      console.log(allData);
 
       var dataArray: any[] = this.dashboardService.processWidgetJSONData(mainData, this.statusIndicatorWidget);
 

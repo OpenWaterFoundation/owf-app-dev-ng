@@ -111,7 +111,6 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
       '<pre class="raster-properties">';
 
       let geoRaster = this.layerItem.getItemLeafletLayer();
-      console.log('geoRaster->', geoRaster);
 
       markdownString +=
       '<b>Height:</b> ' + geoRaster.height + '\n' +

@@ -456,7 +456,7 @@ export class MapUtil {
    */
   public static createSingleBandRaster(georaster: any, result: any, symbol: IM.GeoLayerSymbol): any {
     var geoRasterLayer = new GeoRasterLayer({
-      debugLevel: 2,
+      debugLevel: 0,
       georaster,
       // Sets the color and opacity of each cell in the raster layer.
       pixelValuesToColorFn: (values: any) => {
@@ -549,7 +549,7 @@ export class MapUtil {
     }
 
     // var geoRasterLayer = new GeoRasterLayer({
-    //   debugLevel: 2,
+    //   debugLevel: 0,
     //   georaster,
     //   // Create a custom drawing scheme for the raster layer. This might overwrite pixelValuesToColorFn().
     //   customDrawFunction: ({ context, values, x, y, width, height }) => {
@@ -764,8 +764,8 @@ export class MapUtil {
    * @param symbol An InfoMapper GeoLayerSymbol object from the map config file to decide what the classificationAttribute is,
    * and therefore what raster band is being used for the cell value to display.
    */
-  public static displayMultipleHTMLRasterCells(e: any, georaster: any, geoLayerView: IM.GeoLayerView, originalDivContents: string,
-    layerItem: MapLayerItem, symbol: IM.GeoLayerSymbol): void {
+  public static displayMultipleHTMLRasterCells(e: any, georaster: any, geoLayerView: IM.GeoLayerView,
+  originalDivContents: string, layerItem: MapLayerItem, symbol: IM.GeoLayerSymbol, geoMapId: string): void {
 
     /**
      * The instance of the MapLayerManager, a helper class that manages MapLayerItem objects with Leaflet layers
@@ -773,7 +773,7 @@ export class MapUtil {
      */
     var mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
 
-    let div = L.DomUtil.get('title-card');
+    let div = L.DomUtil.get(geoMapId +'-title-card');
     // var originalDivContents: string = div.innerHTML;
     // If the raster layer is not currently being displayed on the map, then don't show anything over a hover.
     if (layerItem.isDisplayedOnMainMap() === false) {
@@ -1117,7 +1117,8 @@ export class MapUtil {
    * @param geoLayerView A reference to the current geoLayerView the feature if from.
    * @param geoMapName The name of the current GeoMap the feature resides in.
    */
-  public static resetFeature(e: any, geoLayer: any, geoLayerView: any, geoMapName: string): void {
+  public static resetFeature(e: any, geoLayer: any, geoLayerView: any,
+  geoMapName: string, geoMapId: string): void {
 
     if (geoLayerView.properties.highlightEnabled && geoLayerView.properties.highlightEnabled === 'true') {
       if (geoLayer.geometryType.toUpperCase().includes('LINESTRING')) {
@@ -1129,7 +1130,7 @@ export class MapUtil {
       }
     }
 
-    let div = document.getElementById('title-card');
+    let div = document.getElementById(geoMapId + '-title-card');
     let instruction: string = "Move over or click on a feature for more information";
     let divContents: string = "";
 
@@ -1183,7 +1184,7 @@ export class MapUtil {
    * @param geoLayerView The current geoLayerView the feature is from.
    * @param layerAttributes 
    */
-  public static updateFeature(e: any, geoLayer: any, geoLayerView: any, layerAttributes?: any): void {
+  public static updateFeature(e: any, geoLayer: any, geoLayerView: any, geoMapId: string, layerAttributes?: any): void {
     // First check if the geoLayerView of the current layer that's being hovered over has its enabledForHover property set to
     // false. If it does, skip the entire update of the div string and just return.
     if (geoLayerView.properties.enabledForHover && geoLayerView.properties.enabledForHover.toUpperCase() === 'FALSE') {
@@ -1233,7 +1234,7 @@ export class MapUtil {
     }
 
     // Update the main title name up top by using the geoLayerView name
-    let div = document.getElementById('title-card');
+    let div = document.getElementById(geoMapId + '-title-card');
     var featureProperties: any;
     if (layerAttributes) {
       // Filter feature properties to be displayed.

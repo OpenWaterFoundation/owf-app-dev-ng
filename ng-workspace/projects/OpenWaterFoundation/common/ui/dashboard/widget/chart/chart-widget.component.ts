@@ -15,7 +15,7 @@ export class ChartWidgetComponent implements OnInit, OnDestroy {
 
   /** The attribute provided to this component when created, e.g.
    *   <chart-widget [chartWidget]="widget"></chart-widget> */
-  @Input() chartWidget: IM.ChartWidget;
+  @Input('chartWidget') chartWidget: IM.ChartWidget;
 
 
   /**

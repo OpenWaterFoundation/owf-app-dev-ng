@@ -57,7 +57,11 @@ export class OwfCommonService {
   highlighted = new BehaviorSubject(false);
   /** NOTE: Not currently in use. */
   highlightedData = this.highlighted.asObservable();
-  /** Constant for the Font Awesome house with chimney SVG path. */
+  /** SVG 'd' property path for the Font Awesome computer mouse icon. */
+  private readonly constComputerMouseSVGPath = 'M0 352c0 88.38 71.63 160 160 ' +
+  '160h64c88.38 0 160-71.63 160-160V224H0V352zM176 0H160C71.63 0 0 71.62 0 ' +
+  '160v32h176V0zM224 0h-16v192H384V160C384 71.62 312.4 0 224 0z'
+  /** SVG 'd' property path for the Font Awesome house with chimney icon. */
   private readonly constHouseChimneySVGPath = 'M511.8 287.6L512.5 447.7C512.5 ' +
   '450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 ' +
   '512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 ' +
@@ -107,15 +111,6 @@ export class OwfCommonService {
   mapConfigLayerOrder: string[] = [];
   /** A string representing the path to the map configuration file. */
   mapConfigPath: string = '';
-  /**
-   * 
-   */
-  private _mapConfig = new BehaviorSubject<any>({});
-  /**
-   * 
-   */
-  readonly mapConfig$ = this._mapConfig.asObservable();
-  private mapConfigTest = {};
   /** Object containing the original style for a given feature. */
   originalFeatureStyle: any;
   /** Object containing a layer's geoLayerId as the key, and a boolean showing whether
@@ -131,7 +126,14 @@ export class OwfCommonService {
 
 
   /**
-   * Returns the constant SVG path string for drawing the Font Awesome 6 house with
+   * Returns the SVG path string for drawing the Font Awesome 6 computer mouse icon.
+   */
+  get computerMouseSVGPath(): string {
+    return this.constComputerMouseSVGPath;
+  }
+
+  /**
+   * Returns the SVG path string for drawing the Font Awesome 6 house with
    * a chimney icon.
    */
   get houseChimneySVGPath(): string {
@@ -367,78 +369,6 @@ export class OwfCommonService {
   }
 
   /**
-   * Check the background geoLayerViewGroup to see if the expandedInitial property
-   * exists and is set to true or false. Show or hide the background layers depending
-   * which one is present, and false by default (hiding the layers).
-   */
-  getBackgroundExpanded(): boolean {
-    for (let geoMap of this.mapConfig.geoMaps) {
-      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
-        if (geoLayerViewGroup.properties.isBackground === 'true') {
-          if (geoLayerViewGroup.properties.expandedInitial &&
-              geoLayerViewGroup.properties.expandedInitial === 'true')
-            return true;
-          else return false;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * @returns An array of all background geoLayerViewGroup objects.
-   */
-  getBackgroundGeoLayerViewGroups(): any[] {
-    let allBackgroundGeoLayerViewGroups = [];
-
-    for (let geoMap of this.mapConfig.geoMaps) {
-      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
-        if (geoLayerViewGroup.properties.isBackground === 'true') {
-          allBackgroundGeoLayerViewGroups.push(geoLayerViewGroup);
-        }
-      }
-    }
-    return allBackgroundGeoLayerViewGroups;
-  }
-
-  /**
-   * @returns The background layer geoLayerView that matches the provided @var id.
-   * @param id The geoLayerId that needs to be matched
-   */
-  getBkgdGeoLayerViewFromId(id: string) {
-    for (let geoMap of this.mapConfig.geoMaps) {
-      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
-        if (geoLayerViewGroup.properties.isBackground === 'true') {
-          for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-            if (geoLayerView.geoLayerId === id) {
-              return geoLayerView;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * @returns An array of geoLayers containing each background layer as an object
-   */
-  getBackgroundLayers(): any[] {
-    let backgroundLayers: any[] = [];
-    this.mapConfig.geoMaps[0].geoLayers.forEach((geoLayer: any) => {
-      if (geoLayer.properties.isBackground === 'true')
-        backgroundLayers.push(geoLayer);
-    });
-    return backgroundLayers;
-  }
-
-  /**
-   * @returns true no matter what for some reason...
-   */
-  getBackgroundLayersMapControl(): boolean {
-    return true;
-  }
-
-  /**
    * Retrieves the bad path from the @var badPath object, and formats it if needed
    * to show in the warning tooltip.
    * @param geoLayerId The geoLayerId used as the key in the @var badPath to find
@@ -537,67 +467,44 @@ export class OwfCommonService {
   }
 
   /**
+   * 
+   * @param id 
+   * @returns 
+   */
+   getStoryConfigPathFromId(id: string): string {
+    var storyPathExt: string;
+    var splitStoryPath: string[];
+    var storyPath = '';
+
+    for (let mainMenu of this.appConfig.mainMenu) {
+      if (mainMenu.menus) {
+        for (let subMenu of mainMenu.menus) {
+          if (subMenu.id === id) storyPathExt = subMenu.storyFile;
+        }
+      } else {
+        if (mainMenu.id === id) storyPathExt = mainMenu.storyFile;
+      }
+    }
+
+    splitStoryPath = storyPathExt.split('/');
+
+    for (let i = 0; i < splitStoryPath.length - 1; i++) {
+      storyPath += splitStoryPath[i] + '/';
+    }
+
+    storyPath.startsWith('/') ?
+    this.dashboardConfigPath = storyPath.substring(1) :
+    this.dashboardConfigPath = storyPath;
+
+    return storyPathExt.startsWith('/') ?
+    storyPathExt.substring(1) :
+    storyPathExt;
+  }
+
+  /**
    * @returns The array of DataUnits from the DATAUNIT file.
    */
   getDataUnitArray(): any[] { return this.dataUnits; }
-
-  /**
-   * Goes through each geoMap, geoLayerViewGroup, and geoLayerView in a geoMapProject
-   * and returns the FIRST occurrence of a background layer that has the selectedInitial
-   * property set to true, effectively getting the default background layer.
-   */
-  getDefaultBackgroundLayer(): string {
-    for (let geoMap of this.mapConfig.geoMaps) {
-      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
-        if (geoLayerViewGroup.properties.isBackground &&
-          geoLayerViewGroup.properties.isBackground.toUpperCase() === 'TRUE') {
-          for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-            if (geoLayerView.properties.selectedInitial &&
-              geoLayerView.properties.selectedInitial.toUpperCase() === 'TRUE') {
-              return geoLayerView.name;
-            }
-          }
-        }
-      }
-    }
-    return '';
-  }
-
-  /**
-   * @returns An array of the three provided ExtentInitial numbers to be used for
-   * initial map creation.
-   */
-  getExtentInitial(): number[] {
-    // Make sure to do some error handling for incorrect input.
-    if (!this.mapConfig.geoMaps[0].properties.extentInitial) {
-      console.error("Map Configuration property '" +
-        this.mapConfig.geoMaps[0].properties.extentInitial +
-        "' is incorrectly formatted. Confirm property is extentInitial." +
-        "Setting ZoomLevel to '[0, 0], 0' for world-wide view")
-      // Return a default array with all 0's so it's quite obvious the map created
-      // is not intended.
-      return [0, 0, 0];
-    }
-    var finalExtent: number[];
-    let extentInitial: string = this.mapConfig.geoMaps[0].properties.extentInitial;
-    let splitInitial: string[] = extentInitial.split(':');
-
-    if (splitInitial[0] === 'ZoomLevel' && splitInitial[1].split(',').length !== 3)
-      console.error("ZoomLevel inputs of " + splitInitial[1] + " is incorrect. " +
-      "Usage for a ZoomLevel property is 'ZoomLevel:Longitude, Latitude, Zoom Level'");
-
-    try {
-      // Try to convert all strings in the split array to numbers to return as a
-      // number array for the initial extent.
-      finalExtent = splitInitial[1].split(',').map(x => +x);
-    } catch (e) {
-      console.error(e.message);
-      console.error('Latitude, Longitude and Zoom Level must all be integer or decimal numbers');
-      console.error('Setting ZoomLevel to \'[0, 0], 0\' for world-wide view');
-      return [0, 0, 0];
-    }
-    return finalExtent;
-  }
 
   /**
    * Gets the path to the map config file matching the provided id, and sets the
@@ -696,139 +603,11 @@ export class OwfCommonService {
   getGapminderConfigPath(): string { return this.gapminderConfigPath; }
 
   /**
-   * Goes through each geoLayer in the GeoMapProject and if one matches with the
-   * given geoLayerId parameter, returns the geometryType attribute of that geoLayer.
-   * @param id The geoLayerId of the layerView to be compared with the geoLayerId
-   * of the geoLayer.
-   */
-  getGeometryType(id: string): string {
-    for (let geoLayer of this.mapConfig.geoMaps[0].geoLayers) {
-      if (geoLayer.geoLayerId === id) {
-        return geoLayer.geometryType;
-      }
-    }
-    return 'here';
-  }
-
-  /**
    * @returns the base path to the GeoJson files being used in the application.
    * When prepended with the @var appPath, shows the full path the application
    * needs to find any GeoJson file.
    */
   getGeoJSONBasePath(): string { return this.geoJSONBasePath; }
-
-  /**
-   * @returns a geoLayer object in the geoMapProject whose geoLayerId matches the @param id
-   * @param id The geoLayerId to be matched with
-   */
-  getGeoLayerFromId(id: string): any {
-    for (let geoMap of this.mapConfig.geoMaps) {
-      for (let geoLayer of geoMap.geoLayers) {
-        if (geoLayer.geoLayerId === id) {
-          return geoLayer;
-        }
-      }
-    }
-    return '';
-  }
-
-  /**
-   * @returns A reversed array of all geoLayer objects in the geoMapProject.
-   */
-  getGeoLayers(): any[] {
-    let geoLayers: any[] = [];
-    this.mapConfig.geoMaps.forEach((geoMap: any) => {
-      geoMap.geoLayers.forEach((geoLayer: any) => {
-        if (!geoLayer.properties.isBackground || geoLayer.properties.isBackground === 'false') {
-          geoLayers.push(geoLayer);
-        }
-      });
-    });
-    return geoLayers;
-  }
-
-  /**
-   * @returns A reversed array of all geoLayerViewGroupId's in the geoMapProject.
-   * The array is reversed so when it's iterated over, it will bring each one representing
-   * a map layer to the front of the map. This will ultimately put the layers in
-   * the correct order with the first group on top, and subsequent groups below.
-   */
-  getGeoLayerViewGroupIdOrder(): string[] {
-    var allGeoLayerViewGroups: string[] = [];
-    for (let geoMap of this.mapConfig.geoMaps) {
-      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
-        if (!geoLayerViewGroup.properties.isBackground ||
-          geoLayerViewGroup.properties.isBackground === 'false') {
-          allGeoLayerViewGroups.push(geoLayerViewGroup.geoLayerViewGroupId);
-        }
-      }
-    }
-    return allGeoLayerViewGroups.reverse();
-  }
-
-  /**
-   * @returns an array of eventHandler objects from the geoLayerView whose geoLayerId
-   * matches the given @param geoLayerId.
-   * @param geoLayerId The geoLayerId to match with.
-   */
-  getGeoLayerViewEventHandler(geoLayerId: string): IM.EventHandler[] {
-
-    var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
-
-    for (let geoLayerViewGroup of geoLayerViewGroups) {
-      if (!geoLayerViewGroup.properties.isBackground ||
-        geoLayerViewGroup.properties.isBackground === 'false') {
-        for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-          if (geoLayerView.geoLayerId === geoLayerId) {
-            return geoLayerView.eventHandlers;
-          }
-        }
-      }
-    }
-    return [];
-  }
-
-  /**
-   * Return the geoLayerView that matches the given geoLayerId.
-   * @param id The given geoLayerId to match with.
-   */
-   getGeoLayerView(id: string) {
-
-    for (let geoMap of this.mapConfig.geoMaps) {
-      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
-        for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-          if (geoLayerView.geoLayerId === id) {
-            return geoLayerView;
-          }
-        }
-      }
-   }
-    return null;
-  }
-
-  /**
-   * @returns The FIRST geoMap docPath property.
-   */
-  getGeoMapDocPath(): string {
-    return this.getMapConfig().geoMaps[0].properties.docPath;
-  }
-
-  /**
-   * @returns The geoMapId property from the FIRST geoMap in the map configuration.
-   */
-  getGeoMapID(): string { return this.geoMapID; }
-
-  /**
-   * @returns The name attribute to the FIRST geoMap in the geoMapProject.
-   */
-  getGeoMapName(): string {
-    if (this.mapConfig) {
-      if (this.mapConfig.geoMaps[0].name.length < 30) {
-        return this.mapConfig.geoMaps[0].name;
-      }
-      else return this.mapConfig.geoMaps[0].name.substring(0, 30) + '...';
-    }
-  }
 
   /**
    * @returns The file path as a string obtained from a graph template file that
@@ -870,12 +649,7 @@ export class OwfCommonService {
     );
   }
 
-  /**
-   * @returns An array of the geoLayerViewGroups from the FIRST geoMap.
-   */
-  getGeoLayerViewGroups(): IM.GeoLayerViewGroup[] {
-    return this.mapConfig.geoMaps[0].geoLayerViewGroups;
-  }
+  
 
   /**
    * @returns The layerError object, which contains any layer geoLayerId's of a
@@ -921,114 +695,6 @@ export class OwfCommonService {
    * @returns The upper level geoMapProject properties object.
    */
   getProperties(): {} { return this.mapConfig.properties; }
-
-  /**
-   * Returns the geoLayerView's refreshInterval property, converted to a number
-   * if it can be, and 0 if not.
-   * @param geoLayerId The geoLayerId to match with.
-   */
-  getRefreshInterval(geoLayerId: string): number {
-    // Obtain the refreshInterval string and convert to upper case.
-    var rawInterval: string = this.getGeoLayerView(geoLayerId).properties.refreshInterval.toUpperCase();
-    var splitInterval = rawInterval.split(' ');
-    var refreshInterval = 0;
-
-    // Iterate over each spaced item in the string and insert each number in the
-    // delayArr in the order HR, MIN, SEC.
-    for (var elem of splitInterval) {
-      if (elem.includes('H')) {
-        var hours = elem.split('H')[0];
-        refreshInterval += (+hours * 3600000)
-      } else if (elem.includes('MIN')) {
-        var minutes = elem.split('MIN')[0];
-        refreshInterval += (+minutes * 60000)
-      } else if (elem.includes("SEC")) {
-        var seconds = elem.split('SEC')[0];
-        refreshInterval += (+seconds * 1000)
-      } else if (!isNaN(+elem)) {
-        // The refreshInterval string is attempted to be converted to a number.
-        // The + is successful if the string contains only numeric characters, including
-        // periods, otherwise it returns NaN. Return the number given as seconds.
-        refreshInterval += (+elem * 1000);
-      }
-    }
-
-    if (refreshInterval < 30000) {
-      console.error('Refresh interval is less than 30 seconds, and must be greater. ' +
-      'Skipping layer refresh');
-      return NaN;
-    }
-
-    return refreshInterval;
-  }
-
-  /**
-   * Obtain and parse the refreshOffset property from the geoLayerView.
-   * @param geoLayerId 
-   * @param refreshInterval 
-   * @returns The offset in milliseconds, and 0 if none is given.
-   */
-  getRefreshOffset(geoLayerId: string, refreshInterval: number): number {
-    var rawOffset = this.getGeoLayerView(geoLayerId).properties.refreshOffset;
-    var refreshOffset = 0;
-
-    // If no offset is given, use the refresh interval and start from midnight.
-    if (!rawOffset) {
-      return this.setRefreshOffset(refreshInterval);
-    }
-    // If refreshOffset is given, use it starting at midnight to determine the offset.
-    else {
-      // Obtain the refreshOffset string and convert to upper case.
-      var rawOffset = rawOffset.toUpperCase();
-      var splitOffset = rawOffset.split(' ');
-
-      // Iterate over each spaced item in the string and insert each number in the
-      // delayArr in the order HR, MIN, SEC.
-      for (var elem of splitOffset) {
-        if (elem.includes('H')) {
-          var hours = elem.split('H')[0];
-          refreshOffset += (+hours * 3600000);
-        } else if (elem.includes('MIN')) {
-          var minutes = elem.split('MIN')[0];
-          refreshOffset += (+minutes * 60000);
-        } else if (elem.includes("SEC")) {
-          var seconds = elem.split('SEC')[0];
-          refreshOffset += (+seconds * 1000);
-        } else if (!isNaN(+elem)) {
-          // See comment for this line in refreshInterval() above.
-          refreshOffset += (+elem * 1000);
-        }
-      }
-      // If the offset is greater than 24 hours, let user know it must be less,
-      // and run the default.
-      if (refreshOffset > 86400000) {
-        console.error('Refresh interval is greater than 24 hours, and must be less. ' +
-        'Setting offset to midnight.');
-        return this.setRefreshOffset(refreshInterval);
-      }
-      // Finally, find the offset.
-      return this.setRefreshOffset(refreshInterval, refreshOffset);
-    }
-  }
-
-  /**
-   * @returns A geoLayerSymbol object from the geoLayerView whose geoLayerId matches
-   * with @param id.
-   * @param id The geoLayerId to match with.
-   */
-  getSymbolDataFromID(id: string): any {
-    var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
-    var geoLayerViewRet: any;
-
-    for (let geoLayerViewGroup of geoLayerViewGroups) {
-      for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-        if (geoLayerView.geoLayerId === id) {
-          geoLayerViewRet = geoLayerView.geoLayerSymbol;
-        }
-      }
-    }
-    return geoLayerViewRet;
-  }
 
   /**
    * Handles the HTTP operation that failed, and lets the app continue by returning
@@ -1538,38 +1204,6 @@ export class OwfCommonService {
   }
 
   /**
-   * 
-   * @param mapConfig 
-   */
-  setMapConfigTest(mapConfig: any): void {
-    this._mapConfig.next(Object.assign(this.mapConfigTest, mapConfig))
-  }
-
-  /**
-   * Iterates over each geoLayerViewGroup in the geoMap and pushes each geoLayerView's
-   * geoLayerId in the order they are given, so the InfoMapper knows the order in
-   * which they should be draw on the Leaflet map.
-   */
-  getMapConfigLayerOrder(): string[] {
-    var layerArray: string[] = [];
-
-    for (let geoMap of this.mapConfig.geoMaps) {
-      for (let geoLayerViewGroup of geoMap.geoLayerViewGroups) {
-        if (!geoLayerViewGroup.properties.isBackground ||
-        geoLayerViewGroup.properties.isBackground === 'false') {
-          for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
-            layerArray.push(geoLayerView.geoLayerId);
-          }
-        }
-      }
-    }
-    // Reverse the array here, since we'll start on the layer that should be at
-    // the bottom, bring it to the front of Leaflet map, move on to the layer that
-    // should be on top of the bottom layer, bring it to the front, and so on.
-    return layerArray.reverse();
-  }
-
-  /**
    * Sets the @var mapConfigPath to the path of the map configuration file in the
    * application.
    * @param path The path to set to.
@@ -1597,46 +1231,6 @@ export class OwfCommonService {
   setOriginalFeatureStyle(style: any): void { this.originalFeatureStyle = style; }
 
   /**
-   * Sets the amount of time in milliseconds for the rxjs timer function to wait before
-   * starting to refresh a layer on the map.
-   * @param refreshInterval The user provided refreshInterval from the map config file.
-   * @param refreshOffset The user provided refreshOffset from the map config file.
-   * @returns The number of milliseconds given to the rxjs timer to wait until the first
-   * refresh is run.
-   */
-  private setRefreshOffset(refreshInterval: number, refreshOffset?: number): number {
-    var d = new Date();
-    d.setHours(0, 0, 0, 0);
-    // The default offset, the most recent midnight.
-    var initial = d.getTime();
-    var now = Date.now();
-    // Use the user-provided refreshOffset to determine the offset needed to wait.
-    if (refreshOffset) {
-      var fullOffset = initial + refreshOffset;
-      if (fullOffset - now < 15000) {
-        fullOffset += refreshInterval;
-      }
-
-      return fullOffset - now;
-    }
-    // Use the refreshInterval to determine the offset.
-    else {
-      // Add the interval from midnight until it passes the time 'now'.
-      while (initial < now) {
-        initial += refreshInterval;
-      }
-      // If the offset is less than 15 seconds, add one more interval so the layer has
-      // been completely loaded.
-      if (initial - now < 15000) {
-        initial += refreshInterval;
-      }
-
-      return initial - now;
-    }
-    
-  }
-
-  /**
    * Sets the @var serverUnavailable with a key of @var geoLayerId to true.
    * @param geoLayerId The geoLayerId to compare to while creating the side bar
    */
@@ -1651,24 +1245,27 @@ export class OwfCommonService {
   setTSIDLocation(tsid: string): void { this.graphTSID = tsid; }
 
   /**
-   * 
-   * @param mapID 
-   * @returns 
+   * Iterates over all mainMenu and subMenu objects in the application configuration
+   * file and determines if the id property matches the provided Id given in the
+   * URL.
+   * @param urlId Id from the URL.
+   * @returns True if the Id present in the current URL matches an Id from the app
+   * config file, and false if not.
    */
-  validMapConfigMapID(mapID: string): boolean {
+  validID(urlId: string): boolean {
 
     for (let mainMenu of this.appConfig.mainMenu) {
       // If subMenus exist.
       if (mainMenu.menus) {
         for (let subMenu of mainMenu.menus) {
-          if (subMenu.id === mapID) {
+          if (subMenu.id === urlId) {
             return true;
           }
         }
       }
       // If no subMenus exist.
       else {
-        if (mainMenu.id === mapID) {
+        if (mainMenu.id === urlId) {
           return true;
         }
       }

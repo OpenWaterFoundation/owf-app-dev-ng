@@ -110,7 +110,7 @@ export class ChartService {
 
     let startDate: DateTime = timeSeries.getDate1();
     let endDate: DateTime = timeSeries.getDate2();
-    // The DateTime iterator for the the while loop.
+    // The DateTime iterator for the while loop.
     let iter: DateTime = startDate;
     // The index of the x_axisLabel array to push into the chartJS_yAxisData as
     // the x property.
