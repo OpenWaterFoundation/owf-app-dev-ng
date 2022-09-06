@@ -3,7 +3,6 @@ import { AfterViewInit,
           Inject,
           Input,
           OnDestroy,
-          ViewContainerRef,
           ViewEncapsulation }      from '@angular/core';
 import { DOCUMENT }                from '@angular/common';
 import { ActivatedRoute,

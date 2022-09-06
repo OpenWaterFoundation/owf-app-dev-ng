@@ -12,7 +12,7 @@ These elements will only be added if they are applicable for the new version. Ne
 versions will have the date of deployment after the version number, and will contain
 X's if the version is not yet released.
 
-# 4.1.0 (2022-08-XX) #
+# 4.1.0 (2022-08-30) #
 
 ### Bug Fixes ###
 
