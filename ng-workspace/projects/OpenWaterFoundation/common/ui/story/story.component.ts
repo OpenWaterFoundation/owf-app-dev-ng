@@ -8,8 +8,8 @@ import { first,
           Subject,
           takeUntil }          from 'rxjs';
 
-import { options,
-          fullpage_api }       from 'fullpage.js/dist/fullpage.extensions.min';
+// import { options,
+//           fullpage_api }       from 'fullpage.js/dist/fullpage.extensions.min';
 
 import { CommonLoggerService,
           OwfCommonService }   from '@OpenWaterFoundation/common/services';
@@ -23,13 +23,13 @@ import * as IM                 from '@OpenWaterFoundation/common/services';
 export class StoryComponent implements OnInit, OnDestroy {
 
   /** Options for fullpage creation. */
-  config: options;
+  config: any;
   /**
    * 
    */
   currentURL: string;
   /** Reference for the main fullpage object. */
-  fullpageAPI: fullpage_api;
+  fullpageAPI: any;
   /** Subject that is completed when this component is destroyed. The breakpoint
    * observer will stop listening to screen size at that time. */
   destroyed = new Subject<void>();
