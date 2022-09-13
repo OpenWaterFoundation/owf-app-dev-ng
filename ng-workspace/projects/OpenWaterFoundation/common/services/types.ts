@@ -706,7 +706,7 @@ export interface TSID {
   path?: string;
 }
 
-///////////////////////////// Telemetry Station \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+///////////////////////////// TELEMETRY STATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 export interface TelStation {
   abbrev: string;
@@ -790,6 +790,16 @@ export interface TelTimeSeries {
   measValue: number;
   modified: any;
   parameter: string;
+}
+
+/////////////////////////////////// TREE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+/**
+ * 
+ */
+export interface TreeNodeData {
+  name: string;
+  children?: TreeNodeData[];
 }
 
 /////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
