@@ -95,14 +95,14 @@ export class ColoradoHydroBaseRestDatastore {
   /**
    * 
    * @param commonService 
-   * @param serviceRootURI 
+   * @param datastore 
    */
-  constructor(private commonService: OwfCommonService, serviceRootURI: string) {
+  constructor(private commonService: OwfCommonService, datastore: IM.Datastore) {
 
     // this.setName (name);
     // this.setDescription (description);
-    this.setServiceRootURI (serviceRootURI);
-    this.setApiKey(commonService.getApiKey());
+    this.setServiceRootURI (datastore.rootUrl);
+    this.setApiKey(datastore.apiKey);
     // Determine the web service version.
     this.determineAPIVersion();
     // OK to initialize since no properties other than the main properties impact anything.

@@ -146,14 +146,13 @@ export enum Widget {
 
 /** The main AppConfig JSON object created by the user. */
 export interface AppConfig {
-  title?: string;
+  title: string;
   homePage: string;
+  version: string;
   favicon?: string;
   dataUnitsPath?: string;
   googleAnalyticsTrackingId?: string;
-  apiKey?: string;
   standaloneMap?: StandaloneMap;
-  version?: string;
   datastores?: Datastore[];
   mainMenu?: MainMenu[];
 }
@@ -697,6 +696,7 @@ export interface Datastore {
   type: string,
   rootUrl: string,
   aliases?: string[]
+  apiKey?: string;
 }
 
 /** A parsed full TSID string. */
@@ -795,9 +795,16 @@ export interface TelTimeSeries {
 /////////////////////////////////// TREE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /**
+ * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript
+ */
+export type TreeNode<T> = {
+  [key: string]: string | T[];
+}
+
+/**
  * 
  */
-export interface TreeNodeData {
+export interface TreeNodeData extends TreeNode<TreeNodeData> {
   name: string;
   children?: TreeNodeData[];
 }

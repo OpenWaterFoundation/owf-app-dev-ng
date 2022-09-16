@@ -19,12 +19,6 @@ export class DatastoreManager {
   // The hard coded 'built in' Datastores for the Common library.
   private readonly builtInDatastores: IM.Datastore[] = [
     {
-      name: "ColoradoHydroBaseRest",
-      type: "owf.datastore.ColoradoHydroBaseRest",
-      rootUrl: 'https://dwr.state.co.us/Rest/GET/api/v2',
-      aliases: []
-    },
-    {
       name: "Delimited",
       type: "owf.datastore.delimited",
       rootUrl: null,
@@ -84,7 +78,7 @@ export class DatastoreManager {
       case IM.DatastoreType.stateMod:
         return StateModDatastore.readTimeSeries(service, datastore, fullTSID);
       case IM.DatastoreType.ColoradoHydroBaseRest:
-        return new ColoradoHydroBaseRestDatastore(service, datastore.rootUrl).getAsyncData(fullTSID);
+        return new ColoradoHydroBaseRestDatastore(service, datastore).getAsyncData(fullTSID);
       case 'unknown':
       default:
         console.error("Unsupported datastore '" + fullTSID.datastore + "'.");
