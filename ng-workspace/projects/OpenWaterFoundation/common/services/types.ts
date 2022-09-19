@@ -795,6 +795,14 @@ export interface TelTimeSeries {
 /////////////////////////////////// TREE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /**
+ * 
+ */
+export interface MenuChoice {
+  nodeName: string;
+  menuChoice: string;
+}
+
+/**
  * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript
  */
 export type TreeNode<T> = {
