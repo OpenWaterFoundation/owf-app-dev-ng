@@ -795,14 +795,15 @@ export interface TelTimeSeries {
 /////////////////////////////////// TREE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /**
- * 
+ * Sent from each IM Builder node-menu component to the main Build component.
  */
 export interface MenuChoice {
+  choiceType: string;
   nodeName: string;
-  menuChoice: string;
 }
 
 /**
+ * Type to be used recursively by the TreeNodeData interface. Code found at:
  * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript
  */
 export type TreeNode<T> = {
@@ -810,7 +811,7 @@ export type TreeNode<T> = {
 }
 
 /**
- * 
+ * Used by the Angular Material Tree Control and Data Source in the IM Builder.
  */
 export interface TreeNodeData extends TreeNode<TreeNodeData> {
   name: string;
