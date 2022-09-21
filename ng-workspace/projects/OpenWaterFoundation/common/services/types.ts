@@ -304,12 +304,13 @@ export interface EventHandler {
 export interface MainMenu {
   id?: string;
   name?: string;
+  description?: string;
   action?: string;
   enabled?: any;
   dashboardFile?: string;
+  mapProject?: string;
   markdownFile?: string;
   storyFile?: string;
-  mapProject?: string;
   tooltip?: string;
   url?: string;
   visible?: any;
@@ -318,16 +319,17 @@ export interface MainMenu {
 
 /** The SubMenu JSON object created by the user. */
 export interface SubMenu {
-  name?:  string;
-  action?:  string;
   id?: string;
+  name?:  string;
+  description?: string;
+  action?:  string;
   enabled?: any;
   dashboardFile?: string;
   mapProject?: string;
   markdownFile?: string;
-  storyFile?: string;
   separatorBefore?: any;
   doubleSeparatorBefore?: any;
+  storyFile?: string;
   tooltip?: string;
   url?: string;
   visible?: any;
@@ -799,7 +801,7 @@ export interface TelTimeSeries {
  */
 export interface MenuChoice {
   choiceType: string;
-  nodeName: string;
+  node: TreeNodeData;
 }
 
 /**
@@ -807,14 +809,16 @@ export interface MenuChoice {
  * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript
  */
 export type TreeNode<T> = {
-  [key: string]: string | T[];
+  [key: string]: number | string | T[];
 }
 
 /**
  * Used by the Angular Material Tree Control and Data Source in the IM Builder.
  */
 export interface TreeNodeData extends TreeNode<TreeNodeData> {
+  level: string;
   name: string;
+  index: number;
   children?: TreeNodeData[];
 }
 
