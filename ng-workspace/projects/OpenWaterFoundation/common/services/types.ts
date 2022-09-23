@@ -819,6 +819,7 @@ export interface TreeNodeData extends TreeNode<TreeNodeData> {
   level: string;
   name: string;
   index: number;
+  parentIndex?: number;
   children?: TreeNodeData[];
 }
 
