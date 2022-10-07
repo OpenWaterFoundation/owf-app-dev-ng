@@ -694,9 +694,9 @@ export interface StoryChapters {
  * 
  */
 export interface Datastore {
-  name: string,
-  type: string,
-  rootUrl: string,
+  name?: string,
+  type?: string,
+  rootUrl?: string,
   aliases?: string[]
   apiKey?: string;
 }
@@ -801,7 +801,20 @@ export interface TelTimeSeries {
  */
 export interface MenuChoice {
   choiceType: string;
-  node: TreeNodeData;
+  node?: TreeNodeData;
+  flatNode?: TreeFlatNode;
+}
+
+/** A flat version of the TreeNode to be used with a flat Angular Material tree.
+ * Used for dragging and dropping the treen nodes. */
+export interface TreeFlatNode {
+  expandable?: boolean;
+  name?: string;
+  id?: string;
+  level: string;
+  flatLevel: number;
+  index?: number;
+  parentIndex?: number;
 }
 
 /**
@@ -818,6 +831,7 @@ export type TreeNode<T> = {
 export interface TreeNodeData extends TreeNode<TreeNodeData> {
   level: string;
   name: string;
+  id?: string;
   index: number;
   parentIndex?: number;
   children?: TreeNodeData[];
