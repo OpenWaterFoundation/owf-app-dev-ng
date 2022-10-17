@@ -801,8 +801,7 @@ export interface TelTimeSeries {
  */
 export interface MenuChoice {
   choiceType: string;
-  node?: TreeNodeData;
-  flatNode?: TreeFlatNode;
+  node: TreeFlatNode;
 }
 
 /** A flat version of the TreeNode to be used with a flat Angular Material tree.
@@ -811,10 +810,9 @@ export interface TreeFlatNode {
   expandable?: boolean;
   name?: string;
   id?: string;
-  level: string;
-  flatLevel: number;
-  index?: number;
-  parentIndex?: number;
+  level?: string;
+  saved?: boolean;
+  flatLevel?: number;
 }
 
 /**
@@ -822,7 +820,7 @@ export interface TreeFlatNode {
  * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript
  */
 export type TreeNode<T> = {
-  [key: string]: number | string | T[];
+  [key: string]: boolean | number | string | T[];
 }
 
 /**
@@ -832,8 +830,7 @@ export interface TreeNodeData extends TreeNode<TreeNodeData> {
   level: string;
   name: string;
   id?: string;
-  index: number;
-  parentIndex?: number;
+  saved?: boolean;
   children?: TreeNodeData[];
 }
 
