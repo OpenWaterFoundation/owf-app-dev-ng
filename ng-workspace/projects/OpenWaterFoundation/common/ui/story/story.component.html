@@ -16,7 +16,7 @@
           <div *ngFor="let chapter of storyConf.story.chapters" class="story-nav-menu-container">
             <li class="nav-item">
               <a mat-button class="nav-link" [attr.href]="currentURL + '#' + chapter.pages[0].metadata.id"
-              [matTooltip]="chapter.tooltip" [matTooltipShowDelay]="500" matTooltipPosition="left">
+              [matTooltip]="chapter.tooltip" [matTooltipShowDelay]="500" matTooltipPosition="below">
                 {{chapter.name}}
               </a>
             </li>		  

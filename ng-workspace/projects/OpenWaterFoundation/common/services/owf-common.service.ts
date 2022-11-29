@@ -355,10 +355,6 @@ export class OwfCommonService {
     } 
   }
 
-  getApiKey(): string {
-    return this.appConfig.apiKey;
-  }
-
   /**
    * @returns either 'assets/app/' if a user-provided configuration file is supplied,
    * or the default 'assets/app-default/' for the upper level assets path if none

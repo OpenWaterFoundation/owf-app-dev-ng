@@ -146,14 +146,13 @@ export enum Widget {
 
 /** The main AppConfig JSON object created by the user. */
 export interface AppConfig {
-  title?: string;
+  title: string;
   homePage: string;
+  version: string;
   favicon?: string;
   dataUnitsPath?: string;
   googleAnalyticsTrackingId?: string;
-  apiKey?: string;
   standaloneMap?: StandaloneMap;
-  version?: string;
   datastores?: Datastore[];
   mainMenu?: MainMenu[];
 }
@@ -305,12 +304,13 @@ export interface EventHandler {
 export interface MainMenu {
   id?: string;
   name?: string;
+  description?: string;
   action?: string;
   enabled?: any;
   dashboardFile?: string;
+  mapProject?: string;
   markdownFile?: string;
   storyFile?: string;
-  mapProject?: string;
   tooltip?: string;
   url?: string;
   visible?: any;
@@ -319,16 +319,17 @@ export interface MainMenu {
 
 /** The SubMenu JSON object created by the user. */
 export interface SubMenu {
-  name?:  string;
-  action?:  string;
   id?: string;
+  name?:  string;
+  description?: string;
+  action?:  string;
   enabled?: any;
   dashboardFile?: string;
   mapProject?: string;
   markdownFile?: string;
-  storyFile?: string;
   separatorBefore?: any;
   doubleSeparatorBefore?: any;
+  storyFile?: string;
   tooltip?: string;
   url?: string;
   visible?: any;
@@ -693,10 +694,11 @@ export interface StoryChapters {
  * 
  */
 export interface Datastore {
-  name: string,
-  type: string,
-  rootUrl: string,
+  name?: string,
+  type?: string,
+  rootUrl?: string,
   aliases?: string[]
+  apiKey?: string;
 }
 
 /** A parsed full TSID string. */
@@ -706,7 +708,7 @@ export interface TSID {
   path?: string;
 }
 
-///////////////////////////// Telemetry Station \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+///////////////////////////// TELEMETRY STATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 export interface TelStation {
   abbrev: string;
@@ -790,6 +792,58 @@ export interface TelTimeSeries {
   measValue: number;
   modified: any;
   parameter: string;
+}
+
+/////////////////////////////////// TREE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+/**
+ * Sent from each IM Builder node-menu component to the main Build component.
+ */
+export interface MenuChoice {
+  choiceType: string;
+  node: TreeFlatNode;
+}
+
+/** A flat version of the TreeNode to be used with a flat Angular Material tree.
+ * Used for dragging and dropping the treen nodes. */
+export interface TreeFlatNode {
+  expandable?: boolean;
+  name?: string;
+  id?: string;
+  level?: string;
+  saved?: boolean;
+  flatLevel?: number;
+}
+
+/**
+ * Type to be used recursively by the TreeNodeData interface. Code found at:
+ * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript
+ */
+export type TreeNode<T> = {
+  [key: string]: boolean | number | string | T[];
+}
+
+/**
+ * Used by the Angular Material Tree Control and Data Source in the IM Builder.
+ */
+export interface TreeNodeData extends TreeNode<TreeNodeData> {
+  level: string;
+  name: string;
+  id?: string;
+  saved?: boolean;
+  children?: TreeNodeData[];
+}
+
+/////////////////////////////////// FILE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+/**
+ * Used by application file explorer components.
+ */
+export interface FileNode {
+  id?: string;
+  isFolder: boolean;
+  name: string;
+  parent: string;
 }
 
 /////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
