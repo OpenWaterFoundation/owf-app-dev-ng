@@ -834,6 +834,18 @@ export interface TreeNodeData extends TreeNode<TreeNodeData> {
   children?: TreeNodeData[];
 }
 
+/////////////////////////////////// FILE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+/**
+ * Used by application file explorer components.
+ */
+export interface FileNode {
+  id?: string;
+  isFolder: boolean;
+  name: string;
+  parent: string;
+}
+
 /////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /**
