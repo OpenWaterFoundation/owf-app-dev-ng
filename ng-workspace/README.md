@@ -43,7 +43,6 @@ need to be updated only when updating Angular using `npx`.
 | **@angular/compiler** | The Angular compiler library. | Yes | `13.1.3` |
 | **@angular/core** | The Angular core framework. | Yes | `13.1.3` |
 | **@angular/elements** | A library for using Angular Components as Custom Elements. | Yes | `13.1.3` |
-| **@angular/flex-layout** | A layout API using Flexbox CSS + mediaQuery. | | `13.0.0-beta.38` |
 | **@angular/forms** | Directives & services for creating forms. | Yes | `13.1.3` |
 | **@angular/language-service** | Language services. | Yes | `13.1.3` |
 | **@angular/material** | Material Design components for Angular. | | `13.1.3` |
