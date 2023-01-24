@@ -13,7 +13,8 @@ import { SelectionModel }               from '@angular/cdk/collections';
 import booleanPointInPolygon            from '@turf/boolean-point-in-polygon';
 import bbox                             from '@turf/bbox';
 
-import { Subject, takeUntil }                      from 'rxjs';
+import { first, Subject,
+          takeUntil }                   from 'rxjs';
 
 import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
 import * as FileSaver                   from 'file-saver';
@@ -28,6 +29,7 @@ import { DialogService }                from '../dialog.service';
 import { WindowManager }                from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapLayerManager,
           MapLayerItem }                from '@OpenWaterFoundation/common/ui/layer-manager';
+import { HttpErrorResponse } from '@angular/common/http';
 // import * as L from 'leaflet';
 declare var L: any;
 
@@ -329,76 +331,79 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     var encodedAddress = filterAddress.replace(/ /g, '+').replace(/,/g, '%2c');
     // TODO: jpkeahey 2021.04.14 - This is using an OWF employee API key necessary for the query. What to do?
     var addressQuery = 'https://api.geocod.io/v1.6/geocode?q=' + encodedAddress + '&api_key=e794ffb42737727f9904673702993bd96707bf6';
-    this.commonService.getJSONData(addressQuery).subscribe((resultJSON: any) => {
-      if (resultJSON.results[0] === undefined) {
-        this.addressLat = -1;
-        this.addressLng = -1;
-      } else {
-        // Set the returned lat and long values so they can be used in the filter
-        // function. From GeoCodIO's documentation, use the first result in the
-        // array, as it will be the most accurate.
-        this.addressLat = resultJSON.results[0].location.lat;
-        this.addressLng = resultJSON.results[0].location.lng;
-      }
-      this.logger.print('trace', 'DialogDataTableComponent.filterByAddress - GeoCodIO result:',
-      this.debugFlag, this.debugLevelFlag);
-      this.logger.print('trace', resultJSON.results[0], this.debugFlag, this.debugLevelFlag);
+    this.commonService.getJSONData(addressQuery).pipe(first()).subscribe({
+      next: (geoCodeResponse: any) => {
 
-      // Call the filter function for addresses. The user given input itself won't
-      // be used, but this is how the function is called. Set the data rows to show
-      // by using the filtered data.
-      this.attributeTable.filter = filterAddress.trim().toUpperCase();
-      this.matchedRows = this.attributeTable.filteredData.length;
-      
-      // This uses type casting so that a 'correct' GeoJsonObject is created for
-      // the L.geoJSON function.
-      // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37370#issuecomment-577504151
-      var geoJsonObj = {
-        type: "FeatureCollection" as const,
-        bbox: [],
-        features: []
-      };
+        // Call the filter function for addresses. The user given input itself won't
+        // be used, but this is how the function is called. Set the data rows to show
+        // by using the filtered data.
+        this.attributeTable.filter = filterAddress.trim().toUpperCase();
+        this.matchedRows = this.attributeTable.filteredData.length;
 
-      // Iterate through each feature in the layer
-      // this.currentLayer.eachLayer((featureLayer: any) => {
-                
-      //   if (booleanPointInPolygon([this.addressLng, this.addressLat], featureLayer.feature.geometry) === true) {
-      //     geoJsonObj.features.push(featureLayer.feature);
-      //   }
-      // });
-
-      // Iterate over the array of filtered features from the data table, and if
-      // the address is found in one, add it to the map and push it into the geoJson
-      // object to be used for selecting and styling the feature it's in.
-      this.attributeTable.filteredData.forEach((feature: any) => {
-        if (booleanPointInPolygon([this.addressLng, this.addressLat], feature.geometry) === true) {
-          // Create and add the Marker and tooltip to the map.
-          var defaultIcon = L.icon({
-            className: 'selectedMarker',
-            iconUrl: 'assets/app/img/default-marker-25x41.png',
-            iconAnchor: [12, 41]
-          });
-          var addressMarker = L.marker([this.addressLat, this.addressLng], { icon: defaultIcon }).addTo(this.mainMap);
-          addressMarker.bindTooltip(resultJSON.results[0].formatted_address, {
-            className: 'address-marker',
-            direction: 'right',
-            permanent: true
-          });
-          // Obtain the MapLayerItem for this layer and the created selected layer to it.
-          var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
-          layerItem.addAddressMarker(addressMarker);
-          this.addressMarkerDisplayed = true;
-          // Add it to the geoJson object.
-          geoJsonObj.features.push(feature);
+        if (geoCodeResponse instanceof HttpErrorResponse) {
+          console.log('Filter:', this.attributeTable.filter);
+          console.log('Filtered data:', this.attributeTable.filteredData);
+          return;
         }
-      });
+        
+        if (geoCodeResponse.results[0] === undefined) {
+          this.addressLat = -1;
+          this.addressLng = -1;
+        } else {
+          // Set the returned lat and long values so they can be used in the filter
+          // function. From GeoCodIO's documentation, use the first result in the
+          // array, as it will be the most accurate.
+          this.addressLat = geoCodeResponse.results[0].location.lat;
+          this.addressLng = geoCodeResponse.results[0].location.lng;
+        }
+        this.logger.print('trace', 'DialogDataTableComponent.filterByAddress - GeoCodIO result:',
+        this.debugFlag, this.debugLevelFlag);
+        this.logger.print('trace', geoCodeResponse.results[0], this.debugFlag, this.debugLevelFlag);
+        
+        // This uses type casting so that a 'correct' GeoJsonObject is created for
+        // the L.geoJSON function.
+        // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37370#issuecomment-577504151
+        var geoJsonObj = {
+          type: "FeatureCollection" as const,
+          bbox: [],
+          features: []
+        };
+  
+        // Iterate over the array of filtered features from the data table, and if
+        // the address is found in one, add it to the map and push it into the geoJson
+        // object to be used for selecting and styling the feature it's in.
+        this.attributeTable.filteredData.forEach((feature: any) => {
+          if (booleanPointInPolygon([this.addressLng, this.addressLat], feature.geometry) === true) {
+            // Create and add the Marker and tooltip to the map.
+            var defaultIcon = L.icon({
+              className: 'selectedMarker',
+              iconUrl: 'assets/app/img/default-marker-25x41.png',
+              iconAnchor: [12, 41]
+            });
+            var addressMarker = L.marker([this.addressLat, this.addressLng], { icon: defaultIcon }).addTo(this.mainMap);
+            addressMarker.bindTooltip(geoCodeResponse.results[0].formatted_address, {
+              className: 'address-marker',
+              direction: 'right',
+              permanent: true
+            });
+            // Obtain the MapLayerItem for this layer and the created selected layer to it.
+            var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
+            layerItem.addAddressMarker(addressMarker);
+            this.addressMarkerDisplayed = true;
+            // Add it to the geoJson object.
+            geoJsonObj.features.push(feature);
+          }
+        });
+  
+        // Check to see if anything was actually found.
+        if (geoJsonObj.features.length > 0) {
+          // Create the selected layer.
+          this.createSelectedLeafletClass(geoJsonObj);
+        }
 
-      // Check to see if anything was actually found.
-      if (geoJsonObj.features.length > 0) {
-        // Create the selected layer.
-        this.createSelectedLeafletClass(geoJsonObj);
       }
     });
+
   }
 
   /**

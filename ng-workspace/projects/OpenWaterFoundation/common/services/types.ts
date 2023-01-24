@@ -867,6 +867,27 @@ export interface ChartDialog {
   graphTemplate: GraphTemplate;
 }
 
+/**
+ * 
+ */
+export interface ParamAccountValues {
+  accountPath?: string;
+  accountType?: string;
+  accountName?: string;
+  region?: string;
+  userPoolId?: string;
+  userPoolClientId?: string;
+}
+
+/**
+ * 
+ */
+export interface ParamAccount {
+  slug?: string;
+  values?: ParamAccountValues;
+}
+
+
 /** Can be returned from the obtainPropertiesFromLine() method. Used for searching
  * through all found ${} properties in a string. */
 export interface ParsedProp {
