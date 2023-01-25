@@ -228,7 +228,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
           this.matchedRows = this.attributeTable.filteredData.length;
 
           this.highlightFeatures();
-        } else if (this.searchType === 'address') {
+        }
+        else if (this.searchType === 'address') {
           const filterValue = (event.target as HTMLInputElement).value;
           this.prevSearch = filterValue;
           // Search for an address using the geocodio service.
@@ -237,7 +238,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
 
       }
     }
-    return;
   }
 
   /** The label for the checkbox on the passed row
@@ -334,15 +334,8 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     this.commonService.getJSONData(addressQuery).pipe(first()).subscribe({
       next: (geoCodeResponse: any) => {
 
-        // Call the filter function for addresses. The user given input itself won't
-        // be used, but this is how the function is called. Set the data rows to show
-        // by using the filtered data.
-        this.attributeTable.filter = filterAddress.trim().toUpperCase();
-        this.matchedRows = this.attributeTable.filteredData.length;
-
         if (geoCodeResponse instanceof HttpErrorResponse) {
-          console.log('Filter:', this.attributeTable.filter);
-          console.log('Filtered data:', this.attributeTable.filteredData);
+          this.attributeTable.filter = '';
           return;
         }
         
@@ -359,6 +352,13 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         this.logger.print('trace', 'DialogDataTableComponent.filterByAddress - GeoCodIO result:',
         this.debugFlag, this.debugLevelFlag);
         this.logger.print('trace', geoCodeResponse.results[0], this.debugFlag, this.debugLevelFlag);
+
+        // Call the filter function for addresses. Set the data rows to show by using
+        // the filtered data. This uses the custom filter predicate function in updateFilterAlgorithm,
+        // and therefore must be called after the setting of the class variables
+        // for lat and long set above.
+        this.attributeTable.filter = filterAddress.trim().toUpperCase();
+        this.matchedRows = this.attributeTable.filteredData.length;
         
         // This uses type casting so that a 'correct' GeoJsonObject is created for
         // the L.geoJSON function.
