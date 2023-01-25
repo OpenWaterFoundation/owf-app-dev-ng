@@ -97,12 +97,12 @@ screen. -->
             <p *ngIf="searchType === 'columns'">
               <br>No data matched the filter "<strong>{{input.value}}</strong>"
               <br><br>Did you intend to search using an address? If so, select
-              <strong>Search using address</strong> and press <strong>Enter</strong>.
+              <strong>Search using address</strong> and run the filter again.
             </p>
             <p *ngIf="searchType === 'address'">
               <br>No address matched the filter "<strong>{{input.value}}</strong>"
               <br><br>Did you intend to search the data? If so, select
-              <strong>Search layer data</strong> and press <strong>Enter</strong>.
+              <strong>Search layer data</strong> and run the filter again.
               <br>Matches will only be found if the address location is within a polygon for the layer.
             </p>
           </td>

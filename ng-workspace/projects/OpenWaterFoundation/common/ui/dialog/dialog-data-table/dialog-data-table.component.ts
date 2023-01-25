@@ -40,28 +40,29 @@ declare var L: any;
   styleUrls: ['./dialog-data-table.component.css', '../main-dialog-style.css']
 })
 export class DialogDataTableComponent implements OnInit, OnDestroy {
+
   /** The filtered address latitude. */
-  public addressLat: number;
+  addressLat: number;
   /** The filtered address longitude. */
-  public addressLng: number;
+  addressLng: number;
   /** The Leaflet Marker object for displaying when an address is filtered on the
    * map. */
-  public addressMarker: any;
+  addressMarker: any;
   /** Whether an address marker is currently being displayed on the map. */
-  public addressMarkerDisplayed: boolean;
+  addressMarkerDisplayed: boolean;
   /** Holds all features in the layer for determining if an address resides in a
    * polygon. */
-  public allLayerFeatures: any;
+  allLayerFeatures: any;
   /** The original object containing all features in the layer. */
-  public attributeTableOriginal: any;
+  attributeTableOriginal: any;
   /** The copied object for displaying data a Material Table's cells. Is an instance
    * of TableVirtualScrollDataSource, needed for using the third party virtual scrolling
    * with an Angular Material Table. It extends the Angular Material DataSource class. */
-  public attributeTable: TableVirtualScrollDataSource<any>;
+  attributeTable: TableVirtualScrollDataSource<any>;
   /**
    * 
    */
-  public currentLayer: any;
+  currentLayer: any;
   /** Can be set to `true` if the debug query parameter is given for debugging purposes,
    * otherwise will be null. */
   debugFlag: string = null;
@@ -72,59 +73,57 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     * less in-depth debugging. */
   debugLevelFlag: string = null;
   /** Used to determine which matInputFilterText option to display. */
-  public defaultRadioDisabled = true;
+  defaultRadioDisabled = true;
 
   destroyed = new Subject<void>();
   /** Array containing the names of all header columns in the Material Table. */
-  public displayedColumns: string[];
+  displayedColumns: string[];
   /** EventEmitter that alerts the Map component (parent) that an update has happened,
    * and sends the basin name. */
   @Output() featureHighlighted = new EventEmitter<boolean>();
   /** The layer's geoLayer. */
-  public geoLayer: any;
+  geoLayer: any;
   /** The layer's geoLayerView. */
-  public geoLayerView: any;
+  geoLayerView: any;
   /** Object containing the layer geoLayerId as the ID, and an object of properties
    * set by a user-defined classification file. */
-  public layerClassificationInfo: any;
+  layerClassificationInfo: any;
   /** Object containing the URL as the key and value, so each link is unique. Used
    * by the template file to use as the link's href. */
-  public links: {} = {};
+  links: {} = {};
   /** The reference to the Map Component's this.mainMap; the Leaflet map. */
-  public mainMap: any;
+  mainMap: any;
   /**
    * 
    */
-  public mapConfigPath: string;
+  mapConfigPath: string;
   /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
    * objects with Leaflet layers and other layer data for displaying, ordering,
    * and highlighting. */
-  public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
+  mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
   /** Used by the template file to display how many features are highlighted on
    * the map. */
-  public matchedRows: number;
+  matchedRows: number;
   /** Dynamic string to show in the filter input area to a user. Default is set
    * on initialization. */
-  public matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
+  matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
   /**
    * 
    */
-  public originalStyle: any;
-  /** Holds the string that was previously entered by the user. */
-  private prevSearch = '';
+  originalStyle: any;
   /**
    * The type of search the filter is currently performing. Can be:
    * * `columns`
    * * `address`
    */
-  public searchType = 'columns';
+  searchType = 'columns';
   /** This layer's selectedLayer that extends the Leaflet L.geoJSON class. Highlights
    * and displays under selected features, and resets/hides them. */
-  public selectedLayer: any;
+  selectedLayer: any;
   /** Object containing the geoLayerId as the key, and the selectedLayer object.
    * If the geoLayerId exists in this object, it means the layer's features can
    * be highlighted. */
-  public selectedLayers: any;
+  selectedLayers: any;
   /** Number to be assigned uniquely to a selected feature layer id. */
   private selectedLeafletID = Number.MAX_SAFE_INTEGER;
   // TODO: jpkeahey 2020.10.27 - Commented out. Will be used for row selection
@@ -133,13 +132,13 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   // public selectedRows = 0;
   /** Object needed to show and deal with the checkboxes on the data table when
    * selecting each row in the Material Table. */
-  public selection: SelectionModel<any>;
+  selection: SelectionModel<any>;
   /** A unique string representing the windowID of this Dialog Component in the
    * WindowManager. */
-  public windowID: string;
+  windowID: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogDataTableComponent. */
   faXmark = faXmark;
   faMagnifyingGlassPlus = faMagnifyingGlassPlus;
@@ -151,12 +150,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
    * @param dataObject The object containing data passed from the Component that created this Dialog.
    */
-  constructor(private actRoute: ActivatedRoute,
-  private dialogService: DialogService,
-  private logger: CommonLoggerService,
-  public commonService: OwfCommonService,
-  public dialog: MatDialog,
-  public dialogRef: MatDialogRef<DialogDataTableComponent>,
+  constructor(private actRoute: ActivatedRoute, public commonService: OwfCommonService,
+  public dialog: MatDialog, public dialogRef: MatDialogRef<DialogDataTableComponent>,
+  private dialogService: DialogService, private logger: CommonLoggerService,
   @Inject(MAT_DIALOG_DATA) public dataObject: any) {
 
     this.attributeTable = new TableVirtualScrollDataSource(dataObject.data.allFeatures.features);
@@ -184,36 +180,16 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * Applies the necessary trimming to a filter query from the user.
    * @param event The event passed when a DOM event is detected (user inputs into filter field)
    */
-  public applyFilter(event: KeyboardEvent) {
+  applyFilter(event: KeyboardEvent) {
     var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
 
-    // TODO jpkeahey 2021.05.17 - This will check to see if the filter value changed. It might be used in the future for 
-    // query suppression.
-    // if ((event.target as HTMLInputElement).value === this.prevSearch) {
-    //   return;
-    // }
-
-    // If the keyup event is an empty string, then the user has either selected
-    // text and deleted it, or backspaced until the search field is empty. In that
-    // case, do the table search and if the selected layer exists, reset the highlighting.
+    // Keyup event is empty. Reset the filter and remove all selected layers.
     if ((event.target as HTMLInputElement).value === '') {
-      const filterValue = (event.target as HTMLInputElement).value;
-      this.prevSearch = filterValue;
-      this.attributeTable.filter = filterValue.trim().toUpperCase();
-      this.matchedRows = this.attributeTable.data.length;
-      
-      if (this.selectedLayer) {
-        layerItem.removeAllSelectedLayers(this.mainMap);
-        this.selectedLayer = undefined;
-        this.addressMarkerDisplayed = false;
-      }
+      this.resetFilterAndSelectedLayers((event.target as HTMLInputElement).value);
     }
-    // If the keyup event is not empty, attempt to populate the selectedLayer object.
-    // If the Enter key was not pressed by the user, then don't do anything else.
-    // If the Enter key was pressed, check if the selected layer exists, and highlight
-    // the correct features if it does. This should hopefully help with large datasets,
-    // as it only checks when enter is pressed, and not for every letter that the
-    // keyup is detected.
+    // The keyup event is not empty, attempt to populate the selectedLayer object.
+    // If either Enter key was pressed, check if the selected layer exists, and highlight
+    // the correct features.
     else {
       if (event.code && (event.code.toUpperCase() === 'ENTER' || event.code.toUpperCase() === 'NUMPADENTER')) {
         // Check if any selected layers need to be removed first.
@@ -223,7 +199,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
 
         if (this.searchType === 'columns') {
           const filterValue = (event.target as HTMLInputElement).value;
-          this.prevSearch = filterValue;
           this.attributeTable.filter = filterValue.trim().toUpperCase();
           this.matchedRows = this.attributeTable.filteredData.length;
 
@@ -231,7 +206,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
         }
         else if (this.searchType === 'address') {
           const filterValue = (event.target as HTMLInputElement).value;
-          this.prevSearch = filterValue;
           // Search for an address using the geocodio service.
           this.filterByAddress(filterValue);
         }
@@ -244,7 +218,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * @param row Optional row argument if naming a table cell. Not given if table header cell
    * NOTE: Not currently in use
    */
-  public checkboxLabel(row?: any): string {
+  checkboxLabel(row?: any): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -257,7 +231,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * @param geoJsonObj The geoJson object created to be given to the L.geoJSON
    * class to create a selected geoJson layer.
    */
-   private createSelectedLeafletClass(geoJsonObj: any): void {
+  private createSelectedLeafletClass(geoJsonObj: any): void {
 
     if (geoJsonObj.features[0].geometry.type.toUpperCase().includes('POLYGON')) {
       var symbolWeight = (
@@ -335,7 +309,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
       next: (geoCodeResponse: any) => {
 
         if (geoCodeResponse instanceof HttpErrorResponse) {
-          this.attributeTable.filter = '';
+          this.addressLat = -1;
+          this.addressLng = -1;
+          this.attributeTable.filter = filterAddress;
           return;
         }
         
@@ -412,7 +388,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * one. Also truncates any URL's, since they tend to be longer and don't play
    * well with the fixed length of the table columns.
    */
-   private formatAttributeTable(): void {
+  private formatAttributeTable(): void {
 
     for (let feature of this.attributeTable.data) {
       for (let property in feature.properties) {
@@ -494,7 +470,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * Whether the number of selected elements matches the total number of rows.
    * NOTE: Not currently in use
   */
-  public isAllSelected(): boolean {
+  isAllSelected(): boolean {
     // If a filter has been done, check to see if all of them have been selected
     if (this.attributeTable.filteredData.length > 0) {
       const numSelected = this.selection.selected.length;
@@ -514,7 +490,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * Selects all rows, or all filtered rows, if they are not all selected; otherwise clear selection.
    * NOTE: Not currently in use
   */
-  public masterToggle(): void {
+  masterToggle(): void {
     if (this.isAllSelected()) {
       this.selection.clear();
       // this.selectedRows = 0;
@@ -531,6 +507,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * 
+   */
   ngOnInit(): void {
 
     this.actRoute.paramMap.pipe(takeUntil(this.destroyed)).subscribe(() => {
@@ -551,7 +530,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * link is clicked on in the dialog that opens a new map, make sure to close the
    * dialog and remove it from the window manager.
    */
-   public ngOnDestroy(): void {
+  ngOnDestroy(): void {
 
     this.destroyed.next();
     this.destroyed.complete();
@@ -563,16 +542,34 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-  public onClose(): void {
+  onClose(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
+  }
+
+  /**
+   * 
+   * @param filterValue 
+   * @param layerItem 
+   */
+  private resetFilterAndSelectedLayers(filterValue: string): void {
+    var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
+
+    this.attributeTable.filter = filterValue.trim().toUpperCase();
+    this.matchedRows = this.attributeTable.data.length;
+    
+    if (this.selectedLayer) {
+      layerItem.removeAllSelectedLayers(this.mainMap);
+      this.selectedLayer = undefined;
+      this.addressMarkerDisplayed = false;
+    }
   }
 
   /**
    * When the Download button is clicked in the data table dialog, save the table
    * as a CSV file.
    */
-  public saveDataTable(): void {
+  saveDataTable(): void {
 
     var textToSave = '';
     var propertyIndex = 0;
@@ -636,24 +633,17 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * Toggles the Data Table input search field text when the option for multiple
    * radio buttons are shown and clicked.
    */
-  public toggleSearchInfo() {
+  toggleSearchInfo() {
 
-    // if (this.defaultRadioDisabled === true) {
-    //   this.defaultRadioDisabled = false;
-    //   this.matInputFilterText = 'Filter by an address. Press Enter to execute the filter.'
-    // } else if (this.defaultRadioDisabled === false) {
-    //   this.defaultRadioDisabled = true;
-    //   this.matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
-    // }
-    
+    this.resetFilterAndSelectedLayers('');
+
     if (this.searchType === 'columns') {
       this.defaultRadioDisabled = true;
-      this.matInputFilterText = 'Filter by an address. Press Enter to execute the filter.'
+      this.matInputFilterText = 'Filter by an address. Press Enter to execute the filter.';
     } else if (this.searchType === 'address') {
       this.defaultRadioDisabled = false;
       this.matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
     }
-    
   }
 
   /**
@@ -662,7 +652,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * @param row 
    * NOTE: Not currently in use
    */
-  public updateClickedRow(event: MouseEvent, row: any): void {
+  updateClickedRow(event: MouseEvent, row: any): void {
     event.stopPropagation();
     if (this.selection.isSelected(row)) {
       // --this.selectedRows;
@@ -719,7 +709,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * Uses the Leaflet-provided flyTo() method to use an animation that zooms in
    * to the current address latitude and longitude.
    */
-  public zoomToAddress(): void {
+  zoomToAddress(): void {
     this.mainMap.flyTo([this.addressLat, this.addressLng], 16,
       {
         duration: 3
@@ -730,7 +720,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    * When the kebab Zoom button is clicked on, get the correct coordinate bounds
    * and zoom to them on the Leaflet map.
    */
-  public zoomToFeatures(): void {
+  zoomToFeatures(): void {
     // Create the Bounds object that will be overridden and used for the feature
     // bounds to zoom in on.
     var bounds: IM.Bounds = {
