@@ -12,6 +12,24 @@ These elements will only be added if they are applicable for the new version. Ne
 versions will have the date of deployment after the version number, and will contain
 X's if the version is not yet released.
 
+# 4.2.0 #
+
+### Bug Fixes ###
+
+* Fixed a bug when toggling between searching for something in either data or an
+address, including how errors are handled when searching for an address and vice
+versa.
+
+### Refactoring ###
+
+* Changed wording in a data table when a user searches for something that doesn't
+exist in either the data itself, or an error response from GeoCodio is returned for
+an address search.
+
+### Features / Enhancements ###
+
+* Added the `ParamAccount` and `ParamAccountValues` types.
+
 # 4.1.0 (2022-08-30) #
 
 ### Bug Fixes ###

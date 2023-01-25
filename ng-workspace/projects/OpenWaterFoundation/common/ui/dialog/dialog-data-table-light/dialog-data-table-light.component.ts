@@ -60,8 +60,6 @@ export class DialogDataTableLightComponent implements OnInit {
   public matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
 
   public originalStyle: any;
-  /** Holds the string that was previously entered by the user. */
-  private prevSearch = '';
   /**
    * The type of search the filter is currently performing. Can be:
    * * `columns`
@@ -119,18 +117,10 @@ export class DialogDataTableLightComponent implements OnInit {
   public applyFilter(event: KeyboardEvent) {
     var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
 
-    // TODO jpkeahey 2021.05.17 - This will check to see if the filter value changed. It might be used in the future for 
-    // query suppression.
-    // if ((event.target as HTMLInputElement).value === this.prevSearch) {
-    //   return;
-    // }
-    
-
     // If the keyup event is an empty string, then the user has either selected text and deleted it, or backspaced until the
     // search field is empty. In that case, do the table search and if the selected layer exists, reset the highlighting.
     if ((event.target as HTMLInputElement).value === '') {
       const filterValue = (event.target as HTMLInputElement).value;
-      this.prevSearch = filterValue;
       this.attributeTable.filter = filterValue.trim().toUpperCase();
       this.matchedRows = this.attributeTable.data.length;
     }
@@ -143,7 +133,6 @@ export class DialogDataTableLightComponent implements OnInit {
 
         if (this.searchType === 'columns') {
           const filterValue = (event.target as HTMLInputElement).value;
-          this.prevSearch = filterValue;
           this.attributeTable.filter = filterValue.trim().toUpperCase();
           this.matchedRows = this.attributeTable.filteredData.length;
         }
