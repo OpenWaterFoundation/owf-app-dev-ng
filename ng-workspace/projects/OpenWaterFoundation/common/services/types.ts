@@ -1,7 +1,6 @@
 // The interfaces and enums below are typed for use throughout the common library
 // as well as the ability to be utilized by outside consuming applications.
 
-import { DateTime }        from "@OpenWaterFoundation/common/util/time";
 import { BehaviorSubject } from "rxjs";
 
 // ENUM
@@ -155,6 +154,7 @@ export interface AppConfig {
   standaloneMap?: StandaloneMap;
   datastores?: Datastore[];
   mainMenu?: MainMenu[];
+  keywords?: KeywordPage;
 }
 
 //////////////////////// GEOMAPPROJECT / MAP CONFIG \\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -816,14 +816,6 @@ export interface TreeFlatNode {
 }
 
 /**
- * Type to be used recursively by the TreeNodeData interface. Code found at:
- * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript
- */
-export type TreeNode<T> = {
-  [key: string]: boolean | number | string | T[];
-}
-
-/**
  * Used by the Angular Material Tree Control and Data Source in the IM Builder.
  */
 export interface TreeNodeData extends TreeNode<TreeNodeData> {
@@ -844,6 +836,23 @@ export interface FileNode {
   isFolder: boolean;
   name: string;
   parent: string;
+}
+
+////////////////////////////////// SEARCH \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+/**
+ * 
+ */
+export interface Keyword {
+  word: string;
+  score: number;
+}
+
+/**
+ * Used for ranking global searches in applications.
+ */
+export interface KeywordPage {
+  [key: string]: Keyword[];
 }
 
 /////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -895,6 +904,17 @@ export interface ParsedProp {
   line: string;
 }
 
+/**
+ * 
+ */
 export interface StandaloneMap {
   mapProject: string;
+}
+
+/**
+ * Type to be used recursively by the TreeNodeData interface. Code found at:
+ * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript
+ */
+export type TreeNode<T> = {
+  [key: string]: boolean | number | string | T[];
 }

@@ -1689,8 +1689,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     var _this = this;
 
     var isMobile = (this.currentScreenSize === Breakpoints.XSmall ||
-    this.currentScreenSize === Breakpoints.Small ||
-    this.currentScreenSize === Breakpoints.Medium);
+    this.currentScreenSize === Breakpoints.Small);
     
     // Create the sidebar instance and add it to the map. 
     var sidebar = L.control.sidebar({
