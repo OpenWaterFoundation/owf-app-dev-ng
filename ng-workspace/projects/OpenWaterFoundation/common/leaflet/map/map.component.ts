@@ -2157,6 +2157,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   /**
   * This function is called on initialization of the map component, after the constructor.
+  * Use the following in the URL to show more debug messages: ?debug=true&debugLevel=trace
   */
   public ngAfterViewInit() {
 
