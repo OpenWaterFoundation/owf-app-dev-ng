@@ -170,7 +170,8 @@ export interface GeoMapProject {
     specificationFlavor?: string;
     specificationVersion?: string;
   };
-  geoMaps?: GeoMap[]
+  keywords: string[];
+  geoMaps?: GeoMap[];
 }
 /** The GeoMap JSON object created by the GeoProcessor. */
 export interface GeoMap {
