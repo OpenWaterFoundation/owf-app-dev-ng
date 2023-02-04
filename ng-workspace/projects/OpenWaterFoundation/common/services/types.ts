@@ -856,6 +856,39 @@ export interface KeywordPage {
   [key: string]: Keyword[];
 }
 
+/**
+ * 
+ */
+export interface SearchItem {
+  name: string;
+  text: string;
+}
+
+/**
+ * 
+ */
+export interface SearchItemMetadata {
+  routerPath: string;
+  type: string;
+}
+
+/**
+ * 
+ */
+export interface SearchItemsMetadata {
+  [key: string]: SearchItemMetadata;
+}
+
+/**
+ * 
+ */
+export interface SearchResultsDisplay {
+  page: string;
+  totalScore: number;
+  routerPath: string;
+  type: string;
+}
+
 /////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /**
