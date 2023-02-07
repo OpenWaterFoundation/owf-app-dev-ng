@@ -154,7 +154,6 @@ export interface AppConfig {
   standaloneMap?: StandaloneMap;
   datastores?: Datastore[];
   mainMenu?: MainMenu[];
-  keywords?: KeywordPage;
 }
 
 //////////////////////// GEOMAPPROJECT / MAP CONFIG \\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -170,7 +169,7 @@ export interface GeoMapProject {
     specificationFlavor?: string;
     specificationVersion?: string;
   };
-  keywords: string[];
+  keywords?: string[];
   geoMaps?: GeoMap[];
 }
 /** The GeoMap JSON object created by the GeoProcessor. */
@@ -860,8 +859,9 @@ export interface KeywordPage {
  * 
  */
 export interface SearchItem {
-  name: string;
-  text: string;
+  title: string;
+  text?: string;
+  keywords?: string;
 }
 
 /**
