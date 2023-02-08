@@ -37,11 +37,6 @@ https://fontawesome.com/docs/web/add-icons/pseudo-elements#set-pseudo-elements-t
   text-align: center;
 }
 
-/* Styles the geoMap name property on the side panel. */
-.geoMap-title {
-  float: left;
-}
-
 /* Styling for the <div> around the geoMap Doc Dialog information button used from
 the docPath configuration property. */
 .geoMap-doc-button {
@@ -52,12 +47,24 @@ the docPath configuration property. */
 /* Styling for the geoMap Doc Dialog information button used from the docPath
 configuration property. */
 .geoMap-info-circle {
-  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Styles the geoMap Doc Dialog information icon when the button is hovered over. */
 .geoMap-info-circle:hover .fa-info-circle {
   color: rgb(243, 243, 243);
+}
+
+/*  */
+.geoMap-title {
+  font-size: 20px;
+}
+
+/* Styles the geoMap name property on the side panel. */
+.geoMap-title-container {
+  float: left;
 }
 
 /* Styles the leaflet tooltip box that is static on the map. Used for an Image Gallery,
