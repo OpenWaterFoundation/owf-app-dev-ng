@@ -243,8 +243,9 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   * @param geoName The geoMap, geoLayerViewGroup, or geoLayerView name property.
   */
   openDocDialog(docPath: string, geoId: string, geoName: string): void {
+
     var windowID = geoId + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+    if (!this.windowManager.addWindow(windowID, WindowType.DOC)) {
       return;
     }
 
@@ -274,8 +275,6 @@ export class LegendLayerGroupComponent implements AfterViewInit {
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
         DialogDocComponent, this.createDialogConfig(dialogConfigData)
       );
-
-      this.windowManager.addWindow(windowID, WindowType.DOC);
     });
   }
 

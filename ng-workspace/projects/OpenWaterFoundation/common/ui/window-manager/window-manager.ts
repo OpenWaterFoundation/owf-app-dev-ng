@@ -13,7 +13,7 @@ export class WindowManager {
    * The number of the window that's been opened, starting at 0.
    * NOTE: Not currently being used.
    */
-  private windowNumber = 0;
+  private dialogNumber = 0;
   /**
    * The instance of this WindowManager object.
    */
@@ -33,9 +33,17 @@ export class WindowManager {
   /**
    * Only one instance of this WindowManager can be used at one time, making it a singleton Class.
    */
-  public static getInstance(): WindowManager {
+  static getInstance(): WindowManager {
     if (!WindowManager.instance) { WindowManager.instance = new WindowManager(); }
     return WindowManager.instance;
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  get queryParamKey(): string {
+    return 'dialog' + (++this.dialogNumber);
   }
 
   /**
@@ -44,29 +52,39 @@ export class WindowManager {
    * @param type The Window Type being created.
    * @param dialogRef An optional reference to the dialog object created.
    */
-  public addWindow(windowID: string, type: WindowType, dialogRef?: MatDialogRef<any>): void {
+  addWindow(windowID: string, type: WindowType, dialogRef?: MatDialogRef<any>): any {
+
+    console.log('Current windows before add:', this.getWindows());
+    if (this.windowExists(windowID)) {
+      return false;
+    }
+
     var window = new WindowItem(windowID, type, dialogRef);
     this.windows[windowID] = window;
+
+    console.log('Current windows after add:', this.getWindows());
+
+    return true;
   }
 
   /**
    * @returns The windows object of the Window Manager.
    */
-  public getWindows(): any {
+  getWindows(): any {
     return this.windows;
   }
 
   /**
    * Removes the window with the given @var windowID string from the WindowManager.
    */
-  public removeWindow(windowID: string): void {
+  removeWindow(windowID: string): void {
     delete this.windows[windowID];
   }
 
   /**
    * @returns A boolean true or false if the given windowID exists in the WindowManager.
    */
-  public windowExists(windowID: string): boolean {
+  windowExists(windowID: string): boolean {
     return (windowID in this.windows);
   }
 
