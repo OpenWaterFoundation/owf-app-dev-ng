@@ -1,4 +1,3 @@
-import { WindowItem }   from './window-item';
 import { MatDialogRef } from '@angular/material/dialog';
 
 /**
@@ -18,6 +17,7 @@ export class WindowManager {
    * The instance of this WindowManager object.
    */
   private static instance: WindowManager;
+
   /**
    * The object to hold each WindowManagerItem, with the button's windowID as a key.
    */
@@ -25,7 +25,8 @@ export class WindowManager {
 
 
   /**
-   * A private constructor is declared so any instance of the class cannot be created elsewhere, getInstance must be called.
+   * A private constructor is declared so any instance of the class cannot be created
+   * elsewhere, getInstance must be called.
    */
   private constructor() { }
 
@@ -54,15 +55,20 @@ export class WindowManager {
    */
   addWindow(windowID: string, type: WindowType, dialogRef?: MatDialogRef<any>): any {
 
-    console.log('Current windows before add:', this.getWindows());
     if (this.windowExists(windowID)) {
       return false;
     }
 
-    var window = new WindowItem(windowID, type, dialogRef);
-    this.windows[windowID] = window;
+    var windowItem: WindowItem = {
+      queryParamKey: this.setQueryParamKey(),
+      windowID: windowID,
+      windowType: type,
+      dialogRef: dialogRef ? dialogRef : undefined
+    };
 
-    console.log('Current windows after add:', this.getWindows());
+    this.windows[windowID] = windowItem;
+
+    console.log('All windows after adding window:', this.getWindows());
 
     return true;
   }
@@ -75,10 +81,24 @@ export class WindowManager {
   }
 
   /**
-   * Removes the window with the given @var windowID string from the WindowManager.
+   * Removes the window with the given @var windowID key from the windows object
+   * and renumbers the remaining open dialogs.
    */
   removeWindow(windowID: string): void {
     delete this.windows[windowID];
+
+    console.log('Number of windows after removal:', Object.keys(this.windows).length + 1);
+    Object.values(this.windows).forEach((windowItem: WindowItem, i) => {
+      windowItem.queryParamKey = 'dialog' + (i + 1)
+    });
+
+    console.log('All windows after removing window:', this.getWindows());
+
+    // Route update to new query parameters.
+  }
+
+  setQueryParamKey(): string {
+    return 'dialog' + (Object.keys(this.windows).length + 1);
   }
 
   /**
@@ -103,4 +123,11 @@ export enum WindowType {
   TABLE = 'Table',
   TEXT = 'Text',
   TSGRAPH = 'TSGraph'
+}
+
+export interface WindowItem {
+  queryParamKey: string;
+  windowID: string;
+  windowType: WindowType;
+  dialogRef?: MatDialogRef<any>;
 }

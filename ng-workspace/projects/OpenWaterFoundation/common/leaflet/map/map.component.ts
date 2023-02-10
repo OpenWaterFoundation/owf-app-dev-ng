@@ -2267,28 +2267,40 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * 
+   * Refresh or direct URL with query parameter.
    * @param queryParamMap 
    */
   private handleQueryParams(queryParamMap: ParamMap): void {
 
-    const geoMapDocWindowId = this.mapConfig.geoMaps[0].geoMapId + '-dialog-doc';
+    const geoMapDocWindowId = this.geoMapId + '-dialog-doc';
 
     console.log('queryParamMap:', queryParamMap);
 
-    if (queryParamMap.get('dialog') === geoMapDocWindowId) {
-      this.openDocDialog(this.geoMapDocPath, this.geoMapId, this.geoMapName);
+    if (queryParamMap.get('dialog1') === geoMapDocWindowId) {
+      this.openDocDialog();
     }
   }
 
-  test(geoId: string): any {
-    console.log('Test is called here.');
+  /**
+   * Button click.
+   * @param geoDialogDocId 
+   */
+  openDialog(): any {
+
+    const geoMapDocWindowId = this.geoMapId + '-dialog-doc';
 
     const extras: NavigationExtras = {
-      queryParams: { [this.queryParamKey]: geoId }
+      // TODO Add query param properties from window manager if they exist.
+      queryParams: {
+        [this.windowManager.setQueryParamKey()]: geoMapDocWindowId
+      }
     }
 
     this.router.navigate([], extras);
+
+    if (geoMapDocWindowId.endsWith('-dialog-doc')) {
+      this.openDocDialog();
+    }
   }
 
   /**
@@ -2321,31 +2333,33 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param docPath The string representing the path to the documentation file.
   * @param geoId The geoMapId, geoLayerViewGroupId, or geoLayerViewId for the layer.
   */
-  openDocDialog(docPath: string, geoId: string, geoName: string): void {
+  openDocDialog(): void {
 
-    const windowID = geoId + '-dialog-doc';
+    const windowID = this.geoMapId + '-dialog-doc';
     if (!this.windowManager.addWindow(windowID, WindowType.DOC)) {
       return;
     }
 
     var text: boolean, markdown: boolean, html: boolean;
     // Set the type of display the Mat Dialog will show
-    if (docPath.includes('.txt')) text = true;
-    else if (docPath.includes('.md')) markdown = true;
-    else if (docPath.includes('.html')) html = true;
+    if (this.geoMapDocPath.includes('.txt')) text = true;
+    else if (this.geoMapDocPath.includes('.md')) markdown = true;
+    else if (this.geoMapDocPath.includes('.html')) html = true;
 
-    this.commonService.getPlainText(this.commonService.buildPath(IM.Path.dP, [docPath]), IM.Path.dP)
+    this.commonService.getPlainText(
+      this.commonService.buildPath(IM.Path.dP, [this.geoMapDocPath]), IM.Path.dP
+    )
     .pipe(take(1)).subscribe((doc: any) => {
 
       var dialogConfigData = {
         doc: doc,
-        docPath: docPath,
+        docPath: this.geoMapDocPath,
         docText: text,
         docMarkdown: markdown,
         docHtml: html,
         fullMarkdownPath: this.commonService.getFullMarkdownPath(),
-        geoId: geoId,
-        geoName: geoName,
+        geoId: this.geoMapId,
+        geoName: this.geoMapName,
         mapConfigPath: this.commonService.getMapConfigPath(),
         windowID: windowID
       }
