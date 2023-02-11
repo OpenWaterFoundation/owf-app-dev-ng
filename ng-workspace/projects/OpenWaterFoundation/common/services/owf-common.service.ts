@@ -116,6 +116,8 @@ export class OwfCommonService {
   /** Object containing a layer's geoLayerId as the key, and a boolean showing whether
    * the URL for the layer is not currently working or does not exist. */
   serverUnavailable: {} = {};
+  /** Determines whether query parameters should be used when dialogs are opened. */
+  private _useQueryParams = false;
 
   
   /**
@@ -141,10 +143,24 @@ export class OwfCommonService {
   }
 
   /**
+   * @returns The private _useQueryParams boolean.
+   */
+  get useQueryParams(): boolean {
+    return this._useQueryParams;
+  }
+
+  /**
+   * Sets the private _useQueryParams variable to the useQueryParams variable.
+   */
+  set useQueryParams(useQueryParams: boolean) {
+    this._useQueryParams = useQueryParams;
+  }
+
+  /**
    * 
    * @param geoLayerId The layer's geoLayerId to be added to the layerError array
    */
-   addLayerError(geoLayerId: string): void {
+  addLayerError(geoLayerId: string): void {
     this.layerError[geoLayerId] = true;
   }
 

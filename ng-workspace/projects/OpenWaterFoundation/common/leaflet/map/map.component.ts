@@ -28,8 +28,7 @@ import { forkJoin,
           Observable,
           Subscription, 
           Subject }                from 'rxjs';
-import { combineLatestWith,
-          first,
+import { first,
           take,
           takeUntil }              from 'rxjs/operators';
 
@@ -38,6 +37,7 @@ import { faCaretLeft,
           faLayerGroup }           from '@fortawesome/free-solid-svg-icons';
 
 import { CommonLoggerService,
+          DialogParams,
           OwfCommonService }       from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
           MapLayerItem }           from '@OpenWaterFoundation/common/ui/layer-manager';
@@ -154,13 +154,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /** Subscription for all URL and query parameter changes. Unsubscribed from on
    * component destruction. */
   private paramMapSub = null;
-
+  /** Subscription for using the activated route to listen for query parameter changes. */
   private queryParamMapSub: Subscription;
   /** The windowManager instance; To create, maintain, and remove multiple open dialogs. */
   windowManager: WindowManager = WindowManager.getInstance();
-  /**
-   * 
-   */
+  /** Component class variable set so it can be used by the component's template file. */
+  windowTypeImport = WindowType;
+  /** Determines whether the map is shown, or a specialized 404 page component if
+   * an invalid URL map id is provided (e.g. the map id does not exist). */
   validMapID: boolean;
 
 
@@ -1196,8 +1197,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 var resourcePath = _this.commonService.obtainPropertiesFromLine(resourcePathArray[i], featureProperties);
                                 let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePath]);
 
-                                _this.commonService.getPlainText(fullResourcePath, IM.Path.rP).subscribe((text: any) => {
-                                  _this.openTextDialog(text, fullResourcePath, windowID);
+                                _this.commonService.getPlainText(fullResourcePath, IM.Path.rP).subscribe((text: string) => {
+                                  _this.setupDialogOpen(WindowType.TEXT, {
+                                    text: text,
+                                    fullResourcePath: fullResourcePath,
+                                    windowID: windowID + '-dialog-text'
+                                  });
                                 });
                               }
                               // Display a Time Series graph in a Dialog popup.
@@ -2172,9 +2177,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.leafletMapContainerId = this.geoMapId;
 
       // Listen for any changes or additions of query parameters in the URL.
-      this.queryParamMapSub = this.actRoute.queryParamMap.subscribe((queryParamMap: ParamMap) => {
-        this.handleQueryParams(queryParamMap);
-      });
+      if (this.commonService.useQueryParams) {
+        this.queryParamMapSub = this.actRoute.queryParamMap.subscribe((queryParamMap: ParamMap) => {
+          this.handleQueryParams(queryParamMap);
+        });
+      }
 
       // Once the mapConfig object is retrieved and set, set the order in which
       // each layer should be displayed. Get an instance of the singleton MapLayerManager
@@ -2272,34 +2279,77 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private handleQueryParams(queryParamMap: ParamMap): void {
 
-    const geoMapDocWindowId = this.geoMapId + '-dialog-doc';
+    // const geoMapDocWindowId = this.geoMapId + '-dialog-doc';
 
-    console.log('queryParamMap:', queryParamMap);
+    // console.log('handleQueryParams queryParamMap:', queryParamMap);
 
-    if (queryParamMap.get('dialog1') === geoMapDocWindowId) {
-      this.openDocDialog();
-    }
+    // for (let i = 0; i < this.windowManager.numberOfQueryParams; ++i) {
+    //   // If the dialog doesn't already exist in the window manager, open it up.
+    //   if (!this.windowManager.windowExists(queryParamMap.get('dialog' + (i + 1)))) {
+
+    //     if (queryParamMap.get('dialog' + (i + 1)).endsWith('-dialog-doc')) {
+    //       this.openDocDialog();
+    //     }
+    //   }
+      
+    // }
+    
   }
 
   /**
    * Button click.
    * @param geoDialogDocId 
    */
-  openDialog(): any {
+  setupDialogOpen(windowType: WindowType, dialogParams?: DialogParams): any {
+    
+    // Use query parameters.
+    if (this.commonService.useQueryParams) {
 
-    const geoMapDocWindowId = this.geoMapId + '-dialog-doc';
+      var extras: NavigationExtras = {
+        queryParams: this.windowManager.getAllOpenQueryParams()
+      };
+      var dialogWindowId: string;
 
-    const extras: NavigationExtras = {
-      // TODO Add query param properties from window manager if they exist.
-      queryParams: {
-        [this.windowManager.setQueryParamKey()]: geoMapDocWindowId
+      switch(windowType) {
+        case WindowType.DOC: {
+
+          dialogWindowId = this.geoMapId + '-dialog-doc';
+          if (this.windowManager.windowExists(dialogWindowId)) { return false; }
+
+          extras.queryParams[this.windowManager.setQueryParamKey()] = dialogWindowId;
+          this.router.navigate([], extras);
+      
+          this.openDocDialog();
+          break;
+        }
+
+        case WindowType.TEXT: {
+
+          if (this.windowManager.windowExists(dialogParams.windowID)) { return false; }
+
+          extras.queryParams[this.windowManager.setQueryParamKey()] = dialogParams.windowID;
+          this.router.navigate([], extras);
+      
+          this.openTextDialog(dialogParams);
+          break;
+        }
       }
+      
     }
+    // Don't use query parameters.
+    if (!this.commonService.useQueryParams) {
 
-    this.router.navigate([], extras);
-
-    if (geoMapDocWindowId.endsWith('-dialog-doc')) {
-      this.openDocDialog();
+      switch(windowType) {
+        case WindowType.DOC: {
+          this.openDocDialog();
+          break;
+        }
+        case WindowType.TEXT: {
+          this.openTextDialog(dialogParams);
+          break;
+        }
+      }
+      
     }
   }
 
@@ -2364,12 +2414,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         windowID: windowID
       }
 
-      var docDialog: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
+      const docDialog: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
         DialogDocComponent, this.createDialogConfig(dialogConfigData)
       );
-      // Remove the query parameter for this dialog.
+      // Remove the query parameter for this dialog, but keep any other open dialog's
+      // query parameter.
       docDialog.afterClosed().pipe(first()).subscribe(() => {
-        this.router.navigate(['.'], { relativeTo: this.actRoute });
+        this.router.navigate(['.'], {
+          relativeTo: this.actRoute,
+          queryParams: this.windowManager.getAllOpenQueryParams()
+        });
       });
 
     });
@@ -2541,21 +2595,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param windowID A string representing the button ID of the button clicked to
   * open this dialog.
   */
-  private openTextDialog(text: any, resourcePath: string, windowID: string): void {
+  private openTextDialog(params: DialogParams): void {
 
-    if (!this.windowManager.addWindow(windowID, WindowType.TEXT)) {
+    if (!this.windowManager.addWindow(params.windowID, WindowType.TEXT)) {
       return;
     }
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      windowID: windowID,
+      windowID: params.windowID,
       mapConfigPath: this.commonService.getMapConfigPath(),
-      resourcePath: resourcePath,
-      text: text
+      resourcePath: params.fullResourcePath,
+      text: params.text
     }
 
-    const dialogRef: MatDialogRef<DialogTextComponent, any> = this.dialog.open(DialogTextComponent, {
+    const textDialog: MatDialogRef<DialogTextComponent, any> = this.dialog.open(DialogTextComponent, {
       data: dialogConfig,
       // This stops the dialog from containing a backdrop, which means the background
       // opacity is set to 0, and the entire InfoMapper is still navigable while
@@ -2569,6 +2623,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       minWidth: "450px",
       maxHeight: "90vh",
       maxWidth: "90vw"
+    });
+
+    // Remove the query parameter for this dialog, but keep any other open dialog's
+    // query parameter.
+    textDialog.afterClosed().pipe(first()).subscribe(() => {
+      this.router.navigate(['.'], {
+        relativeTo: this.actRoute,
+        queryParams: this.windowManager.getAllOpenQueryParams()
+      });
     });
   }
 

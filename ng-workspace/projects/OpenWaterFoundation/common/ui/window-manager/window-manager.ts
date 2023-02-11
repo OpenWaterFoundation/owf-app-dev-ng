@@ -1,10 +1,12 @@
 import { MatDialogRef } from '@angular/material/dialog';
+import { Params } from '@angular/router';
 
 /**
- * A helper singleton class for creating, managing and maintaining multiple opened Material Dialogs (WindowManagerItem object)
- * while viewing a map in the Infomapper. The fact that it is singleton is important, as it allows the building of a unique
- * name using a number to signify how many windows have been opened. The (at)dynamic line below needs to be declared before
- * classes that declares static methods.
+ * A helper singleton class for creating, managing and maintaining multiple opened
+ * Material Dialogs (WindowManagerItem object) while viewing a map in the Infomapper.
+ * The fact that it is singleton is important, as it allows the building of a unique
+ * name using a number to signify how many windows have been opened. The (at)dynamic
+ * line below needs to be declared before classes that declares static methods.
  */
 // @dynamic
 export class WindowManager {
@@ -32,11 +34,16 @@ export class WindowManager {
 
 
   /**
-   * Only one instance of this WindowManager can be used at one time, making it a singleton Class.
+   * Only one instance of this WindowManager can be used at one time, making it a
+   * singleton Class.
    */
   static getInstance(): WindowManager {
     if (!WindowManager.instance) { WindowManager.instance = new WindowManager(); }
     return WindowManager.instance;
+  }
+
+  get numberOfQueryParams(): number {
+    return Object.keys(this.windows).length;
   }
 
   /**
@@ -48,10 +55,14 @@ export class WindowManager {
   }
 
   /**
-   * Adds a window with the windowID to the @var windows WindowManager object as the key, and the WindowItem object as the value.
-   * @param windowID The unique string representing the window ID for the windowItem being created.
+   * Adds a window with the windowID to the @var windows WindowManager object as
+   * the key, and the WindowItem object as the value.
+   * @param windowID The unique string representing the window ID for the windowItem
+   * being created.
    * @param type The Window Type being created.
    * @param dialogRef An optional reference to the dialog object created.
+   * @returns True if adding the new window succeeded, or false if it already existed
+   * 
    */
   addWindow(windowID: string, type: WindowType, dialogRef?: MatDialogRef<any>): any {
 
@@ -74,6 +85,21 @@ export class WindowManager {
   }
 
   /**
+   * 
+   */
+  getAllOpenQueryParams(): Params {
+
+    var allOpenParams: Params = {};
+    
+
+    Object.values(this.windows).forEach((windowItem: WindowItem) => {
+      allOpenParams[windowItem.queryParamKey] = windowItem.windowID;
+    });
+
+    return allOpenParams;
+  }
+
+  /**
    * @returns The windows object of the Window Manager.
    */
   getWindows(): any {
@@ -87,9 +113,8 @@ export class WindowManager {
   removeWindow(windowID: string): void {
     delete this.windows[windowID];
 
-    console.log('Number of windows after removal:', Object.keys(this.windows).length + 1);
     Object.values(this.windows).forEach((windowItem: WindowItem, i) => {
-      windowItem.queryParamKey = 'dialog' + (i + 1)
+      windowItem.queryParamKey = 'dialog' + (i + 1);
     });
 
     console.log('All windows after removing window:', this.getWindows());
