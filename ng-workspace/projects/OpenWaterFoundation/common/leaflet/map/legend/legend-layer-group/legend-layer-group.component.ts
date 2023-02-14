@@ -244,7 +244,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   */
   openDocDialog(docPath: string, geoId: string, geoName: string): void {
 
-    var windowID = geoId + '-dialog-doc';
+    var windowID = geoId;
     if (!this.windowManager.addWindow(windowID, WindowType.DOC)) {
       return;
     }

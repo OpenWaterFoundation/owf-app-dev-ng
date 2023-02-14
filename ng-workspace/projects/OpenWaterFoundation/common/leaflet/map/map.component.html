@@ -52,7 +52,7 @@
               <div *ngIf="geoMapDocPath" class="geoMap-doc-button">
 
                 <button mat-icon-button class="geoMap-info-circle" routerLink="."
-                (click)="setupDialogOpen(windowTypeImport.DOC)"
+                (click)="setupDialogOpen(windowTypeImport.DOC, {'location': 'geoMap-' + windowTypeImport.DOC})"
                 matTooltip="Click to view map documentation" [matTooltipShowDelay]="750">
                   <fa-icon [icon]=faInfoCircle size="xl" style="color: black"></fa-icon>
                 </button>

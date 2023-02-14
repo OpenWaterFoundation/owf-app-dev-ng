@@ -910,7 +910,11 @@ export interface ChartDialog {
   graphTemplate: GraphTemplate;
 }
 
+/**
+ * 
+ */
 export interface DialogParams {
+  location: string;
   fullResourcePath?: string;
   text?: string;
   windowID?: string;

@@ -1199,9 +1199,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
                                 _this.commonService.getPlainText(fullResourcePath, IM.Path.rP).subscribe((text: string) => {
                                   _this.setupDialogOpen(WindowType.TEXT, {
+                                    location: 'map-layer-' + WindowType.TEXT,
                                     text: text,
                                     fullResourcePath: fullResourcePath,
-                                    windowID: windowID + '-dialog-text'
+                                    windowID: windowID
                                   });
                                 });
                               }
@@ -2279,20 +2280,22 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private handleQueryParams(queryParamMap: ParamMap): void {
 
-    // const geoMapDocWindowId = this.geoMapId + '-dialog-doc';
+    console.log('handleQueryParams queryParamMap:', queryParamMap);
+    console.log('Number of already existing query parameters:', this.windowManager.amountExistingQueryParams);
 
-    // console.log('handleQueryParams queryParamMap:', queryParamMap);
+    for (let i = 0; i < this.windowManager.amountExistingQueryParams; ++i) {
 
-    // for (let i = 0; i < this.windowManager.numberOfQueryParams; ++i) {
-    //   // If the dialog doesn't already exist in the window manager, open it up.
-    //   if (!this.windowManager.windowExists(queryParamMap.get('dialog' + (i + 1)))) {
+      const queryWindowType = this.windowManager.canOpenWindow(queryParamMap, i);
+      // If the dialog doesn't already exist in the window manager, open it up.
 
-    //     if (queryParamMap.get('dialog' + (i + 1)).endsWith('-dialog-doc')) {
-    //       this.openDocDialog();
-    //     }
-    //   }
-      
-    // }
+      switch(queryWindowType) {
+        case WindowType.DOC: {
+          this.openDocDialog({
+            location: queryParamMap.get('stuff')
+          });
+        }
+      }
+    }
     
   }
 
@@ -2313,13 +2316,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       switch(windowType) {
         case WindowType.DOC: {
 
-          dialogWindowId = this.geoMapId + '-dialog-doc';
+          dialogWindowId = this.geoMapId;
           if (this.windowManager.windowExists(dialogWindowId)) { return false; }
 
-          extras.queryParams[this.windowManager.setQueryParamKey()] = dialogWindowId;
+          extras.queryParams[this.windowManager.setQueryParamTypeKey()] = dialogParams.location;
+          extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogWindowId;
           this.router.navigate([], extras);
       
-          this.openDocDialog();
+          this.openDocDialog(dialogParams);
           break;
         }
 
@@ -2327,7 +2331,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
           if (this.windowManager.windowExists(dialogParams.windowID)) { return false; }
 
-          extras.queryParams[this.windowManager.setQueryParamKey()] = dialogParams.windowID;
+          extras.queryParams[this.windowManager.setQueryParamTypeKey()] = dialogParams.location;
+          extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogParams.windowID;
           this.router.navigate([], extras);
       
           this.openTextDialog(dialogParams);
@@ -2341,7 +2346,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       switch(windowType) {
         case WindowType.DOC: {
-          this.openDocDialog();
+          this.openDocDialog(dialogParams);
           break;
         }
         case WindowType.TEXT: {
@@ -2383,10 +2388,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param docPath The string representing the path to the documentation file.
   * @param geoId The geoMapId, geoLayerViewGroupId, or geoLayerViewId for the layer.
   */
-  openDocDialog(): void {
+  openDocDialog(params: DialogParams): void {
 
-    const windowID = this.geoMapId + '-dialog-doc';
-    if (!this.windowManager.addWindow(windowID, WindowType.DOC)) {
+    const windowID = this.geoMapId;
+    if (!this.windowManager.addWindow(windowID, WindowType.DOC, params.location)) {
       return;
     }
 
@@ -2597,7 +2602,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   private openTextDialog(params: DialogParams): void {
 
-    if (!this.windowManager.addWindow(params.windowID, WindowType.TEXT)) {
+    if (!this.windowManager.addWindow(params.windowID, WindowType.TEXT, params.location)) {
       return;
     }
 
