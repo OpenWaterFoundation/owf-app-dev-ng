@@ -1198,10 +1198,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePath]);
 
                                 _this.commonService.getPlainText(fullResourcePath, IM.Path.rP).subscribe((text: string) => {
-                                  _this.setupDialogOpen(WindowType.TEXT, {
-                                    location: 'map-layer-' + WindowType.TEXT,
-                                    text: text,
+                                  _this.openTextDialog({
                                     fullResourcePath: fullResourcePath,
+                                    text: text,
                                     windowID: windowID
                                   });
                                 });
@@ -2178,11 +2177,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.leafletMapContainerId = this.geoMapId;
 
       // Listen for any changes or additions of query parameters in the URL.
-      if (this.commonService.useQueryParams) {
-        this.queryParamMapSub = this.actRoute.queryParamMap.subscribe((queryParamMap: ParamMap) => {
-          this.handleQueryParams(queryParamMap);
-        });
-      }
+      // if (this.commonService.useQueryParams) {
+      //   this.queryParamMapSub = this.actRoute.queryParamMap.subscribe((queryParamMap: ParamMap) => {
+      //     this.handleQueryParams(queryParamMap);
+      //   });
+      // }
 
       // Once the mapConfig object is retrieved and set, set the order in which
       // each layer should be displayed. Get an instance of the singleton MapLayerManager
@@ -2278,85 +2277,80 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * Refresh or direct URL with query parameter.
    * @param queryParamMap 
    */
-  private handleQueryParams(queryParamMap: ParamMap): void {
+  // private handleQueryParams(queryParamMap: ParamMap): void {
 
-    console.log('handleQueryParams queryParamMap:', queryParamMap);
-    console.log('Number of already existing query parameters:', this.windowManager.amountExistingQueryParams);
+  //   const windowsToOpen = this.windowManager.windowsToOpen(queryParamMap, this.mapConfig);
+  //   // If the dialog doesn't already exist in the window manager, open it up.
 
-    for (let i = 0; i < this.windowManager.amountExistingQueryParams; ++i) {
+  //   windowsToOpen.forEach((windowToOpen: {type: WindowType, params: DialogParams}) => {
 
-      const queryWindowType = this.windowManager.canOpenWindow(queryParamMap, i);
-      // If the dialog doesn't already exist in the window manager, open it up.
+  //     switch(windowToOpen.type) {
+  //       case WindowType.DOC: {
+  //         this.openDocDialog(windowToOpen.params);
+  //       }
+  //     }
+  //   });
 
-      switch(queryWindowType) {
-        case WindowType.DOC: {
-          this.openDocDialog({
-            location: queryParamMap.get('stuff')
-          });
-        }
-      }
-    }
-    
-  }
+  // }
 
   /**
    * Button click.
    * @param geoDialogDocId 
    */
-  setupDialogOpen(windowType: WindowType, dialogParams?: DialogParams): any {
+  // setupDialogOpen(windowType: WindowType, dialogParams?: DialogParams): any {
     
-    // Use query parameters.
-    if (this.commonService.useQueryParams) {
+  //   // Use query parameters.
+  //   if (this.commonService.useQueryParams) {
 
-      var extras: NavigationExtras = {
-        queryParams: this.windowManager.getAllOpenQueryParams()
-      };
-      var dialogWindowId: string;
+  //     var extras: NavigationExtras = {
+  //       queryParams: this.windowManager.getAllOpenQueryParams()
+  //     };
+  //     var dialogWindowId: string;
 
-      switch(windowType) {
-        case WindowType.DOC: {
+  //     switch(windowType) {
+  //       case WindowType.DOC: {
 
-          dialogWindowId = this.geoMapId;
-          if (this.windowManager.windowExists(dialogWindowId)) { return false; }
+  //         dialogWindowId = this.geoMapId;
+  //         if (this.windowManager.windowExists(dialogWindowId)) { return false; }
 
-          extras.queryParams[this.windowManager.setQueryParamTypeKey()] = dialogParams.location;
-          extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogWindowId;
-          this.router.navigate([], extras);
+  //         extras.queryParams[this.windowManager.setQueryParamTypeKey()] = dialogParams.location;
+  //         extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogWindowId;
+  //         this.router.navigate([], extras);
       
-          this.openDocDialog(dialogParams);
-          break;
-        }
+  //         this.openDocDialog(dialogParams);
+  //         break;
+  //       }
 
-        case WindowType.TEXT: {
+  //       case WindowType.TEXT: {
 
-          if (this.windowManager.windowExists(dialogParams.windowID)) { return false; }
+  //         if (this.windowManager.windowExists(dialogParams.windowID)) { return false; }
 
-          extras.queryParams[this.windowManager.setQueryParamTypeKey()] = dialogParams.location;
-          extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogParams.windowID;
-          this.router.navigate([], extras);
+  //         extras.queryParams[this.windowManager.setQueryParamTypeKey()] = dialogParams.location;
+  //         extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogParams.windowID;
+  //         this.router.navigate([], extras);
       
-          this.openTextDialog(dialogParams);
-          break;
-        }
-      }
+  //         this.openTextDialog(dialogParams);
+  //         break;
+  //       }
+  //     }
       
-    }
-    // Don't use query parameters.
-    if (!this.commonService.useQueryParams) {
+  //   }
+  //   // Don't use query parameters.
+  //   if (!this.commonService.useQueryParams) {
 
-      switch(windowType) {
-        case WindowType.DOC: {
-          this.openDocDialog(dialogParams);
-          break;
-        }
-        case WindowType.TEXT: {
-          this.openTextDialog(dialogParams);
-          break;
-        }
-      }
+  //     switch(windowType) {
+  //       case WindowType.DOC: {
+  //         this.openDocDialog(dialogParams);
+  //         break;
+  //       }
+  //       case WindowType.TEXT: {
+  //         this.openTextDialog(dialogParams);
+  //         break;
+  //       }
+  //     }
       
-    }
-  }
+  //   }
+  // }
 
   /**
    * Opens a D3 visualization Dialog with the necessary configuration data.
@@ -2388,10 +2382,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param docPath The string representing the path to the documentation file.
   * @param geoId The geoMapId, geoLayerViewGroupId, or geoLayerViewId for the layer.
   */
-  openDocDialog(params: DialogParams): void {
+  openDocDialog(): void {
 
     const windowID = this.geoMapId;
-    if (!this.windowManager.addWindow(windowID, WindowType.DOC, params.location)) {
+    if (!this.windowManager.addWindow(windowID, WindowType.DOC)) {
       return;
     }
 
@@ -2423,13 +2417,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         DialogDocComponent, this.createDialogConfig(dialogConfigData)
       );
       // Remove the query parameter for this dialog, but keep any other open dialog's
-      // query parameter.
-      docDialog.afterClosed().pipe(first()).subscribe(() => {
-        this.router.navigate(['.'], {
-          relativeTo: this.actRoute,
-          queryParams: this.windowManager.getAllOpenQueryParams()
-        });
-      });
+      // query parameter. No need for now since not using query parameters.
+      // docDialog.afterClosed().pipe(first()).subscribe(() => {
+      //   this.router.navigate(['.'], {
+      //     relativeTo: this.actRoute,
+      //     queryParams: this.windowManager.getAllOpenQueryParams()
+      //   });
+      // });
 
     });
   }
@@ -2602,7 +2596,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   private openTextDialog(params: DialogParams): void {
 
-    if (!this.windowManager.addWindow(params.windowID, WindowType.TEXT, params.location)) {
+    if (!this.windowManager.addWindow(params.windowID, WindowType.TEXT)) {
       return;
     }
 
@@ -2631,13 +2625,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
 
     // Remove the query parameter for this dialog, but keep any other open dialog's
-    // query parameter.
-    textDialog.afterClosed().pipe(first()).subscribe(() => {
-      this.router.navigate(['.'], {
-        relativeTo: this.actRoute,
-        queryParams: this.windowManager.getAllOpenQueryParams()
-      });
-    });
+    // query parameter. No need for now since not using query parameters.
+    // textDialog.afterClosed().pipe(first()).subscribe(() => {
+    //   this.router.navigate(['.'], {
+    //     relativeTo: this.actRoute,
+    //     queryParams: this.windowManager.getAllOpenQueryParams()
+    //   });
+    // });
   }
 
   /**

@@ -255,6 +255,11 @@ export class OwfCommonService {
     }
   }
 
+  /**
+   * 
+   * @param highlighted 
+   * @returns 
+   */
   featureHighlighted(highlighted: boolean): any {
     return this.highlighted.next(highlighted);
   }
@@ -441,6 +446,10 @@ export class OwfCommonService {
     }
   }
 
+  /**
+   * 
+   * @returns 
+   */
   getDashboardConfigPath(): string { return this.dashboardConfigPath; }
 
   /**

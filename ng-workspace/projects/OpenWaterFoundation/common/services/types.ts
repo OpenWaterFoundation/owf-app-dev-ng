@@ -880,6 +880,14 @@ export interface SearchItemsMetadata {
 }
 
 /**
+ * Optional choices to enhance a global application search.
+ */
+export interface SearchOptions {
+  keywordSearch: boolean;
+  fuzzySearch: boolean;
+}
+
+/**
  * 
  */
 export interface SearchResultsDisplay {
@@ -914,7 +922,6 @@ export interface ChartDialog {
  * 
  */
 export interface DialogParams {
-  location: string;
   fullResourcePath?: string;
   text?: string;
   windowID?: string;

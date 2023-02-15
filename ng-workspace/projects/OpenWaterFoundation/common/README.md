@@ -141,8 +141,9 @@ See the Common library
 
 ## Running Unit Tests
 
-From anywhere in the Angular project, run `ng test @OpenWaterFoundation/common`
-to execute the unit tests via [Karma](https://karma-runner.github.io).
+From anywhere in the Angular project, run either `ng test @OpenWaterFoundation/common`
+or `npm test @OpenWaterFoundation/common` to execute the unit tests via
+[Karma](https://karma-runner.github.io).
 
 ## Code Scaffolding
 

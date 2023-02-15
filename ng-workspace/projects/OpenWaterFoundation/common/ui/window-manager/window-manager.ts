@@ -1,5 +1,8 @@
-import { MatDialogRef } from '@angular/material/dialog';
-import { ParamMap, Params } from '@angular/router';
+import { MatDialogRef }   from '@angular/material/dialog';
+import { ParamMap,
+          Params }        from '@angular/router';
+import { DialogParams,
+          GeoMapProject } from '@OpenWaterFoundation/common/services';
 
 /**
  * A helper singleton class for creating, managing and maintaining multiple opened
@@ -10,19 +13,14 @@ import { ParamMap, Params } from '@angular/router';
  */
 // @dynamic
 export class WindowManager {
-  /**
-   * The number of the window that's been opened, starting at 0.
-   * NOTE: Not currently being used.
-   */
-  private dialogNumber = 0;
-  /**
-   * The instance of this WindowManager object.
-   */
-  private static instance: WindowManager;
 
-  /**
-   * The object to hold each WindowManagerItem, with the button's windowID as a key.
-   */
+  /** The number of the window that's been opened, starting at 0. NOTE: Not currently
+   * being used. */
+  private dialogNumber = 0;
+  /** The instance of this WindowManager object. */
+  private static instance: WindowManager;
+  /** The object to hold each WindowManagerItem, with the button's windowID as a
+   * key. */
   private windows: {} = {};
 
 
@@ -42,6 +40,9 @@ export class WindowManager {
     return WindowManager.instance;
   }
 
+  /**
+   * 
+   */
   get amountExistingQueryParams(): number {
     return Object.keys(this.windows).length;
   }
@@ -64,14 +65,13 @@ export class WindowManager {
    * @returns True if adding the new window succeeded, or false if it already existed
    * 
    */
-  addWindow(windowID: string, type: WindowType, location?: string, dialogRef?: MatDialogRef<any>): any {
+  addWindow(windowID: string, type: WindowType, dialogRef?: MatDialogRef<any>): any {
 
     if (this.windowExists(windowID)) {
       return false;
     }
 
     var windowItem: WindowItem = {
-      location: location,
       queryParamTypeKey: this.setQueryParamTypeKey(),
       queryParamIdKey: this.setQueryParamIdKey(),
       windowID: windowID,
@@ -81,33 +81,57 @@ export class WindowManager {
 
     this.windows[windowID] = windowItem;
 
-    console.log('All windows after adding window:', this.getWindows());
-
     return true;
-  }
-
-  canOpenWindow(queryParamMap: ParamMap, i: number): WindowType {
-
-    console.log('All windows:', this.windows);
-    console.log('Window dialog Id key:', 'dialog' + i + 'Id');
-    console.log('Does window exist:', queryParamMap.get('dialog' + i + 'Id'));
-
-    if (this.windowExists(queryParamMap.get('dialog' + i + 'Id'))) {
-      return;
-    }
-
-    const windowType = queryParamMap.get('dialog' + i).split('-').pop();
-    console.log('Can open window with window type:', windowType);
   }
 
   /**
    * 
+   * @param queryParamMap 
+   * @returns 
+   */
+  // windowsToOpen(queryParamMap: ParamMap, mapConfig: GeoMapProject): {
+  //   type: WindowType,
+  //   params: DialogParams
+  // }[] {
+
+  //   var windowsToOpen: {
+  //     type: WindowType,
+  //     params: DialogParams
+  //   }[] = [];
+
+  //   var windowType: string;
+
+  //   if (this.amountExistingQueryParams === 0) {
+  //     // queryParamMap.get('dialog' + i).split('-').pop();
+  //     var numQueryParamKeys = queryParamMap.keys.length;
+
+  //     for (let i = 0; i < numQueryParamKeys; ++i) {
+
+  //       var queryParamTypeKey = 'dialog' + (i + 1);
+  //       if (!queryParamTypeKey) { return []; }
+
+  //       if (queryParamMap.get(queryParamTypeKey)) {
+  //         windowsToOpen.push({
+  //           type: queryParamMap.get(queryParamTypeKey).split('-').pop() as WindowType,
+  //           params: {
+  //             location: queryParamMap.get(queryParamTypeKey)
+  //           }
+  //         })
+  //       }
+  //     }
+  //   }
+  //   else if (this.amountExistingQueryParams > 0) {
+
+  //   }
+    
+  // }
+
+  /**
+   * Currently unused.
    */
   getAllOpenQueryParams(): Params {
 
     var allOpenParams: Params = {};
-
-    console.log('Setting current open query params using the following windows object:', this.windows);
 
     Object.values(this.windows).forEach((windowItem: WindowItem) => {
       allOpenParams[windowItem.queryParamTypeKey] = windowItem.location;
@@ -139,14 +163,10 @@ export class WindowManager {
       splitIdKey = windowItem.queryParamIdKey.split(/\d+/g);
       windowItem.queryParamIdKey = splitIdKey[0] + (i + 1) + splitIdKey[1];
     });
-
-    console.log('All windows after removing window:', this.getWindows());
-
-    // Route update to new query parameters.
   }
 
   /**
-   * 
+   * Set in the addWindow method, but otherwise unused.
    * @returns 
    */
   setQueryParamIdKey(): string {
@@ -154,7 +174,7 @@ export class WindowManager {
   }
 
   /**
-   * 
+   * Set in the addWindow method, but otherwise unused.
    * @returns 
    */
   setQueryParamTypeKey(): string {
@@ -171,7 +191,7 @@ export class WindowManager {
 }
 
 /**
- * Enum representing the supported Window Types (Dialog Types) for the WindowManager.
+ * The supported Window Types (Dialog Types) for the WindowManager.
  */
 export enum WindowType {
   D3 = 'D3',
@@ -185,6 +205,9 @@ export enum WindowType {
   TSGRAPH = 'TSGraph'
 }
 
+/**
+ * Properties for the 
+ */
 export interface WindowItem {
   queryParamIdKey: string;
   queryParamTypeKey: string;

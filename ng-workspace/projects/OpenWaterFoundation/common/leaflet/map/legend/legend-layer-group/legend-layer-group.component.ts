@@ -82,7 +82,9 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   @Input('layerClassificationInfo') layerClassificationInfo: any;
   /** Reference to the Map Component Leaflet map object. */
   @Input('mainMap') mainMap: any;
-
+  /**
+   * 
+   */
   @Input('mapConfig') mapConfig: IM.GeoMapProject;
   /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
    * objects with Leaflet layers and other layer data for displaying, ordering, and
