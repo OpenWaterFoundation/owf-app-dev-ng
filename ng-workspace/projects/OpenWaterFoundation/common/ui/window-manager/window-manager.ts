@@ -48,14 +48,6 @@ export class WindowManager {
   }
 
   /**
-   * 
-   * @returns 
-   */
-  get queryParamKey(): string {
-    return 'dialog' + (++this.dialogNumber);
-  }
-
-  /**
    * Adds a window with the windowID to the @var windows WindowManager object as
    * the key, and the WindowItem object as the value.
    * @param windowID The unique string representing the window ID for the windowItem

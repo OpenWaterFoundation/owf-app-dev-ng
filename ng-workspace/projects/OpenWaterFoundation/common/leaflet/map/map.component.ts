@@ -6,7 +6,6 @@ import { AfterViewInit,
           ViewEncapsulation }      from '@angular/core';
 import { DOCUMENT }                from '@angular/common';
 import { ActivatedRoute,
-          NavigationExtras,
           ParamMap,
           Router }                 from '@angular/router';
 import { MatDialog,
@@ -174,8 +173,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param commonService A reference to the common library service.
   * @param dialog A reference to the MatDialog for creating and displaying a popup
   * dialog with a chart.
-  * @param document
-  * @param logger 
+  * @param document Any web page loaded in the browser and serves as an entry point
+  * into the web page's content, which is the DOM tree.
+  * @param logger Logger service to print different levels of logging to the console
+  * depending on URL query parameters.
   * @param router A service that provides navigation among views and URL manipulation
   * capabilities.
   */
@@ -242,13 +243,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }
       else return this.mapConfig.geoMaps[0].name.substring(0, 30) + '...';
     }
-  }
-
-  /**
-   * 
-   */
-  get queryParamKey(): string {
-    return this.windowManager.queryParamKey;
   }
 
   /**
@@ -547,7 +541,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Builds the Leaflet map, and sets all event handling.
+   * Builds the Leaflet map and sets all event handling.
    */
   private buildMap(): void {
 
@@ -1444,10 +1438,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   } // END OF MAP BUILDING.
 
   /**
-  * The entry point and main foundation for building the Leaflet map using the data
-  * from the configuration file. Contains the building and positioning of the map,
-  * raster and/or vector layers on the map and all necessary Leaflet functions for the
-  * creation and styling of shapes, polygons and images on the map (among other options).
+  * Sometimes the global L variable has not been created at this point in production.
+  * I'm still not completely sure why this is the case; maybe I'm importing Leaflet
+  * incorrectly (even though most examples show it done like I have). This method
+  * loops for 1 second for a total of 10 seconds and checks if it exists.
   */
   private checkIfMapContainerExists(): void {
 
@@ -1779,14 +1773,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Initializes the content of the topleft title card div area.
+   * Initializes the content of the top left title card div area.
    */
   private createMapTitleInitial(): void {
 
     let div: HTMLElement = L.DomUtil.get(this.geoMapId + '-title-card');
 
     // Media query. This is not perfect yet.
-    // var mobileMatch = window.matchMedia("(max-width: 600px)");
+    // var mobileMatch = window.matchMedia("(max-width: 767px)");
 
     // function test(mobileMatch: any) {
     //   if (mobileMatch.matches) {
@@ -1812,8 +1806,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * 
-   * @returns 
+   * Uses the Leaflet mouse position npm package to create the control.
+   * @returns The MousePositionControl for Leaflet to use as a control.
    */
   private createMousePositionControl(): any {
     
@@ -1834,8 +1828,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * 
-   * @returns 
+   * Creates the small Leaflet control on the lower left section of the map that
+   * displays the map's current zoom level.
+   * @returns The Leaflet control object.
    */
   private createZoomLevelControl(): any {
     var _this = this;
