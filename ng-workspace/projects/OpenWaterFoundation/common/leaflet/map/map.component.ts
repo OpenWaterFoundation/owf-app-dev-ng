@@ -36,6 +36,7 @@ import { faCaretLeft,
           faLayerGroup }           from '@fortawesome/free-solid-svg-icons';
 
 import { CommonLoggerService,
+          DialogParams,
           OwfCommonService }       from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
           MapLayerItem }           from '@OpenWaterFoundation/common/ui/layer-manager';
@@ -127,8 +128,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /** Template input property used by consuming applications,websites, or other Angular
    * modules for passing the path to the map configuration file. */
   @Input('map-config') mapConfigStandalonePath: string;
-  /** The map configuration subscription, unsubscribed to on component destruction. */
-  private mapConfigSub = null;
   /** A variable to keep track of whether or not the leaflet map has already been
    * initialized. This is useful for resetting the page and clearing the map using
    * map.remove() which can only be called on a previously initialized map. */
@@ -145,19 +144,23 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   mapManager: MapManager = MapManager.getInstance();
   /** InfoMapper project version. */
   projectVersion: Observable<any>;
-  /** The activatedRoute subscription, unsubscribed to on component destruction. */
-  private actRouteSub = null;
   /** Boolean showing if the URL given for a layer is currently unavailable. */
   serverUnavailable = false;
   /** Boolean to indicate whether the sidebar has been initialized. Don't need to
    * waste time/resources initializing sidebar twice, but rather edit the information
    * in the already initialized sidebar. */
   sidebarInitialized: boolean = false;
+  /** Subscription for all URL and query parameter changes. Unsubscribed from on
+   * component destruction. */
+  private paramMapSub = null;
+  /** Subscription for using the activated route to listen for query parameter changes. */
+  private queryParamMapSub: Subscription;
   /** The windowManager instance; To create, maintain, and remove multiple open dialogs. */
   windowManager: WindowManager = WindowManager.getInstance();
-  /**
-   * 
-   */
+  /** Component class variable set so it can be used by the component's template file. */
+  windowTypeImport = WindowType;
+  /** Determines whether the map is shown, or a specialized 404 page component if
+   * an invalid URL map id is provided (e.g. the map id does not exist). */
   validMapID: boolean;
 
 
@@ -170,12 +173,22 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param commonService A reference to the common library service.
   * @param dialog A reference to the MatDialog for creating and displaying a popup
   * dialog with a chart.
+  * @param document Any web page loaded in the browser and serves as an entry point
+  * into the web page's content, which is the DOM tree.
+  * @param logger Logger service to print different levels of logging to the console
+  * depending on URL query parameters.
   * @param router A service that provides navigation among views and URL manipulation
   * capabilities.
   */
-  constructor(private actRoute: ActivatedRoute, private breakpointObserver: BreakpointObserver,
-  public commonService: OwfCommonService, public dialog: MatDialog, private router: Router,
-  private logger: CommonLoggerService, @Inject(DOCUMENT) private document: Document) {
+  constructor(
+    private actRoute: ActivatedRoute,
+    private breakpointObserver: BreakpointObserver,
+    private commonService: OwfCommonService,
+    private dialog: MatDialog,
+    @Inject(DOCUMENT) private document: Document,
+    private logger: CommonLoggerService,
+    private router: Router
+  ) {
 
     if (window['Cypress']) window['MapComponent'] = this;
 
@@ -280,16 +293,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     var _this = this;
 
-    // Create the control on the Leaflet map
+    // Create the control on the Leaflet map.
     var mapTitle = L.control({ position: 'topleft' });
-    // Add the title to the map in a div whose class name is 'info'
+    // Add the title to the map in a div whose class name is 'upper-left-map-info'.
     mapTitle.onAdd = function () {
       this._div = L.DomUtil.create('div', 'upper-left-map-info');
       this._div.id = _this.geoMapId + '-title-card';
       this.update();
       return this._div;
     };
-    // When the title-card is created, have it say this
+    // When the title-card is created, have it show the following.
     mapTitle.update = function () {
       this._div.innerHTML = ('<h4>' + _this.geoMapName + '</h4>');
     };
@@ -527,6 +540,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.graduatedLayerColors[geoLayerId] = lineArr;
   }
 
+  /**
+   * Builds the Leaflet map and sets all event handling.
+   */
   private buildMap(): void {
 
     this.logger.print('trace', 'MapComponent.buildMap - Creating Leaflet map with id "' +
@@ -1174,21 +1190,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 // the resourcePath only.
                                 var resourcePath = _this.commonService.obtainPropertiesFromLine(resourcePathArray[i], featureProperties);
                                 let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePath]);
-                                // Add this window ID to the windowManager so a
-                                // user can't open it more than once.
-                                _this.windowManager.addWindow(windowID, WindowType.TEXT);
 
-                                _this.commonService.getPlainText(fullResourcePath, IM.Path.rP).subscribe((text: any) => {
-                                  _this.openTextDialog(text, fullResourcePath, windowID);
+                                _this.commonService.getPlainText(fullResourcePath, IM.Path.rP).subscribe((text: string) => {
+                                  _this.openTextDialog({
+                                    fullResourcePath: fullResourcePath,
+                                    text: text,
+                                    windowID: windowID
+                                  });
                                 });
                               }
                               // Display a Time Series graph in a Dialog popup.
                               else if (actionArray[i].toUpperCase() === 'DISPLAYTIMESERIES') {
 
                                 let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
-                                // Add this window ID to the windowManager so a
-                                // user can't open it more than once.
-                                _this.windowManager.addWindow(windowID, WindowType.TSGRAPH);
 
                                 _this.commonService.getJSONData(fullResourcePath, IM.Path.rP, _this.mapID)
                                   .subscribe((graphTemplate: IM.GraphTemplate) => {
@@ -1424,10 +1438,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   } // END OF MAP BUILDING.
 
   /**
-  * The entry point and main foundation for building the Leaflet map using the data
-  * from the configuration file. Contains the building and positioning of the map,
-  * raster and/or vector layers on the map and all necessary Leaflet functions for the
-  * creation and styling of shapes, polygons and images on the map (among other options).
+  * Sometimes the global L variable has not been created at this point in production.
+  * I'm still not completely sure why this is the case; maybe I'm importing Leaflet
+  * incorrectly (even though most examples show it done like I have). This method
+  * loops for 1 second for a total of 10 seconds and checks if it exists.
   */
   private checkIfMapContainerExists(): void {
 
@@ -1482,14 +1496,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * @param geoLayerId 
    * @returns 
    */
-  public checkIfHighlighted(geoLayerId: string): boolean {
+  checkIfHighlighted(geoLayerId: string): boolean {
     return;
   }
 
   /**
   * Removes all highlighted layers from the map.
   */
-  public clearAllSelections(): void {
+  clearAllSelections(): void {
     this.mainMap.eachLayer((layer: any) => {
       if (layer.options.fillColor === '#ffff01') {
         this.mainMap.removeLayer(layer);
@@ -1689,8 +1703,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     var _this = this;
 
     var isMobile = (this.currentScreenSize === Breakpoints.XSmall ||
-    this.currentScreenSize === Breakpoints.Small ||
-    this.currentScreenSize === Breakpoints.Medium);
+    this.currentScreenSize === Breakpoints.Small);
     
     // Create the sidebar instance and add it to the map. 
     var sidebar = L.control.sidebar({
@@ -1760,11 +1773,25 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Initializes the content of the topleft title card div area.
+   * Initializes the content of the top left title card div area.
    */
   private createMapTitleInitial(): void {
 
-    let div = L.DomUtil.get(this.geoMapId + '-title-card');
+    let div: HTMLElement = L.DomUtil.get(this.geoMapId + '-title-card');
+
+    // Media query. This is not perfect yet.
+    // var mobileMatch = window.matchMedia("(max-width: 767px)");
+
+    // function test(mobileMatch: any) {
+    //   if (mobileMatch.matches) {
+    //     div.style.display = 'none';
+    //   }
+    //   else {
+    //     div.style.display = 'block';
+    //   }
+    // }
+    // mobileMatch.addEventListener('change', test);
+
     let instruction: string = "Move over or click on a feature for more information";
     let divContents: string = "";
 
@@ -1779,8 +1806,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * 
-   * @returns 
+   * Uses the Leaflet mouse position npm package to create the control.
+   * @returns The MousePositionControl for Leaflet to use as a control.
    */
   private createMousePositionControl(): any {
     
@@ -1801,8 +1828,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * 
-   * @returns 
+   * Creates the small Leaflet control on the lower left section of the map that
+   * displays the map's current zoom level.
+   * @returns The Leaflet control object.
    */
   private createZoomLevelControl(): any {
     var _this = this;
@@ -2132,9 +2160,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Get AND sets the map config path and geoJson path for relative path use.
     this.commonService.getFullMapConfigPath(this.mapID, standalone, configPath);
 
-    this.mapConfigSub = <any>Subscription;
-    this.mapConfigSub = this.commonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
-    .subscribe((mapConfig: IM.GeoMapProject) => {
+    this.commonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
+    .pipe(first()).subscribe((mapConfig: IM.GeoMapProject) => {
 
       this.logger.print('info', 'MapComponent.ngAfterViewInit - Map initialization for geoMapId "' + 
       mapConfig.geoMaps[0].geoMapId + '".');
@@ -2143,6 +2170,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // this.commonService.setMapConfig(mapConfig);
       this.mapConfig = mapConfig;
       this.leafletMapContainerId = this.geoMapId;
+
+      // Listen for any changes or additions of query parameters in the URL.
+      // if (this.commonService.useQueryParams) {
+      //   this.queryParamMapSub = this.actRoute.queryParamMap.subscribe((queryParamMap: ParamMap) => {
+      //     this.handleQueryParams(queryParamMap);
+      //   });
+      // }
 
       // Once the mapConfig object is retrieved and set, set the order in which
       // each layer should be displayed. Get an instance of the singleton MapLayerManager
@@ -2158,26 +2192,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   /**
   * This function is called on initialization of the map component, after the constructor.
+  * Use the following in the URL to show more debug messages: ?debug=true&debugLevel=trace
   */
-  public ngAfterViewInit() {
+  ngAfterViewInit() {
 
-    // When the parameters in the URL are changed the map will refresh and load
-    // according to new configuration data.
-    this.actRouteSub = <any>Subscription;
-    this.actRouteSub = this.actRoute.paramMap.subscribe((paramMap: ParamMap) => {
-
-      this.debugFlag = this.actRoute.snapshot.queryParamMap.get('debug');
-      this.debugLevelFlag = this.actRoute.snapshot.queryParamMap.get('debugLevel');
+    // Subscribe to all changes made to the URL.
+    this.paramMapSub = <any>Subscription;
+    this.paramMapSub = this.actRoute.paramMap.subscribe((paramMap: ParamMap) => {
+      
+      this.debugFlag = paramMap.get('debug');
+      this.debugLevelFlag = paramMap.get('debugLevel');
 
       if (!this.router.url.toLowerCase().includes('/map/') &&
       !this.appConfigStandalonePath && !this.mapConfigStandalonePath) {
         return;
       }
 
-      this.resetMapVariables();
+      this.setMapDefaultVars();
       this.mapID = paramMap.get('id');
       this.validMapID = this.commonService.validID(this.mapID);
-
+      // If an invalid map ID, displays the Map 404 page.
       if (this.validMapID === false) {
         return;
       }
@@ -2194,25 +2228,30 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // Standalone map for use in another Angular module.
       else if (this.mapConfigStandalonePath) {
         this.initMapSettings('map', this.mapConfigStandalonePath);
-      } else {
+      }
+      // A 'normal' map to display.
+      else {
         this.initMapSettings();
       }
+
     });
+
   }
 
   /**
   * Called once, before this Map Component instance is destroyed.
   */
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
+
     // Unsubscribe from all subscriptions that occurred in the Map Component.
-    if (this.actRouteSub) {
-      this.actRouteSub.unsubscribe();
-    }
     if (this.forkJoinSub) {
       this.forkJoinSub.unsubscribe();
     }
-    if (this.mapConfigSub) {
-      this.mapConfigSub.unsubscribe();
+    if (this.paramMapSub) {
+      this.paramMapSub.unsubscribe();
+    }
+    if (this.queryParamMapSub) {
+      this.queryParamMapSub.unsubscribe();
     }
 
     if (this.mainMap) {
@@ -2230,13 +2269,93 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * Refresh or direct URL with query parameter.
+   * @param queryParamMap 
+   */
+  // private handleQueryParams(queryParamMap: ParamMap): void {
+
+  //   const windowsToOpen = this.windowManager.windowsToOpen(queryParamMap, this.mapConfig);
+  //   // If the dialog doesn't already exist in the window manager, open it up.
+
+  //   windowsToOpen.forEach((windowToOpen: {type: WindowType, params: DialogParams}) => {
+
+  //     switch(windowToOpen.type) {
+  //       case WindowType.DOC: {
+  //         this.openDocDialog(windowToOpen.params);
+  //       }
+  //     }
+  //   });
+
+  // }
+
+  /**
+   * Button click.
+   * @param geoDialogDocId 
+   */
+  // setupDialogOpen(windowType: WindowType, dialogParams?: DialogParams): any {
+    
+  //   // Use query parameters.
+  //   if (this.commonService.useQueryParams) {
+
+  //     var extras: NavigationExtras = {
+  //       queryParams: this.windowManager.getAllOpenQueryParams()
+  //     };
+  //     var dialogWindowId: string;
+
+  //     switch(windowType) {
+  //       case WindowType.DOC: {
+
+  //         dialogWindowId = this.geoMapId;
+  //         if (this.windowManager.windowExists(dialogWindowId)) { return false; }
+
+  //         extras.queryParams[this.windowManager.setQueryParamTypeKey()] = dialogParams.location;
+  //         extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogWindowId;
+  //         this.router.navigate([], extras);
+      
+  //         this.openDocDialog(dialogParams);
+  //         break;
+  //       }
+
+  //       case WindowType.TEXT: {
+
+  //         if (this.windowManager.windowExists(dialogParams.windowID)) { return false; }
+
+  //         extras.queryParams[this.windowManager.setQueryParamTypeKey()] = dialogParams.location;
+  //         extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogParams.windowID;
+  //         this.router.navigate([], extras);
+      
+  //         this.openTextDialog(dialogParams);
+  //         break;
+  //       }
+  //     }
+      
+  //   }
+  //   // Don't use query parameters.
+  //   if (!this.commonService.useQueryParams) {
+
+  //     switch(windowType) {
+  //       case WindowType.DOC: {
+  //         this.openDocDialog(dialogParams);
+  //         break;
+  //       }
+  //       case WindowType.TEXT: {
+  //         this.openTextDialog(dialogParams);
+  //         break;
+  //       }
+  //     }
+      
+  //   }
+  // }
+
+  /**
    * Opens a D3 visualization Dialog with the necessary configuration data.
    * @param geoLayer The layer geoLayer object.
    * @param d3Prop The D3 visualization's property object from the config file.
    */
-  public openD3VizDialog(geoLayer: IM.GeoLayer, d3Prop: IM.D3Prop): void {
+  openD3VizDialog(geoLayer: IM.GeoLayer, d3Prop: IM.D3Prop): void {
+
     var windowID = geoLayer.geoLayerId + '-dialog-d3-viz';
-    if (this.windowManager.windowExists(windowID)) {
+    if (!this.windowManager.addWindow(windowID, WindowType.D3)) {
       return;
     }
 
@@ -2247,9 +2366,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
       
     var dialogRef: MatDialogRef<DialogD3Component, any> = this.dialog.open(
-      DialogD3Component, this.createDialogConfig(dialogConfigData));
-
-    this.windowManager.addWindow(windowID, WindowType.D3);
+      DialogD3Component, this.createDialogConfig(dialogConfigData)
+    );
   }
 
   /**
@@ -2259,40 +2377,49 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param docPath The string representing the path to the documentation file.
   * @param geoId The geoMapId, geoLayerViewGroupId, or geoLayerViewId for the layer.
   */
-  public openDocDialog(docPath: string, geoId: string, geoName: string): void {
-    var windowID = geoId + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+  openDocDialog(): void {
+
+    const windowID = this.geoMapId;
+    if (!this.windowManager.addWindow(windowID, WindowType.DOC)) {
       return;
     }
 
     var text: boolean, markdown: boolean, html: boolean;
     // Set the type of display the Mat Dialog will show
-    if (docPath.includes('.txt')) text = true;
-    else if (docPath.includes('.md')) markdown = true;
-    else if (docPath.includes('.html')) html = true;
+    if (this.geoMapDocPath.includes('.txt')) text = true;
+    else if (this.geoMapDocPath.includes('.md')) markdown = true;
+    else if (this.geoMapDocPath.includes('.html')) html = true;
 
-    this.commonService.getPlainText(this.commonService.buildPath(IM.Path.dP, [docPath]), IM.Path.dP)
-    .pipe(take(1))
-    .subscribe((doc: any) => {
+    this.commonService.getPlainText(
+      this.commonService.buildPath(IM.Path.dP, [this.geoMapDocPath]), IM.Path.dP
+    )
+    .pipe(take(1)).subscribe((doc: any) => {
 
       var dialogConfigData = {
         doc: doc,
-        docPath: docPath,
+        docPath: this.geoMapDocPath,
         docText: text,
         docMarkdown: markdown,
         docHtml: html,
         fullMarkdownPath: this.commonService.getFullMarkdownPath(),
-        geoId: geoId,
-        geoName: geoName,
+        geoId: this.geoMapId,
+        geoName: this.geoMapName,
         mapConfigPath: this.commonService.getMapConfigPath(),
         windowID: windowID
       }
 
-      var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
+      const docDialog: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
         DialogDocComponent, this.createDialogConfig(dialogConfigData)
       );
+      // Remove the query parameter for this dialog, but keep any other open dialog's
+      // query parameter. No need for now since not using query parameters.
+      // docDialog.afterClosed().pipe(first()).subscribe(() => {
+      //   this.router.navigate(['.'], {
+      //     relativeTo: this.actRoute,
+      //     queryParams: this.windowManager.getAllOpenQueryParams()
+      //   });
+      // });
 
-      this.windowManager.addWindow(windowID, WindowType.DOC);
     });
   }
 
@@ -2303,8 +2430,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * path to the resourcePath property.
   */
   private openGapminderDialog(geoLayer: IM.GeoLayer, resourcePath: string): any {
+
     var windowID = geoLayer.geoLayerId + '-dialog-gapminder';
-    if (this.windowManager.windowExists(windowID)) {
+    if (!this.windowManager.addWindow(windowID, WindowType.GAP)) {
       return;
     }
 
@@ -2329,8 +2457,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       maxHeight: "100vh",
       maxWidth: "100vw"
     });
-
-    this.windowManager.addWindow(windowID, WindowType.GAP);
   }
 
   /**
@@ -2340,7 +2466,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private openHeatmapDialog(geoLayer: any, graphTemplate: IM.GraphTemplate, graphFilePath: string): void {
 
     var windowID = geoLayer.geoLayerId + '-dialog-heatmap';
-    if (this.windowManager.windowExists(windowID)) {
+    if (!this.windowManager.addWindow(windowID, WindowType.HEAT)) {
       return;
     }
 
@@ -2363,7 +2489,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       maxWidth: "95vw"
     });
 
-    this.windowManager.addWindow(windowID, WindowType.HEAT);
   }
 
   /**
@@ -2379,7 +2504,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     geoLayerView: any, eventObject: any): void {
 
     var windowID = geoLayer.geoLayerId + '-dialog-gallery';
-    if (this.windowManager.windowExists(windowID)) {
+    if (!this.windowManager.addWindow(windowID, WindowType.GAL)) {
       return;
     }
 
@@ -2417,8 +2542,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           maxHeight: "70vh",
           maxWidth: "95vw"
         });
-
-        this.windowManager.addWindow(windowID, WindowType.GAL);
       }
     });
 
@@ -2431,6 +2554,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   private openTSGraphDialog(graphTemplate: IM.GraphTemplate, graphFilePath: string, TSIDLocation: string,
   chartPackage: string, featureProperties: any, downloadFileName?: string, windowID?: string): void {
+
+    if (!this.windowManager.addWindow(windowID, WindowType.TSGRAPH)) {
+      return;
+    }
 
     var dialogConfigData = {
       windowID: windowID,
@@ -2462,17 +2589,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param windowID A string representing the button ID of the button clicked to
   * open this dialog.
   */
-  private openTextDialog(text: any, resourcePath: string, windowID: string): void {
+  private openTextDialog(params: DialogParams): void {
+
+    if (!this.windowManager.addWindow(params.windowID, WindowType.TEXT)) {
+      return;
+    }
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      windowID: windowID,
+      windowID: params.windowID,
       mapConfigPath: this.commonService.getMapConfigPath(),
-      resourcePath: resourcePath,
-      text: text
+      resourcePath: params.fullResourcePath,
+      text: params.text
     }
 
-    const dialogRef: MatDialogRef<DialogTextComponent, any> = this.dialog.open(DialogTextComponent, {
+    const textDialog: MatDialogRef<DialogTextComponent, any> = this.dialog.open(DialogTextComponent, {
       data: dialogConfig,
       // This stops the dialog from containing a backdrop, which means the background
       // opacity is set to 0, and the entire InfoMapper is still navigable while
@@ -2487,6 +2618,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       maxHeight: "90vh",
       maxWidth: "90vw"
     });
+
+    // Remove the query parameter for this dialog, but keep any other open dialog's
+    // query parameter. No need for now since not using query parameters.
+    // textDialog.afterClosed().pipe(first()).subscribe(() => {
+    //   this.router.navigate(['.'], {
+    //     relativeTo: this.actRoute,
+    //     queryParams: this.windowManager.getAllOpenQueryParams()
+    //   });
+    // });
   }
 
   /**
@@ -2643,7 +2783,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * Refreshes, re-initializes, and unsubscribes from necessary subscriptions being
   * used by map variables when a new map component instance is created.
   */
-  private resetMapVariables(): void {
+  private setMapDefaultVars(): void {
     // First clear the map
     if (this.mapInitialized === true) {
       // Before the map is removed - and there can only be one popup open at a time
@@ -2700,7 +2840,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * Replaces the background layer on the Leaflet map with the layer selected.
   * @param name The name of the background selected to set the @var currentBackgroundLayer as.
   */
-  public selectBackgroundLayer(name: string): void {
+  selectBackgroundLayer(name: string): void {
     this.mainMap.removeLayer(this.mapBackgroundLayers[this.currentBackgroundLayer]);
     this.mainMap.addLayer(this.mapBackgroundLayers[name]);
     this.currentBackgroundLayer = name;

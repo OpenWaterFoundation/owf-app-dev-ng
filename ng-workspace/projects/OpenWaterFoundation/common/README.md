@@ -22,11 +22,12 @@ See the following resources for background information for the library.
 
 ## Building the Common Library
 
-From the `ng-workspace` folder, type `../build-util/create-common-package.sh` to build the
-project through Angular and create a tarball file through npm. This allows the library to be
-published using the created distributable version of the library in the `dist/` folder, or
-by installing the local tarball file in another local application's `package.json` dependencies.
-This is used for testing the library.
+From the `ng-workspace` folder, type `../build-util/create-common-package.sh` to
+build the project through Angular and create a tarball file that npm will use to
+publish. This allows the library to be published using the created distributable
+version of the library in the `dist/` folder, or by installing the local tarball
+file in another local application's `package.json` dependencies. This is used for
+testing the library.
 
 ## Publishing the Common Library ##
 
@@ -53,7 +54,7 @@ the command:
     npm login --registry=https://npm.pkg.github.com --scope=OWNER
     ```
 
-    replacing OWNER with the owner of the repository - OpenWaterFoundation in this case. Three
+    replacing OWNER with the owner of the repository - `OpenWaterFoundation` in this case. Three
     prompts will display:
 
       * **Username** - GitHub username. This must be all lower case or it will ask again.
@@ -96,31 +97,56 @@ the name of the user or organization that own the repository containing the proj
 The following instructions are for setting up an already existing application to be able to
 communicate with GitHub so that an `npm` created GitHub Package can be consumed:
 
-1. In the same directory as the app `package.json` file, create or edit an `.npmrc` file and add
+1. In the Common package, in the same directory as the package's `package.json` file, create or edit an `.npmrc` file and add
     ```
     @OWNER:registry=https://npm.pkg.github.com
     ```
     replacing `OWNER` with the name of the user or organization account that own the repository
     containing the project.
-2. Add the `.npmrc` file to the repo the application belongs to so GitHub Packages can find the
-project.
-3. Configure the `package.json` to use the package being installed. This means adding it to the
-dependencies. This needs to be done manually by a developer, then once there, it will be in the
-repository and used when cloned/fetched/pulled. For example, the dependencies property would
-look something like:
+2. Copy the `.npmrc` file into the application as well. Similarly, this will be in
+the same directory as its `package.json`, so GitHub Packages can find the project.
+3. Configure the application's `package.json` to use the package being installed.
+This means adding it to the dependencies. This needs to be done manually by a developer
+(though an automated way will hopefully be done at some point). Once there, it will
+be in the application's repository, and will be installed with the other npm packages
+when the repo is pulled and `npm install` is performed. As an example, the application
+dependencies would look something like the following:
     ```json
     {
       "name": "@my-org/my-app",
       "version": "1.0.0",
-      "description": "An app that uses the @openwaterfoundation/common package",
+      "description": "An app that uses the @OpenWaterFoundation/common package.",
       "main": "index.js",
-      "author": "",
+      "author": "Malcolm Reynolds",
       "license": "MIT",
       "dependencies": {
-        "@OpenWaterFoundation/common": "0.0.1-alpha.6"
+        "@OpenWaterFoundation/common": "^4.2.0"
       }
     }
     ```
+    * **Because this step needs to be performed manually, there are a few key actions
+    developers need to keep in mind**:
+      1. When starting a new development session in between Common package production
+      builds, the version of the Common package should be replaced by the relative path
+      to the package's `dist/` build folder. This can be automatically done by running
+      the `reinstall-common-lib.sh` script, which is located in the consuming application's
+      top level `build-util/` folder. If the current application does not have the
+      file, it can be copied over from the InfoMapper, or any other application that
+      contains it.
+      2. Once all testing has been completed and a new version of the Common package
+      is ready to be published, follow the section above to
+      [publish a GitHub Package](#publishing-a-github-package). This takes care of
+      the package steps, but an action still needs to be performed on the application
+      side of things. The developer should try to remember that the application's
+      `package.json` dependency for the Common package is still pointing to the package's
+      local `dist/` folder. **This should be updated to the package version
+      that was just published to npm before the application code is pushed to
+      its remote repository**. If forgotten (which the author of this has before),
+      the application's Common package dependency value will be a local path, and
+      not the version that npm should look up in its registry. Even worse, if the
+      application repo is updated by a third party, their version will also be replaced
+      by this path. This flow will hopefully be automated somehow in the future,
+      so the burden of having to remember this by the developer can be lessened.
 4. The package can now be installed by typing `npm install` like any other npm package.
 
 ### Installing a GitHub Package  ###
@@ -141,8 +167,9 @@ See the Common library
 
 ## Running Unit Tests
 
-From anywhere in the Angular project, run `ng test @OpenWaterFoundation/common`
-to execute the unit tests via [Karma](https://karma-runner.github.io).
+From anywhere in the Angular project, run either `ng test @OpenWaterFoundation/common`
+or `npm test @OpenWaterFoundation/common` to execute the unit tests via
+[Karma](https://karma-runner.github.io).
 
 ## Code Scaffolding
 

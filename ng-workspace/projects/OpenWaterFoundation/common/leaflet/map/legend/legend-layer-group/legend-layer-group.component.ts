@@ -82,7 +82,9 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   @Input('layerClassificationInfo') layerClassificationInfo: any;
   /** Reference to the Map Component Leaflet map object. */
   @Input('mainMap') mainMap: any;
-
+  /**
+   * 
+   */
   @Input('mapConfig') mapConfig: IM.GeoMapProject;
   /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
    * objects with Leaflet layers and other layer data for displaying, ordering, and
@@ -243,8 +245,9 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   * @param geoName The geoMap, geoLayerViewGroup, or geoLayerView name property.
   */
   openDocDialog(docPath: string, geoId: string, geoName: string): void {
-    var windowID = geoId + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+
+    var windowID = geoId;
+    if (!this.windowManager.addWindow(windowID, WindowType.DOC)) {
       return;
     }
 
@@ -274,8 +277,6 @@ export class LegendLayerGroupComponent implements AfterViewInit {
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
         DialogDocComponent, this.createDialogConfig(dialogConfigData)
       );
-
-      this.windowManager.addWindow(windowID, WindowType.DOC);
     });
   }
 

@@ -2,20 +2,20 @@
   <mat-expansion-panel [expanded]="true" hideToggle>
     <mat-expansion-panel-header class="expansion-header"
     attr.data-cy="{{geoLayerViewGroup.geoLayerViewGroupId}}-expansion-panel-header">
-      <mat-panel-title class="expansion-header-title"
-      [class.expansion-header-title-doc]="geoLayerViewGroup.properties.docPath">
-        {{geoLayerViewGroup.name}}
-      </mat-panel-title>
-      <mat-panel-description>
-        <div *ngIf="geoLayerViewGroup.properties.docPath">
 
+      <div class="mat-panel-container">
+
+        <div class="expansion-header-title-container">
+          <span class="expansion-header-title">
+            {{geoLayerViewGroup.name}}
+          </span>
+        </div>
+
+        <div *ngIf="geoLayerViewGroup.properties.docPath" class="expansion-header-kebab">
           <button mat-icon-button
-          (click)="clickIconButtonOnly($event)"
-          [matMenuTriggerFor]="geoLayerViewGroupMenu"
-          matTooltip="Click to view layer group menu options"
-          [matTooltipShowDelay]="750"
-          matTooltipPosition="above"
-          data-cy="geoLayerViewGroupKebab">
+          (click)="clickIconButtonOnly($event)" [matMenuTriggerFor]="geoLayerViewGroupMenu"
+          matTooltip="Click to view layer group menu options" [matTooltipShowDelay]="750"
+          matTooltipPosition="above" data-cy="geoLayerViewGroupKebab">
             <mat-icon class="white-dots">more_vert</mat-icon>
           </button>
           <mat-menu #geoLayerViewGroupMenu="matMenu">
@@ -30,9 +30,9 @@
               Information
             </button>
           </mat-menu>
-
         </div>
-      </mat-panel-description>
+      </div>
+
     </mat-expansion-panel-header>
 
     <!-- Here go through each geoLayerView and just show them. No need for trying

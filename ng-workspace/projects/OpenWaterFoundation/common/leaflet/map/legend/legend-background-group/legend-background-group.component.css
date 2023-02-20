@@ -31,10 +31,8 @@ it will default to white. */
 
 /* Styles how the background geoLayerViewGroup's name property is displayed. */
 .expansion-header-title {
-  flex-grow: 1000 !important;
-  padding-top: 2px !important;
-  color: white !important;
-  font-size: medium !important;
+  color: whitesmoke;
+  font-size: 18px;
 }
 
 /* Div container for both background layer title and description. */

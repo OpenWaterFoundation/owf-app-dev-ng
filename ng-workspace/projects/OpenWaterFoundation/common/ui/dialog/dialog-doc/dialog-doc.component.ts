@@ -122,7 +122,6 @@ export class DialogDocComponent implements OnInit, OnDestroy {
    */
   public onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
   }
 
   /**
@@ -131,7 +130,6 @@ export class DialogDocComponent implements OnInit, OnDestroy {
    * dialog and remove it from the window manager.
    */
   public ngOnDestroy(): void {
-    this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }
 

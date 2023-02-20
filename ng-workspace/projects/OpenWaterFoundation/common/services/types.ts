@@ -1,7 +1,6 @@
 // The interfaces and enums below are typed for use throughout the common library
 // as well as the ability to be utilized by outside consuming applications.
 
-import { DateTime }        from "@OpenWaterFoundation/common/util/time";
 import { BehaviorSubject } from "rxjs";
 
 // ENUM
@@ -170,7 +169,8 @@ export interface GeoMapProject {
     specificationFlavor?: string;
     specificationVersion?: string;
   };
-  geoMaps?: GeoMap[]
+  keywords?: string[];
+  geoMaps?: GeoMap[];
 }
 /** The GeoMap JSON object created by the GeoProcessor. */
 export interface GeoMap {
@@ -816,14 +816,6 @@ export interface TreeFlatNode {
 }
 
 /**
- * Type to be used recursively by the TreeNodeData interface. Code found at:
- * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript
- */
-export type TreeNode<T> = {
-  [key: string]: boolean | number | string | T[];
-}
-
-/**
  * Used by the Angular Material Tree Control and Data Source in the IM Builder.
  */
 export interface TreeNodeData extends TreeNode<TreeNodeData> {
@@ -846,6 +838,65 @@ export interface FileNode {
   parent: string;
 }
 
+////////////////////////////////// SEARCH \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+/**
+ * 
+ */
+export interface Keyword {
+  word: string;
+  score: number;
+}
+
+/**
+ * Used for ranking global searches in applications.
+ */
+export interface KeywordPage {
+  [key: string]: Keyword[];
+}
+
+/**
+ * 
+ */
+export interface SearchItem {
+  title: string;
+  text?: string;
+  keywords?: string;
+}
+
+/**
+ * 
+ */
+export interface SearchItemMetadata {
+  routerPath: string;
+  type: string;
+}
+
+/**
+ * 
+ */
+export interface SearchItemsMetadata {
+  [key: string]: SearchItemMetadata;
+}
+
+/**
+ * Optional choices to enhance a global application search.
+ */
+export interface SearchOptions {
+  keywordSearch: boolean;
+  fuzzySearch: boolean;
+}
+
+/**
+ * 
+ */
+export interface SearchResultsDisplay {
+  page: string;
+  totalScore: number;
+  routerPath: string;
+  type: string;
+}
+
 /////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /**
@@ -865,6 +916,15 @@ export interface AttributeTableParams {
  */
 export interface ChartDialog {
   graphTemplate: GraphTemplate;
+}
+
+/**
+ * 
+ */
+export interface DialogParams {
+  fullResourcePath?: string;
+  text?: string;
+  windowID?: string;
 }
 
 /**
@@ -895,6 +955,17 @@ export interface ParsedProp {
   line: string;
 }
 
+/**
+ * 
+ */
 export interface StandaloneMap {
   mapProject: string;
+}
+
+/**
+ * Type to be used recursively by the TreeNodeData interface. Code found at:
+ * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript
+ */
+export type TreeNode<T> = {
+  [key: string]: boolean | number | string | T[];
 }

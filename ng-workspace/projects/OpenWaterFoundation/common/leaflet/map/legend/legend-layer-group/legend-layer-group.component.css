@@ -33,15 +33,14 @@ if an extra long description string is provided. */
 
 /* Default styling for every regular geoLayerView expansion header title.  */
 .expansion-header-title {
-  flex-grow: 1000 !important;
-  color: white !important;
-  font-size: medium !important;
+  color: whitesmoke;
+  font-size: 18px;
 }
 
-/* Added to the expansion header title if the "docPath" property is provided in
-the map configuration JSON file. */
-.expansion-header-title-doc {
-  padding-top: 10px !important;
+/*  */
+.expansion-header-title-container {
+  display: flex;
+  align-items: center;
 }
 
 /* Unused. */
@@ -197,6 +196,13 @@ the map configuration JSON file. Transitions from 'black' to whitesmoke.   */
   /* Overrides the width of the button in the menu. otherwise the default max-width
   is quite short, and will cut off even a short name of the button, such as 'Data Table' */
   width: 200px !important;
+}
+
+/*  */
+.mat-panel-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 /* TESTING with the Angular Material Mat Slide Toggle. */

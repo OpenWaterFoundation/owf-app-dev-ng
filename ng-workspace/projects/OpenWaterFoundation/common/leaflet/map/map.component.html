@@ -39,19 +39,24 @@
   
       </div>
   
-      <!-- Panel content -->
+      <!-- Panel content. The following three lines are required by the Leaflet sidebar. -->
       <div class="leaflet-sidebar-content">
         <div class="leaflet-sidebar-pane" id="home">
           <h1 class="leaflet-sidebar-header">
-            <div *ngIf="geoMapName" class="geoMap-title">{{geoMapName}}</div>
+
+            <div *ngIf="geoMapName" class="geoMap-title-container">
+              <span class="geoMap-title">{{geoMapName}}</span>
+            </div>
   
             <div *ngIf="mapConfig">
               <div *ngIf="geoMapDocPath" class="geoMap-doc-button">
-                <button class="btn geoMap-info-circle"
-                  (click)="openDocDialog(geoMapDocPath, mapConfig.geoMaps[0].geoMapId, geoMapName)"
-                  matTooltip="Click to view map documentation" [matTooltipShowDelay]="750">
-                    <fa-icon [icon]=faInfoCircle size="lg"></fa-icon>
+
+                <button mat-icon-button class="geoMap-info-circle" routerLink="."
+                (click)="openDocDialog()" matTooltip="Click to view map documentation"
+                [matTooltipShowDelay]="750">
+                  <fa-icon [icon]=faInfoCircle size="xl" style="color: black"></fa-icon>
                 </button>
+
               </div>
             </div>
   
@@ -111,6 +116,7 @@
             </p>
   
             <p>
+              <!-- https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#optional-chaining -->
               <b>InfoMapper {{(projectVersion | async)?.version}}</b><br>
               Developed by the Open Water Foundation<br>
               The InfoMapper displays spatial data and related information.<br><br>
