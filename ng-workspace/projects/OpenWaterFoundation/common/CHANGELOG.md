@@ -29,6 +29,9 @@ an address search.
 ### Features / Enhancements ###
 
 * Added the `ParamAccount` and `ParamAccountValues` types.
+* Added the ability to Search the application. All Markdown files will be added to
+the search index by default, and maps can also be searched if the `keywords` top-level
+property is added to the map's configuration file.
 
 # 4.1.0 (2022-08-30) #
 
