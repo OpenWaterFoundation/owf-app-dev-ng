@@ -100,7 +100,7 @@ export class DialogGapminderComponent implements OnInit {
 
 
   /**
-   * Component constructor.
+   * Constructor for the DialogGapminderComponent.
    * @param dialogRef 
    * @param dataObject 
    */
