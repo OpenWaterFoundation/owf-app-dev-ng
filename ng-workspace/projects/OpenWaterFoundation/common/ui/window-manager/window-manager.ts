@@ -162,7 +162,7 @@ export class WindowManager {
    * @returns 
    */
   setQueryParamIdKey(): string {
-    return 'dialog' + (Object.keys(this.windows).length + 1) + 'Id'
+    return 'dialog' + (Object.keys(this.windows).length + 1) + 'Id';
   }
 
   /**

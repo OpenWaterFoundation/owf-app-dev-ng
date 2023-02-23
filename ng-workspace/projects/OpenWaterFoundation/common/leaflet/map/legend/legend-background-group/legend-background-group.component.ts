@@ -2,9 +2,8 @@ import { AfterViewInit,
           Component,
           EventEmitter,
           Input, 
-          Output }          from '@angular/core';
+          Output } from '@angular/core';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 
 @Component({
   selector: 'legend-background-group',
@@ -22,10 +21,9 @@ export class LegendBackgroundGroupComponent implements AfterViewInit {
 
 
   /**
-   * 
-   * @param commonService The reference to the injected Common library.
+   * Constructor for the LegendBackgroundGroupComponent.
    */
-  constructor(public commonService: OwfCommonService) {}
+  constructor() {}
 
 
   /**
