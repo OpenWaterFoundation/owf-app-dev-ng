@@ -13,7 +13,7 @@ export class DayTS extends TS {
 
   // Data members...
   /** The DataFlavor for transferring this specific class. */
-  // public static DataFlavor dayTSFlavor = new DataFlavor(RTi.TS.DayTS.class, "RTi.TS.DayTS");
+  // static DataFlavor dayTSFlavor = new DataFlavor(RTi.TS.DayTS.class, "RTi.TS.DayTS");
   protected _data: number[][]; // This is the data space for daily time series.
   protected _dataFlags: any[]; // Data flags for each daily value, with dimensions [month][day_in_month]
   private _pos: number[] = null; // Used to optimize performance when getting data.
@@ -29,7 +29,7 @@ export class DayTS extends TS {
   /**
   Copy constructor.  Everything is copied by calling copyHeader() and then copying the data values.
   */
-  public copyConstructor ( ts: DayTS ) {
+  copyConstructor ( ts: DayTS ) {
     if ( ts == null ) {
   		return;
   	}
@@ -48,7 +48,7 @@ export class DayTS extends TS {
   // <b>Note:</b> Currently assumes that the interval is 24Hour, and offers no 
   // support for other HourTS intervals.
   // */
-  // public DayTS ( HourTS ts )
+  // DayTS ( HourTS ts )
   // {	if ( ts == null ) {
   // 		return;
   // 	}
@@ -90,7 +90,7 @@ export class DayTS extends TS {
   // previous data values will be retained.  If false, the array will be reallocated and initialized to spaces.
   // @exception Exception if there is an error allocating the memory.
   // */
-  // public void allocateDataFlagSpace (	String initialValue, boolean retainPreviousValues )
+  // void allocateDataFlagSpace (	String initialValue, boolean retainPreviousValues )
   // throws Exception
   // {	String	routine="DayTS.allocateDataFlagSpace", message;
   // 	int	i;
@@ -178,7 +178,7 @@ export class DayTS extends TS {
   /** Allocate the data space for the time series.  The start and end dates and the
   data interval multiplier must have been set.  Initialize the space with the missing data value.
   */
-  public allocateDataSpace(): number {
+  allocateDataSpace(): number {
     return this.allocateDataSpaceNumber ( this._missing );
   }
 
@@ -186,7 +186,7 @@ export class DayTS extends TS {
   @param value The value to initialize the time series.
   @return 0 if successful, 1 if failure.
   */
-  public allocateDataSpaceNumber ( value: number ): number {
+  allocateDataSpaceNumber ( value: number ): number {
     var routine = "DayTS.allocateDataSpace";
   	var	ndays_in_month: number, nmonths=0, nvals: number;
 
@@ -263,7 +263,7 @@ export class DayTS extends TS {
   @param end_date The last date of the period.
   @param interval_mult The time series data interval multiplier.
   */
-  public static calculateDataSize(start_date: DateTime, end_date: DateTime, interval_mult: number): number {
+  static calculateDataSize(start_date: DateTime, end_date: DateTime, interval_mult: number): number {
     var routine = "DayTS.calculateDataSize";
   	var datasize = 0;
 
@@ -300,7 +300,7 @@ export class DayTS extends TS {
   // @param date2 New end date of time series.
   // @exception RTi.TS.TSException if there is a problem extending the data.
   // */
-  // public void changePeriodOfRecord ( DateTime date1, DateTime date2 )
+  // void changePeriodOfRecord ( DateTime date1, DateTime date2 )
   // throws TSException
   // {	String routine="DayTS.changePeriodOfRecord";
   // 	String message;
@@ -424,7 +424,7 @@ export class DayTS extends TS {
   // /**
   // Clone the object.  Similar to a copy constructor but can be used polymorphically.
   // */
-  // public Object clone ()
+  // Object clone ()
   // {	DayTS ts = (DayTS)super.clone();
   // 	// Does not seem to work...
   // 	//ts._data = (double[][])_data.clone();
@@ -632,7 +632,7 @@ export class DayTS extends TS {
   // </table>
   // @exception RTi.TS.TSException Throws if there is a problem formatting the output.
   // */
-  // public List<String> formatOutput( PropList proplist )
+  // List<String> formatOutput( PropList proplist )
   // throws TSException
   // {	String message = "", routine = "DayTS.formatOutput()";	
   // 	int column, dl = 20, row;
@@ -1172,7 +1172,7 @@ export class DayTS extends TS {
   // @param props Properties to modify output.
   // @exception RTi.TS.TSException Throws if there is an error writing the output.
   // */
-  // public List<String> formatOutput ( PrintWriter fp, PropList props )
+  // List<String> formatOutput ( PrintWriter fp, PropList props )
   // throws TSException
   // {	List<String> formatted_output = null;
   // 	String routine = "DayTS.formatOutput(Writer,props)";
@@ -1221,7 +1221,7 @@ export class DayTS extends TS {
   // @param props Property list containing output modifiers.
   // @exception RTi.TS.TSException Throws if there is an error writing the output.
   // */
-  // public List<String> formatOutput ( String fname, PropList props )
+  // List<String> formatOutput ( String fname, PropList props )
   // throws TSException
   // {	String message = null;
   // 	//String routine = "DayTS.formatOutput";
@@ -1421,7 +1421,7 @@ export class DayTS extends TS {
   @return The data value corresponding to the date, or the missing data value if the date is not found.
   @param date Date of interest.
   */
-  public getDataValue( date: DateTime ): number {
+  getDataValue( date: DateTime ): number {
     // Do not define routine here to improve performance.
   	// Check the date coming in 
     if ( (date == null) || !this.hasData() ) {
@@ -1464,7 +1464,7 @@ export class DayTS extends TS {
   // @param flavor the flavor in which to return the data.
   // @return the data in the specified DataFlavor, or null if no matching flavor exists.
   // */
-  // public Object getTransferData(DataFlavor flavor) {
+  // Object getTransferData(DataFlavor flavor) {
   // 	if (flavor.equals(dayTSFlavor)) {	
   // 		return this;
   // 	}
@@ -1488,7 +1488,7 @@ export class DayTS extends TS {
   // <li>TSIdent - TSIdent.class / RTi.TS.TSIdent</li></ul>
   // @return the flavors in which data can be transferred.
   // */
-  // public DataFlavor[] getTransferDataFlavors() {
+  // DataFlavor[] getTransferDataFlavors() {
   // 	DataFlavor[] flavors = new DataFlavor[3];
   // 	flavors[0] = dayTSFlavor;
   // 	flavors[1] = TS.tsFlavor;
@@ -1507,7 +1507,7 @@ export class DayTS extends TS {
   @return true if data are available (the data space has been allocated).
   Note that true will be returned even if all the data values are set to the missing data value.
   */
-  public hasData (): boolean {
+  hasData (): boolean {
     if ( this._data != null ) {
   		return true;
   	} else {
@@ -1521,7 +1521,7 @@ export class DayTS extends TS {
   // @return true if data flags are available (the data flag space has been allocated).
   // Note that true will be returned even if all the data flag values are set to the missing data flag value.
   // */
-  // public boolean hasDataFlags ()
+  // boolean hasDataFlags ()
   // {	if ( _dataFlags != null ) {
   // 		return super.hasDataFlags();
   // 	}
@@ -1552,7 +1552,7 @@ export class DayTS extends TS {
   // @param flavor the flavor to check.
   // @return true if data can be transferred in the specified flavor, false if not.
   // */
-  // public boolean isDataFlavorSupported(DataFlavor flavor) {
+  // boolean isDataFlavorSupported(DataFlavor flavor) {
   // 	if (flavor.equals(dayTSFlavor)) {
   // 		return true;
   // 	}
@@ -1571,7 +1571,7 @@ export class DayTS extends TS {
   // Refresh the derived data (e.g., data limits) if data have been set.  This is
   // normally only called from other package routines.
   // */
-  // public void refresh ()
+  // void refresh ()
   // {	TSLimits limits = null;
 
   // 	// If the data is not dirty, then we do not have to refresh the other information...
@@ -1611,7 +1611,7 @@ export class DayTS extends TS {
   @param date Date of interest.
   @param value Data value corresponding to date.
   */
-  public setDataValueTwo( date: DateTime, value: number ): void {
+  setDataValueTwo( date: DateTime, value: number ): void {
     if( (date.lessThan(this._date1)) || (date.greaterThan(this._date2)) ) {
   		// if ( Message.isDebugOn ) {
   		// 	Message.printWarning( 10, "DayTS.setDataValue",

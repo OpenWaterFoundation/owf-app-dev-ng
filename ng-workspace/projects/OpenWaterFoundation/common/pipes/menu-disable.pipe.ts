@@ -9,7 +9,7 @@ import { MapLayerManager }     from '@OpenWaterFoundation/common/ui/layer-manage
  */
 export class MenuDisablePipe implements PipeTransform {
 
-  public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
+  mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
 
   transform(value: any, ...args: any[]): unknown {
     var pipeType = args[0];

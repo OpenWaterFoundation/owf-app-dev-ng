@@ -5,6 +5,6 @@ import { Directive, ViewContainerRef } from '@angular/core';
 })
 export class SidepanelInfoDirective {
 
-  constructor(public viewContainerRef: ViewContainerRef) { }
+  constructor(private viewContainerRef: ViewContainerRef) { }
 
 }

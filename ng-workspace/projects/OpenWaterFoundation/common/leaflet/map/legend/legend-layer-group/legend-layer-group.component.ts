@@ -21,8 +21,10 @@ import { faInfoCircle,
           faList,
           faTable }                   from '@fortawesome/free-solid-svg-icons';
 
-import { OwfCommonService }           from '@OpenWaterFoundation/common/services';
-import * as IM                        from '@OpenWaterFoundation/common/services';
+import { GeoMapProject,
+          OwfCommonService,
+          Path,
+          Style }                     from '@OpenWaterFoundation/common/services';
 import { DialogDataTableComponent,
           DialogDocComponent, 
           DialogGalleryComponent, 
@@ -54,13 +56,10 @@ export class LegendLayerGroupComponent implements AfterViewInit {
    * name followed by color for each feature in the Leaflet layer to be shown in
    * the sidebar. */
   @Input('categorizedLayerColors') categorizedLayerColors: any;
-  /**
-   * 
-   */
+  /** Set to the size of the current screen by the Angular provided breakpoint observer. */
   currentScreenSize: string;
-  /**
-   * 
-   */
+  /** Subject used throughout subscriptions in the component that can be unsubscribed
+   * to when the component is destroyed. */
   destroyed = new Subject<void>();
   /** An object containing any event actions with their id as the key and the action
    * object itself as the value. */
@@ -82,10 +81,8 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   @Input('layerClassificationInfo') layerClassificationInfo: any;
   /** Reference to the Map Component Leaflet map object. */
   @Input('mainMap') mainMap: any;
-  /**
-   * 
-   */
-  @Input('mapConfig') mapConfig: IM.GeoMapProject;
+  /** The map config object read in from the map config file. */
+  @Input('mapConfig') mapConfig: GeoMapProject;
   /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
    * objects with Leaflet layers and other layer data for displaying, ordering, and
    * highlighting. */
@@ -105,11 +102,13 @@ export class LegendLayerGroupComponent implements AfterViewInit {
    * @param commonService The reference to the injected Common library.
    * @param dialog The reference to the MatDialog service.
    */
-  constructor(private breakpointObserver: BreakpointObserver,
-  public commonService: OwfCommonService,
-  public dialog: MatDialog) {
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private commonService: OwfCommonService,
+    private dialog: MatDialog
+  ) {
 
-    breakpointObserver.observe([
+    this.breakpointObserver.observe([
       Breakpoints.XSmall,
       Breakpoints.Small,
       Breakpoints.Medium,
@@ -257,7 +256,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
     else if (docPath.includes('.md')) { markdown = true; }
     else if (docPath.includes('.html')) { html = true; }
 
-    this.commonService.getPlainText(this.commonService.buildPath(IM.Path.dP, [docPath]), IM.Path.dP)
+    this.commonService.getPlainText(this.commonService.buildPath(Path.dP, [docPath]), Path.dP)
     .pipe(take(1))
     .subscribe((doc: any) => {
 
@@ -326,7 +325,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
     }
 
     var resourcePath = this.eventActions[geoLayerView.properties.imageGalleryEventActionId].resourcePath;
-    let fullResourcePath = this.commonService.buildPath(IM.Path.rP, [resourcePath]);
+    let fullResourcePath = this.commonService.buildPath(Path.rP, [resourcePath]);
 
     Papa.parse(fullResourcePath, {
       delimiter: ",",
@@ -369,7 +368,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
    * @param geoLayerId The geoLayerView's geoLayerId.
    * @param geoLayerViewName The geoLayerView's geoLayerViewName.
    */
-  public openPropertyDialog(geoLayerId: string, geoLayerViewName: any): void {
+  openPropertyDialog(geoLayerId: string, geoLayerViewName: any): void {
 
     var windowID = geoLayerId + '-dialog-properties';
     if (this.windowManager.windowExists(windowID)) {
@@ -430,8 +429,8 @@ export class LegendLayerGroupComponent implements AfterViewInit {
       // Graduated classificationType map configuration property.
       case 'g':
         return {
-          fill: MapUtil.verify(symbolProperties.fillColor, IM.Style.fillColor),
-          fillOpacity: MapUtil.verify(symbolProperties.fillOpacity, IM.Style.fillOpacity),
+          fill: MapUtil.verify(symbolProperties.fillColor, Style.fillColor),
+          fillOpacity: MapUtil.verify(symbolProperties.fillOpacity, Style.fillOpacity),
         }
     }
   }
@@ -447,36 +446,36 @@ export class LegendLayerGroupComponent implements AfterViewInit {
       // SingleSymbol classificationType map configuration property.
       case 'ss':
         return {
-          fill: MapUtil.verify(symbolProperties.properties.fillColor, IM.Style.fillColor),
-          fillOpacity: MapUtil.verify(symbolProperties.properties.fillOpacity, IM.Style.fillOpacity),
-          opacity: MapUtil.verify(symbolProperties.properties.opacity, IM.Style.opacity),
-          stroke: MapUtil.verify(symbolProperties.properties.color, IM.Style.color),
-          strokeWidth: MapUtil.verify(symbolProperties.properties.weight, IM.Style.weight)
+          fill: MapUtil.verify(symbolProperties.properties.fillColor, Style.fillColor),
+          fillOpacity: MapUtil.verify(symbolProperties.properties.fillOpacity, Style.fillOpacity),
+          opacity: MapUtil.verify(symbolProperties.properties.opacity, Style.opacity),
+          stroke: MapUtil.verify(symbolProperties.properties.color, Style.color),
+          strokeWidth: MapUtil.verify(symbolProperties.properties.weight, Style.weight)
         };
       // Categorized classificationType map configuration property.
       case 'c':
         return {
-          fill: MapUtil.verify(symbolProperties.fillColor, IM.Style.fillColor),
-          fillOpacity: MapUtil.verify(symbolProperties.fillOpacity, IM.Style.fillOpacity),
-          stroke: MapUtil.verify(symbolProperties.color, IM.Style.color),
-          strokeWidth: MapUtil.verify(symbolProperties.weight, IM.Style.weight)
+          fill: MapUtil.verify(symbolProperties.fillColor, Style.fillColor),
+          fillOpacity: MapUtil.verify(symbolProperties.fillOpacity, Style.fillOpacity),
+          stroke: MapUtil.verify(symbolProperties.color, Style.color),
+          strokeWidth: MapUtil.verify(symbolProperties.weight, Style.weight)
         };
       // Graduated classificationType map configuration property.
       case 'g':
         return {
           fillOpacity: '0',
-          stroke: MapUtil.verify(symbolProperties.color, IM.Style.color),
-          strokeOpacity: MapUtil.verify(symbolProperties.opacity, IM.Style.opacity),
-          strokeWidth: MapUtil.verify(symbolProperties.weight, IM.Style.weight)
+          stroke: MapUtil.verify(symbolProperties.color, Style.color),
+          strokeOpacity: MapUtil.verify(symbolProperties.opacity, Style.opacity),
+          strokeWidth: MapUtil.verify(symbolProperties.weight, Style.weight)
         }
       // If symbol is missing (sm), return a default styling object.
       case 'sm':
         return {
-          fill: MapUtil.verify(undefined, IM.Style.fillColor),
-          fillOpacity: MapUtil.verify(undefined, IM.Style.fillOpacity),
-          opacity: MapUtil.verify(undefined, IM.Style.opacity),
-          stroke: MapUtil.verify(undefined, IM.Style.color),
-          strokeWidth: MapUtil.verify(undefined, IM.Style.weight)
+          fill: MapUtil.verify(undefined, Style.fillColor),
+          fillOpacity: MapUtil.verify(undefined, Style.fillOpacity),
+          opacity: MapUtil.verify(undefined, Style.opacity),
+          stroke: MapUtil.verify(undefined, Style.color),
+          strokeWidth: MapUtil.verify(undefined, Style.weight)
         }
     }
 
@@ -529,7 +528,7 @@ export class LegendLayerGroupComponent implements AfterViewInit {
   //  * @param $event 
   //  * @param geoLayerViewGroup 
   //  */
-  // toggleLayerTest($event: any, geoLayerViewGroup: IM.GeoLayerViewGroup, geoLayerView: IM.GeoLayerView): void {
+  // toggleLayerTest($event: any, geoLayerViewGroup: GeoLayerViewGroup, geoLayerView: GeoLayerView): void {
 
   //   this.isChecked = !this.isChecked;
   //   // Obtain the MapLayerItem for this layer.

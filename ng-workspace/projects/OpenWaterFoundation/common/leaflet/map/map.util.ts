@@ -22,7 +22,7 @@ export class MapUtil {
    * track of multiple rasters shown on the map. */
   private static currentRasterLayers: any = {};
   /** The constant containing the colors of a defaulted color table for displaying categorized layers. */
-  public static readonly defaultColorTable =
+  static readonly defaultColorTable =
     ['#b30000', '#ff6600', '#ffb366', '#ffff00', '#59b300', '#33cc33', '#b3ff66', '#00ffff',
       '#66a3ff', '#003cb3', '#3400b3', '#6a00b3', '#9b00b3', '#b30092', '#b30062', '#b30029'];
   /** Holds the original style object of a feature on the layer. */
@@ -30,13 +30,13 @@ export class MapUtil {
   /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
    * objects with Leaflet layers and other layer data for displaying, ordering,
    * and highlighting. */
-  public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
+  mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
   /** The constant variable for what a cell value will contain as a missing value.
    * NOTE: May be turned into an array in the future for a list of all known missing
    * values. */
   private static readonly missingValue = -3.3999999521443642e38;
   /** A read only object for dynamically using operators between two integers. */
-  public static readonly operators = {
+  static readonly operators = {
     '>': function (a: any, b: any) { return a > b; },
     '>=': function (a: any, b: any) { return a >= b; },
     '<': function (a: any, b: any) { return a < b; },
@@ -47,7 +47,7 @@ export class MapUtil {
    * Adds style to a geoJson Leaflet layer, determined by properties set in the GeoLayerSymbol, or set to a default.
    * @param sp The object being passed with Style Property data.
    */
-  public static addStyle(sp: any): any {
+  static addStyle(sp: any): any {
     // Convert the symbolShape property (if it exists) to lowercase, needed to work with the third-party npm package ShapeMarker.
     if (sp.symbol.properties.symbolShape) {
       sp.symbol.properties.symbolShape = sp.symbol.properties.symbolShape.toLowerCase();
@@ -141,7 +141,7 @@ export class MapUtil {
    * @param features An array of all features of the selected layer
    * @param symbol The symbol object containing data about the selected layer
    */
-  public static assignColor(features: any[], symbol: any): string[] {
+  static assignColor(features: any[], symbol: any): string[] {
     let colors: string[] = MapUtil.defaultColorTable;
     let colorTable: any[] = [];
 
@@ -190,7 +190,7 @@ export class MapUtil {
    * and converted Linux like epoch times into human readable date/times.
    * @param featureProperties The object containing feature properties. May be filtered.
    */
-  public static buildDefaultDivContentString(featureProperties: any): string {
+  static buildDefaultDivContentString(featureProperties: any): string {
     var divContents = '';
     var feature: any;
     // Boolean to show if we've converted any epoch times in the features. Used to add what the + sign means in the popup.
@@ -254,7 +254,7 @@ export class MapUtil {
    * @param featureProperties All feature properties for the layer.
    * @param firstAction Boolean showing whether the action currently on is the first action, or all others after.
    */
-  public static buildPopupHTML(popupTemplateId: string, action: any, layerAttributes: any,
+  static buildPopupHTML(popupTemplateId: string, action: any, layerAttributes: any,
     featureProperties: any, firstAction: boolean, hoverEvent?: boolean): string {
 
     // VERY IMPORTANT! When the user clicks on a marker, a check is needed to determine if the marker has been clicked on before,
@@ -306,7 +306,7 @@ export class MapUtil {
    * on a feature popup div in the upper left corner of the map.
    * @param epochTime The amount of seconds or milliseconds since January 1st, 1970 to be converted.
    */
-  public static convertEpochToFormattedDate(epochTime: number): string {
+  static convertEpochToFormattedDate(epochTime: number): string {
     // Convert the epoch time to an ISO 8601 string with an offset and return it.
     return format(epochTime, 'yyyy-MM-dd HH:mm:ss');
   }
@@ -316,7 +316,7 @@ export class MapUtil {
    * the correct location on the map, whether the user is zoomed far in or out.
    * @param symbolPath The path to the image to show on the map
    */
-  public static createAnchorArray(symbolPath: any, imageAnchorPoint: string): number[] {
+  static createAnchorArray(symbolPath: any, imageAnchorPoint: string): number[] {
     // Split the image path by underscore, since it will have to contain at least one of those. Then pop the
     // last instance of this, as it will have the image dimensions. Splitting by x in between the numbers will
     // separate them into an array
@@ -393,7 +393,7 @@ export class MapUtil {
    * @param labelText The geoLayerSymbol property for showing a user-defined label
    * in the tooltip instead of default numbering.
    */
-  public static createLayerTooltips(leafletMarker: any, eventObject: any,
+  static createLayerTooltips(leafletMarker: any, eventObject: any,
     imageGalleryEventActionId: string, labelText: string, count: number): void {
 
     // Check the eventObject to see if it contains any keys in it. If it does, then
@@ -454,7 +454,7 @@ export class MapUtil {
    * @param result The result object from PapaParse after asynchronously reading the CSV classification file.
    * @param symbol The GeoLayerSymbol object from the map configuration file.
    */
-  public static createSingleBandRaster(georaster: any, result: any, symbol: IM.GeoLayerSymbol): any {
+  static createSingleBandRaster(georaster: any, result: any, symbol: IM.GeoLayerSymbol): any {
     var geoRasterLayer = new GeoRasterLayer({
       debugLevel: 0,
       georaster,
@@ -530,7 +530,7 @@ export class MapUtil {
    * @param result The result object from PapaParse after asynchronously reading the CSV classification file.
    * @param symbol The GeoLayerSymbol object from the map configuration file.
    */
-  public static createMultiBandRaster(georaster: any, geoLayerView: any, result: any, symbol: any): any {
+  static createMultiBandRaster(georaster: any, geoLayerView: any, result: any, symbol: any): any {
 
     var classificationAttribute = symbol.classificationAttribute;
     // Check the classificationAttribute to see if it is a number, and if not, log the error.
@@ -764,7 +764,7 @@ export class MapUtil {
    * @param symbol An InfoMapper GeoLayerSymbol object from the map config file to decide what the classificationAttribute is,
    * and therefore what raster band is being used for the cell value to display.
    */
-  public static displayMultipleHTMLRasterCells(e: any, georaster: any, geoLayerView: IM.GeoLayerView,
+  static displayMultipleHTMLRasterCells(e: any, georaster: any, geoLayerView: IM.GeoLayerView,
   originalDivContents: string, layerItem: MapLayerItem, symbol: IM.GeoLayerSymbol, geoMapId: string): void {
 
     /**
@@ -905,7 +905,7 @@ export class MapUtil {
    * @param featureProperties The original feature Properties object taken from the feature.
    * @param layerAttributes The object containing rules, regex, and general instructions for filtering out properties.
    */
-  public static filterProperties(featureProperties: any, layerAttributes: IM.EventConfig['layerAttributes']): any {
+  static filterProperties(featureProperties: any, layerAttributes: IM.EventConfig['layerAttributes']): any {
 
     var included: string[] = layerAttributes.include;
     var excluded: string[] = layerAttributes.exclude;
@@ -953,7 +953,7 @@ export class MapUtil {
    * @param keys 
    * @param features 
    */
-  public static formatAllFeatures(keys: string[], features: any[]): any {
+  static formatAllFeatures(keys: string[], features: any[]): any {
 
     // var featureIndex = 0;
     // var propertyIndex = 0;
@@ -974,7 +974,7 @@ export class MapUtil {
     return features;
   }
 
-  public static formatDisplayedColumns(keys: any): any {
+  static formatDisplayedColumns(keys: any): any {
 
 
     return keys;
@@ -986,7 +986,7 @@ export class MapUtil {
    * @param strVal The classification attribute that needs to match with the color being searched for
    * @param colorTable The default color table created when a user-created color table was not found
    */
-  public static getColor(symbol: any, strVal: string, colorTable: any) {
+  static getColor(symbol: any, strVal: string, colorTable: any) {
 
     switch (symbol.classificationType.toUpperCase()) {
       case "SINGLESYMBOL":
@@ -1012,7 +1012,7 @@ export class MapUtil {
    * Code from user Tim Down @ https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
    * @param hex The string representing a hex value
    */
-  public static hexToRGB(hex: string): any {
+  static hexToRGB(hex: string): any {
     // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
     hex = hex.replace(shorthandRegex, function (m, r, g, b) {
@@ -1032,7 +1032,7 @@ export class MapUtil {
    * 
    * @param cellValue 
    */
-  public static isCellValueMissing(cellValue: number): number | string {
+  static isCellValueMissing(cellValue: number): number | string {
 
     let nodataValueMin = MapUtil.missingValue - .000001;
     let nodataValueMax = MapUtil.missingValue + .000001;
@@ -1049,7 +1049,7 @@ export class MapUtil {
    * @returns True if the given @var num is an integer number, and false otherwise.
    * @param num The number to be tested as an integer value.
    */
-  public static isInt(num: any): boolean {
+  static isInt(num: any): boolean {
     return Number(num) === parseInt(num) && Number(num) % 1 === 0;
   }
 
@@ -1057,7 +1057,7 @@ export class MapUtil {
    * @returns True if the given @var num is a floating point number, and false otherwise.
    * @param num The number to be tested as a floating point number.
    */
-  public static isFloat(num: any): boolean {
+  static isFloat(num: any): boolean {
     return Number(num) === parseFloat(num) && Number(num) % 1 !== 0;
   }
 
@@ -1066,7 +1066,7 @@ export class MapUtil {
    * @param styleObj The object containing styling for a feature on a layer.
    * @returns A string hex code of what the highlight color should be on a hover event.
    */
-  public static highlightColor(styleObj?: any): string {
+  static highlightColor(styleObj?: any): string {
     // If the color being used is anywhere near yellow, use magenta instead.
     if (parseInt(styleObj.color.substring(1), 16) >= 16776960 && parseInt(styleObj.color.substring(1), 16) <= 16777054) {
       return '#FF00FF';
@@ -1080,7 +1080,7 @@ export class MapUtil {
    * @param imageBounds The raw image bounds string obtained from the map config file.
    * @returns The nested number array needed by the Leaflet imageOverlay constructor.
    */
-  public static parseImageBounds(imageBounds: string): number[][] {
+  static parseImageBounds(imageBounds: string): number[][] {
     var splitBounds = imageBounds.split(',');
     // If 2 sets of lat, lng bounds aren't given, inform the user and return the default value.
     if (splitBounds.length !== 4) {
@@ -1117,7 +1117,7 @@ export class MapUtil {
    * @param geoLayerView A reference to the current geoLayerView the feature if from.
    * @param geoMapName The name of the current GeoMap the feature resides in.
    */
-  public static resetFeature(e: any, geoLayer: any, geoLayerView: any,
+  static resetFeature(e: any, geoLayer: any, geoLayerView: any,
   geoMapName: string, geoMapId: string): void {
 
     if (geoLayerView.properties.highlightEnabled && geoLayerView.properties.highlightEnabled === 'true') {
@@ -1147,7 +1147,7 @@ export class MapUtil {
    * @param propFunction The PropFunction enum value to determine which implemented function needs to be called
    * @param args The optional arguments found in the parens of the PropFunction as a string
    */
-  public static runPropFunction(featureValue: string, propFunction: IM.PropFunction, args?: string): string {
+  static runPropFunction(featureValue: string, propFunction: IM.PropFunction, args?: string): string {
     switch (propFunction) {
       case IM.PropFunction.toMixedCase:
         var featureArray = featureValue.toLowerCase().split(' ');
@@ -1184,7 +1184,7 @@ export class MapUtil {
    * @param geoLayerView The current geoLayerView the feature is from.
    * @param layerAttributes 
    */
-  public static updateFeature(e: any, geoLayer: any, geoLayerView: any, geoMapId: string, layerAttributes?: any): void {
+  static updateFeature(e: any, geoLayer: any, geoLayerView: any, geoMapId: string, layerAttributes?: any): void {
     // First check if the geoLayerView of the current layer that's being hovered over has its enabledForHover property set to
     // false. If it does, skip the entire update of the div string and just return.
     if (geoLayerView.properties.enabledForHover && geoLayerView.properties.enabledForHover.toUpperCase() === 'FALSE') {
@@ -1304,7 +1304,7 @@ export class MapUtil {
    * @param styleProperty
    * @param style 
    */
-  public static verify(styleProperty: any, style: IM.Style): any {
+  static verify(styleProperty: any, style: IM.Style): any {
     // The property exists, so return it to be used in the style
     // TODO: jpkeahey 2020.06.15 - Maybe check to see if it's a correct property?
     if (styleProperty) {

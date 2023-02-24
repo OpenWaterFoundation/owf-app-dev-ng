@@ -3,8 +3,7 @@ import { Component,
           Inject,
           OnInit,
           Output }                      from '@angular/core';
-import { MatDialog,
-          MatDialogRef,
+import { MatDialogRef,
           MAT_DIALOG_DATA }             from '@angular/material/dialog';
 import { SelectionModel }               from '@angular/cdk/collections';
 
@@ -27,55 +26,55 @@ import { MapLayerManager,
 })
 export class DialogDataTableLightComponent implements OnInit {
   /** The original object containing all features in the layer. */
-  public attributeTableOriginal: any;
+  attributeTableOriginal: any;
   /** The copied object for displaying data a Material Table's cells. Is an instance
    * of TableVirtualScrollDataSource, needed for using the third party virtual scrolling
    * with an Angular Material Table. It extends the Angular Material DataSource class. */
-  public attributeTable: TableVirtualScrollDataSource<any>;
+  attributeTable: TableVirtualScrollDataSource<any>;
   /** Used to determine which matInputFilterText option to display. */
-  public defaultRadioDisabled = true;
+  defaultRadioDisabled = true;
   /** Array containing the names of all header columns in the Material Table. */
-  public displayedColumns: string[];
+  displayedColumns: string[];
   /** EventEmitter that alerts the Map component (parent) that an update has happened,
    * and sends the basin name. */
   @Output() featureHighlighted = new EventEmitter<boolean>();
   /** The layer's geoLayer. */
-  public geoLayer: any;
+  geoLayer: any;
   /** Object containing the layer geoLayerId as the ID, and an object of properties
    * set by a user-defined classification file. */
-  public layerClassificationInfo: any;
+  layerClassificationInfo: any;
   /** Object containing the URL as the key and value, so each link is unique.
    * Used by the template file to use as the link's href. */
-  public links: {} = {};
+  links: {} = {};
   /**
    * 
    */
-  public mapConfigPath: string;
+  mapConfigPath: string;
   /** The instance of the MapLayerManager, a helper class that manages MapLayerItem objects with Leaflet layers
    * and other layer data for displaying, ordering, and highlighting. */
-  public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
+  mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
   /** Used by the template file to display how many features are highlighted on the map. */
-  public matchedRows: number;
+  matchedRows: number;
   /** Dynamic string to show in the filter input area to a user. Default is set on initialization. */
-  public matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
+  matInputFilterText = 'Filter all columns using the filter string. Press Enter to execute the filter.';
 
-  public originalStyle: any;
+  originalStyle: any;
   /**
    * The type of search the filter is currently performing. Can be:
    * * `columns`
    */
-  public searchType = 'columns';
+  searchType = 'columns';
   // TODO: jpkeahey 2020.10.27 - Commented out. Will be used for row selection
   /**
    * Used by the template file to display how many rows (features in the layer) are selected on the data table.
    */
-  // public selectedRows = 0;
+  // selectedRows = 0;
   /** Object needed to show and deal with the checkboxes on the data table when selecting each row in the Material Table. */
-  public selection: SelectionModel<any>;
+  selection: SelectionModel<any>;
   /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
-  public windowID: string;
+  windowID: string;
   /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogDataTableLightComponent. */
   faXmark = faXmark;
 
@@ -84,21 +83,22 @@ export class DialogDataTableLightComponent implements OnInit {
    * @constructor for the Dialog Data Table.
    * @param commonService The reference to the OwfCommonService injected object.
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
-   * @param dataObject The object containing data passed from the Component that created this Dialog.
+   * @param matDialogData The object containing data passed from the Component that created this Dialog.
    */
-  constructor(public commonService: OwfCommonService,
-              public dialog: MatDialog,
-              public dialogRef: MatDialogRef<DialogDataTableLightComponent>,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any) {
+  constructor(
+    private commonService: OwfCommonService,
+    private dialogRef: MatDialogRef<DialogDataTableLightComponent>,
+    @Inject(MAT_DIALOG_DATA) private matDialogData: any
+  ) {
 
-    this.attributeTable = new TableVirtualScrollDataSource(dataObject.data.allFeatures);
-    this.attributeTableOriginal = JSON.parse(JSON.stringify(dataObject.data.allFeatures));
-    this.displayedColumns = Object.keys(dataObject.data.allFeatures[0]);
+    this.attributeTable = new TableVirtualScrollDataSource(this.matDialogData.data.allFeatures);
+    this.attributeTableOriginal = JSON.parse(JSON.stringify(this.matDialogData.data.allFeatures));
+    this.displayedColumns = Object.keys(this.matDialogData.data.allFeatures[0]);
     // Manually add the select column to the displayed Columns. This way checkboxes can be added below
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
     // this.displayedColumns.unshift('select');
-    this.geoLayer = dataObject.data.geoLayer;
-    this.layerClassificationInfo = dataObject.data.layerClassificationInfo;
+    this.geoLayer = this.matDialogData.data.geoLayer;
+    this.layerClassificationInfo = this.matDialogData.data.layerClassificationInfo;
     // This is needed for testing the library.
     // this.geometryType = 'WKT:Polygon';
 
@@ -106,7 +106,7 @@ export class DialogDataTableLightComponent implements OnInit {
 
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
     // this.selection = new SelectionModel<any>(true, []);
-    this.windowID = dataObject.data.windowID;
+    this.windowID = this.matDialogData.data.windowID;
   }
 
 
@@ -114,7 +114,7 @@ export class DialogDataTableLightComponent implements OnInit {
    * Function that applies the necessary trimming to a filter query from the user.
    * @param event The event passed when a DOM event is detected (user inputs into filter field)
    */
-  public applyFilter(event: KeyboardEvent) {
+  applyFilter(event: KeyboardEvent) {
     var layerItem: MapLayerItem = this.mapLayerManager.getMapLayerItem(this.geoLayer.geoLayerId);
 
     // If the keyup event is an empty string, then the user has either selected text and deleted it, or backspaced until the
@@ -145,7 +145,7 @@ export class DialogDataTableLightComponent implements OnInit {
    * @param row Optional row argument if naming a table cell. Not given if table header cell
    * NOTE: Not currently in use
    */
-  public checkboxLabel(row?: any): string {
+  checkboxLabel(row?: any): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -155,7 +155,7 @@ export class DialogDataTableLightComponent implements OnInit {
   /** Whether the number of selected elements matches the total number of rows.
    * NOTE: Not currently in use
   */
-  public isAllSelected(): boolean {
+  isAllSelected(): boolean {
     // If a filter has been done, check to see if all of them have been selected
     if (this.attributeTable.filteredData.length > 0) {
       const numSelected = this.selection.selected.length;
@@ -174,7 +174,7 @@ export class DialogDataTableLightComponent implements OnInit {
   /** Selects all rows, or all filtered rows, if they are not all selected; otherwise clear selection.
    * NOTE: Not currently in use
   */
-  public masterToggle(): void {
+  masterToggle(): void {
     if (this.isAllSelected()) {
       this.selection.clear();
       // this.selectedRows = 0;
@@ -224,7 +224,7 @@ export class DialogDataTableLightComponent implements OnInit {
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-  public onClose(): void {
+  onClose(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }
@@ -232,7 +232,7 @@ export class DialogDataTableLightComponent implements OnInit {
   /**
    * When the Download button is clicked in the data table dialog, save the table as a CSV file.
    */
-  public saveDataTable(): void {
+  saveDataTable(): void {
 
     var textToSave = '';
     var propertyIndex = 0;
@@ -298,7 +298,7 @@ export class DialogDataTableLightComponent implements OnInit {
    * @param row 
    * NOTE: Not currently in use
    */
-  public updateClickedRow(event: MouseEvent, row: any): void {
+  updateClickedRow(event: MouseEvent, row: any): void {
     event.stopPropagation();
     if (this.selection.isSelected(row)) {
       // --this.selectedRows;

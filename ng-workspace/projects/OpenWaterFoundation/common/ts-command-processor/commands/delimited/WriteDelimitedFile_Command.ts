@@ -35,7 +35,7 @@ export class WriteDelimitedFile_Command extends AbstractCommand {
   // @exception CommandWarningException Thrown if non-fatal warnings occur (the command could produce some results).
   // @exception CommandException Thrown if fatal warnings occur (the command could not produce output).
   // */
-  // public runCommand ( command_number: number ): void {
+  // runCommand ( command_number: number ): void {
   //   var routine = ".runCommand", message: string;
   //   var warning_level = 2;
   //   var command_tag = "" + command_number;
@@ -271,7 +271,7 @@ export class WriteDelimitedFile_Command extends AbstractCommand {
     @param outputEnd End end for output values
     @param headerComments list of strings for file header, should already have '#' at front.
   */
-  public writeTimeSeries(tslist: TS[], dateTimeColumn: string,
+  writeTimeSeries(tslist: TS[], dateTimeColumn: string,
     dateTimeFormatterType: DateTimeFormatterType, dateTimeFormat: string, valueColumns: string,
     headingSurround: string, delim: string, precision: number, missingValue: string,
     outputStart: DateTime, outputEnd: DateTime, headerComments: string[],

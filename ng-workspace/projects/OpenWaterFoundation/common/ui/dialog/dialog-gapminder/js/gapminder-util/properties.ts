@@ -3,8 +3,8 @@ import * as $ from "jquery";
 
 export class Properties {
 
-	public properties: any;
-	public DefaultSpeed = 75;
+	properties: any;
+	DefaultSpeed = 75;
 
 	constructor(configPath: string) {
 

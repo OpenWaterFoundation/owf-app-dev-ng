@@ -30,7 +30,7 @@ export class ChartService {
    * attribute table cell value precision.
    * @param fullTSID The entire TSID value from the graph config json file.
    */
-  public determineDatePrecision(fullTSID: any): number {
+  determineDatePrecision(fullTSID: any): number {
     if (fullTSID.toUpperCase().includes('YEAR') || fullTSID.toUpperCase().includes('MONTH') ||
     fullTSID.toUpperCase().includes('WEEK') || fullTSID.toUpperCase().includes('DAY')) {
           return 100;
@@ -42,7 +42,7 @@ export class ChartService {
    * label. This is only shown if the `TSAlias` property is an empty string.
    * @param fullTSID The TSID string from the graph template object JSON file.
    */
-  public formatLegendLabel(fullTSID: any): string {
+  formatLegendLabel(fullTSID: any): string {
     var legendLabel: string;
     // Determine what the legend label will be for both this time series graph and
     // the data table, depending on what the full TSID is.
@@ -62,7 +62,7 @@ export class ChartService {
    * @param endDate Date to be the last index in the returned array of dates.
    * @param timeSeries 
    */
-  public getDates(startDate: any, endDate: any, timeSeries: TS): string[] {
+  getDates(startDate: any, endDate: any, timeSeries: TS): string[] {
 
     var allDates: string[] = [];
     var interval = '';
@@ -104,7 +104,7 @@ export class ChartService {
    * @param timeSeries The current time series to use to extract the y axis data
    * for the graph.
    */
-  public setYAxisData(timeSeries: TS): any {
+  setYAxisData(timeSeries: TS): any {
 
     var yAxisData: number[] = [];
 
@@ -188,7 +188,7 @@ export class ChartService {
    * @param graphCount An optional number of the amount of 'traces' or graphs on
    * showing on the graph itself.
    */
-  public setPlotlyLegendPosition(legendPosition: string, graphCount?: number): any {
+  setPlotlyLegendPosition(legendPosition: string, graphCount?: number): any {
 
     var position: {
       x: number, 
@@ -258,7 +258,7 @@ export class ChartService {
    * be implemented as a Plotly property. Will be passed in as all lower case.
    * @param type The type of property being scrutinized.
    */
-  public verifyPlotlyProp(property: string, type: IM.GraphProp): string {
+  verifyPlotlyProp(property: string, type: IM.GraphProp): string {
 
     switch(type) {
       // BACKGROUND COLOR.
@@ -322,7 +322,7 @@ export class ChartService {
    * @param num The number that needs padding.
    * @param places The amount the padding will go out to the left.
    */
-  public zeroPad(num: number, places: number) {    
+  zeroPad(num: number, places: number) {    
     return String(num).padStart(places, '0');
   }
 

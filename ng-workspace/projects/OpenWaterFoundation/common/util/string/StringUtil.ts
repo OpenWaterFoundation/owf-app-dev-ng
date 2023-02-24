@@ -65,7 +65,7 @@ export class StringUtil {
   @param v list of Strings - will be modified if not null when passed in.
   @param newv list of Strings to add.
   */
-  public static addListToStringList ( v: string[], newv: string[] ): string[] {
+  static addListToStringList ( v: string[], newv: string[] ): string[] {
     if ( newv == null ) {
       return v;
     }
@@ -91,7 +91,7 @@ export class StringUtil {
   @param s String to convert.
   @return A double as converted from the String, or 0.0 if a conversion error.
   */
-  public static atod( s: string ): number {
+  static atod( s: string ): number {
     if ( s == null ) {
       return 0.0;
     }
@@ -111,7 +111,7 @@ export class StringUtil {
   @param s String to convert.
   @return An int as converted from the String or 0 if conversion fails.
   */
-  public static atoi( s: string ): number {
+  static atoi( s: string ): number {
     if ( s == null ) {
       return 0;
     }
@@ -328,7 +328,7 @@ export class StringUtil {
   results.  This allows a single list to be reused in repetitive reads.
   The list is cleared before reading.
   */
-  public static fixedReadTwo ( string: string, format: string ) {
+  static fixedReadTwo ( string: string, format: string ) {
     // First loop through the format string and count the number of valid format specifier characters...
     var format_length: number = 0;
     if ( format !== null ) {
@@ -419,7 +419,7 @@ export class StringUtil {
   results.  This allows a single list to be reused in repetitive reads.
   The list is cleared before reading.
   */
-  public static fixedReadFour ( string: string, field_types: number[], field_widths: number[], results: any[] ): any[] {
+  static fixedReadFour ( string: string, field_types: number[], field_widths: number[], results: any[] ): any[] {
     var	dtype: number = 0,	// Indicates type of variable (from "format").
       isize: number,		// Number of characters in a data value
           // (as integer).
@@ -521,7 +521,7 @@ export class StringUtil {
   @param d A double to format.
   @param format Format to use.
   */
-  public static formatString ( num: number, format: string ): string {
+  static formatString ( num: number, format: string ): string {
     var v: number[] = [];
     v.push ( num );
     return this.formatStringFinal ( v, format );
@@ -586,7 +586,7 @@ export class StringUtil {
   floating point numbers to always use a decimal point use the #.
   Additional capabilities may be added later.
   */
-  public static formatStringFinal ( v: any[], format: string ): string {
+  static formatStringFinal ( v: any[], format: string ): string {
     var buffer = '';
     var dl = 75;
 
@@ -1161,7 +1161,7 @@ export class StringUtil {
   @param token Token to return (starting with 0).
   @return the requested token or null.
   */
-  public static getToken ( string: string, delim: string, flag: number, token: number ): string {
+  static getToken ( string: string, delim: string, flag: number, token: number ): string {
     if ( token < 0 ) {
       return null;
     }
@@ -1182,7 +1182,7 @@ export class StringUtil {
   @param fromIndex The index where the search should begin.
   @return position of substring or -1 if not found.
   */
-  public static indexOfIgnoreCase ( full: string, substring: string, fromIndex: number ): number {
+  static indexOfIgnoreCase ( full: string, substring: string, fromIndex: number ): number {
     // Convert both strings to uppercase and then do the comparison.
     var full_up: string = full.toUpperCase();
     var substring_up: string = substring.toUpperCase();
@@ -1195,7 +1195,7 @@ export class StringUtil {
   @return true if the string can be converted to a double.
   @param s String to convert.
   */
-  public static isDouble( s: string ): boolean {
+  static isDouble( s: string ): boolean {
     if ( s == null ) {
           return false;
       }
@@ -1213,7 +1213,7 @@ export class StringUtil {
   @return true if the string can be converted to a integer.
   @param s String to convert.
   */
-  public static isInteger( s: string ): boolean {
+  static isInteger( s: string ): boolean {
     if ( s == null ) {
           return false;
       }
@@ -1232,7 +1232,7 @@ export class StringUtil {
   @param s String to remove character from.
   @param r String to remove.
   */
-  public static remove ( s: string, r: string ): string {
+  static remove ( s: string, r: string ): string {
     if ( (s == null) || (r == null) ) {
       return s;
     }
@@ -1259,7 +1259,7 @@ export class StringUtil {
   @param string String containing a floating point number.
   @param precision Number of digits after the decimal point to round the number.
   */
-  public static round ( string: string, precision: number ): string {
+  static round ( string: string, precision: number ): string {
     var new_string: string;
 
     // First break the string into its integer and remainder parts...

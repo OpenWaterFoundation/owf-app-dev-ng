@@ -5,8 +5,7 @@
           OnInit,
           Output }                      from '@angular/core';
 import { ActivatedRoute }               from '@angular/router';
-import { MatDialog,
-          MatDialogRef,
+import { MatDialogRef,
           MAT_DIALOG_DATA }             from '@angular/material/dialog';
 import { SelectionModel }               from '@angular/cdk/collections';
 
@@ -74,7 +73,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   debugLevelFlag: string = null;
   /** Used to determine which matInputFilterText option to display. */
   defaultRadioDisabled = true;
-
+  /**
+   * 
+   */
   destroyed = new Subject<void>();
   /** Array containing the names of all header columns in the Material Table. */
   displayedColumns: string[];
@@ -129,7 +130,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   // TODO: jpkeahey 2020.10.27 - Commented out. Will be used for row selection
   /** Used by the template file to display how many rows (features in the layer)
    * are selected on the data table. */
-  // public selectedRows = 0;
+  // selectedRows = 0;
   /** Object needed to show and deal with the checkboxes on the data table when
    * selecting each row in the Material Table. */
   selection: SelectionModel<any>;
@@ -145,30 +146,39 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
 
 
   /**
-   * @constructor Constructs the Dialog Data Table.
-   * @param commonService The reference to the OwfCommonService injected object.
-   * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
-   * @param dataObject The object containing data passed from the Component that created this Dialog.
+   * Constructor for the DialogDataTableComponent.
+   * @param actRoute 
+   * @param commonService Reference to the OwfCommonService injected service.
+   * @param dialogRef Reference to the DialogTSGraphComponent. Used for creation
+   * and sending of data.
+   * @param dialogService 
+   * @param logger Reference to the logging service for simpler debugging.
+   * @param matDialogData The object containing data passed from the component that
+   * created this Dialog.
    */
-  constructor(private actRoute: ActivatedRoute, public commonService: OwfCommonService,
-  public dialog: MatDialog, public dialogRef: MatDialogRef<DialogDataTableComponent>,
-  private dialogService: DialogService, private logger: CommonLoggerService,
-  @Inject(MAT_DIALOG_DATA) public dataObject: any) {
+  constructor(
+    private actRoute: ActivatedRoute,
+    private commonService: OwfCommonService,
+    private dialogRef: MatDialogRef<DialogDataTableComponent>,
+    private dialogService: DialogService,
+    private logger: CommonLoggerService,
+    @Inject(MAT_DIALOG_DATA) private matDialogData: any
+  ) {
 
-    this.attributeTable = new TableVirtualScrollDataSource(dataObject.data.allFeatures.features);
-    this.attributeTableOriginal = JSON.parse(JSON.stringify(dataObject.data.allFeatures.features));
-    this.allLayerFeatures = JSON.parse(JSON.stringify(dataObject.data.allFeatures.features));
-    this.currentLayer = L.geoJSON(dataObject.data.allFeatures);
-    this.displayedColumns = Object.keys(dataObject.data.allFeatures.features[0].properties);
+    this.attributeTable = new TableVirtualScrollDataSource(this.matDialogData.data.allFeatures.features);
+    this.attributeTableOriginal = JSON.parse(JSON.stringify(this.matDialogData.data.allFeatures.features));
+    this.allLayerFeatures = JSON.parse(JSON.stringify(this.matDialogData.data.allFeatures.features));
+    this.currentLayer = L.geoJSON(this.matDialogData.data.allFeatures);
+    this.displayedColumns = Object.keys(this.matDialogData.data.allFeatures.features[0].properties);
     // Manually add the select column to the displayed Columns. This way checkboxes can be added below
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
     // this.displayedColumns.unshift('select');
-    this.geoLayer = dataObject.data.geoLayer;
-    this.geoLayerView = dataObject.data.geoLayerView;
-    this.layerClassificationInfo = dataObject.data.layerClassificationInfo;
+    this.geoLayer = this.matDialogData.data.geoLayer;
+    this.geoLayerView = this.matDialogData.data.geoLayerView;
+    this.layerClassificationInfo = this.matDialogData.data.layerClassificationInfo;
     // This is needed for testing the library.
     // this.geometryType = 'WKT:Polygon';
-    this.mainMap = dataObject.data.mainMap;
+    this.mainMap = this.matDialogData.data.mainMap;
     this.matchedRows = this.attributeTable.data.length;
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
     // this.selection = new SelectionModel<any>(true, []);

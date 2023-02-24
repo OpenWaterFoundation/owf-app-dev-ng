@@ -29,27 +29,27 @@ export class Prop {
   /**
   Indicates that it is unknown how the property was set (this is the default).
   */
-  public static SET_UNKNOWN = 0;
+  static SET_UNKNOWN = 0;
 
   /**
   Indicates that the property was set from a file or database.  In this case,
   when a PropList is saved, the property should typically be saved.
   */
-  public static SET_FROM_PERSISTENT = 1;
+  static SET_FROM_PERSISTENT = 1;
 
   /**
   Indicates that the property was set at run-time as a default value.  In this
   case, when a PropList is saved, the property often may be ignored because it
   will be set to the same default value the next time.
   */
-  public static SET_AS_RUNTIME_DEFAULT = 2;
+  static SET_AS_RUNTIME_DEFAULT = 2;
 
   /**
   Indicates that the property was set by the user at run-time.  In this case,
   when a PropList is saved, the property should likely be saved because the user
   has specified a value different from internal defaults.
   */
-  public static SET_AT_RUNTIME_BY_USER = 3;
+  static SET_AT_RUNTIME_BY_USER = 3;
 
   /**
   Indicates that the property was automatically set for the user at run-time.  In
@@ -58,14 +58,14 @@ export class Prop {
   for all practical purposes, it is a run-time default and, in and of itself,
   should not force the user to save.
   */
-  public static SET_AT_RUNTIME_FOR_USER = 4;
+  static SET_AT_RUNTIME_FOR_USER = 4;
 
   /**
   Indicates that the property was set behind the scenes in a way that should be
   invisible to the user.  Users cannot edit hidden properties, will never see
   hidden properties, and should never be able to save hidden properties to a persistent source.
   */
-  public static SET_HIDDEN = 5;
+  static SET_HIDDEN = 5;
 
   /**
   Indicates whether property is read from a persistent source, set internally as a
@@ -114,7 +114,7 @@ export class Prop {
   Return the contents (Object) for the property.
   @return The contents (Object) for the property (note: the original is returned, not a copy).
   */
-  public getContents (): any {
+  getContents (): any {
     return this.__contents;
   }
 
@@ -122,7 +122,7 @@ export class Prop {
   Return the string key for the property.
   @return The string key for the property.
   */
-  public getKey (): string {
+  getKey (): string {
     return this.__key;
   }
 
@@ -130,7 +130,7 @@ export class Prop {
   Return the string value for the property.
   @return The string value for the property.
   */
-  public getValueNone (): string {
+  getValueNone (): string {
     return this.__value;
   }
 
@@ -139,7 +139,7 @@ export class Prop {
   // @param props PropList to search.
   // @return The string value for the property.
   // */
-  // public getValue ( props: PropList ): string {
+  // getValue ( props: PropList ): string {
   //   // This will expand contents if necessary...
   //   this.refresh ( props );
   //   return this.__value;
@@ -171,7 +171,7 @@ export class Prop {
   // @param props PropList to search.
   // @return The string value for the property.
   // */
-  // public refresh ( props: PropList ): void {
+  // refresh ( props: PropList ): void {
   //   var persistent_format: number = props.getPersistentFormat();
   //   if ( (persistent_format === PropList.FORMAT_MAKEFILE) ||
   //     (persistent_format === PropList.FORMAT_NWSRFS) ||
@@ -187,7 +187,7 @@ export class Prop {
   Set the contents for a property.
   @param contents The contents of a property as an Object.
   */
-  public setContents ( contents: any ): void {
+  setContents ( contents: any ): void {
     // Use a reference here (do we need a copy?)...
     if ( contents != null ) {
       this.__contents = contents;
@@ -198,7 +198,7 @@ export class Prop {
   Set how the property is being set (see SET_*).
   Set how the property is being set.
   */
-  public setHowSet ( how_set: number ): void {
+  setHowSet ( how_set: number ): void {
     this.__howSet = how_set;
   }
 
@@ -206,7 +206,7 @@ export class Prop {
   Set the string key for the property.
   @param key String key for the property.
   */
-  public setKey ( key: string ): void {
+  setKey ( key: string ): void {
     if ( key != null ) {
       this.__key = key;
     }
@@ -216,7 +216,7 @@ export class Prop {
   Set the string value for the property.
   @param value The string value for the property.
   */
-  public setValue ( value: string ): void
+  setValue ( value: string ): void
   {	if ( value != null ) {
       this.__value = value;
     }

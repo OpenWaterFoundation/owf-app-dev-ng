@@ -5,8 +5,8 @@ import { DOCUMENT }         from '@angular/common';
 import { map }              from 'rxjs/operators';
 
 import { DataUnits }        from '@OpenWaterFoundation/common/util/io';
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { OwfCommonService,
+          Path } from '@OpenWaterFoundation/common/services';
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
 
 
@@ -18,7 +18,7 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
 export class AppComponent {
   title = 'angulardev';
 
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
 
 
   /**
@@ -46,7 +46,7 @@ export class AppComponent {
    * @param dataUnitsPath The path to the dataUnits file.
    */
   private setDataUnits(dataUnitsPath: string): void {
-    this.owfService.getPlainText(this.owfService.buildPath(IM.Path.dUP, [dataUnitsPath]), IM.Path.dUP).pipe(map((dfile: any) => {
+    this.owfService.getPlainText(this.owfService.buildPath(Path.dUP, [dataUnitsPath]), Path.dUP).pipe(map((dfile: any) => {
       let dfileArray = dfile.split('\n');
       // Convert the returned string above into an array of strings as an argument
       DataUnits.readUnitsFileBool ( dfileArray, true );

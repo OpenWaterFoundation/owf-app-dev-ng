@@ -97,7 +97,7 @@ export class DataUnitsConversion {
   Return the factor to add by to perform the conversion.
   @return The factor to add by to perform the conversion.
   */
-  public getAddFactor ( ): number {
+  getAddFactor ( ): number {
     return this._add_factor;
   }
 
@@ -105,7 +105,7 @@ export class DataUnitsConversion {
   Return the factor to multiply by to perform the conversion.
   @return The factor to multiply by to perform the conversion.
   */
-  public getMultFactor ( ): number {
+  getMultFactor ( ): number {
     return this._mult_factor;
   }
 
@@ -113,7 +113,7 @@ export class DataUnitsConversion {
   Return the new units (after conversion).
   @return The new units (after conversion).
   */
-  public getNewUnits ( ): string {
+  getNewUnits ( ): string {
     return this._new_units;
   }
 
@@ -121,7 +121,7 @@ export class DataUnitsConversion {
   Return the original units (before conversion).
   @return The original units (before conversion).
   */
-  public getOriginalUnits ( ): string {
+  getOriginalUnits ( ): string {
     return this._original_units;
   }
 
@@ -140,7 +140,7 @@ export class DataUnitsConversion {
   temperature conversions).
   @param add_factor The addition factor.
   */
-  public setAddFactor ( add_factor: number ): void {
+  setAddFactor ( add_factor: number ): void {
     this._add_factor = add_factor;
   }
 
@@ -148,7 +148,7 @@ export class DataUnitsConversion {
   Set the multiplication factor for the conversion.
   @param mult_factor The multiplication factor.
   */
-  public setMultFactor ( mult_factor: number ): void {
+  setMultFactor ( mult_factor: number ): void {
     this._mult_factor = mult_factor;
   }
 
@@ -156,7 +156,7 @@ export class DataUnitsConversion {
   Set the new units (after conversion).
   @param new_units Data units after conversion.
   */
-  public setNewUnits ( new_units: string ): void {
+  setNewUnits ( new_units: string ): void {
     if ( new_units == null ) {
       return;
     }
@@ -167,7 +167,7 @@ export class DataUnitsConversion {
   Set the original units (before conversion).
   @param original_units Data units before conversion.
   */
-  public setOriginalUnits ( original_units: string ): void {
+  setOriginalUnits ( original_units: string ): void {
     if ( original_units == null ) {
       return;
     }
@@ -178,9 +178,9 @@ export class DataUnitsConversion {
   Return a string representation of the units (verbose output).
   @return A string representation of the units (verbose output).
   */
-  public toString (): string {
+  toString (): string {
     return "Conv:  \"" + this._original_units + "\" to \"" + this._new_units +
-            "\", MultBy:" + this._mult_factor + ", Add:" + this._add_factor;
+    "\", MultBy:" + this._mult_factor + ", Add:" + this._add_factor;
   }
 
 } // End of DataUnitsConversion

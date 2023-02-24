@@ -25,18 +25,18 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
 })
 export class DialogD3Component implements OnInit {
 
-  public d3Prop: IM.D3Prop;
-  public geoLayer: any;
+  d3Prop: IM.D3Prop;
+  geoLayer: any;
   private svg: any;
   private windowID: string;
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogD3Component. */
   faXmark = faXmark;
 
 
-  constructor(public dialogRef: MatDialogRef<DialogD3Component>,
+  constructor(private dialogRef: MatDialogRef<DialogD3Component>,
   private commonService: OwfCommonService,
-  @Inject(MAT_DIALOG_DATA) public matDialogData: any) {
+  @Inject(MAT_DIALOG_DATA) private matDialogData: any) {
 
     this.d3Prop = matDialogData.d3Prop;
     this.geoLayer = matDialogData.geoLayer;
@@ -332,7 +332,7 @@ export class DialogD3Component implements OnInit {
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-   public onClose(): void {
+   onClose(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }

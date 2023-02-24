@@ -39,7 +39,7 @@ export class StateModTS {
    * @param read_data Indicates whether data should be read (false=no, true=yes).
    * @returns A TS object as an observable.
    */
-  public readTimeSeries(tsident_string: string, filename: string, date1?: any, date2?: any,
+  readTimeSeries(tsident_string: string, filename: string, date1?: any, date2?: any,
     units?: string, read_data?: boolean): Observable<TS> {
     
     let ts = null;

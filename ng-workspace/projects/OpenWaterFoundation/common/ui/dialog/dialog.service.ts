@@ -26,7 +26,7 @@ export class DialogService {
    * @param long The longitude to check.
    * @param bounds The InfoMapper typed Bounds object to be updated if necessary.
    */
-  public setZoomBounds(lat: number, long: number, bounds: IM.Bounds): void {
+  setZoomBounds(lat: number, long: number, bounds: IM.Bounds): void {
 
     if (lat > bounds.NEMaxLat) {
       bounds.NEMaxLat = lat;
@@ -68,7 +68,7 @@ export class DialogService {
    * under band properties.
    * @param arr The Raster array reference to determine what data types it is using.
    */
-  public getInstanceOf(arr: any[]): string {
+  getInstanceOf(arr: any[]): string {
     if (arr instanceof Float32Array) {
       return 'Float32Array';
     } else if (arr instanceof Float64Array) {

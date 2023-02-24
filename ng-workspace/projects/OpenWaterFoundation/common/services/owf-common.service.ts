@@ -157,7 +157,8 @@ export class OwfCommonService {
   }
 
   /**
-   * 
+   * Adds the geoLayerId to the object that holds layers that have been determined
+   * to contain an error.
    * @param geoLayerId The layer's geoLayerId to be added to the layerError array
    */
   addLayerError(geoLayerId: string): void {
@@ -173,6 +174,7 @@ export class OwfCommonService {
    * filename or geoLayerId.
    */
   buildPath(pathType: string, arg?: any[]): string {
+
     // If a URL is given as the path that needs to be built, just return it so the
     // http GET request can be performed.
     if (arg) {

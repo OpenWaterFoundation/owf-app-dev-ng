@@ -1,11 +1,11 @@
 
 export class Parameters {
 
-  public csv: any;
-  public parameters: any;
-  public parameterFile: any;
-  public json: any;
-  public label: any;
+  csv: any;
+  parameters: any;
+  parameterFile: any;
+  json: any;
+  label: any;
 
   constructor(parameterFile: any, label: any) {
     this.parameters;

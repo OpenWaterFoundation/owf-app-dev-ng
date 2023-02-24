@@ -43,10 +43,14 @@ export class DashboardComponent implements OnDestroy {
    * @param route The injected ActivatedRoute for determining the correct URL and
    * Dashboard to be displayed.
    */
-  constructor(private commonService: OwfCommonService,
-  private dashboardService: DashboardService,
-  private eventService: EventService,
-  private route: ActivatedRoute) {}
+  constructor(
+    private commonService: OwfCommonService,
+    private dashboardService: DashboardService,
+    private eventService: EventService,
+    private route: ActivatedRoute
+  ) {
+    
+  }
 
 
   /**

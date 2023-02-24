@@ -199,7 +199,7 @@ export class ColoradoHydroBaseRestDatastore {
    * @param fullTSID The parsed TSID string as an object.
    * @returns A string that will be ignored by consuming components.
    */
-  public getAsyncData(fullTSID: IM.TSID): string {
+  getAsyncData(fullTSID: IM.TSID): string {
 
     // Wait until initialized.
     this.paramsInitialized$.subscribe((initialized: boolean) => {
@@ -215,7 +215,7 @@ export class ColoradoHydroBaseRestDatastore {
    * For example 'Surface Water Station - Streamflow-Avg' would return 'Streamflow-Avg'.
    * @return data type without group
    */
-  public getDataTypeWithoutGroup ( dataType: string ): string {
+  getDataTypeWithoutGroup ( dataType: string ): string {
     // Parse the group.
     var pos = dataType.indexOf(" -");
     var group = "";
@@ -235,7 +235,7 @@ export class ColoradoHydroBaseRestDatastore {
   Return the service root URI for the data store.
   @return the service root URI for the data store.
   */
-  public getServiceRootURI(): string {
+  getServiceRootURI(): string {
     return this.__serviceRootURI;
   }
 
@@ -258,7 +258,7 @@ export class ColoradoHydroBaseRestDatastore {
    * @param dataType - the datatype portion of the TSID ex. 'DISCHRG'
    * @return true if data type is for a telemetry station, false otherwise
    */
-  public isTelemetryStationTimeSeriesDataType ( dataType: string ): boolean {
+  isTelemetryStationTimeSeriesDataType ( dataType: string ): boolean {
 
     //String routine = getClass().getSimpleName() + ".isTelemetryStationTimeSeriesData";
     //Message.printStatus(2, routine, "Checking whether \"" + dataType + "\" is telemetry station." );
@@ -2396,7 +2396,7 @@ export class ColoradoHydroBaseRestDatastore {
    * Set the apiKey 
    * @param apiKey String that is the api key.
    */
-  public setApiKey(apiKey: string): void {
+  setApiKey(apiKey: string): void {
     this.apiKey = apiKey ? apiKey : '';
   }
 
@@ -2426,7 +2426,7 @@ export class ColoradoHydroBaseRestDatastore {
    * Set the service root URI for the data store.
    * @param serviceRootURI the service root URI for the data store.
    */
-  public setServiceRootURI ( serviceRootURI: string ): void {
+  setServiceRootURI ( serviceRootURI: string ): void {
     this.__serviceRootURI = serviceRootURI;
   }
 

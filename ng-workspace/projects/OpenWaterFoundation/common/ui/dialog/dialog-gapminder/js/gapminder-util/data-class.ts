@@ -12,15 +12,22 @@ import * as Papa            from 'papaparse';
 
 export class Data {
 
-	public configProps: any;
-	public variables: any;
-	public csv: any;
-	public json: any;
-	public annotations: any;
-	public dimensions: any;
-	public parseDate: any;
+	configProps: any;
+	variables: any;
+	csv: any;
+	json: any;
+	annotations: any;
+	dimensions: any;
+	parseDate: any;
 
-	constructor(configProps: any, public commonService: OwfCommonService) {
+
+	/**
+	 * 
+	 * @param configProps 
+	 * @param commonService 
+	 */
+	constructor(configProps: any, private commonService: OwfCommonService) {
+
 		this.configProps = configProps;
 		this.variables = configProps.VariableNames;
 		this.csv;

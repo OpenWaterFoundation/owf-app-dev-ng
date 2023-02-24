@@ -54,7 +54,7 @@ export class DatastoreManager {
    * Only one instance of this MapLayerManager can be used at one time, making it
    * a singleton class.
    */
-  public static getInstance(): DatastoreManager {
+  static getInstance(): DatastoreManager {
     if (!DatastoreManager.instance) { DatastoreManager.instance = new DatastoreManager(); }
     return DatastoreManager.instance;
   }
@@ -65,7 +65,7 @@ export class DatastoreManager {
    * @param TSID The full TSID string.
    * @returns The data from the requested Datastore as an observable.
    */
-  public getDatastoreData(service: OwfCommonService, TSID: string): any {
+  getDatastoreData(service: OwfCommonService, TSID: string): any {
     // Parse the TSID string into the TSID object.
     var fullTSID = service.parseTSID(TSID);
     var datastore = this.getDatastore(fullTSID.datastore);
@@ -92,7 +92,7 @@ export class DatastoreManager {
    * @param datastoreStr The datastore string from the full TSID.
    * @returns A string of the DatastoreType.
    */
-  public getDatastore(datastoreStr: string): IM.Datastore {
+  getDatastore(datastoreStr: string): IM.Datastore {
 
     // First try checking each built-in datastore's name property.
     for (let datastore of this.builtInDatastores) {
@@ -130,7 +130,7 @@ export class DatastoreManager {
     };
   }
 
-  public initializeDatastores(): void {
+  initializeDatastores(): void {
 
     // Create and initialize the ColoradoHydroBaseRestDatastore instance.
     // this.createdDatastores['ColoradoHydroBaseRestDatastore'] =
@@ -143,7 +143,7 @@ export class DatastoreManager {
    * @param userDatastores The array of all user provided datastores from the
    * application configuration file.
    */
-  public setUserDatastores(userDatastores: IM.Datastore[]): void {
+  setUserDatastores(userDatastores: IM.Datastore[]): void {
 
     // If no userDatastores are given, don't do anything.
     if (!userDatastores || userDatastores.length === 0) {

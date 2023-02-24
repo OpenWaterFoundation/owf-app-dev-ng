@@ -11,9 +11,9 @@
 // /**
 // Flags use to indicate the vendor
 // */
-// public static SUN = 1;
-// public static MICROSOFT = 2;
-// public static UNKNOWN = 3;
+// static SUN = 1;
+// static MICROSOFT = 2;
+// static UNKNOWN = 3;
 
 // /**
 // String to use to indicate a file header revision line.
@@ -112,7 +112,7 @@
 //   @see PropList
 //   @see PropListManager
 //   */
-//   public static getProp ( key: string ): Prop {
+//   static getProp ( key: string ): Prop {
 //     if ( !this._initialized ) {
 //       this.initialize ();
 //     }
@@ -127,7 +127,7 @@
 //   @see PropList
 //   @see PropListManager
 //   */
-//   public static getPropValue ( key: string ): string {
+//   static getPropValue ( key: string ): string {
 //     if ( !this._initialized ) {
 //       this.initialize ();
 //     }

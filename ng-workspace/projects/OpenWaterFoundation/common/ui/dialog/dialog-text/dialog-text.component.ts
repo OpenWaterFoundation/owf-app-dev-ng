@@ -23,19 +23,19 @@ import * as FileSaver       from 'file-saver';
 export class DialogTextComponent implements OnInit, OnDestroy {
   /** A string representing the file extension that the text came from. Used for
    * the Download button tooltip. */
-  public fileExtension: string;
+  fileExtension: string;
   /** A string representing the name that the text came from. */
-  public fileName: string;
+  fileName: string;
   /** Used as a path resolver and contains the path to the map configuration that
    * is using this TSGraphComponent. To be set in the app service for relative
    * paths. */
-  public mapConfigPath: string;
+  mapConfigPath: string;
   /** The text to be displayed in the dialog. */
-  public text: any;
+  text: any;
   /** A string representing the button ID of the button clicked to open this dialog. */
-  public windowID: string;
+  windowID: string;
   /** The windowManager instance for managing the opening and closing of windows throughout the InfoMapper. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogTextComponent. */
   faXmark = faXmark;
 
@@ -45,22 +45,24 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    * and sending of data.
    * @param dialogService The reference to the dialog service, for sending data between
    * components and higher scoped map variables.
-   * @param dataObject The object containing data passed from the Component that
+   * @param matDialogData The object containing data passed from the Component that
    * created this Dialog.
    */
-  constructor(public dialogRef: MatDialogRef<DialogTextComponent>,
-              private commonService: OwfCommonService,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any) {
+  constructor(
+    private commonService: OwfCommonService,
+    private dialogRef: MatDialogRef<DialogTextComponent>,
+    @Inject(MAT_DIALOG_DATA) private matDialogData: any
+  ) {
 
-    this.windowID = dataObject.data.windowID;
-    this.text = dataObject.data.text;
-    this.fileName = dataObject.data.resourcePath;
+    this.windowID = this.matDialogData.data.windowID;
+    this.text = this.matDialogData.data.text;
+    this.fileName = this.matDialogData.data.resourcePath;
     if (this.fileName.includes('.')) {
       this.fileExtension = this.fileName.split('.').pop();
     } else {
       this.fileExtension = this.fileName;
     }
-    this.mapConfigPath = dataObject.data.mapConfigPath;
+    this.mapConfigPath = this.matDialogData.data.mapConfigPath;
   }
 
 
@@ -79,7 +81,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-  public onClose(): void {
+  onClose(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }
@@ -88,7 +90,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    * Called once, before the instance is destroyed. If the page is changed or a link is clicked on in the dialog that opens
    * a new map, make sure to close the dialog and remove it from the window manager.
    */
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }
@@ -96,7 +98,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
   /**
    * Downloads the text as a Blob onto the user's local machine with the same name as the original file
    */
-  public saveText(): void {
+  saveText(): void {
     var data = new Blob([this.text], { type: 'text/plain;charset=utf-8' });
     FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.fileName, IM.SaveFileType.text));
   }

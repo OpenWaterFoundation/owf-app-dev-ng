@@ -40,7 +40,7 @@ export class StateModDatastore {
    * @param fullTSID TSID object that has been parsed from a full TSID string.
    * @returns The StateMod data as an observable of type TS.
    */
-  public static readTimeSeries(commonService: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
+  static readTimeSeries(commonService: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
 
     var convertedPath: string;
 

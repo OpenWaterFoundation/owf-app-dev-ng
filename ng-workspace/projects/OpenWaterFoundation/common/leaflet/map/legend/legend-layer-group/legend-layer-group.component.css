@@ -37,7 +37,7 @@ if an extra long description string is provided. */
   font-size: 18px;
 }
 
-/*  */
+/* Container around the expansion title. */
 .expansion-header-title-container {
   display: flex;
   align-items: center;
@@ -49,7 +49,7 @@ if an extra long description string is provided. */
   padding-right: 7%;
 }
 
-/*  */
+/* Each fa-icon element in the component. */
 .fa-icon {
   margin-right: 2%;
 }

@@ -58,8 +58,14 @@ export class StoryComponent implements OnInit, OnDestroy {
    * a component that is loaded in an outlet.
    * @param logger Reference to the Common library logger service.
    */
-  constructor(private actRoute: ActivatedRoute, private commonService: OwfCommonService,
-  private logger: CommonLoggerService, private router: Router) { }
+  constructor(
+    private actRoute: ActivatedRoute,
+    private commonService: OwfCommonService,
+    private logger: CommonLoggerService,
+    private router: Router
+  ) {
+    
+  }
 
 
   /**

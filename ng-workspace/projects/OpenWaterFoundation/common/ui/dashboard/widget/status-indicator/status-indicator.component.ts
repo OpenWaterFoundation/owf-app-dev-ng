@@ -96,9 +96,13 @@ export class StatusIndicatorComponent {
    * 
    * @param commonService The injected Common library service.
    */
-  constructor(private commonService: OwfCommonService,
-    private eventService: EventService,
-    private dashboardService: DashboardService) {}
+  constructor(
+    private commonService: OwfCommonService,
+    private dashboardService: DashboardService,
+    private eventService: EventService
+  ) {
+    
+  }
 
 
   /**

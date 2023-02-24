@@ -86,9 +86,12 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * @param matDialogData The incoming templateGraph object containing data about
    * from the graph template file.
    */
-  constructor(private commonService: OwfCommonService, private dialog: MatDialog,
-  private dialogRef: MatDialogRef<DialogTSGraphComponent>,
-  @Inject(MAT_DIALOG_DATA) matDialogData: any) {
+  constructor(
+    private commonService: OwfCommonService,
+    private dialog: MatDialog,
+    private dialogRef: MatDialogRef<DialogTSGraphComponent>,
+    @Inject(MAT_DIALOG_DATA) matDialogData: any
+  ) {
 
     this.windowID = matDialogData.windowID;
     this.featureProperties = matDialogData.featureProperties;

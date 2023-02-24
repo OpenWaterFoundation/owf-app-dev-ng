@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject,
           Observable,
           of } from 'rxjs';
+import { DashboardConf, DashboardWidget, ListenedToWidget, Widget, WidgetEvent, WidgetEventHandler } from './types';
 
-import * as IM from './types';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +13,12 @@ export class EventService {
 
   /** The currently supported widget types that can listen to the Select widget. */
   private readonly SUPPORTEDSELECTEVENTWIDGETS = [
-    IM.Widget.cht,
-    IM.Widget.ind
+    Widget.cht,
+    Widget.ind
   ];
   /** Array of ListenedToWidget objects, which contain the name of the widget that
    * is being listened to, and the BehaviorSubject attached to the widget. */
-  private listenedToWidgets: IM.ListenedToWidget[] = [];
+  private listenedToWidgets: ListenedToWidget[] = [];
 
   constructor() { }
 
@@ -31,7 +31,7 @@ export class EventService {
   /**
    * Determines if a widget supports the SelectEvent type.
    */
-  private canSelect(widget: IM.DashboardWidget): boolean {
+  private canSelect(widget: DashboardWidget): boolean {
     for (let supportedWidgetType of this.SUPPORTEDSELECTEVENTWIDGETS) {
       if (supportedWidgetType.toLowerCase() === widget.type.toLowerCase()) {
         return true;
@@ -45,14 +45,14 @@ export class EventService {
    * provided eventHandlers property in the dashboard configuration file.
    * @param dashboardConfig The dashboard configuration object.
    */
-  createListenedToWidgets(dashboardConfig: IM.DashboardConf): void {
+  createListenedToWidgets(dashboardConfig: DashboardConf): void {
 
     var listenedToWidgetNames: string[] = [];
 
-    dashboardConfig.widgets.forEach((widget: IM.DashboardWidget) => {
+    dashboardConfig.widgets.forEach((widget: DashboardWidget) => {
       
       if (widget.eventHandlers) {
-        widget.eventHandlers.forEach((eventHandler: IM.WidgetEventHandler) => {
+        widget.eventHandlers.forEach((eventHandler: WidgetEventHandler) => {
 
           // Check if the widget has already been added to the listenedToWidgets
           // array.
@@ -77,7 +77,7 @@ export class EventService {
    * array.
    * @returns An Observable of a WidgetEvent if all checks were passed, or null. 
    */
-  getWidgetEvent(widget: IM.DashboardWidget): Observable<IM.WidgetEvent> {
+  getWidgetEvent(widget: DashboardWidget): Observable<WidgetEvent> {
 
     if (widget.eventHandlers && this.isSupportedWidgetEvent(widget) === true) {
 
@@ -98,7 +98,7 @@ export class EventService {
    * @returns True if the widget eventHandler object's eventType is SelectEvent,
    * and false otherwise.
    */
-  hasSelectEvent(widget: IM.DashboardWidget): boolean {
+  hasSelectEvent(widget: DashboardWidget): boolean {
 
     if (!widget.eventHandlers) {
       return false;
@@ -117,7 +117,7 @@ export class EventService {
    * @param widget The widget object.
    * @returns A boolean whether the widget's eventHandler eventType is supported.
    */
-  private isSupportedWidgetEvent(widget: IM.DashboardWidget): boolean {
+  private isSupportedWidgetEvent(widget: DashboardWidget): boolean {
 
     switch(widget.eventHandlers[0].eventType.toLowerCase()) {
       case 'selectevent': return this.canSelect(widget);
@@ -130,7 +130,7 @@ export class EventService {
    * uses its 
    * @param widgetEvent The widgetEvent to update using the appropriate BehaviorSubject.
    */
-  sendWidgetEvent(widgetEvent: IM.WidgetEvent): void {
+  sendWidgetEvent(widgetEvent: WidgetEvent): void {
     
     for (let listenedToWidget of this.listenedToWidgets) {
       if (widgetEvent.widgetName.toLowerCase() === listenedToWidget.name.toLowerCase()) {

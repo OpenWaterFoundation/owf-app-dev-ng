@@ -2,8 +2,8 @@ import { Component,
           Input,
           OnInit }           from '@angular/core';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { OwfCommonService,
+          Path }             from '@OpenWaterFoundation/common/services';
 
 @Component({
   selector: 'lib-sidepanel-info',
@@ -22,7 +22,7 @@ export class SidepanelInfoComponent implements OnInit {
     // Set the projectVersion class variable to an Observable that contains what was received
     // from the version.json file. The template will then use the async pipe to subscribe to it
     // and display the version.
-    this.projectVersion = this.commonService.getJSONData('assets/version.json', IM.Path.vP);
+    this.projectVersion = this.commonService.getJSONData('assets/version.json', Path.vP);
   }
 
 }

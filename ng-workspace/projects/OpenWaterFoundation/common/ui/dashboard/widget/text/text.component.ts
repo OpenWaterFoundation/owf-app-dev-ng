@@ -46,11 +46,17 @@ export class TextComponent implements OnDestroy{
 
   /**
    * 
-   * @param commonService The injected Common library service.
+   * @param commonService 
+   * @param dashboardService 
+   * @param document 
    */
-  constructor(private commonService: OwfCommonService,
+  constructor(
+    private commonService: OwfCommonService,
     private dashboardService: DashboardService,
-    @Inject(DOCUMENT) private document: Document) {}
+    @Inject(DOCUMENT) private document: Document
+  ) {
+    
+  }
 
 
   /**

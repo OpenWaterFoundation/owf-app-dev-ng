@@ -34,19 +34,19 @@ export class DataUnits {
   /**
   Indicates that the units system is unknown.
   */
-  public static SYSTEM_UNKNOWN = 0;
+  static SYSTEM_UNKNOWN = 0;
   /**
   Indicates that the units are for the English System.
   */
-  public static SYSTEM_ENGLISH = 1;
+  static SYSTEM_ENGLISH = 1;
   /**
   Indicates that the units are for the International System.
   */
-  public static SYSTEM_SI = 2;
+  static SYSTEM_SI = 2;
   /**
   Indicates that the units are for both English and International System.
   */
-  public static SYSTEM_ALL = 3;
+  static SYSTEM_ALL = 3;
 
   // Data members...
 
@@ -168,7 +168,7 @@ export class DataUnits {
   be used throughout the application.
   @param units Instance of DataUnits to add to the list.
   */
-  public static addUnits ( units: DataUnits ): void {
+  static addUnits ( units: DataUnits ): void {
     // First see if the units are already in the list...
 
     var size: number = this.__units_Vector.length;
@@ -195,7 +195,7 @@ export class DataUnits {
   version of this method that takes the boolean flag.
   @param units_strings list of units strings.
   */
-  public static areUnitsStringsCompatible ( units_strings: string[] ): boolean {
+  static areUnitsStringsCompatible ( units_strings: string[] ): boolean {
     return this.areUnitsStringsCompatibleBool ( units_strings, false );
   }
 
@@ -208,7 +208,7 @@ export class DataUnits {
   conversion necessary).  If true, the units must be the same.  If false, the
   units must only be in the same dimension (e.g., "CFS" and "GPM" would be compatible).
   */
-  public static areUnitsStringsCompatible3 ( units_string1: string, units_string2: string, require_same: boolean ): boolean {	
+  static areUnitsStringsCompatible3 ( units_string1: string, units_string2: string, require_same: boolean ): boolean {	
     var units_strings: string[] = new Array<string>(2);
     units_strings.push ( units_string1 );
     units_strings.push ( units_string2 );
@@ -224,7 +224,7 @@ export class DataUnits {
   spelling or have the a conversion factor of unity.  If false, the
   units must only be in the same dimension (e.g., "CFS" and "GPM" would be compatible).
   */
-  public static areUnitsStringsCompatibleBool ( units_strings: string[], require_same: boolean ): boolean {
+  static areUnitsStringsCompatibleBool ( units_strings: string[], require_same: boolean ): boolean {
     if ( units_strings === null ) {
       // No units.  Decide later whether to throw an exception.
       return true;
@@ -291,7 +291,7 @@ export class DataUnits {
   Return the units abbreviation string.
   @return The units abbreviation string.
   */
-  public getAbbreviation ( ): string {
+  getAbbreviation ( ): string {
     return this.__abbreviation;
   }
 
@@ -299,7 +299,7 @@ export class DataUnits {
   Return The addition factor when converting to the base units.
   @return The addition factor when converting to the base units.
   */
-  public getAddFactor ( ): number {
+  getAddFactor ( ): number {
     return this.__add_factor;
   }
 
@@ -307,7 +307,7 @@ export class DataUnits {
   Return One (1) if the units are the base units for a dimension, zero otherwise.
   @return One (1) if the units are the base units for a dimension, zero otherwise.
   */
-  public getBaseFlag ( ) {
+  getBaseFlag ( ) {
     return this.__base_flag;
   }
 
@@ -315,7 +315,7 @@ export class DataUnits {
   Return "BASE" if the unit is the base unit for conversions, and "OTHR" if not.
   @return "BASE" if the unit is the base unit for conversions, and "OTHR" if not.
   */
-  public getBaseString ( ): string {
+  getBaseString ( ): string {
     if ( this.__base_flag === 1 ) {
       return "BASE";
     }
@@ -331,7 +331,7 @@ export class DataUnits {
   @param u2_string The units after conversion.
   @exception Exception If the conversion cannot be found.
   */
-  public static getConversion ( u1_string: string, u2_string: string ): DataUnitsConversion {
+  static getConversion ( u1_string: string, u2_string: string ): DataUnitsConversion {
     // Call the routine that takes the auxiliary information.  This is not
     // fully implemented at this time but provides a migration path from the legacy code...
     return this.getConversionFull ( u1_string, u2_string, 0.0, "" );
@@ -346,7 +346,7 @@ export class DataUnits {
   @param aunits The units of "aux".
   @exception Exception If the conversion cannot be found.
   */
-  public static getConversionFull ( u1_string: string, u2_string: string, aux: number, aunits: string ): DataUnitsConversion {
+  static getConversionFull ( u1_string: string, u2_string: string, aux: number, aunits: string ): DataUnitsConversion {
     var	dl = 20;
     var routine = "DataUnits.getConversion", u1_dim, u2_dim;
 
@@ -517,7 +517,7 @@ export class DataUnits {
   @return A DataDimension instance for the units.
   @see DataDimension
   */
-  public getDimension ( ): DataDimension
+  getDimension ( ): DataDimension
   {	return this.__dimension;
   }
 
@@ -525,7 +525,7 @@ export class DataUnits {
   Return the long name for the units.
   @return The long name for the units.
   */
-  public getLongName ( ): string {
+  getLongName ( ): string {
     return this.__long_name;
   }
 
@@ -533,7 +533,7 @@ export class DataUnits {
   Return the multiplication factor used to convert to the base units.
   @return The multiplication factor used to convert to the base units.
   */
-  public getMultFactor ( ): number {
+  getMultFactor ( ): number {
     return this.__mult_factor;
   }
 
@@ -543,7 +543,7 @@ export class DataUnits {
   @param units_string Units of data.
   @param width Width of output (if zero, no width will be used in the format).
   */
-  public static getOutputFormat ( units_string: string, width: number ): DataFormat {
+  static getOutputFormat ( units_string: string, width: number ): DataFormat {
     return this.getOutputFormat3 ( units_string, width, 2 );
   }
 
@@ -555,7 +555,7 @@ export class DataUnits {
   @param default_precision Default precision if precision cannot be determined
   from the units.  If not specified, 2 will be used.
   */
-  public static getOutputFormat3 ( units_string: string, width: number, default_precision: number ): DataFormat {
+  static getOutputFormat3 ( units_string: string, width: number, default_precision: number ): DataFormat {
     var routine = "DataUnits.getOutputFormat";
 
     // Initialize the DataFormat for return...
@@ -593,7 +593,7 @@ export class DataUnits {
   @param default_precision Default precision if precision cannot be determined
   from the units.  If not specified, 2 will be used.
   */
-  public static getOutputFormatString ( units: string, width: number, default_precision: number ): string {
+  static getOutputFormatString ( units: string, width: number, default_precision: number ): string {
     return this.getOutputFormat3(units,width,default_precision).toString();
   }
 
@@ -601,7 +601,7 @@ export class DataUnits {
   Return the output precision for the units.
   @return The output precision for the units (the number of digits after the decimal point).
   */
-  public getOutputPrecision ( ): number {
+  getOutputPrecision ( ): number {
     return this.__output_precision;
   }
 
@@ -609,7 +609,7 @@ export class DataUnits {
   Return The source of the data units.
   @return The source of the data units (narrative).
   */
-  public getSource ( ): string {
+  getSource ( ): string {
     return this.__source;
   }
 
@@ -617,7 +617,7 @@ export class DataUnits {
   Return The units system.
   @return The units system.  See SYSTEM*.
   */
-  public getSystem ( ) {
+  getSystem ( ) {
     return this.__system;
   }
 
@@ -625,7 +625,7 @@ export class DataUnits {
   Return the units system as a string.
   @return The units system as a string ("SI", "ENGL", "" ). See SYSTEM*.
   */
-  public getSystemString ( ): string
+  getSystemString ( ): string
   {	if ( this.__system === DataUnits.SYSTEM_SI ) {
       return "SI";
     }
@@ -645,7 +645,7 @@ export class DataUnits {
   @return the list of units data (useful for debugging and GUI displays).
   Perhaps later overload to request by dimension, system, etc.
   */
-  public static getUnitsData(): DataUnits[] {
+  static getUnitsData(): DataUnits[] {
     return this.__units_Vector;
   }
 
@@ -673,7 +673,7 @@ export class DataUnits {
   @param units_string The units abbreviation to look up.
   @exception Exception If there is a problem looking up the units abbreviation.
   */
-  public static lookupUnits ( units_string: string ): DataUnits {
+  static lookupUnits ( units_string: string ): DataUnits {
     var routine = "DataUnits.lookupUnits";
 
     // First see if the units are already in the list...
@@ -701,7 +701,7 @@ export class DataUnits {
   @param dimension the dimension abbreviation to return units for.
   @return a list of all the DataUnits objects that match the dimension or an empty list if none exist.
   */
-  public static lookupUnitsForDimension ( system: string, dimension: string ): DataUnits[] {
+  static lookupUnitsForDimension ( system: string, dimension: string ): DataUnits[] {
     var v: DataUnits[] = [];
 
     // First see if the units are already in the list...
@@ -734,7 +734,7 @@ export class DataUnits {
   more information.  This version calls the other version with define_dimensions as true.
   @param dfile Units file to read (can be a URL).
   */
-  // public static readNWSUnitsFile ( dfilePath: string, commonService: OwfCommonService ): void {
+  // static readNWSUnitsFile ( dfilePath: string, commonService: OwfCommonService ): void {
   //   // Read in the file path or URL to the file asynchronously
   //   commonService.getPlainText(dfilePath, 'dataUnitsPath').pipe(map((dfile: any) => {
   //     let dfileArray = dfile.split('\n');
@@ -775,7 +775,7 @@ export class DataUnits {
   being the same.  This is required in many cases because defining a data unit
   instance checks the dimension against defined dimensions.
   */
-  public static readNWSUnitsFileBool ( dfile: string[], define_dimensions: boolean ): void {
+  static readNWSUnitsFileBool ( dfile: string[], define_dimensions: boolean ): void {
     var add_factor = 0.0, mult_factor = 1.0;
     var abbreviation: string, base_string: string, dimension: string,
     long_name: string, routine = "DataUnits.readNWSUnitsFile", string: string;
@@ -926,7 +926,7 @@ export class DataUnits {
   This version calls the other version with define_dimensions as true.
   @param dfile Units file to read (can be a URL).
   */
-  public static readUnitsFile ( dfileArray: string[] ): void {    
+  static readUnitsFile ( dfileArray: string[] ): void {    
     // Convert the returned string above into an array of strings as an argument
     this.readUnitsFileBool ( dfileArray, true );
   }
@@ -954,7 +954,7 @@ export class DataUnits {
   being the same. This is required in many cases because defining a data unit
   instance checks the dimension against defined dimensions.
   */
-  public static readUnitsFileBool ( dfile: string[], define_dimensions: boolean ): void {
+  static readUnitsFileBool ( dfile: string[], define_dimensions: boolean ): void {
     var message: string, routine = "DataUnits.readUnitsFile";
     var units_file: string[] = null;
 
@@ -1070,7 +1070,7 @@ export class DataUnits {
   Set the abbreviation string for the units.
   @param abbreviation Units abbreviation (e.g., "CFS").
   */
-  public setAbbreviation ( abbreviation: string ): void {
+  setAbbreviation ( abbreviation: string ): void {
     if ( abbreviation === null ) {
       return;
     }
@@ -1081,7 +1081,7 @@ export class DataUnits {
   Set the addition factor when converting to the base units for the dimension.
   @param add_factor Add factor to convert to the base units.
   */
-  public setAddFactor ( add_factor: number ): void {
+  setAddFactor ( add_factor: number ): void {
     this.__add_factor = add_factor;
   }
 
@@ -1089,7 +1089,7 @@ export class DataUnits {
   Indicate whether the units are base units (should only have one base for a dimension.
   @param base_flag Indicates if the units are base units.
   */
-  public setBaseFlag ( base_flag: number ): void {
+  setBaseFlag ( base_flag: number ): void {
     this.__base_flag = base_flag;
   }
 
@@ -1097,7 +1097,7 @@ export class DataUnits {
   Set the behavior flag for the units (used for converting to strings).  This is not used at this time.
   @param behavior_mask Indicates how units should be displayed. 
   */
-  public setBehaviorMask ( behavior_mask: number ): void {
+  setBehaviorMask ( behavior_mask: number ): void {
     this.__behavior_mask = behavior_mask;
   }
 
@@ -1107,7 +1107,7 @@ export class DataUnits {
   @exception Exception If the dimension string to be used is not recognized.
   @see DataDimension
   */
-  public setDimension ( dimension_string: string ): void {
+  setDimension ( dimension_string: string ): void {
     var routine = "DataUnits.setDimension(String)";
 
     // Return if null...
@@ -1138,7 +1138,7 @@ export class DataUnits {
   Set the long name for the units (e.g., "cubic feet per second").
   @param long_name Long name for the units.
   */
-  public setLongName ( long_name: string ): void {
+  setLongName ( long_name: string ): void {
     if ( long_name === null ) {
       return;
     }
@@ -1149,7 +1149,7 @@ export class DataUnits {
   Set the multiplication factor used when converting to the base units.
   @param mult_factor Multiplication factor used when converting to the base units.
   */
-  public setMultFactor ( mult_factor: number ): void {	
+  setMultFactor ( mult_factor: number ): void {	
     this.__mult_factor = mult_factor;
   }
 
@@ -1158,7 +1158,7 @@ export class DataUnits {
   @param output_precision Number of digits after the decimal to be used for output
   for data of these units.
   */
-  public setOutputPrecision ( output_precision: number ): void {
+  setOutputPrecision ( output_precision: number ): void {
     this.__output_precision = output_precision;
   }
 
@@ -1166,7 +1166,7 @@ export class DataUnits {
   Set the source of the data units.
   @param source source of the data units (narrative).
   */
-  public setSource ( source: string ): void {
+  setSource ( source: string ): void {
     if ( source === null ) {
           return;
       }
@@ -1177,7 +1177,7 @@ export class DataUnits {
   Set the system of units.
   @param system System of units (see SYSTEM_*).
   */
-  public setSystem ( system: number ): void {
+  setSystem ( system: number ): void {
     this.__system = system;
   }
 
@@ -1186,7 +1186,7 @@ export class DataUnits {
   @param system System of units.  Recognized strings are "SI", "ENG", or nothing.
   If the system cannot be determined, SYSTEM_UNKNOWN is assumed.
   */
-  public setSystemStr ( system: string ): void {
+  setSystemStr ( system: string ): void {
     if ( system === null ) {
       return;
     }
@@ -1208,7 +1208,7 @@ export class DataUnits {
   Return A string representation of the units (verbose).
   @return A string representation of the units (verbose).
   */
-  public toString (): string {
+  toString (): string {
     return this.__dimension.getAbbreviation() + "|" +
     this.getBaseString() + "|" +
     this.__abbreviation + "|" +

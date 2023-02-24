@@ -109,9 +109,13 @@ export class ChartComponent implements OnInit, OnDestroy {
   * @constructor for the DialogTSGraph Component.
   * @param commonService A reference to the top level service OwfCommonService.
   */
-  constructor(private commonService: OwfCommonService,
+  constructor(
+    private commonService: OwfCommonService,
     private chartService: ChartService,
-    private eventService: EventService) { }
+    private eventService: EventService
+  ) {
+    
+  }
 
   /**
    * Observable used in the Chart Widget that's used with an async pipe in the template

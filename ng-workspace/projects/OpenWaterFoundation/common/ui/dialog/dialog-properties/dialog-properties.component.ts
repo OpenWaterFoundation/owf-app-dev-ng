@@ -26,24 +26,24 @@ import * as Showdown        from 'showdown';
 })
 export class DialogPropertiesComponent implements OnInit, OnDestroy {
   /** The layer's geoLayerId. */
-  public geoLayerId: string;
+  geoLayerId: string;
   /** The reference to the layer's geoLayer object. */
-  public geoLayer: any;
+  geoLayer: any;
   /** The MapLayerItem that represents the layer for the properties being displayed. */
-  public layerItem: MapLayerItem;
+  layerItem: MapLayerItem;
   /** An array of all properties for this layer. */
-  public layerProperties: string[];
+  layerProperties: string[];
   /** Used as a path resolver and contains the path to the map configuration that is
    * using this TSGraphComponent. To be set in the app service for relative paths. */
-  public mapConfigPath: string;
+  mapConfigPath: string;
   /** The instance of the MapLayerManager, a helper class that manages MapLayerItem
    * objects with Leaflet layers and other layer data for displaying, ordering,
    * and highlighting. */
-  public mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
+  mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
   /** The formatted string to be converted to HTML by Showdown. */
-  public showdownHTML: string;
+  showdownHTML: string;
   /** The Showdown config option object. Overrides the `app.module.ts` config option object. */
-  public showdownOptions = {
+  showdownOptions = {
     emoji: true,
     flavor: 'github',
     noHeaderId: true,
@@ -55,9 +55,9 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
     tables: true
   }
   /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
-  public windowID: string;
+  windowID: string;
   /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogPropertiesComponent. */
   faXmark = faXmark;
   
@@ -66,18 +66,20 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
    * 
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
    * @param commonService The reference to the app service, for sending data between components and higher scoped map variables.
-   * @param dataObject The object containing data passed from the Component that created this Dialog.
+   * @param matDialogData The object containing data passed from the Component that created this Dialog.
    */
-  constructor(private dialogService: DialogService,
-              public commonService: OwfCommonService,
-              public dialogRef: MatDialogRef<DialogPropertiesComponent>,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any) {
+  constructor(
+    private commonService: OwfCommonService,
+    private dialogService: DialogService,
+    private dialogRef: MatDialogRef<DialogPropertiesComponent>,
+    @Inject(MAT_DIALOG_DATA) private matDialogData: any
+  ) {
 
-    this.geoLayer = dataObject.data.geoLayer;
-    this.geoLayerId = dataObject.data.geoLayerId;
-    this.layerProperties = dataObject.data.layerProperties;
+    this.geoLayer = this.matDialogData.data.geoLayer;
+    this.geoLayerId = this.matDialogData.data.geoLayerId;
+    this.layerProperties = this.matDialogData.data.layerProperties;
     this.layerItem = this.mapLayerManager.getMapLayerItem(this.geoLayerId);
-    this.mapConfigPath = dataObject.data.mapConfigPath;
+    this.mapConfigPath = this.matDialogData.data.mapConfigPath;
     this.windowID = this.geoLayerId + '-dialog-properties';
   }
 
@@ -225,7 +227,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-  public onClose(): void {
+  onClose(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }
@@ -235,7 +237,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
    * link is clicked on in the dialog that opens a new map, make sure to close the
    * dialog and remove it from the window manager.
    */
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.windowID);
   }

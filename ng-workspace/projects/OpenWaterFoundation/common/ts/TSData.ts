@@ -50,7 +50,7 @@ constructor() {
 // @param date date for data value.
 // @param value data value.
 // */
-// public TSData ( DateTime date, double value )
+// TSData ( DateTime date, double value )
 // {   super();
 //     initialize();
 //     setDate( date );
@@ -64,7 +64,7 @@ constructor() {
 // @param units data units.
 // @see DataUnits
 // */
-// public TSData ( DateTime date, double value, String units )
+// TSData ( DateTime date, double value, String units )
 // {   super();
 //     initialize();
 //     setDate( date );
@@ -80,7 +80,7 @@ constructor() {
 // @param flag Data flag.
 // @see DataUnits
 // */
-// public TSData ( DateTime date, double value, String units, String flag )
+// TSData ( DateTime date, double value, String units, String flag )
 // {   super();
 //     initialize();
 //     setDate( date );
@@ -96,7 +96,7 @@ constructor() {
 // being created, the next/previous pointers will need to be reset accordingly.
 // @param tsdata the instance that is being copied.
 // */
-// public TSData ( TSData tsdata )
+// TSData ( TSData tsdata )
 // {	_data_flag = tsdata._data_flag;
 // 	_duration = tsdata._duration;
 // 	_units = tsdata._units;
@@ -114,7 +114,7 @@ then the flag will be appended and a comma will be included only if a previous f
 @param flag data flag to append
 @return the new merged data flag string
 */
-public static appendDataFlag ( flagOrig: string, flag: string ): string
+static appendDataFlag ( flagOrig: string, flag: string ): string
 {   //Message.printStatus(2, "", "Before append flagOrig= \"" + flagOrig + "\" flag=\"" + flag + "\"" );
     if ( flagOrig === null ) {
         flagOrig = "";
@@ -148,7 +148,7 @@ public static appendDataFlag ( flagOrig: string, flag: string ): string
 // previous pointers, which are copied as is.  If a sequence of new data are
 // being created, the next/previous pointers will need to be reset accordingly.
 // */
-// public Object clone ()
+// Object clone ()
 // {	try {
 //         TSData tsdata = (TSData)super.clone();
 // 		tsdata._date = (DateTime)_date.clone();
@@ -181,7 +181,7 @@ public static appendDataFlag ( flagOrig: string, flag: string ): string
 Return the data value.
 @return The data value.
 */
-public getDataValue(): number {
+getDataValue(): number {
   return this._dataValue;
 }
 
@@ -190,7 +190,7 @@ public getDataValue(): number {
 //  * @return The data value.
 //  */
 // @Deprecated
-// public double getData() {
+// double getData() {
 //     return getDataValue();
 // }
 
@@ -198,7 +198,7 @@ public getDataValue(): number {
 // Return the data flag.
 // @return The data flag.
 // */
-// public String getDataFlag()
+// String getDataFlag()
 // {	return _data_flag;
 // }
 
@@ -206,7 +206,7 @@ public getDataValue(): number {
 Return the data for the data.
 @return The date associated with the value.  A copy is returned.
 */
-public getDate(): DateTime {
+getDate(): DateTime {
   return new DateTime (this._date);
 }
 
@@ -214,7 +214,7 @@ public getDate(): DateTime {
 // Return the duration (seconds) for the data.
 // @return The duration (seconds) associated with the value.
 // */
-// public int getDuration()
+// int getDuration()
 // {	return _duration;
 // }
 
@@ -223,7 +223,7 @@ public getDate(): DateTime {
 // @return Return the reference to the next data item (used when an
 // internally-maintained linked list is used).
 // */
-// public TSData getNext()
+// TSData getNext()
 // {	return _next;
 // }
 
@@ -232,7 +232,7 @@ public getDate(): DateTime {
 // @return Return the reference to the previous data item (used when an
 // internally-maintained linked list is used).
 // */
-// public TSData getPrevious()
+// TSData getPrevious()
 // {	return _previous;
 // }
 
@@ -241,7 +241,7 @@ public getDate(): DateTime {
 // @return The units for the data.
 // REVISIT -- Incorrect tag usage: see DataUnits
 // */
-// public String getUnits()
+// String getUnits()
 // {	return _units;
 // }
 
@@ -262,7 +262,7 @@ private initialize ( ): void {
 Set the data value.
 @param d Data value.
 */
-public setDataValue( d: number ): void {
+setDataValue( d: number ): void {
   this._dataValue = d;
 }
 
@@ -272,7 +272,7 @@ with flag (without the +).  If the first two characters are "+,", then the flag 
 comma will be included only if a previous flag was set.
 @param flag Data flag.
 */
-public setDataFlag( flag: string ): void {
+setDataFlag( flag: string ): void {
   if ( (flag !== null) && (flag.length > 0) && (flag.charAt(0) === '+') ) {
         // Appending the flag
         this._data_flag = TSData.appendDataFlag(this._data_flag,flag);
@@ -288,7 +288,7 @@ public setDataFlag( flag: string ): void {
 Set the date.  A copy of the date is made.
 @param d Date corresponding to data.
 */
-public setDate( d: DateTime ): void {
+setDate( d: DateTime ): void {
   if( d != null ){
 		this._date = DateTime.copyConstructor ( d );
 	}
@@ -298,7 +298,7 @@ public setDate( d: DateTime ): void {
 // Set the duration (seconds).
 // @param duration Duration corresponding to data.
 // */
-// public void setDuration ( int duration )
+// void setDuration ( int duration )
 // {	_duration = duration;
 // }
 
@@ -306,7 +306,7 @@ public setDate( d: DateTime ): void {
 // Set the next reference (used when maintaining and internal linked-list).
 // @param d Reference to TSData.
 // */
-// public void setNext( TSData d )
+// void setNext( TSData d )
 // {	_next = d;
 // }
 
@@ -314,7 +314,7 @@ public setDate( d: DateTime ): void {
 // Set the previous reference (used when maintaining and internal linked-list).
 // @param d Reference to TSData.
 // */
-// public void setPrevious( TSData d )
+// void setPrevious( TSData d )
 // {	_previous = d;
 // }
 
@@ -323,7 +323,7 @@ Set the units for the data value.
 @param units Data units.
 @see DataUnits
 */
-public setUnits( units: string ): void {
+setUnits( units: string ): void {
   if( units != null ){
 		this._units	= units;
 	}
@@ -337,7 +337,7 @@ public setUnits( units: string ): void {
 // @param flag Data flag.
 // @see DataUnits
 // */
-// public void setValues( DateTime date, double d, String units, String flag )
+// void setValues( DateTime date, double d, String units, String flag )
 // {	setDate( date );
 // 	setDataValue( d );
 // 	setUnits( units );
@@ -353,7 +353,7 @@ Set the data values.
 @param duration Duration (seconds).
 @see DataUnits
 */
-public setValues ( date: DateTime, d: number, units: string, flag: string, duration: number ): void {
+setValues ( date: DateTime, d: number, units: string, flag: string, duration: number ): void {
   this.setDate( date );
 	this._dataValue = d;
 	this.setUnits( units );
@@ -365,7 +365,7 @@ public setValues ( date: DateTime, d: number, units: string, flag: string, durat
 // Return a string representation of the instance.
 // @return A string representation of a TSData.
 // */
-// public String toString()
+// String toString()
 // {	return "TSData: " +
 // 	" Date: \"" + _date +
 // 	"\" Value: " + _dataValue +
@@ -390,7 +390,7 @@ public setValues ( date: DateTime, d: number, units: string, flag: string, durat
 // @param flag Data quality flag to format (can be ignored if %q is not specified).
 // @param units Data units (can be ignored if %v and %U are not specified.
 // */
-// public static String toString (	String full_format, String value_format,
+// static String toString (	String full_format, String value_format,
 //     DateTime date, double value1, double value2, String flag, String units )
 // {	// Format the date first...
 // 	String format = TimeUtil.formatDateTime ( date, full_format );

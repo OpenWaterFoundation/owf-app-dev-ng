@@ -36,28 +36,36 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    * leaks.*/
   private forkJoinSub: Subscription;
   /** Path to the data being displayed in the heatmap. */
-  public graphFilePath: string;
+  graphFilePath: string;
   /** The geoLayer object from the map configuration file. */
-  public geoLayer: any;
+  geoLayer: any;
   /** The object read from the JSON file from TSTool. Gives properties and metadata
    * for the graph. */
-  public graphTemplate: IM.GraphTemplate;
+  graphTemplate: IM.GraphTemplate;
   /** A string representing the button ID of the button clicked to open this dialog. */
-  public windowID: string;
+  windowID: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogHeatmapComponent. */
   faXmark = faXmark;
 
-  constructor(public dialogRef: MatDialogRef<DialogHeatmapComponent>,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any,
-              private commonService: OwfCommonService) {
+  /**
+   * 
+   * @param commonService 
+   * @param dialogRef 
+   * @param matDialogData 
+   */
+  constructor(
+    private commonService: OwfCommonService,
+    private dialogRef: MatDialogRef<DialogHeatmapComponent>,
+    @Inject(MAT_DIALOG_DATA) private matDialogData: any
+  ) {
 
-    this.geoLayer = dataObject.data.geoLayer;
-    this.graphTemplate = dataObject.data.graphTemplate;
-    this.graphFilePath = dataObject.data.graphFilePath;
-    this.windowID = dataObject.data.windowID;
+    this.geoLayer = this.matDialogData.data.geoLayer;
+    this.graphTemplate = this.matDialogData.data.graphTemplate;
+    this.graphFilePath = this.matDialogData.data.graphFilePath;
+    this.windowID = this.matDialogData.data.windowID;
   }
 
   /**
@@ -65,7 +73,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    */
   // TODO: jpkeahey 2021-08-02 - Ths is dealing with only one TS-based class in
   // the TS array. 
-  public createHeatmap(resultsArray: TS[]): void {
+  createHeatmap(resultsArray: TS[]): void {
 
     var dataPoints: any[] = [];
     var heatmapDataObj = {};
@@ -102,7 +110,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
         }
         ++monthIndex;
   
-        // Update the interval and labelIndex now that the dataObject has been pushed onto the chartJS_yAxisData array.
+        // Update the interval and labelIndex now that the this.matDialogData has been pushed onto the chartJS_yAxisData array.
         currentDateIter.addInterval(resultsArray[0].getDataIntervalBase(), resultsArray[0].getDataIntervalMult());
   
         // Check if the very last data value in the last year has been reached, add

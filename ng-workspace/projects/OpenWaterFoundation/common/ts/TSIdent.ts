@@ -268,7 +268,7 @@ export class TSIdent {
   Return the time series alias.
   @return The alias for the time series.
   */
-  public getAlias (): string {
+  getAlias (): string {
     return this.alias;
   }
 
@@ -277,7 +277,7 @@ export class TSIdent {
   Return the full identifier String.
   @return The full identifier string.
   */
-  public getIdentifier(): string {
+  getIdentifier(): string {
     return "false"; //toString ( false );
   }
 
@@ -285,7 +285,7 @@ export class TSIdent {
   Return the main location, which is the first part of the full location.
   @return The main location string.
   */
-  public getMainLocation( ): string {
+  getMainLocation( ): string {
     return this.main_location;
   }
 
@@ -293,7 +293,7 @@ export class TSIdent {
   Return the main source string.
   @return The main source string.
   */
-  public getMainSource(): string {
+  getMainSource(): string {
     return this.main_source;
   }
 
@@ -301,7 +301,7 @@ export class TSIdent {
   Return the sub-location, which will be an empty string if __behavior_mask has NO_SUB_LOCATION set.
   @return The sub-location string.
   */
-  public getSubLocation(): string {
+  getSubLocation(): string {
     return this.sub_location;
   }
 
@@ -309,7 +309,7 @@ export class TSIdent {
   Return the sub-source, which will be an empty string if __behavior_mask has NO_SUB_SOURCE set.
   @return The sub-source string.
   */
-  public getSubSource( ): string {
+  getSubSource( ): string {
     return this.sub_source;
   }
 
@@ -958,7 +958,7 @@ export class TSIdent {
       return;
     }
 
-    // Parse the identifier using the public static function to create a temporary identifier object...
+    // Parse the identifier using the static function to create a temporary identifier object...
 
     // if ( Message.isDebugOn ) {
     //   Message.printDebug ( dl, routine, "Done declaring temp TSIdent." );

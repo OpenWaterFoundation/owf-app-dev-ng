@@ -1,7 +1,7 @@
 // TelemetryStationDataType - data object for telemetry station data types
 
-import { DateTime }    from "@OpenWaterFoundation/common/util/time";
-import * as IM         from '@OpenWaterFoundation/common/services';
+import { TelStationDataType } from "@OpenWaterFoundation/common/services";
+import { DateTime }           from "@OpenWaterFoundation/common/util/time";
 
 /* NoticeStart
 CDSS HydroBase REST Web Services Java Library
@@ -27,7 +27,7 @@ NoticeEnd */
 export class TelemetryStationDataType {
 
 
-  constructor(private telemetryStationDateType: IM.TelStationDataType) {
+  constructor(private telemetryStationDateType: TelStationDataType) {
 		this.initAllDateTimeAttributes();
   }
 
