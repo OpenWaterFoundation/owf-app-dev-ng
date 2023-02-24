@@ -1,9 +1,9 @@
 import { Component,
           Input,
           OnDestroy, 
-          OnInit}             from '@angular/core';
+          OnInit}      from '@angular/core';
+import { ChartWidget } from '@OpenWaterFoundation/common/services';
 
-import * as IM                from '@OpenWaterFoundation/common/services';
 
 
 @Component({
@@ -15,7 +15,7 @@ export class ChartWidgetComponent implements OnInit, OnDestroy {
 
   /** The attribute provided to this component when created, e.g.
    *   <chart-widget [chartWidget]="widget"></chart-widget> */
-  @Input('chartWidget') chartWidget: IM.ChartWidget;
+  @Input('chartWidget') chartWidget: ChartWidget;
 
 
   /**

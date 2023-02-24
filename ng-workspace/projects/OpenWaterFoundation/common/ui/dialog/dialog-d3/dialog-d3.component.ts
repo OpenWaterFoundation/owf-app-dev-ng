@@ -8,8 +8,10 @@ import * as d3              from 'd3';
 
 import { faXmark }          from '@fortawesome/free-solid-svg-icons';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { D3Chart,
+          D3Prop,
+          OwfCommonService,
+          Path }            from '@OpenWaterFoundation/common/services';
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
 
 /**
@@ -25,7 +27,7 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
 })
 export class DialogD3Component implements OnInit {
 
-  d3Prop: IM.D3Prop;
+  d3Prop: D3Prop;
   geoLayer: any;
   private svg: any;
   private windowID: string;
@@ -50,9 +52,9 @@ export class DialogD3Component implements OnInit {
   ngOnInit(): void {
     switch(this.d3Prop.chartType) {
 
-      case IM.D3Chart.tree:
+      case D3Chart.tree:
         if (this.d3Prop.dataPath.toUpperCase().endsWith('.JSON')) {
-          this.commonService.getJSONData(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getJSONData(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             var data = this.renameKeys(data);
             // Create the tree and root hierarchy node given the provided
@@ -69,7 +71,7 @@ export class DialogD3Component implements OnInit {
           });
 
         } else if (this.d3Prop.dataPath.toUpperCase().endsWith('.CSV')) {
-          this.commonService.getPlainText(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getPlainText(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             // Read in CSV file.
             var table = d3.csvParse(data);
@@ -94,10 +96,10 @@ export class DialogD3Component implements OnInit {
         }
         break;
 
-      case IM.D3Chart.treemap:
+      case D3Chart.treemap:
         // Create the root hierarchy node with data from a JSON config file.
         if (this.d3Prop.dataPath.toUpperCase().endsWith('.JSON')) {
-          this.commonService.getJSONData(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getJSONData(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             var data = this.renameKeys(data);
             // Create the treemap and root hierarchy node given the provided
@@ -116,7 +118,7 @@ export class DialogD3Component implements OnInit {
         }
         // Create the root hierarchy node with data from a CSV config file.
         else if (this.d3Prop.dataPath.toUpperCase().endsWith('.CSV')) {
-          this.commonService.getPlainText(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getPlainText(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             var table = d3.csvParse(data);
             this.replaceWithValue(table);

@@ -6,9 +6,12 @@ import { ActivatedRoute }    from '@angular/router';
 import { Subscription }      from 'rxjs';
 import { first }             from 'rxjs/operators';
 
-import { EventService,
-          OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM               from '@OpenWaterFoundation/common/services';
+import { DashboardConf,
+          DashboardWidget,
+          EventService,
+          OwfCommonService, 
+          Style,
+          WidgetTileStyle} from '@OpenWaterFoundation/common/services';
 
 import { DashboardService }  from './dashboard.service';
 
@@ -21,7 +24,7 @@ import { DashboardService }  from './dashboard.service';
 export class DashboardComponent implements OnDestroy {
 
   /** The dashboard configuration object read in from the JSON file. */
-  dashboardConf: IM.DashboardConf;
+  dashboardConf: DashboardConf;
   /**
    * 
    */
@@ -32,7 +35,7 @@ export class DashboardComponent implements OnDestroy {
   /**
    * A dashboard config object passed in from a 
    */
-  @Input('dashboardConfig') standaloneDashboardConf: IM.DashboardConf;
+  @Input('dashboardConfig') standaloneDashboardConf: DashboardConf;
   /** `true` if the id in the URL matches an id from the `app-config.json` file.
    * `false` if not, and the 404 page will show. */
   validDashboardId: boolean;
@@ -60,11 +63,11 @@ export class DashboardComponent implements OnDestroy {
    *   2. All widgets contain a `type` property.
    *   3. All widget types are currently supported.
    */
-  private checkDashboardConfig(dashboardConfig: IM.DashboardConf): void {
+  private checkDashboardConfig(dashboardConfig: DashboardConf): void {
 
     var uniqueKeys = {};
 
-    dashboardConfig.widgets.forEach((widget: IM.DashboardWidget) => {
+    dashboardConfig.widgets.forEach((widget: DashboardWidget) => {
 
       widget.errorTypes = [];
 
@@ -87,7 +90,7 @@ export class DashboardComponent implements OnDestroy {
   /**
    * 
    */
-  private dashboardInit(dashboardConfig: IM.DashboardConf): void {
+  private dashboardInit(dashboardConfig: DashboardConf): void {
     this.checkDashboardConfig(dashboardConfig);
     this.dashboardConf = dashboardConfig;
 
@@ -137,7 +140,7 @@ export class DashboardComponent implements OnDestroy {
     var dashboardConfigPath = this.commonService.getDashboardConfigPathFromId(dashboardId);
 
     this.commonService.getJSONData(this.commonService.getAppPath() + dashboardConfigPath)
-    .pipe(first()).subscribe((dashboardConfig: IM.DashboardConf) => {
+    .pipe(first()).subscribe((dashboardConfig: DashboardConf) => {
 
       this.dashboardInit(dashboardConfig);
     });
@@ -149,7 +152,7 @@ export class DashboardComponent implements OnDestroy {
    * @param style The style object to check.
    * @returns A style object that has had its properties verified.
    */
-  setMatGridTileStyle(style: IM.WidgetTileStyle): any {
+  setMatGridTileStyle(style: WidgetTileStyle): any {
     // If no style object is provided, return the default object.
     if (!style) {
       return {
@@ -158,8 +161,8 @@ export class DashboardComponent implements OnDestroy {
     }
 
     return {
-      backgroundColor: this.verify(style.backgroundColor, IM.Style.backgroundColor),
-      color: this.verify(style.textColor, IM.Style.color)
+      backgroundColor: this.verify(style.backgroundColor, Style.backgroundColor),
+      color: this.verify(style.textColor, Style.color)
     }
   }
 
@@ -169,15 +172,15 @@ export class DashboardComponent implements OnDestroy {
    * @param styleProp The style property to examine.
    * @param style The InfoMapper style type to differentiate types.
    */
-  verify(styleProp: any, style: IM.Style): any {
+  verify(styleProp: any, style: Style): any {
     if (styleProp) {
       return styleProp;
     }
     // The property does not exist, so return a default value.
     else {
       switch (style) {
-        case IM.Style.backgroundColor: return 'lightgrey';
-        case IM.Style.color: return 'black';
+        case Style.backgroundColor: return 'lightgrey';
+        case Style.color: return 'black';
       }
     }
   }

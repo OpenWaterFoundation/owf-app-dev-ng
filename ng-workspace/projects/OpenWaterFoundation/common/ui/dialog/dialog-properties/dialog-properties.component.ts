@@ -6,7 +6,8 @@ import { Component,
 import { MatDialogRef,
           MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
+import { OwfCommonService,
+          Path }            from '@OpenWaterFoundation/common/services';
 import { DialogService }    from '../dialog.service';
 
 import { faXmark }          from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +15,6 @@ import { faXmark }          from '@fortawesome/free-solid-svg-icons';
 import { MapLayerManager,
           MapLayerItem }    from '@OpenWaterFoundation/common/ui/layer-manager';
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
-import * as IM              from '@OpenWaterFoundation/common/services';
 
 import * as Showdown        from 'showdown';
 
@@ -194,7 +194,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
     }
     
 
-    var fullPath: string = this.commonService.buildPath(IM.Path.gLGJP, [this.geoLayer.sourcePath]);
+    var fullPath: string = this.commonService.buildPath(Path.gLGJP, [this.geoLayer.sourcePath]);
     var formattedPath = this.commonService.condensePath(fullPath, 'link');
 
     markdownString += '\n## Download Layer ##\n\n' +

@@ -14,8 +14,7 @@ import { DialogTSTableComponent } from '../dialog-tstable/dialog-tstable.compone
 import { faXmark }                from '@fortawesome/free-solid-svg-icons';
 
 import { TS }                     from '@OpenWaterFoundation/common/ts';
-import { OwfCommonService }       from '@OpenWaterFoundation/common/services';
-import * as IM                    from '@OpenWaterFoundation/common/services';
+import { AttributeTableParams, ChartDialog, OwfCommonService }       from '@OpenWaterFoundation/common/services';
 import { WindowManager,
           WindowType }            from '@OpenWaterFoundation/common/ui/window-manager';
 
@@ -31,9 +30,9 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   attributeTable: any[] = [];
   /** Object that will be assigned by data passed up from the Chart component, and
    * used to create a TSTable dialog. */
-  attributeTableParams: IM.AttributeTableParams;
+  attributeTableParams: AttributeTableParams;
   /** Object that is sent down to the Chart component for displaying. */
-  chartDialog: IM.ChartDialog;
+  chartDialog: ChartDialog;
   /** A string representing the chartPackage property given (or not) from a popup
    * configuration file. */
   chartPackage: string;
@@ -189,7 +188,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * @param attributeTableParams The object that holds the data needed for creating
    * a TSTable dialog component.
    */
-  setAttributeTableParams(attributeTableParams: IM.AttributeTableParams): void {
+  setAttributeTableParams(attributeTableParams: AttributeTableParams): void {
     this.attributeTableParams = attributeTableParams;
   }
 

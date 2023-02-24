@@ -12,8 +12,7 @@ import * as FileSaver                   from 'file-saver';
 
 import { faXmark }                      from '@fortawesome/free-solid-svg-icons';
 
-import { OwfCommonService }             from '@OpenWaterFoundation/common/services';
-import * as IM                          from '@OpenWaterFoundation/common/services';
+import { OwfCommonService, SaveFileType }             from '@OpenWaterFoundation/common/services';
 import { WindowManager }                from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapLayerManager,
           MapLayerItem }                from '@OpenWaterFoundation/common/ui/layer-manager';
@@ -289,7 +288,7 @@ export class DialogDataTableLightComponent implements OnInit {
     }
 
     var data = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
-    FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.geoLayer.geoLayerId, IM.SaveFileType.dataTable));
+    FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.geoLayer.geoLayerId, SaveFileType.dataTable));
   }
 
   /**

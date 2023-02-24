@@ -1,7 +1,6 @@
 import { Injectable }  from "@angular/core";
 
 import { DateTime }    from '@OpenWaterFoundation/common/util/time';
-import * as IM         from '@OpenWaterFoundation/common/services';
 
 import { add,
           format,
@@ -11,6 +10,7 @@ import { DayTS,
           MonthTS,
           TS,
           YearTS}          from "@OpenWaterFoundation/common/ts";
+import { GraphProp } from "@OpenWaterFoundation/common/services";
 
 /** The DialogService provides helper function to all Dialog Components in the Common
  * library. Any function not directly related to a Dialog Component's core functionality
@@ -258,11 +258,11 @@ export class ChartService {
    * be implemented as a Plotly property. Will be passed in as all lower case.
    * @param type The type of property being scrutinized.
    */
-  verifyPlotlyProp(property: string, type: IM.GraphProp): string {
+  verifyPlotlyProp(property: string, type: GraphProp): string {
 
     switch(type) {
       // BACKGROUND COLOR.
-      case IM.GraphProp.bc:
+      case GraphProp.bc:
         // Convert C / Java '0x' notation into hex hash '#' notation.
         if (property.startsWith('0x')) {
           return property.replace('0x', '#');
@@ -273,7 +273,7 @@ export class ChartService {
           return 'black';
         }
       // CHART MODE.
-      case IM.GraphProp.cm:
+      case GraphProp.cm:
 
         var isScatterGraphType = (
           property === 'line' ||
@@ -293,7 +293,7 @@ export class ChartService {
           return 'lines';
         }
       // CHART TYPE.
-      case IM.GraphProp.ct:
+      case GraphProp.ct:
 
         var isScatterGraphType = (
           property === 'line' ||
@@ -306,12 +306,12 @@ export class ChartService {
         } else {
           return 'scatter';
         }
-      case IM.GraphProp.lw:
+      case GraphProp.lw:
         return property ? property : '1.5';
       // FILL TYPE.
-      case IM.GraphProp.fl:
+      case GraphProp.fl:
         return (property === 'area') ? 'tozeroy' : undefined;
-      case IM.GraphProp.sk:
+      case GraphProp.sk:
         return (property === 'areastacked') ? 'one' : undefined;
     }
   }

@@ -1,6 +1,6 @@
 import { Injectable }   from "@angular/core";
+import { Bounds } from "@OpenWaterFoundation/common/services";
 
-import * as IM          from '@OpenWaterFoundation/common/services';
 
 /** The DialogService provides helper function to all Dialog Components in the Common
  * library. Any function not directly related to a Dialog Component's core functionality
@@ -26,7 +26,7 @@ export class DialogService {
    * @param long The longitude to check.
    * @param bounds The InfoMapper typed Bounds object to be updated if necessary.
    */
-  setZoomBounds(lat: number, long: number, bounds: IM.Bounds): void {
+  setZoomBounds(lat: number, long: number, bounds: Bounds): void {
 
     if (lat > bounds.NEMaxLat) {
       bounds.NEMaxLat = lat;

@@ -21,9 +21,9 @@ import * as FileSaver                   from 'file-saver';
 import { faXmark,
           faMagnifyingGlassPlus }       from '@fortawesome/free-solid-svg-icons';
 
-import { CommonLoggerService,
-          OwfCommonService }            from '@OpenWaterFoundation/common/services';
-import * as IM                          from '@OpenWaterFoundation/common/services';
+import { Bounds, CommonLoggerService,
+          OwfCommonService, 
+          SaveFileType}            from '@OpenWaterFoundation/common/services';
 import { DialogService }                from '../dialog.service';
 import { WindowManager }                from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapLayerManager,
@@ -636,7 +636,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     }
 
     var data = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
-    FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.geoLayer.geoLayerId, IM.SaveFileType.dataTable));
+    FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.geoLayer.geoLayerId, SaveFileType.dataTable));
   }
   
   /**
@@ -733,7 +733,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   zoomToFeatures(): void {
     // Create the Bounds object that will be overridden and used for the feature
     // bounds to zoom in on.
-    var bounds: IM.Bounds = {
+    var bounds: Bounds = {
       NEMaxLat: Number.NEGATIVE_INFINITY,
       NEMaxLong: Number.NEGATIVE_INFINITY,
       SWMinLat: Number.POSITIVE_INFINITY,

@@ -13,8 +13,10 @@ import { faCaretDown,
           faXmark }          from '@fortawesome/free-solid-svg-icons';
 
 import { EventService,
-          OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM               from '@OpenWaterFoundation/common/services';
+          OwfCommonService, 
+          Path,
+          SelectEvent,
+          StatusIndicatorWidget} from '@OpenWaterFoundation/common/services';
 import { DashboardService }  from '../../dashboard.service';
 
 
@@ -76,7 +78,7 @@ export class StatusIndicatorComponent {
   passingIndicator: boolean;
   /** The attribute provided to this component when created, e.g.
    *   <widget-status-indicator [statusIndicatorWidget]="widget"></widget-status-indicator> */
-  @Input('statusIndicatorWidget') statusIndicatorWidget: IM.StatusIndicatorWidget;
+  @Input('statusIndicatorWidget') statusIndicatorWidget: StatusIndicatorWidget;
   /**
    * 
    */
@@ -117,7 +119,7 @@ export class StatusIndicatorComponent {
       // Found a classification file.
       if (this.statusIndicatorWidget.classificationFile) {
 
-        var fullClassificationPath = this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.classificationFile]);
+        var fullClassificationPath = this.commonService.buildPath(Path.dbP, [this.statusIndicatorWidget.classificationFile]);
         this.classifyFile$ = this.commonService.papaParse(fullClassificationPath);
         this.initStatusIndicator();
       }
@@ -193,7 +195,7 @@ export class StatusIndicatorComponent {
    */
   private listenForEvent(): void {
     
-    this.eventService.getWidgetEvent(this.statusIndicatorWidget).subscribe((selectEvent: IM.SelectEvent) => {
+    this.eventService.getWidgetEvent(this.statusIndicatorWidget).subscribe((selectEvent: SelectEvent) => {
 
       // Check if the initial selectEvent was passed.
       if (selectEvent === null) {
@@ -299,7 +301,7 @@ export class StatusIndicatorComponent {
       delimitedData$.push(this.classifyFile$);
     }
 
-    var fullCSVDataPath = this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath]);
+    var fullCSVDataPath = this.commonService.buildPath(Path.dbP, [this.statusIndicatorWidget.dataPath]);
     delimitedData$.push(this.commonService.papaParse(fullCSVDataPath, true));
 
     this.CSVSub = forkJoin(delimitedData$).subscribe((delimitedData: any[]) => {
@@ -331,7 +333,7 @@ export class StatusIndicatorComponent {
       allData$.push(this.classifyFile$);
     }
 
-    var fullJSONDataPath = this.commonService.buildPath(IM.Path.dbP, [this.statusIndicatorWidget.dataPath]);
+    var fullJSONDataPath = this.commonService.buildPath(Path.dbP, [this.statusIndicatorWidget.dataPath]);
     allData$.push(this.commonService.getJSONData(fullJSONDataPath));
 
     this.JSONSub = forkJoin(allData$).subscribe((allData: any) => {

@@ -10,8 +10,7 @@ import { WindowManager,
 
 import { take }                          from 'rxjs/operators';
 
-import { OwfCommonService }              from '@OpenWaterFoundation/common/services';
-import * as IM                           from '@OpenWaterFoundation/common/services';
+import { GeoLayer, OwfCommonService, Path }              from '@OpenWaterFoundation/common/services';
 
 import { faBackwardStep,
           faForwardStep,
@@ -53,7 +52,7 @@ export class DialogGapminderComponent implements OnInit {
   firstClick: boolean;
   formatDate: any;
   /** The geoLayer from the current layer. */
-  geoLayer: IM.GeoLayer;
+  geoLayer: GeoLayer;
   handle: any;
   handleText: any;
   inputFileFormat: any;
@@ -2276,7 +2275,7 @@ export class DialogGapminderComponent implements OnInit {
     else if (docPath.includes('.md')) markdown = true;
     else if (docPath.includes('.html')) html = true;
 
-    this.commonService.getPlainText(this.commonService.buildPath(IM.Path.gP, [docPath]), IM.Path.dP)
+    this.commonService.getPlainText(this.commonService.buildPath(Path.gP, [docPath]), Path.dP)
     .pipe(take(1))
     .subscribe((doc: any) => {
 

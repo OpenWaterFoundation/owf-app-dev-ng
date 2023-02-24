@@ -1,20 +1,21 @@
-import { Observable }                from 'rxjs/internal/Observable';
+import { Observable }           from 'rxjs/internal/Observable';
 import { BehaviorSubject,
           forkJoin,
-          map }                      from 'rxjs';
+          map }                 from 'rxjs';
 
 import { TS,
           TSIdent, 
-          TSUtil}                    from '@OpenWaterFoundation/common/ts';
+          TSUtil}               from '@OpenWaterFoundation/common/ts';
 
-import { OwfCommonService }          from '@OpenWaterFoundation/common/services';
-import * as IM                       from '@OpenWaterFoundation/common/services';
+import { Datastore,
+          OwfCommonService,
+          TSID }                from '@OpenWaterFoundation/common/services';
 import { DateTime,
-          TimeInterval }             from '@OpenWaterFoundation/common/util/time';
-import { PropList }                  from '@OpenWaterFoundation/common/util/io';
+          TimeInterval }        from '@OpenWaterFoundation/common/util/time';
+import { PropList }             from '@OpenWaterFoundation/common/util/io';
 import { TelemetryStation,
           TelemetryStationDataType,
-          TelemetryTimeSeries }      from '@OpenWaterFoundation/common/dmi';
+          TelemetryTimeSeries } from '@OpenWaterFoundation/common/dmi';
 
 
 // @dynamic
@@ -97,7 +98,7 @@ export class ColoradoHydroBaseRestDatastore {
    * @param commonService 
    * @param datastore 
    */
-  constructor(private commonService: OwfCommonService, datastore: IM.Datastore) {
+  constructor(private commonService: OwfCommonService, datastore: Datastore) {
 
     // this.setName (name);
     // this.setDescription (description);
@@ -199,7 +200,7 @@ export class ColoradoHydroBaseRestDatastore {
    * @param fullTSID The parsed TSID string as an object.
    * @returns A string that will be ignored by consuming components.
    */
-  getAsyncData(fullTSID: IM.TSID): string {
+  getAsyncData(fullTSID: TSID): string {
 
     // Wait until initialized.
     this.paramsInitialized$.subscribe((initialized: boolean) => {

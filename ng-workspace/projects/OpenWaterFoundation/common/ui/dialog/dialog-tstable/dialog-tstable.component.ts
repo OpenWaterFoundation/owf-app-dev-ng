@@ -10,8 +10,7 @@ import * as FileSaver                   from 'file-saver';
 
 import { faXmark }                      from '@fortawesome/free-solid-svg-icons';
 
-import { OwfCommonService }             from '@OpenWaterFoundation/common/services';
-import * as IM                          from '@OpenWaterFoundation/common/services';
+import { OwfCommonService, SaveFileType }             from '@OpenWaterFoundation/common/services';
 
 import { WriteDelimitedFile_Command }   from '@OpenWaterFoundation/common/ts-command-processor/commands/delimited';
 import { DateTimeFormatterType }        from '@OpenWaterFoundation/common/util/time';
@@ -129,8 +128,11 @@ export class DialogTSTableComponent implements OnDestroy {
       );
       var data = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
       // Send the download file name to format it correctly, along with the SaveFileType enum.
-      FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.downloadFileName,
-        IM.SaveFileType.tstable, this.featureProperties));
+      FileSaver.saveAs(data, this.commonService.formatSaveFileName(
+        this.downloadFileName,
+        SaveFileType.tstable,
+        this.featureProperties
+      ));
     }
     // If the file read in was a CSV file, create the correct string for downloading
     // the file again. This is similar to regular data table dialog download.
@@ -181,8 +183,11 @@ export class DialogTSTableComponent implements OnDestroy {
 
       var data = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
       // Send the download file name to format, along with the SaveFileType enum.
-      FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.downloadFileName,
-        IM.SaveFileType.tstable, this.featureProperties));
+      FileSaver.saveAs(data, this.commonService.formatSaveFileName(
+        this.downloadFileName,
+        SaveFileType.tstable,
+        this.featureProperties
+      ));
     }
     
   }

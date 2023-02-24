@@ -1,10 +1,10 @@
 import GeoRasterLayer      from 'georaster-layer-for-leaflet';
-import * as IM             from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
           MapLayerItem }   from '@OpenWaterFoundation/common/ui/layer-manager';
 
 import geoblaze            from 'geoblaze';
 import { format }          from 'date-fns';
+import { EventConfig, GeoLayerSymbol, GeoLayerView, Operator, PropFunction, Style } from '@OpenWaterFoundation/common/services';
 
 declare var L: any;
 
@@ -78,13 +78,13 @@ export class MapUtil {
             
             // Don't need to convert hex to RGB because Leaflet will take care it.
             return {
-              color: this.verify(line.color, IM.Style.color),
-              fillColor: this.verify(line.fillColor, IM.Style.fillColor),
-              fillOpacity: this.verify(line.fillOpacity, IM.Style.fillOpacity),
-              opacity: this.verify(line.opacity, IM.Style.opacity),
-              radius: this.verify(parseInt(line.symbolSize), IM.Style.size),
-              shape: this.verify(line.symbolShape, IM.Style.shape),
-              weight: this.verify(parseInt(line.weight), IM.Style.weight)
+              color: this.verify(line.color, Style.color),
+              fillColor: this.verify(line.fillColor, Style.fillColor),
+              fillOpacity: this.verify(line.fillOpacity, Style.fillOpacity),
+              opacity: this.verify(line.opacity, Style.opacity),
+              radius: this.verify(parseInt(line.symbolSize), Style.size),
+              shape: this.verify(line.symbolShape, Style.shape),
+              weight: this.verify(parseInt(line.weight), Style.weight)
             };
           }
         }
@@ -98,21 +98,21 @@ export class MapUtil {
           sp.feature['properties'][sp.symbol.classificationAttribute].toUpperCase() === sp.results[i]['value'].toUpperCase()) {
 
           return {
-            color: this.verify(sp.results[i]['color'], IM.Style.color),
-            fillOpacity: this.verify(sp.results[i]['fillOpacity'], IM.Style.fillOpacity),
-            opacity: this.verify(sp.results[i]['opacity'], IM.Style.opacity),
+            color: this.verify(sp.results[i]['color'], Style.color),
+            fillOpacity: this.verify(sp.results[i]['fillOpacity'], Style.fillOpacity),
+            opacity: this.verify(sp.results[i]['opacity'], Style.opacity),
             stroke: sp.symbol.properties.outlineColor === "" ? false : true,
-            weight: this.verify(parseInt(sp.results[i]['weight']), IM.Style.weight)
+            weight: this.verify(parseInt(sp.results[i]['weight']), Style.weight)
           }
         }
         // If the classificationAttribute is a number, compare it with the results.
         else if (sp.feature['properties'][sp.symbol.classificationAttribute] === parseInt(sp.results[i]['value'])) {
           return {
-            color: this.verify(sp.results[i]['color'], IM.Style.color),
-            fillOpacity: this.verify(sp.results[i]['fillOpacity'], IM.Style.fillOpacity),
-            opacity: this.verify(sp.results[i]['opacity'], IM.Style.opacity),
+            color: this.verify(sp.results[i]['color'], Style.color),
+            fillOpacity: this.verify(sp.results[i]['fillOpacity'], Style.fillOpacity),
+            opacity: this.verify(sp.results[i]['opacity'], Style.opacity),
             stroke: sp.symbol.properties.outlineColor === "" ? false : true,
-            weight: this.verify(parseInt(sp.results[i]['weight']), IM.Style.weight)
+            weight: this.verify(parseInt(sp.results[i]['weight']), Style.weight)
           }
         }
       }
@@ -121,14 +121,14 @@ export class MapUtil {
     // Return all possible style properties, and if the layer doesn't have a use for one, it will be ignored.
     else {
       return {
-        color: this.verify(sp.symbol.properties.color, IM.Style.color),
-        fillColor: this.verify(sp.symbol.properties.fillColor, IM.Style.fillColor),
-        fillOpacity: this.verify(sp.symbol.properties.fillOpacity, IM.Style.fillOpacity),
-        opacity: this.verify(sp.symbol.properties.opacity, IM.Style.opacity),
-        radius: this.verify(parseInt(sp.symbol.properties.symbolSize), IM.Style.size),
+        color: this.verify(sp.symbol.properties.color, Style.color),
+        fillColor: this.verify(sp.symbol.properties.fillColor, Style.fillColor),
+        fillOpacity: this.verify(sp.symbol.properties.fillOpacity, Style.fillOpacity),
+        opacity: this.verify(sp.symbol.properties.opacity, Style.opacity),
+        radius: this.verify(parseInt(sp.symbol.properties.symbolSize), Style.size),
         stroke: sp.symbol.properties.outlineColor === "" ? false : true,
-        shape: this.verify(sp.symbol.properties.symbolShape, IM.Style.shape),
-        weight: this.verify(parseInt(sp.symbol.properties.weight), IM.Style.weight)
+        shape: this.verify(sp.symbol.properties.symbolShape, Style.shape),
+        weight: this.verify(parseInt(sp.symbol.properties.weight), Style.weight)
       }
     }
 
@@ -454,7 +454,7 @@ export class MapUtil {
    * @param result The result object from PapaParse after asynchronously reading the CSV classification file.
    * @param symbol The GeoLayerSymbol object from the map configuration file.
    */
-  static createSingleBandRaster(georaster: any, result: any, symbol: IM.GeoLayerSymbol): any {
+  static createSingleBandRaster(georaster: any, result: any, symbol: GeoLayerSymbol): any {
     var geoRasterLayer = new GeoRasterLayer({
       debugLevel: 0,
       georaster,
@@ -655,93 +655,93 @@ export class MapUtil {
 
     var valueMin: any = null;
     var valueMax: any = null;
-    var minOp: IM.Operator = null;
-    var maxOp: IM.Operator = null;
+    var minOp: Operator = null;
+    var maxOp: Operator = null;
     var minOpPresent = false;
     var maxOpPresent = false;
 
     // Check to see if either of them are actually positive or negative infinity.
     if (min.toUpperCase().includes('-INFINITY')) {
       valueMin = Number.MIN_SAFE_INTEGER;
-      minOp = IM.Operator.gt;
+      minOp = Operator.gt;
     }
     if (max.toUpperCase().includes('INFINITY')) {
       valueMax = Number.MAX_SAFE_INTEGER;
-      maxOp = IM.Operator.lt;
+      maxOp = Operator.lt;
     }
 
     // Contains operator
-    if (min.includes(IM.Operator.gt)) {
-      valueMin = parseFloat(min.replace(IM.Operator.gt, ''));
-      minOp = IM.Operator.gt;
+    if (min.includes(Operator.gt)) {
+      valueMin = parseFloat(min.replace(Operator.gt, ''));
+      minOp = Operator.gt;
       minOpPresent = true;
     }
-    if (min.includes(IM.Operator.gtet)) {
-      valueMin = parseFloat(min.replace(IM.Operator.gtet, ''));
-      minOp = IM.Operator.gtet;
+    if (min.includes(Operator.gtet)) {
+      valueMin = parseFloat(min.replace(Operator.gtet, ''));
+      minOp = Operator.gtet;
       minOpPresent = true;
     }
-    if (min.includes(IM.Operator.lt)) {
-      valueMin = parseFloat(min.replace(IM.Operator.lt, ''));
-      minOp = IM.Operator.lt;
+    if (min.includes(Operator.lt)) {
+      valueMin = parseFloat(min.replace(Operator.lt, ''));
+      minOp = Operator.lt;
       minOpPresent = true;
     }
-    if (min.includes(IM.Operator.ltet)) {
-      valueMin = parseFloat(min.replace(IM.Operator.ltet, ''));
-      minOp = IM.Operator.ltet;
+    if (min.includes(Operator.ltet)) {
+      valueMin = parseFloat(min.replace(Operator.ltet, ''));
+      minOp = Operator.ltet;
       minOpPresent = true;
     }
 
     // Contains operator
-    if (max.includes(IM.Operator.gt)) {
-      valueMax = parseFloat(max.replace(IM.Operator.gt, ''));
-      maxOp = IM.Operator.gt;
+    if (max.includes(Operator.gt)) {
+      valueMax = parseFloat(max.replace(Operator.gt, ''));
+      maxOp = Operator.gt;
       maxOpPresent = true;
     }
-    if (max.includes(IM.Operator.gtet)) {
-      valueMax = parseFloat(max.replace(IM.Operator.gtet, ''));
-      maxOp = IM.Operator.gtet;
+    if (max.includes(Operator.gtet)) {
+      valueMax = parseFloat(max.replace(Operator.gtet, ''));
+      maxOp = Operator.gtet;
       maxOpPresent = true;
     }
-    if (max.includes(IM.Operator.lt)) {
-      valueMax = parseFloat(max.replace(IM.Operator.lt, ''));
-      maxOp = IM.Operator.lt;
+    if (max.includes(Operator.lt)) {
+      valueMax = parseFloat(max.replace(Operator.lt, ''));
+      maxOp = Operator.lt;
       maxOpPresent = true;
     }
-    if (max.includes(IM.Operator.ltet)) {
-      valueMax = parseFloat(max.replace(IM.Operator.ltet, ''));
-      maxOp = IM.Operator.ltet;
+    if (max.includes(Operator.ltet)) {
+      valueMax = parseFloat(max.replace(Operator.ltet, ''));
+      maxOp = Operator.ltet;
       maxOpPresent = true;
     }
 
     // If no operator is detected in the valueMin property.
     if (minOpPresent === false) {
       valueMin = parseFloat(min);
-      minOp = IM.Operator.gt;
+      minOp = Operator.gt;
     }
     // If no operator is detected in the valueMax property.
     if (maxOpPresent === false) {
       valueMax = parseFloat(max);
-      maxOp = IM.Operator.ltet;
+      maxOp = Operator.ltet;
     }
 
     // The following two if, else if statements are done if only a number is given as valueMin and valueMax.
     // If the min is an integer or float.
     // if (MapUtil.isInt(min)) {
     //   valueMin = parseInt(min);
-    //   minOp = IM.Operator.gtet;
+    //   minOp = Operator.gtet;
     // } else if (MapUtil.isFloat(min)) {
     //   valueMin = parseFloat(min);
-    //   minOp = IM.Operator.gt;
+    //   minOp = Operator.gt;
     // }
 
     // If the max is an integer or float.
     // if (MapUtil.isInt(max)) {
     //   valueMax = parseInt(max);
-    //   maxOp = IM.Operator.ltet;
+    //   maxOp = Operator.ltet;
     // } else if (MapUtil.isFloat(max)) {
     //   valueMax = parseFloat(max);
-    //   maxOp = IM.Operator.ltet;
+    //   maxOp = Operator.ltet;
     // }
 
     // Each of the attributes below have been assigned; return as an object.
@@ -764,8 +764,15 @@ export class MapUtil {
    * @param symbol An InfoMapper GeoLayerSymbol object from the map config file to decide what the classificationAttribute is,
    * and therefore what raster band is being used for the cell value to display.
    */
-  static displayMultipleHTMLRasterCells(e: any, georaster: any, geoLayerView: IM.GeoLayerView,
-  originalDivContents: string, layerItem: MapLayerItem, symbol: IM.GeoLayerSymbol, geoMapId: string): void {
+  static displayMultipleHTMLRasterCells(
+    e: any,
+    georaster: any,
+    geoLayerView: GeoLayerView,
+    originalDivContents: string,
+    layerItem: MapLayerItem,
+    symbol: GeoLayerSymbol,
+    geoMapId: string
+  ): void {
 
     /**
      * The instance of the MapLayerManager, a helper class that manages MapLayerItem objects with Leaflet layers
@@ -905,7 +912,7 @@ export class MapUtil {
    * @param featureProperties The original feature Properties object taken from the feature.
    * @param layerAttributes The object containing rules, regex, and general instructions for filtering out properties.
    */
-  static filterProperties(featureProperties: any, layerAttributes: IM.EventConfig['layerAttributes']): any {
+  static filterProperties(featureProperties: any, layerAttributes: EventConfig['layerAttributes']): any {
 
     var included: string[] = layerAttributes.include;
     var excluded: string[] = layerAttributes.exclude;
@@ -1147,9 +1154,9 @@ export class MapUtil {
    * @param propFunction The PropFunction enum value to determine which implemented function needs to be called
    * @param args The optional arguments found in the parens of the PropFunction as a string
    */
-  static runPropFunction(featureValue: string, propFunction: IM.PropFunction, args?: string): string {
+  static runPropFunction(featureValue: string, propFunction: PropFunction, args?: string): string {
     switch (propFunction) {
-      case IM.PropFunction.toMixedCase:
+      case PropFunction.toMixedCase:
         var featureArray = featureValue.toLowerCase().split(' ');
         var finalArray = [];
 
@@ -1158,7 +1165,7 @@ export class MapUtil {
         }
         return finalArray.join(' ');
 
-      case IM.PropFunction.replace:
+      case PropFunction.replace:
         var argArray: string[] = [];
         for (let arg of args.split(',')) {
           argArray.push(arg.trim().replace(/\'/g, ''));
@@ -1304,7 +1311,7 @@ export class MapUtil {
    * @param styleProperty
    * @param style 
    */
-  static verify(styleProperty: any, style: IM.Style): any {
+  static verify(styleProperty: any, style: Style): any {
     // The property exists, so return it to be used in the style
     // TODO: jpkeahey 2020.06.15 - Maybe check to see if it's a correct property?
     if (styleProperty) {
@@ -1313,13 +1320,13 @@ export class MapUtil {
     // The property does not exist, so return a default value.
     else {
       switch (style) {
-        case IM.Style.color: return 'gray';
-        case IM.Style.fillOpacity: return '0.2';
-        case IM.Style.fillColor: return 'gray';
-        case IM.Style.opacity: return '1.0';
-        case IM.Style.size: return 6;
-        case IM.Style.shape: return 'circle';
-        case IM.Style.weight: return 3;
+        case Style.color: return 'gray';
+        case Style.fillOpacity: return '0.2';
+        case Style.fillColor: return 'gray';
+        case Style.opacity: return '1.0';
+        case Style.size: return 6;
+        case Style.shape: return 'circle';
+        case Style.weight: return 3;
       }
     }
   }

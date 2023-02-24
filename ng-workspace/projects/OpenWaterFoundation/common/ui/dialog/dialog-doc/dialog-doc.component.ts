@@ -5,8 +5,7 @@ import { Component,
 import { MatDialogRef,
           MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { OwfCommonService, Path } from '@OpenWaterFoundation/common/services';
 
 import { faXmark }          from '@fortawesome/free-solid-svg-icons';
 
@@ -106,7 +105,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
       // If it does, we want users to be able to set the path to the image relative
       // to the markdown folder being displayed, so they don't have to be burdened
       // with putting a possibly extra long path.
-      var sanitizedDoc = this.commonService.sanitizeDoc(this.doc, IM.Path.mP);
+      var sanitizedDoc = this.commonService.sanitizeDoc(this.doc, Path.mP);
 
       setTimeout(() => {
         this.showdownHTML = sanitizedDoc;

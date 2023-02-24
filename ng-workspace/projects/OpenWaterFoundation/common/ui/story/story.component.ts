@@ -12,8 +12,8 @@ import { first,
 //           fullpage_api }       from 'fullpage.js/dist/fullpage.extensions.min';
 
 import { CommonLoggerService,
-          OwfCommonService }   from '@OpenWaterFoundation/common/services';
-import * as IM                 from '@OpenWaterFoundation/common/services';
+          OwfCommonService, 
+          StoryConf}   from '@OpenWaterFoundation/common/services';
 
 @Component({
   selector: 'common-lib-story',
@@ -45,7 +45,7 @@ export class StoryComponent implements OnInit, OnDestroy {
   /**
    * 
    */
-  storyConf: IM.StoryConf;
+  storyConf: StoryConf;
   /**
    * 
    */
@@ -151,7 +151,7 @@ export class StoryComponent implements OnInit, OnDestroy {
     var storyConfigPath = this.commonService.getStoryConfigPathFromId(storyId);
 
     this.commonService.getJSONData(this.commonService.getAppPath() + storyConfigPath)
-    .pipe(first()).subscribe((storyConfig: IM.StoryConf) => {
+    .pipe(first()).subscribe((storyConfig: StoryConf) => {
 
       this.storyInit(storyConfig);
     });
@@ -161,7 +161,7 @@ export class StoryComponent implements OnInit, OnDestroy {
    * 
    * @param storyConfig 
    */
-  private storyInit(storyConfig: IM.StoryConf): void {
+  private storyInit(storyConfig: StoryConf): void {
     this.storyConf = storyConfig;
     this.createFullpageOptions();
   }

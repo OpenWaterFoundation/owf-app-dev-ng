@@ -8,8 +8,11 @@ import { BehaviorSubject,
           Observable }              from 'rxjs';
 
 import { EventService,
-          OwfCommonService }        from '@OpenWaterFoundation/common/services';
-import * as IM                      from '@OpenWaterFoundation/common/services';
+          OwfCommonService, 
+          ParsedProp, 
+          Path, 
+          SelectEvent,
+          SelectorWidget }          from '@OpenWaterFoundation/common/services';
 import { DashboardService }         from '../../dashboard.service';
 
 import * as Papa                    from 'papaparse';
@@ -43,7 +46,7 @@ export class SelectorComponent {
   dataLoading$ = this.dataLoading.asObservable();
   /** The attribute provided to this component when created, e.g.
    *   <widget-selector [selectorWidget]="widget"></widget-selector> */
-  @Input('selectorWidget') selectorWidget: IM.SelectorWidget;
+  @Input('selectorWidget') selectorWidget: SelectorWidget;
   /** The array of feature objects that have been filtered by a user search. To be
    * updated and reflected in the mat-select main widget dropdown. */
   filteredFeatures: any[];
@@ -124,7 +127,7 @@ export class SelectorComponent {
   // TODO: jpkeahey 2022.04.14 - This is being called hundreds of times in seconds due to it being
   // a function call using data binding in the template file.
   getFeaturePropValue(feature: any): string {
-    var props: IM.ParsedProp;
+    var props: ParsedProp;
 
     props = this.commonService.obtainPropertiesFromLine(this.selectorWidget.displayName, feature, null, null, true);
     this.allFoundProps = props.foundProps;
@@ -171,7 +174,7 @@ export class SelectorComponent {
    */
   retrieveCSVData(): void {
 
-    var fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.selectorWidget.dataPath]);
+    var fullDataPath = this.commonService.buildPath(Path.dbP, [this.selectorWidget.dataPath]);
 
     Papa.parse(fullDataPath, {
       delimiter: ",",
@@ -185,7 +188,7 @@ export class SelectorComponent {
         this.filteredFeatures = this.allFeatures;
 
         // Send the initial event to the Chart Widget.
-        let initialSelectEvent: IM.SelectEvent = {
+        let initialSelectEvent: SelectEvent = {
           selectedItem: this.allFeatures[0],
           widgetName: this.selectorWidget.name
         }
@@ -207,14 +210,14 @@ export class SelectorComponent {
    * so this Selector Widget correctly shows them in its dropdown.
    */
   retrieveJSONData(): void {
-    this.commonService.getJSONData(this.commonService.buildPath(IM.Path.dbP, [this.selectorWidget.dataPath]))
+    this.commonService.getJSONData(this.commonService.buildPath(Path.dbP, [this.selectorWidget.dataPath]))
     .subscribe((JSONData: any) => {
 
       this.allFeatures = this.dashboardService.processWidgetJSONData(JSONData, this.selectorWidget);
       
       this.filteredFeatures = this.allFeatures;
       // Send the initial event to the Chart Widget.
-      let initialSelectEvent: IM.SelectEvent = {
+      let initialSelectEvent: SelectEvent = {
         selectedItem: this.allFeatures[0],
         widgetName: this.selectorWidget.name
       }
@@ -287,7 +290,7 @@ export class SelectorComponent {
    * @param item The feature item object that's been selected.
    */
   updateSelectedItem(item: any): void {
-    var widgetEvent: IM.SelectEvent = {
+    var widgetEvent: SelectEvent = {
       selectedItem: item,
       widgetName: this.selectorWidget.name
     };

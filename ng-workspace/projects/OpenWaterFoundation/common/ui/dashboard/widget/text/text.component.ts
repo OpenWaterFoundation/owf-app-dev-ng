@@ -7,8 +7,7 @@ import { DOCUMENT }         from '@angular/common';
 import { Observable,
           Subscription }    from 'rxjs';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { OwfCommonService, Path, TextWidget } from '@OpenWaterFoundation/common/services';
 import { DashboardService } from '../../dashboard.service';
 
 
@@ -41,7 +40,7 @@ export class TextComponent implements OnDestroy{
   textSub: Subscription;
   /** The attribute provided to this component when created, e.g.
    *   <widget-text [textWidget]="widget"></widget-text> */
-  @Input('textWidget') textWidget: IM.TextWidget;
+  @Input('textWidget') textWidget: TextWidget;
   
 
   /**
@@ -86,7 +85,7 @@ export class TextComponent implements OnDestroy{
     }
 
     // The widget object has passed its inspection and can be created.
-    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.textWidget.textPath]);
+    this.fullDataPath = this.commonService.buildPath(Path.dbP, [this.textWidget.textPath]);
     this.getTextData();
   }
 
@@ -102,7 +101,7 @@ export class TextComponent implements OnDestroy{
 
       this.textSub = this.commonService.getPlainText(this.fullDataPath)
       .subscribe((text: string) => {
-        this.text = this.commonService.sanitizeDoc(text, IM.Path.dbP);
+        this.text = this.commonService.sanitizeDoc(text, Path.dbP);
       });
     }
     // HTML file.

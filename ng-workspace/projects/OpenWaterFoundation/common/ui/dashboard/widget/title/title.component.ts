@@ -1,10 +1,10 @@
 import { Component,
           Input, 
           OnDestroy}        from '@angular/core';
+import { TitleWidget }      from '@OpenWaterFoundation/common/services';
 
 import { Observable }       from 'rxjs';
 
-import * as IM              from '@OpenWaterFoundation/common/services';
 import { DashboardService } from '../../dashboard.service';
 
 
@@ -23,7 +23,7 @@ export class TitleComponent implements OnDestroy{
   isTitleError$: Observable<boolean>;
   /** The widget object provided as an attribute to this component when created, e.g.
    *   <widget-title [titleWidget]="widget"></widget-title> */
-  @Input('titleWidget') titleWidget: IM.TitleWidget;
+  @Input('titleWidget') titleWidget: TitleWidget;
 
   /**
    * 

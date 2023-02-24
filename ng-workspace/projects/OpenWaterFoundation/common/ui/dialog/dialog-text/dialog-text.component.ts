@@ -5,8 +5,8 @@ import { Component,
 import { MatDialogRef,
           MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { OwfCommonService,
+          SaveFileType }    from '@OpenWaterFoundation/common/services';
 
 import { faXmark }          from '@fortawesome/free-solid-svg-icons';
 
@@ -100,7 +100,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    */
   saveText(): void {
     var data = new Blob([this.text], { type: 'text/plain;charset=utf-8' });
-    FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.fileName, IM.SaveFileType.text));
+    FileSaver.saveAs(data, this.commonService.formatSaveFileName(this.fileName, SaveFileType.text));
   }
 
 }

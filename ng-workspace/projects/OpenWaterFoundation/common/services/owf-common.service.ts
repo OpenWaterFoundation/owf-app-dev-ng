@@ -7,8 +7,8 @@ import { BehaviorSubject,
           of, 
           Subscriber}      from 'rxjs';
 
-import * as IM             from './types';
 import * as Papa           from 'papaparse';
+import { AppConfig, GeoMapProject, Path, PropFunction, SaveFileType, TSID } from './types';
 
 
 @Injectable({
@@ -18,7 +18,7 @@ export class OwfCommonService {
 
   /** Object that holds the application configuration contents from the `app-config.json`
    * file. */
-  appConfig: IM.AppConfig;
+  appConfig: AppConfig;
   /** The hard-coded string of the name of the application configuration file. It
    * is readonly, because it must be named app-config.json by the user. */
   readonly appConfigFile: string = 'app-config.json';
@@ -104,7 +104,7 @@ export class OwfCommonService {
   leafletMapArray: any[] = [];
   /** The object that holds the map configuration contents from the map configuration
    * file for a Leaflet map. */
-  mapConfig: IM.GeoMapProject;
+  mapConfig: GeoMapProject;
   /** Array of geoLayerId's in the correct geoLayerView order, retrieved from the
    * geoMap. The order in which each layer should be displayed in on the map and
    * side bar legend. */
@@ -184,40 +184,40 @@ export class OwfCommonService {
     }
     // Depending on the pathType, build the correct path.
     switch(pathType) {
-      case IM.Path.cPP:
+      case Path.cPP:
         return this.getAppPath() + this.getContentPathFromId(arg[0]);
-      case IM.Path.gLGJP:
+      case Path.gLGJP:
         return this.getAppPath() + this.getGeoJSONBasePath() + arg[0];
-      case IM.Path.hPP:
+      case Path.hPP:
         return this.getAppPath() + this.getHomePage();
-      case IM.Path.eCP:
+      case Path.eCP:
         return this.getAppPath() + this.getMapConfigPath() + arg[0];
-      case IM.Path.cP:
-      case IM.Path.csvPath:
-      case IM.Path.d3P:
-      case IM.Path.dbP:
-      case IM.Path.dVP:
-      case IM.Path.dUP:
-      case IM.Path.dP:
-      case IM.Path.iGP:
-      case IM.Path.iP:
-      case IM.Path.sMP:
-      case IM.Path.sIP:
-      case IM.Path.raP:
-      case IM.Path.rP:
-        if (pathType === IM.Path.dP) {
+      case Path.cP:
+      case Path.csvPath:
+      case Path.d3P:
+      case Path.dbP:
+      case Path.dVP:
+      case Path.dUP:
+      case Path.dP:
+      case Path.iGP:
+      case Path.iP:
+      case Path.sMP:
+      case Path.sIP:
+      case Path.raP:
+      case Path.rP:
+        if (pathType === Path.dP) {
           this.setMarkdownPath(this.getAppPath() + this.formatPath(arg[0], pathType));
         }
         return this.getAppPath() + this.formatPath(arg[0], pathType);
-      case IM.Path.bSIP:
+      case Path.bSIP:
         return this.formatPath(arg[0], pathType);
-      case IM.Path.mP:
+      case Path.mP:
         if (arg[0].startsWith('/')) {
           return this.getAppPath() + this.formatPath(arg[0], pathType);
         } else {
           return this.getFullMarkdownPath() + this.formatPath(arg[0], pathType);
         }
-      case IM.Path.gP:
+      case Path.gP:
         if (arg[0].startsWith('/')) {
           return this.getAppPath() + arg[0].substring(1);
         } else {
@@ -276,16 +276,16 @@ export class OwfCommonService {
   formatPath(path: string, pathType: string): string {
 
     switch (pathType) {
-      case IM.Path.cP:
-      case IM.Path.csvPath:
-      case IM.Path.d3P:
-      case IM.Path.dVP:
-      case IM.Path.dP:
-      case IM.Path.iGP:
-      case IM.Path.iP:
-      case IM.Path.sMP:
-      case IM.Path.raP:
-      case IM.Path.rP:
+      case Path.cP:
+      case Path.csvPath:
+      case Path.d3P:
+      case Path.dVP:
+      case Path.dP:
+      case Path.iGP:
+      case Path.iP:
+      case Path.sMP:
+      case Path.raP:
+      case Path.rP:
         // If any of the pathType's above are given, they will either be given as
         // an absolute or relative path. A forward slash at the beginning of the
         // string signifies its absolute, so since assets/app/ is already given,
@@ -296,27 +296,27 @@ export class OwfCommonService {
         } else {
           return this.getMapConfigPath() + path;
         }
-      case IM.Path.dbP:
+      case Path.dbP:
         if (path.startsWith('/')) {
           return path.substring(1);
         } else {
           return this.getDashboardConfigPath() + path;
         }
-      case IM.Path.bSIP:
+      case Path.bSIP:
         if (path.startsWith('/')) {
           return 'assets/app-default/' + path.substring(1);
         } else {
           return 'assets/app-default/' + path;
         }
-      case IM.Path.dUP:
-      case IM.Path.mP:
-      case IM.Path.sIP:
+      case Path.dUP:
+      case Path.mP:
+      case Path.sIP:
         if (path.startsWith('/')) {
           return path.substring(1);
         } else {
           return path;
         }
-      case IM.Path.gP:
+      case Path.gP:
         return this.getGapminderConfigPath() + path;
     }
 
@@ -332,14 +332,14 @@ export class OwfCommonService {
    * @param featureProperties The object containing all features and values for a
    * feature; for replacing ${property} notation.
    */
-  formatSaveFileName(saveFileName: string, saveFileType: IM.SaveFileType,
+  formatSaveFileName(saveFileName: string, saveFileType: SaveFileType,
     featureProperties?: any): string {
 
     var warning = 'Undefined detected in the save file name. Confirm "saveFile" ' +
     'property and/or property notation ${ } is correct';
 
     switch (saveFileType) {
-      case IM.SaveFileType.tstable:
+      case SaveFileType.tstable:
         // The filename is undefined.
         if (!saveFileName) {
           return 'timeseries.csv';
@@ -358,7 +358,7 @@ export class OwfCommonService {
           return saveFileName;
         }
 
-      case IM.SaveFileType.text:
+      case SaveFileType.text:
         if (saveFileName.toUpperCase().includes('UNDEFINED')) {
           console.warn(warning);
           console.warn('Defaulting to file name "report"');
@@ -367,7 +367,7 @@ export class OwfCommonService {
           return saveFileName;
         }
 
-      case IM.SaveFileType.dataTable:
+      case SaveFileType.dataTable:
         if (!saveFileName) {
           console.warn(warning);
           console.warn('Defaulting to file name and extension "geoLayerId.csv"');
@@ -699,7 +699,7 @@ export class OwfCommonService {
   /**
    * Read data asynchronously from a file or URL and return it as plain text.
    * @param path The path to the file to be read, or the URL to send the GET request.
-   * @param type Optional type of request sent, e.g. IM.Path.cPP. Used for error
+   * @param type Optional type of request sent, e.g. Path.cPP. Used for error
    * handling and messaging.
    * @param id Optional app-config id to help determine where exactly an error occurred.
    */
@@ -759,26 +759,26 @@ export class OwfCommonService {
       }
 
       switch(type) {
-        case IM.Path.fMCP:
+        case Path.fMCP:
           console.error("Confirm the app configuration property 'mapProject' with id '" +
           id + "' is the correct path");
           break;
-        case IM.Path.gLGJP:
+        case Path.gLGJP:
           console.error("Confirm the map configuration property 'sourcePath' is the correct path");
           break;
-        case IM.Path.eCP:
+        case Path.eCP:
           console.error("Confirm the map configuration EventHandler property " +
           "'eventConfigPath' is the correct path");
           break;
-        case IM.Path.aCP:
+        case Path.aCP:
           console.error("No app-config.json detected in " + this.appPath +
           ". Confirm app-config.json exists in " + this.appPath);
           break;
-        case IM.Path.cPage:
+        case Path.cPage:
           console.error("Confirm the app configuration property 'markdownFilepath' with id '" +
           id + "' is the correct path");
           break;
-        case IM.Path.rP:
+        case Path.rP:
           console.error("Confirm the popup configuration file property 'resourcePath' " +
           "is the correct path");
           break;
@@ -921,7 +921,7 @@ export class OwfCommonService {
         // Iterate over the currently implemented property functions that OWF is
         // supporting, which is being organized in the PropFunction enum at the
         // end of this file.
-        for (const propFunction of Object.values(IM.PropFunction)) {
+        for (const propFunction of Object.values(PropFunction)) {
           // We're at the index after the ${} property, so check to see if it is
           // immediately followed by a PropFunction string.
           if (line.substring(currentIndex).startsWith(propFunction)) {
@@ -997,7 +997,7 @@ export class OwfCommonService {
    * @returns An object with at least the TSIDLocation and datastore, and the path
    * to the datastore file if given.
    */
-   parseTSID(fullTSID: any): IM.TSID {
+   parseTSID(fullTSID: any): TSID {
 
     // Depending on whether it's a full TSID used in the graph template file, determine
     // what the file path of the StateMod file is. (TSIDLocation~/path/to/filename.stm OR
@@ -1060,9 +1060,9 @@ export class OwfCommonService {
    * function needs to be called.
    * @param args The optional arguments found in the parens of the PropFunction as a string
    */
-  runPropFunction(featureValue: string, propFunction: IM.PropFunction, args?: string): string {
+  runPropFunction(featureValue: string, propFunction: PropFunction, args?: string): string {
     switch (propFunction) {
-      case IM.PropFunction.toMixedCase:
+      case PropFunction.toMixedCase:
         var featureArray = featureValue.toLowerCase().split(' ');
         var finalArray = [];
 
@@ -1071,7 +1071,7 @@ export class OwfCommonService {
         }
         return finalArray.join(' ');
 
-      case IM.PropFunction.replace:
+      case PropFunction.replace:
         var argArray: string[] = [];
         for (let arg of args.split(',')) {
           argArray.push(arg.trim().replace(/\'/g, ''));
@@ -1100,7 +1100,7 @@ export class OwfCommonService {
    * `![Waldo](full/path/to/markdown/file/waldo.png)`.
    * @param doc The documentation string retrieved from the markdown file.
    */
-  sanitizeDoc(doc: string, pathType: IM.Path): string {
+  sanitizeDoc(doc: string, pathType: Path): string {
     // Needed for a smaller scope when replacing the image links.
     var _this = this;
     // If anywhere in the documentation there exists  ![any amount of text](
@@ -1141,7 +1141,7 @@ export class OwfCommonService {
    * @param appConfig The entire application configuration read in from the app-config
    * .file as an object
    */
-  setAppConfig(appConfig: IM.AppConfig): void { this.appConfig = appConfig; }
+  setAppConfig(appConfig: AppConfig): void { this.appConfig = appConfig; }
 
   /**
    * No configuration file was detected from the user, so the 'assets/app-default/'

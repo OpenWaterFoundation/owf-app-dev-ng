@@ -13,8 +13,7 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
 
 import { faXmark }          from '@fortawesome/free-solid-svg-icons';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { GraphTemplate, OwfCommonService, Path } from '@OpenWaterFoundation/common/services';
 import { StateModTS }       from '@OpenWaterFoundation/common/dwr/statemod';
 import { DateValueTS,
           DayTS,
@@ -41,7 +40,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
   geoLayer: any;
   /** The object read from the JSON file from TSTool. Gives properties and metadata
    * for the graph. */
-  graphTemplate: IM.GraphTemplate;
+  graphTemplate: GraphTemplate;
   /** A string representing the button ID of the button clicked to open this dialog. */
   windowID: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
@@ -170,9 +169,9 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     if (this.graphFilePath.toUpperCase().includes('.STM')) {
-      this.parseTSFile(IM.Path.sMP);
+      this.parseTSFile(Path.sMP);
     } else if (this.graphFilePath.toUpperCase().includes('.DV')) {
-      this.parseTSFile(IM.Path.dVP);
+      this.parseTSFile(Path.dVP);
     }
   }
 
@@ -199,7 +198,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    * files, create a TS object, and add it to an array.
    * @param dataPath The path type describing what kind of file is being processed.
    */
-  parseTSFile(dataPath: IM.Path): void {
+  parseTSFile(dataPath: Path): void {
     // Defines a TSObject so it can be instantiated as the desired object later.
     var TSObject: any;
     // Create an array to hold the Observables of each file read.
@@ -210,8 +209,8 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
     var TSIDLocation: string;
 
     switch (dataPath) {
-      case IM.Path.sMP: TSObject = new StateModTS(this.commonService); break;
-      case IM.Path.dVP: TSObject = new DateValueTS(this.commonService); break;
+      case Path.sMP: TSObject = new StateModTS(this.commonService); break;
+      case Path.dVP: TSObject = new DateValueTS(this.commonService); break;
     }
 
     for (let data of this.graphTemplate.product.subProducts[0].data) {

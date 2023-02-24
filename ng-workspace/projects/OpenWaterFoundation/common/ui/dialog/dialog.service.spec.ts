@@ -1,14 +1,14 @@
 import { HttpClientTestingModule,
           HttpTestingController } from '@angular/common/http/testing';
 import { TestBed }                from '@angular/core/testing';
+import { Bounds } from '@OpenWaterFoundation/common/services';
 
 import { DialogService }          from './dialog.service';
-import * as IM                    from '@OpenWaterFoundation/common/services';
 
 describe('DialogService', () => {
   let dialogService: DialogService,
     httpTestingController: HttpTestingController,
-    bounds: IM.Bounds;
+    bounds: Bounds;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

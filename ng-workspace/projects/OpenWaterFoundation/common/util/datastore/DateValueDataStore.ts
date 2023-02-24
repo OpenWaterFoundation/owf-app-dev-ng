@@ -2,8 +2,7 @@ import { Observable }       from 'rxjs/internal/Observable';
 import { TS }               from '@OpenWaterFoundation/common/ts';
 
 import { DateValueTS }      from '@OpenWaterFoundation/common/ts';
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { Datastore, OwfCommonService, Path, TSID } from '@OpenWaterFoundation/common/services';
 
 
 // @dynamic
@@ -40,7 +39,7 @@ export class DateValueDatastore {
    * @param fullTSID TSID object that has been parsed from a full TSID string.
    * @returns The DateValue data as an observable of type TS.
    */
-  static readTimeSeries(commonService: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
+  static readTimeSeries(commonService: OwfCommonService, datastore: Datastore, fullTSID: TSID): Observable<TS> {
 
     var convertedPath: string;
 
@@ -52,7 +51,7 @@ export class DateValueDatastore {
 
     return new DateValueTS(commonService).readTimeSeries(
       fullTSID.location,
-      commonService.buildPath(IM.Path.sMP, [convertedPath]),
+      commonService.buildPath(Path.sMP, [convertedPath]),
       null,
       null,
       null,
