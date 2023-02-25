@@ -122,7 +122,8 @@ export class TextComponent implements OnDestroy{
   }
 
   /**
-   * Called right after the constructor.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     this.isTextError$ = this.dashboardService.isTextError;

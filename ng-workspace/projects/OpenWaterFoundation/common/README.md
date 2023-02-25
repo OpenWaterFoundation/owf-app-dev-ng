@@ -58,8 +58,8 @@ the command:
     prompts will display:
 
       * **Username** - GitHub username. This must be all lower case or it will ask again.
-      * **Password** - GitHub account personal access token with `repo` and `read:packages`
-      access permissions.
+      * **Password** - GitHub personal access token. See
+      [Generating a GitHub access token](#generating-a-github-access-token) below.
       * **Email** - GitHub email address.
   
     A successful login will show something similar to
@@ -157,8 +157,37 @@ following steps (assuming InfoMapper is being used):
 1. `cd` into the directory that will hold the repository folder.
 2. `git clone git@github.com:OpenWaterFoundation/owf-app-infomapper-ng.git`
 3. `cd owf-app-infomapper-ng/infomapper`
-4. Follow step `5` under [Publishing the Common Library](#publishing-the-common-library)
+4. Follow step `5` under [Publishing the Common Library](#publishing-the-common-library).
 5. Run `npm install`
+
+## Generating a GitHub Access Token ##
+
+There are 2 types of users for the Common package: (1) Users creating their own InfoMapper
+sites by providing configuration files to the application and using the package,
+and (2) developers actively contributing to the package's development. The steps
+for generating an access token for either of these cases are as follows:
+
+* Login to GitHub.
+* Click on the upper left profile picture, followed by **Settings**.
+* Click on the lowest Settings menu, **Developer settings**.
+* Click on the **Personal access tokens** dropdown, and select **Tokens (classic)**.
+* This area will list all personal access tokens. Click on the **Generate new token**
+dropdown, and select **Generate new token (classic)**.
+* Fill out the 3 main fields for a new access token:
+  * **Note** - This is a name for the token. Make sure it accurately describes what
+  the token is used for.
+  * **Expiration** - An expiration date for the token, to increase security.
+  * **Select scopes** - The defined scopes this personal token can access.
+    * For type (1) users, the `read:packages` scope is all that required,
+    since access to read the package from the registry is needed.
+    * For type (2) users, the `write:packages` scope is needed to not only read the
+    package, but publish newer versions as well. Note that this will automatically
+    choose the `repo` section and all its subsections.
+* Once all necessary fields are complete, click on the **Generate token** button.
+* Once the token has been created, it will show its contents on the following page.
+Note that this is the one and *only* time it will be shown, so be sure to do what's
+necessary to keep it safe and secure.
+* The token can now be used for authentication.
 
 ## Changelog ##
 

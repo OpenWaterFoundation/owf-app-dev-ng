@@ -206,7 +206,8 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * The initial function called in this component. Called once, after ngOnChanges().
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     this.commonService.setMapConfigPath(this.mapConfigPath);

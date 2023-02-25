@@ -4,7 +4,12 @@ import { MapLayerManager,
 
 import geoblaze            from 'geoblaze';
 import { format }          from 'date-fns';
-import { EventConfig, GeoLayerSymbol, GeoLayerView, Operator, PropFunction, Style } from '@OpenWaterFoundation/common/services';
+import { EventConfig,
+          GeoLayerSymbol,
+          GeoLayerView,
+          Operator,
+          PropFunction,
+          Style }          from '@OpenWaterFoundation/common/services';
 
 declare var L: any;
 

@@ -117,8 +117,9 @@ export class ErrorComponent implements OnInit {
   }
 
   /**
-  * Called right after the constructor.
-  */
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
+   */
   ngOnInit(): void {
 
     if (this.errorLocation.includes('dashboard') || this.errorLocation.includes('widget')) {

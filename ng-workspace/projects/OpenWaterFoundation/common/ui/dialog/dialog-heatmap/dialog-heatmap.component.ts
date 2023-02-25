@@ -165,7 +165,8 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Entry point of the component.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     if (this.graphFilePath.toUpperCase().includes('.STM')) {

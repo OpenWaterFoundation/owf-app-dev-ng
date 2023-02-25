@@ -6,7 +6,7 @@ import { map }              from 'rxjs/operators';
 
 import { DataUnits }        from '@OpenWaterFoundation/common/util/io';
 import { OwfCommonService,
-          Path } from '@OpenWaterFoundation/common/services';
+          Path }            from '@OpenWaterFoundation/common/services';
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
 
 
@@ -16,8 +16,14 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'angulardev';
 
+  /**
+   * 
+   */
+  title = 'angulardev';
+  /**
+   * 
+   */
   windowManager: WindowManager = WindowManager.getInstance();
 
 
@@ -28,16 +34,16 @@ export class AppComponent {
    * @param owfService 
    * @param document 
    */
-  constructor(private owfService: OwfCommonService,
-              @Inject(DOCUMENT) private document: Document) { }
+  constructor(@Inject(DOCUMENT) private document: Document, private owfService: OwfCommonService) {
+
+  }
 
 
   /**
-   * 
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
-    // Called after the constructor, initializing input properties, and the first
-    // call to ngOnChanges. Set the app's favicon.
     this.document.getElementById('appFavicon').setAttribute('href', 'assets/app/img/OWF-Logo-Favicon-32x32.ico');
   }
 

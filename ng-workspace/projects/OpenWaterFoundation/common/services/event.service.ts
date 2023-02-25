@@ -1,9 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable }          from '@angular/core';
 
 import { BehaviorSubject,
           Observable,
-          of } from 'rxjs';
-import { DashboardConf, DashboardWidget, ListenedToWidget, Widget, WidgetEvent, WidgetEventHandler } from './types';
+          of }                 from 'rxjs';
+import { DashboardConf,
+          DashboardWidget,
+          ListenedToWidget,
+          Widget,
+          WidgetEvent,
+          WidgetEventHandler } from './types';
 
 
 @Injectable({
@@ -19,6 +24,7 @@ export class EventService {
   /** Array of ListenedToWidget objects, which contain the name of the widget that
    * is being listened to, and the BehaviorSubject attached to the widget. */
   private listenedToWidgets: ListenedToWidget[] = [];
+
 
   constructor() { }
 

@@ -215,7 +215,8 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Called once after the constructor.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     // this.commonService.setMapConfigPath(this.mapConfigPath);

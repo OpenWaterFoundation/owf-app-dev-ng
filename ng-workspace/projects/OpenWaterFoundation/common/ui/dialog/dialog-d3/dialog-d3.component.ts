@@ -47,7 +47,8 @@ export class DialogD3Component implements OnInit {
 
 
   /**
-   * Determine which D3 graph type to create and display.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     switch(this.d3Prop.chartType) {

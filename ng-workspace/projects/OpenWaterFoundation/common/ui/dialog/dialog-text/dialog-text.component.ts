@@ -67,7 +67,8 @@ export class DialogTextComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Called once on Component initialization, right after the constructor.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     this.commonService.setMapConfigPath(this.mapConfigPath);

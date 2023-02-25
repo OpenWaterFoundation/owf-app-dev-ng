@@ -1,5 +1,4 @@
-import { AfterViewInit,
-          Component,
+import { Component,
           EventEmitter,
           Input, 
           Output }                    from '@angular/core';
@@ -43,7 +42,7 @@ import * as Papa                      from 'papaparse';
   templateUrl: './legend-layer-group.component.html',
   styleUrls: ['./legend-layer-group.component.css']
 })
-export class LegendLayerGroupComponent implements AfterViewInit {
+export class LegendLayerGroupComponent {
 
   /** An object with each geoLayerId as the key, and all features of a geoLayerView,
    * usually a FeatureCollection, as the value. */
@@ -125,12 +124,6 @@ export class LegendLayerGroupComponent implements AfterViewInit {
     });
   }
 
-  /**
-   * Called right after the constructor.
-   */
-  ngAfterViewInit(): void {
-
-  }
 
   /**
   * Determine what layer the user clicked the clear button from, and rest the styling

@@ -91,8 +91,8 @@ export class DialogDocComponent implements OnInit, OnDestroy {
 
 
   /**
-   * This function is called on initialization of the map component, right after
-   * the constructor.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     if (this.mapConfigPath && this.fullMarkdownPath) {

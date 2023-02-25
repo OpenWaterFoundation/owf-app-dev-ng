@@ -693,9 +693,9 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Initial function call when the Dialog component is created. Determines whether
-  * a CSV or StateMod file is to be read for graph creation.
-  */
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
+   */
   ngOnInit(): void {
     
     this.isChartError$ = this.isChartError;

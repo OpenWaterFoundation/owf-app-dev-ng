@@ -11,7 +11,7 @@ import { ChartWidget } from '@OpenWaterFoundation/common/services';
   templateUrl: './chart-widget.component.html',
   styleUrls: ['./chart-widget.component.css']
 })
-export class ChartWidgetComponent implements OnInit, OnDestroy {
+export class ChartWidgetComponent implements OnDestroy {
 
   /** The attribute provided to this component when created, e.g.
    *   <chart-widget [chartWidget]="widget"></chart-widget> */
@@ -23,14 +23,6 @@ export class ChartWidgetComponent implements OnInit, OnDestroy {
   */
   constructor() { }
 
-
-  /**
-  * Initial function call when the Dialog component is created. Determines whether
-  * a CSV or StateMod file is to be read for graph creation.
-  */
-  ngOnInit(): void {
-
-  }
 
   /**
   * Called once, before the instance is destroyed. Unsubscribes from all defined
