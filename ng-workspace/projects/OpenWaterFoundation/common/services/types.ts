@@ -863,10 +863,15 @@ export interface SearchItem {
 }
 
 /** Contains metadata for a SearchItem that shouldn't be searchable in the index,
- * but is needed for displaying the results in the search table. */
+ * but is needed for displaying the property's results in the search table. */
 export interface SearchItemMetadata {
   routerPath: string;
   type: string;
+}
+
+/** Contains all search result metadata items with a unique string used as the key. */
+export interface SearchItemsMetadata {
+  [key: string]: SearchItemMetadata;
 }
 
 /** Optional choices to enhance a global application search. */
