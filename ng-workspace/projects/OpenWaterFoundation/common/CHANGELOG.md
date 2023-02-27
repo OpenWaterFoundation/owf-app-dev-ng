@@ -693,7 +693,7 @@ rely on map component code.
 
 ### Bug Fixes ###
 
-* Fixed a Window Manager windowID issue, where the variable in the InfoMapper was still called
+* Fixed a Window Manager windowId issue, where the variable in the InfoMapper was still called
 buttonID, an old leftover when the ID was only being created in a Leaflet popup button. This will
 stop a Text and Graph Dialog from opening just once.
 * Fixed a bug where a address would be added to the map regardless if it was in a feature or not.

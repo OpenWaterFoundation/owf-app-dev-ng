@@ -21,6 +21,7 @@ import * as FileSaver       from 'file-saver';
   styleUrls: ['./dialog-text.component.css', '../main-dialog-style.css']
 })
 export class DialogTextComponent implements OnInit, OnDestroy {
+
   /** A string representing the file extension that the text came from. Used for
    * the Download button tooltip. */
   fileExtension: string;
@@ -33,7 +34,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
   /** The text to be displayed in the dialog. */
   text: any;
   /** A string representing the button ID of the button clicked to open this dialog. */
-  windowID: string;
+  windowId: string;
   /** The windowManager instance for managing the opening and closing of windows throughout the InfoMapper. */
   windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogTextComponent. */
@@ -54,7 +55,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) private matDialogData: any
   ) {
 
-    this.windowID = this.matDialogData.data.windowID;
+    this.windowId = this.matDialogData.data.windowId;
     this.text = this.matDialogData.data.text;
     this.fileName = this.matDialogData.data.resourcePath;
     if (this.fileName.includes('.')) {
@@ -84,7 +85,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    */
   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -93,7 +94,7 @@ export class DialogTextComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**

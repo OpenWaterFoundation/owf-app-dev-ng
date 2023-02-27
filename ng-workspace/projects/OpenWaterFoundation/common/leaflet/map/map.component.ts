@@ -1135,7 +1135,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                           var TSIDLocation: string;
                           var resourcePathArray: string[] = [];
                           var downloadFileNameArray: any[] = [];
-                          var windowID: string;
+                          var windowId: string;
 
                           if (e.target.getTooltip()) {
                             featureIndex = parseInt(e.target.getTooltip()._content);
@@ -1184,12 +1184,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                           popup.setLatLng(e.latlng).openOn(_this.mainMap);
 
                           for (let i = 0; i < numberOfActions; i++) {
-                            windowID = popupTemplateId + '-' + actionLabelArray[i];
-                            L.DomEvent.addListener(L.DomUtil.get(windowID), 'click', function (e: any) {
-                              windowID = popupTemplateId + '-' + actionLabelArray[i];
+                            windowId = popupTemplateId + '-' + actionLabelArray[i];
+                            L.DomEvent.addListener(L.DomUtil.get(windowId), 'click', function (e: any) {
+                              windowId = popupTemplateId + '-' + actionLabelArray[i];
                               // If this button has already been clicked and resides
                               // in the windowManager, don't do anything.
-                              if (_this.windowManager.windowExists(windowID)) {
+                              if (_this.windowManager.windowExists(windowId)) {
                                 return;
                               }
 
@@ -1205,7 +1205,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                   _this.openTextDialog({
                                     fullResourcePath: fullResourcePath,
                                     text: text,
-                                    windowID: windowID
+                                    windowId: windowId
                                   });
                                 });
                               }
@@ -1239,7 +1239,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                     } else console.error('The TSID has not been set in the graph template file');
 
                                     _this.openTSGraphDialog(graphTemplate, graphFilePath, TSIDLocation, chartPackageArray[i],
-                                      featureProperties, downloadFileNameArray[i] ? downloadFileNameArray[i] : null, windowID);
+                                      featureProperties, downloadFileNameArray[i] ? downloadFileNameArray[i] : null, windowId);
                                   });
                               }
                               // Display a Heatmap Dialog.
@@ -2334,10 +2334,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   //       case WindowType.TEXT: {
 
-  //         if (this.windowManager.windowExists(dialogParams.windowID)) { return false; }
+  //         if (this.windowManager.windowExists(dialogParams.windowId)) { return false; }
 
   //         extras.queryParams[this.windowManager.setQueryParamTypeKey()] = dialogParams.location;
-  //         extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogParams.windowID;
+  //         extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogParams.windowId;
   //         this.router.navigate([], extras);
       
   //         this.openTextDialog(dialogParams);
@@ -2370,15 +2370,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   openD3VizDialog(geoLayer: GeoLayer, d3Prop: D3Prop): void {
 
-    var windowID = geoLayer.geoLayerId + '-dialog-d3-viz';
-    if (!this.windowManager.addWindow(windowID, WindowType.D3)) {
+    var windowId = geoLayer.geoLayerId + '-dialog-d3-viz';
+    if (!this.windowManager.addWindow(windowId, WindowType.D3)) {
       return;
     }
 
     var dialogConfigData = {
       d3Prop: d3Prop,
       geoLayer: geoLayer,
-      windowID: windowID
+      windowId: windowId
     }
       
     var dialogRef: MatDialogRef<DialogD3Component, any> = this.dialog.open(
@@ -2395,8 +2395,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   openDocDialog(): void {
 
-    const windowID = this.geoMapId;
-    if (!this.windowManager.addWindow(windowID, WindowType.DOC)) {
+    const windowId = this.geoMapId;
+    if (!this.windowManager.addWindow(windowId, WindowType.DOC)) {
       return;
     }
 
@@ -2421,7 +2421,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         geoId: this.geoMapId,
         geoName: this.geoMapName,
         mapConfigPath: this.commonService.getMapConfigPath(),
-        windowID: windowID
+        windowId: windowId
       }
 
       const docDialog: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
@@ -2447,8 +2447,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   private openGapminderDialog(geoLayer: GeoLayer, resourcePath: string): any {
 
-    var windowID = geoLayer.geoLayerId + '-dialog-gapminder';
-    if (!this.windowManager.addWindow(windowID, WindowType.GAP)) {
+    var windowId = geoLayer.geoLayerId + '-dialog-gapminder';
+    if (!this.windowManager.addWindow(windowId, WindowType.GAP)) {
       return;
     }
 
@@ -2459,7 +2459,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     dialogConfig.data = {
       configPath: fullGapminderPath,
       geoLayer: geoLayer,
-      windowID: windowID
+      windowId: windowId
     }
 
     const dialogRef: MatDialogRef<DialogGapminderComponent, any> = this.dialog.open(DialogGapminderComponent, {
@@ -2481,8 +2481,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private openHeatmapDialog(geoLayer: any, graphTemplate: GraphTemplate, graphFilePath: string): void {
 
-    var windowID = geoLayer.geoLayerId + '-dialog-heatmap';
-    if (!this.windowManager.addWindow(windowID, WindowType.HEAT)) {
+    var windowId = geoLayer.geoLayerId + '-dialog-heatmap';
+    if (!this.windowManager.addWindow(windowId, WindowType.HEAT)) {
       return;
     }
 
@@ -2491,7 +2491,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       geoLayer: geoLayer,
       graphFilePath: graphFilePath,
       graphTemplate: graphTemplate,
-      windowID: windowID
+      windowId: windowId
     }
     const dialogRef: MatDialogRef<DialogHeatmapComponent, any> = this.dialog.open(DialogHeatmapComponent, {
       data: dialogConfig,
@@ -2519,8 +2519,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private openImageGalleryDialog(geoLayer: any, feature: any, featureIndex: number, resourcePath: string,
     geoLayerView: any, eventObject: any): void {
 
-    var windowID = geoLayer.geoLayerId + '-dialog-gallery';
-    if (!this.windowManager.addWindow(windowID, WindowType.GAL)) {
+    var windowId = geoLayer.geoLayerId + '-dialog-gallery';
+    if (!this.windowManager.addWindow(windowId, WindowType.GAL)) {
       return;
     }
 
@@ -2569,14 +2569,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param graphFilePath The file path to the current graph that needs to be read
   */
   private openTSGraphDialog(graphTemplate: GraphTemplate, graphFilePath: string, TSIDLocation: string,
-  chartPackage: string, featureProperties: any, downloadFileName?: string, windowID?: string): void {
+  chartPackage: string, featureProperties: any, downloadFileName?: string, windowId?: string): void {
 
-    if (!this.windowManager.addWindow(windowID, WindowType.TSGRAPH)) {
+    if (!this.windowManager.addWindow(windowId, WindowType.TSGRAPH)) {
       return;
     }
 
     var dialogConfigData = {
-      windowID: windowID,
+      windowId: windowId,
       chartPackage: chartPackage,
       featureProperties: featureProperties,
       graphTemplate: graphTemplate,
@@ -2602,18 +2602,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * .popup
   * @param resourcePath The path to the text file so the file name can be extracted
   * in the dialog-text component.
-  * @param windowID A string representing the button ID of the button clicked to
+  * @param windowId A string representing the button ID of the button clicked to
   * open this dialog.
   */
   private openTextDialog(params: DialogParams): void {
 
-    if (!this.windowManager.addWindow(params.windowID, WindowType.TEXT)) {
+    if (!this.windowManager.addWindow(params.windowId, WindowType.TEXT)) {
       return;
     }
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      windowID: params.windowID,
+      windowId: params.windowId,
       mapConfigPath: this.commonService.getMapConfigPath(),
       resourcePath: params.fullResourcePath,
       text: params.text

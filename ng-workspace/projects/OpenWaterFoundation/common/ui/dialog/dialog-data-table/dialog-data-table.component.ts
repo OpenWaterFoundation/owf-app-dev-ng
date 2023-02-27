@@ -134,9 +134,9 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   /** Object needed to show and deal with the checkboxes on the data table when
    * selecting each row in the Material Table. */
   selection: SelectionModel<any>;
-  /** A unique string representing the windowID of this Dialog Component in the
+  /** A unique string representing the windowId of this Dialog Component in the
    * WindowManager. */
-  windowID: string;
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
@@ -182,7 +182,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     this.matchedRows = this.attributeTable.data.length;
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
     // this.selection = new SelectionModel<any>(true, []);
-    this.windowID = this.geoLayer.geoLayerId + '-dialog-data-table';
+    this.windowId = this.geoLayer.geoLayerId + '-dialog-data-table';
   }
 
 
@@ -546,7 +546,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
     this.destroyed.next();
     this.destroyed.complete();
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -555,7 +555,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
    */
   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**

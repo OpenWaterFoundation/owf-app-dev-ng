@@ -238,8 +238,8 @@ export class LegendLayerGroupComponent {
   */
   openDocDialog(docPath: string, geoId: string, geoName: string): void {
 
-    var windowID = geoId;
-    if (!this.windowManager.addWindow(windowID, WindowType.DOC)) {
+    var windowId = geoId;
+    if (!this.windowManager.addWindow(windowId, WindowType.DOC)) {
       return;
     }
 
@@ -263,7 +263,7 @@ export class LegendLayerGroupComponent {
         geoId: geoId,
         geoName: geoName,
         mapConfigPath: this.commonService.getMapConfigPath(),
-        windowID: windowID
+        windowId: windowId
       }
 
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
@@ -277,8 +277,8 @@ export class LegendLayerGroupComponent {
   * @param geoLayerView The current geoLayerView object.
   */
   openDataTableDialog(geoLayerView: any): void {
-    var windowID = geoLayerView.geoLayerId + '-dialog-data-table';
-    if (this.windowManager.windowExists(windowID) || this.allFeatures[geoLayerView.geoLayerId] === undefined) {
+    var windowId = geoLayerView.geoLayerId + '-dialog-data-table';
+    if (this.windowManager.windowExists(windowId) || this.allFeatures[geoLayerView.geoLayerId] === undefined) {
       return;
     }
 
@@ -302,7 +302,7 @@ export class LegendLayerGroupComponent {
       maxHeight: "90vh",
       maxWidth: "90vw"
     });
-    this.windowManager.addWindow(windowID, WindowType.TABLE);
+    this.windowManager.addWindow(windowId, WindowType.TABLE);
   }
 
   /**
@@ -312,8 +312,8 @@ export class LegendLayerGroupComponent {
   * @param geoLayerView The geoLayerView object from the selected layer.
   */
   openImageGalleryDialogFromKebab(geoLayerId: any, geoLayerView: any): void {
-    var windowID = geoLayerId + '-dialog-gallery';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = geoLayerId + '-dialog-gallery';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -350,7 +350,7 @@ export class LegendLayerGroupComponent {
           maxWidth: "910px"
         });
 
-        this.windowManager.addWindow(windowID, WindowType.GAL);
+        this.windowManager.addWindow(windowId, WindowType.GAL);
       }
     });
   }
@@ -363,8 +363,8 @@ export class LegendLayerGroupComponent {
    */
   openPropertyDialog(geoLayerId: string, geoLayerViewName: any): void {
 
-    var windowID = geoLayerId + '-dialog-properties';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = geoLayerId + '-dialog-properties';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -407,7 +407,7 @@ export class LegendLayerGroupComponent {
       maxWidth: "90vw"
     });
 
-    this.windowManager.addWindow(windowID, WindowType.TEXT);
+    this.windowManager.addWindow(windowId, WindowType.TEXT);
   }
 
   /**

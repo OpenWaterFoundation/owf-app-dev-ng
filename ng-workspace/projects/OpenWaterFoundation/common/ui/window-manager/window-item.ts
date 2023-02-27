@@ -8,12 +8,12 @@ import { WindowType }   from './window-manager';
 export class WindowItem {
 
   dialogRef: MatDialogRef<any> = null;
-  windowID: string = null;
+  windowId: string = null;
   windowType: WindowType = null;
 
 
-  constructor(windowID: string, type: WindowType, dialogRef?: MatDialogRef<any>) {
-    this.windowID = windowID;
+  constructor(windowId: string, type: WindowType, dialogRef?: MatDialogRef<any>) {
+    this.windowId = windowId;
     this.windowType = type;
     this.dialogRef = dialogRef;
   }

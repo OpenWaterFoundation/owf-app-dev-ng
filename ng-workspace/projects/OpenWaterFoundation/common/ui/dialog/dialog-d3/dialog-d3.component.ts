@@ -30,7 +30,7 @@ export class DialogD3Component implements OnInit {
   d3Prop: D3Prop;
   geoLayer: any;
   private svg: any;
-  private windowID: string;
+  private windowId: string;
   windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogD3Component. */
   faXmark = faXmark;
@@ -42,7 +42,7 @@ export class DialogD3Component implements OnInit {
 
     this.d3Prop = matDialogData.d3Prop;
     this.geoLayer = matDialogData.geoLayer;
-    this.windowID = matDialogData.windowID;
+    this.windowId = matDialogData.windowId;
   }
 
 
@@ -337,7 +337,7 @@ export class DialogD3Component implements OnInit {
    */
    onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**

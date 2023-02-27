@@ -42,7 +42,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    * for the graph. */
   graphTemplate: GraphTemplate;
   /** A string representing the button ID of the button clicked to open this dialog. */
-  windowID: string;
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
@@ -64,7 +64,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
     this.geoLayer = this.matDialogData.data.geoLayer;
     this.graphTemplate = this.matDialogData.data.graphTemplate;
     this.graphFilePath = this.matDialogData.data.graphFilePath;
-    this.windowID = this.matDialogData.data.windowID;
+    this.windowId = this.matDialogData.data.windowId;
   }
 
   /**
@@ -191,7 +191,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    */
   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**

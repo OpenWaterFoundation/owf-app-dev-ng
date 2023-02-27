@@ -24,7 +24,7 @@ go side-by-side. */
 .drag-header-div {
   display: inline-block;
   height: 100%;
-  width: calc(100% - 80px)
+  width: calc(100% - 80px);
 }
 
 /* The styling for each of the dialog titles. Font size needs to be a little larger

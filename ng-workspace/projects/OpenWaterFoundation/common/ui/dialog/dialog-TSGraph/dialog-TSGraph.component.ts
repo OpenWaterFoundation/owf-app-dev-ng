@@ -69,7 +69,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * header. To be passed to dialog-tstable for downloading files. */
   valueColumns: string[] = [];
   /** A string representing the button ID of the button clicked to open this dialog. */
-  windowID: string;
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
@@ -92,7 +92,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) matDialogData: any
   ) {
 
-    this.windowID = matDialogData.windowID;
+    this.windowId = matDialogData.windowId;
     this.featureProperties = matDialogData.featureProperties;
     this.chartPackage = matDialogData.chartPackage;
     this.downloadFileName = matDialogData.downloadFileName ? matDialogData.downloadFileName : undefined;
@@ -125,7 +125,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    */
   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -138,7 +138,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
       this.forkJoinSub$.unsubscribe();
     }
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -151,8 +151,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     //   this.attributeTable = this.attributeTable.concat(this.attributeTable);
     // }
 
-    var windowID = this.windowID + '-dialog-ts-table';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = this.windowId + '-dialog-ts-table';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
     // Create and use a MatDialogConfig object to pass to the DialogTSGraphComponent
@@ -165,7 +165,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
       featureProperties: this.featureProperties,
       isTSFile: this.attributeTableParams.isTSFile,
       TSArrayRef: this.attributeTableParams.TSArrayRef,
-      windowID: windowID,
+      windowId: windowId,
       valueColumns: this.attributeTableParams.valueColumns
     }
     const dialogRef: MatDialogRef<DialogTSTableComponent, any> = this.dialog.open(DialogTSTableComponent, {
@@ -179,7 +179,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
       maxHeight: "90vh",
       maxWidth: "90vw"
     });
-    this.windowManager.addWindow(windowID, WindowType.TABLE);
+    this.windowManager.addWindow(windowId, WindowType.TABLE);
   }
 
   /**

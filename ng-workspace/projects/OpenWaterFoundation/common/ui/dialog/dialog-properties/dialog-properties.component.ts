@@ -54,8 +54,8 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
     strikethrough: true,
     tables: true
   }
-  /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
-  windowID: string;
+  /** A unique string representing the windowId of this Dialog Component in the WindowManager. */
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogPropertiesComponent. */
@@ -80,7 +80,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
     this.layerProperties = this.matDialogData.data.layerProperties;
     this.layerItem = this.mapLayerManager.getMapLayerItem(this.geoLayerId);
     this.mapConfigPath = this.matDialogData.data.mapConfigPath;
-    this.windowID = this.geoLayerId + '-dialog-properties';
+    this.windowId = this.geoLayerId + '-dialog-properties';
   }
 
 
@@ -230,7 +230,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
    */
   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -240,7 +240,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**

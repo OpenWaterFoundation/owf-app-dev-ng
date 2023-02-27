@@ -47,9 +47,9 @@ export class DialogTSTableComponent implements OnDestroy {
   /** An array for holding all column header titles for the data table past the
    * first column. To be used for downloading as a CSV file. */
   valueColumns: string[];
-  /** A unique string representing the windowID of this Dialog Component in the
+  /** A unique string representing the windowId of this Dialog Component in the
    * WindowManager. */
-  windowID: string;
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
@@ -78,7 +78,7 @@ export class DialogTSTableComponent implements OnDestroy {
     this.featureProperties = this.matDialogData.data.featureProperties;
     this.isTSFile = this.matDialogData.data.isTSFile;
     this.TSArrayRef = this.matDialogData.data.TSArrayRef;
-    this.windowID = this.matDialogData.data.windowID;
+    this.windowId = this.matDialogData.data.windowId;
     this.valueColumns = this.matDialogData.data.valueColumns;
   }
 
@@ -99,7 +99,7 @@ export class DialogTSTableComponent implements OnDestroy {
    */
   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -109,7 +109,7 @@ export class DialogTSTableComponent implements OnDestroy {
    */
   ngOnDestroy(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**

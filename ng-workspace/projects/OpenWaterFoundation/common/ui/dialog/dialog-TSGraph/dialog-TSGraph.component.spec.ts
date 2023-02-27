@@ -184,7 +184,7 @@ xdescribe('DialogTSGraphComponent', () => {
         }
       },
       mapConfigPath: "data-maps/map-configuration-files/",
-      windowID: "county-popup-template-County"
+      windowId: "county-popup-template-County"
     }
   }
 

@@ -70,8 +70,8 @@ export class DialogDataTableLightComponent implements OnInit {
   // selectedRows = 0;
   /** Object needed to show and deal with the checkboxes on the data table when selecting each row in the Material Table. */
   selection: SelectionModel<any>;
-  /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
-  windowID: string;
+  /** A unique string representing the windowId of this Dialog Component in the WindowManager. */
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogDataTableLightComponent. */
@@ -105,7 +105,7 @@ export class DialogDataTableLightComponent implements OnInit {
 
     // TODO: jpkeahey 2020.10.16 - Uncomment out for checkboxes in data table
     // this.selection = new SelectionModel<any>(true, []);
-    this.windowID = this.matDialogData.data.windowID;
+    this.windowId = this.matDialogData.data.windowId;
   }
 
 
@@ -229,7 +229,7 @@ export class DialogDataTableLightComponent implements OnInit {
    */
   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**

@@ -910,7 +910,7 @@ export interface ChartDialog {
 export interface DialogParams {
   fullResourcePath?: string;
   text?: string;
-  windowID?: string;
+  windowId?: string;
 }
 
 /** Currently unused. Might be used with the IM Builder, which is currently using

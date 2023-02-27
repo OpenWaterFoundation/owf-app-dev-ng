@@ -51,9 +51,9 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    * element in the object contains the geoLayerId as the key, and the LayerGroup
    * object as the value. */
   mapLayerItem: any;
-  /** A unique string representing the windowID of this Dialog Component in the
+  /** A unique string representing the windowId of this Dialog Component in the
    * WindowManager. */
-  windowID: string;
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
@@ -85,7 +85,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
     this.papaResult = this.matDialogData.data.papaResult;
     this.mainMap = this.matDialogData.data.mainMap;
     this.mapLayerItem = this.matDialogData.data.mapLayerItem;
-    this.windowID = this.geoLayerId + '-dialog-gallery';
+    this.windowId = this.geoLayerId + '-dialog-gallery';
   }
 
 
@@ -229,7 +229,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    */
   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -239,7 +239,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    */
    ngOnDestroy(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**

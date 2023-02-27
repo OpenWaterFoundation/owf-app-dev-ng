@@ -53,9 +53,9 @@ export class DialogDocComponent implements OnInit, OnDestroy {
   }
   /** The formatted string to be converted into markdown by Showdown. */
   showdownHTML: string;
-  /** A unique string representing the windowID of this Dialog Component in the
+  /** A unique string representing the windowId of this Dialog Component in the
    * WindowManager. */
-  windowID: string;
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
@@ -86,7 +86,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
     else if (this.matDialogData.docHtml) this.docHTML = true;
 
     this.mapConfigPath = this.matDialogData.mapConfigPath;
-    this.windowID = this.matDialogData.windowID;
+    this.windowId = this.matDialogData.windowId;
   }
 
 
@@ -131,7 +131,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
    * dialog and remove it from the window manager.
    */
   ngOnDestroy(): void {
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
 }

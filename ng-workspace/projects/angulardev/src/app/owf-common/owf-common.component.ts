@@ -62,8 +62,8 @@ export class OwfCommonComponent implements OnInit {
    * Opens the D3 Dialog example.
    */
   openD3ExampleDialog(): void {
-    var windowID = 'geoLayerId-dialog-d3';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = 'geoLayerId-dialog-d3';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -108,7 +108,7 @@ export class OwfCommonComponent implements OnInit {
       dialogConfig.data = {
         d3Prop: treeMapConfig,
         geoLayer: geoLayer,
-        windowID: windowID
+        windowId: windowId
       }
         
       var dialogRef: MatDialogRef<DialogD3Component, any> = this.dialog.open(DialogD3Component, {
@@ -123,15 +123,15 @@ export class OwfCommonComponent implements OnInit {
         maxWidth: "100vw"
       });
 
-    this.windowManager.addWindow(windowID, WindowType.D3);
+    this.windowManager.addWindow(windowId, WindowType.D3);
   }
 
   /**
    * 
    */
   openDataTableExampleDialog(): void {
-    var windowID = 'geoLayerId-dialog-data-table';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = 'geoLayerId-dialog-data-table';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -161,7 +161,7 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.TABLE);
+      this.windowManager.addWindow(windowId, WindowType.TABLE);
     });
   }
 
@@ -169,8 +169,8 @@ export class OwfCommonComponent implements OnInit {
    * 
    */
   openDocMarkdownExampleDialog(): void {
-    var windowID = 'uniqueDocMarkdownID' + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = 'uniqueDocMarkdownID' + '-dialog-doc';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -191,7 +191,7 @@ export class OwfCommonComponent implements OnInit {
         docMarkdown: markdown,
         docHtml: html,
         geoLayerView: 'Doc Markdown Example',
-        windowID: windowID
+        windowId: windowId
       }
         
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
@@ -205,7 +205,7 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
     });
   }
 
@@ -213,8 +213,8 @@ export class OwfCommonComponent implements OnInit {
    * 
    */
   openDocTextExampleDialog(): void {
-    var windowID = 'uniqueDocTextID' + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = 'uniqueDocTextID' + '-dialog-doc';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -235,7 +235,7 @@ export class OwfCommonComponent implements OnInit {
         docMarkdown: markdown,
         docHtml: html,
         geoLayerView: 'Doc Text Example',
-        windowID: windowID
+        windowId: windowId
       }
         
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
@@ -249,7 +249,7 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
     });
   }
 
@@ -257,8 +257,8 @@ export class OwfCommonComponent implements OnInit {
    * 
    */
   openDocHTMLExampleDialog(): void {
-    var windowID = 'uniqueDocHtmlID' + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = 'uniqueDocHtmlID' + '-dialog-doc';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -279,7 +279,7 @@ export class OwfCommonComponent implements OnInit {
         docMarkdown: markdown,
         docHtml: html,
         geoLayerView: 'Doc HTML Example',
-        windowID: windowID
+        windowId: windowId
       }
         
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
@@ -293,7 +293,7 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
     });
   }
 
@@ -301,8 +301,8 @@ export class OwfCommonComponent implements OnInit {
    * 
    */
   openGapminderExampleDialog(): void {
-    var windowID = 'uniqueGapminderExampleID' + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = 'uniqueGapminderExampleID' + '-dialog-doc';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -316,7 +316,7 @@ export class OwfCommonComponent implements OnInit {
     dialogConfig.data = {
       configPath: 'assets/app/data-maps/data-viz/viz-config/viz-config.json',
       geoLayer: geoLayer,
-      windowID: windowID
+      windowId: windowId
     }
     const dialogRef: MatDialogRef<DialogGapminderComponent, any> = this.dialog.open(DialogGapminderComponent, {
       data: dialogConfig,
@@ -329,7 +329,7 @@ export class OwfCommonComponent implements OnInit {
       maxHeight: "100vh",
       maxWidth: "100vw"
     });
-    this.windowManager.addWindow(windowID, WindowType.GAP);
+    this.windowManager.addWindow(windowId, WindowType.GAP);
   }
 
   /**
@@ -372,8 +372,8 @@ export class OwfCommonComponent implements OnInit {
    */
   openImageExampleDialog(): void {
 
-    var windowID = 'uniqueImageID' + '-dialog-image';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = 'uniqueImageID' + '-dialog-image';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -384,7 +384,7 @@ export class OwfCommonComponent implements OnInit {
 
       const dialogConfig = new MatDialogConfig();
       dialogConfig.data = {
-        dialogID: windowID,
+        dialogID: windowId,
         imagePath: pathObj.absolutePath + pathObj.relativePath + '402-SNODAS-SnowCover.png',
         imageDescription: ''
       }
@@ -399,15 +399,15 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "65vh",
         maxWidth: "80vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
   }
 
   /**
    * 
    */
   openTextExampleDialog(): void {
-    var windowID = 'uniqueTextID' + '-dialog-text';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = 'uniqueTextID' + '-dialog-text';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -419,7 +419,7 @@ export class OwfCommonComponent implements OnInit {
     this.commonService.getPlainText("assets/app/Text/text-files/0300911.H2.xdd").subscribe((text: any) => {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.data = {
-        windowID: windowID,
+        windowId: windowId,
         text: text,
         resourcePath: pathObj.absolutePath + pathObj.relativePath + 'text-files/0300911.H2.xdd'
       }
@@ -437,7 +437,7 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
     });
 
   }
@@ -454,7 +454,7 @@ export class OwfCommonComponent implements OnInit {
     // Create a MatDialogConfig object to pass to the DialogTSGraphComponent for the graph that will be shown
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      windowID: 'uniqueTSGraphWindowId',
+      windowId: 'uniqueTSGraphWindowId',
       // featureProperties: featureProperties,
       chartPackage: 'plotly',
       // graphTemplate: graphTemplateObject,

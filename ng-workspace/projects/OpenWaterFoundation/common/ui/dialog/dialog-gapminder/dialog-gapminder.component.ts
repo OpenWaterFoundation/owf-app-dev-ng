@@ -85,8 +85,8 @@ export class DialogGapminderComponent implements OnInit {
   visSpeed: any;
   xScale: any;
   yScale: any;
-  /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
-  windowID: string;
+  /** A unique string representing the windowId of this Dialog Component in the WindowManager. */
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogGapminderComponent. */
@@ -112,7 +112,7 @@ export class DialogGapminderComponent implements OnInit {
 
     this.configPath = this.matDialogData.data.configPath;
     this.geoLayer = this.matDialogData.data.geoLayer;
-    this.windowID = this.matDialogData.data.windowID;
+    this.windowId = this.matDialogData.data.windowId;
   }
 
   
@@ -130,7 +130,7 @@ export class DialogGapminderComponent implements OnInit {
    */
   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -2217,8 +2217,8 @@ export class DialogGapminderComponent implements OnInit {
   */
   openDataTableLightDialog(): void {
 
-    var windowID = this.geoLayer.geoLayerId + '-gapminder-dialog-data-table-light';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = this.geoLayer.geoLayerId + '-gapminder-dialog-data-table-light';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -2235,7 +2235,7 @@ export class DialogGapminderComponent implements OnInit {
           allFeatures: result.data,
           geoLayer: this.geoLayer,
           mapConfigPath: this.commonService.getMapConfigPath(),
-          windowID: windowID
+          windowId: windowId
         }
         const dialogRef: MatDialogRef<DialogDataTableLightComponent, any> = this.dialog.open(DialogDataTableLightComponent, {
           data: dialogConfig,
@@ -2251,7 +2251,7 @@ export class DialogGapminderComponent implements OnInit {
           maxHeight: "90vh",
           maxWidth: "90vw"
         });
-        this.windowManager.addWindow(windowID, WindowType.TABLE);
+        this.windowManager.addWindow(windowId, WindowType.TABLE);
       }
     });
 
@@ -2265,8 +2265,8 @@ export class DialogGapminderComponent implements OnInit {
   openDocDialog(): void {
     var docPath = this.properties.DocFilePath;
 
-    var windowID = this.geoLayer.geoLayerId + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = this.geoLayer.geoLayerId + '-dialog-doc';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -2291,7 +2291,7 @@ export class DialogGapminderComponent implements OnInit {
         geoId: this.geoLayer.geoLayerId,
         geoName: this.geoLayer.name,
         mapConfigPath: this.commonService.getMapConfigPath(),
-        windowID: windowID
+        windowId: windowId
       }
 
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
@@ -2305,7 +2305,7 @@ export class DialogGapminderComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
     });
   }
 

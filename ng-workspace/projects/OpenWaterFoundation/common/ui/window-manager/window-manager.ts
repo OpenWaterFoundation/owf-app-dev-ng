@@ -19,7 +19,7 @@ export class WindowManager {
   private dialogNumber = 0;
   /** The instance of this WindowManager object. */
   private static instance: WindowManager;
-  /** The object to hold each WindowManagerItem, with the button's windowID as a
+  /** The object to hold each WindowManagerItem, with the button's windowId as a
    * key. */
   private windows: {} = {};
 
@@ -48,30 +48,30 @@ export class WindowManager {
   }
 
   /**
-   * Adds a window with the windowID to the @var windows WindowManager object as
+   * Adds a window with the windowId to the @var windows WindowManager object as
    * the key, and the WindowItem object as the value.
-   * @param windowID The unique string representing the window ID for the windowItem
+   * @param windowId The unique string representing the window ID for the windowItem
    * being created.
    * @param type The Window Type being created.
    * @param dialogRef An optional reference to the dialog object created.
    * @returns True if adding the new window succeeded, or false if it already existed
    * 
    */
-  addWindow(windowID: string, type: WindowType, dialogRef?: MatDialogRef<any>): any {
+  addWindow(windowId: string, type: WindowType, dialogRef?: MatDialogRef<any>): any {
 
-    if (this.windowExists(windowID)) {
+    if (this.windowExists(windowId)) {
       return false;
     }
 
     var windowItem: WindowItem = {
       queryParamTypeKey: this.setQueryParamTypeKey(),
       queryParamIdKey: this.setQueryParamIdKey(),
-      windowID: windowID,
+      windowId: windowId,
       windowType: type,
       dialogRef: dialogRef ? dialogRef : undefined
     };
 
-    this.windows[windowID] = windowItem;
+    this.windows[windowId] = windowItem;
 
     return true;
   }
@@ -127,7 +127,7 @@ export class WindowManager {
 
     Object.values(this.windows).forEach((windowItem: WindowItem) => {
       allOpenParams[windowItem.queryParamTypeKey] = windowItem.location;
-      allOpenParams[windowItem.queryParamIdKey] = windowItem.windowID;
+      allOpenParams[windowItem.queryParamIdKey] = windowItem.windowId;
     });
 
     return allOpenParams;
@@ -141,11 +141,11 @@ export class WindowManager {
   }
 
   /**
-   * Removes the window with the given @var windowID key from the windows object
+   * Removes the window with the given @var windowId key from the windows object
    * and renumbers the remaining open dialogs.
    */
-  removeWindow(windowID: string): void {
-    delete this.windows[windowID];
+  removeWindow(windowId: string): void {
+    delete this.windows[windowId];
 
     var splitIdKey: string[];
 
@@ -174,10 +174,10 @@ export class WindowManager {
   }
 
   /**
-   * @returns A boolean true or false if the given windowID exists in the WindowManager.
+   * @returns A boolean true or false if the given windowId exists in the WindowManager.
    */
-  windowExists(windowID: string): boolean {
-    return (windowID in this.windows);
+  windowExists(windowId: string): boolean {
+    return (windowId in this.windows);
   }
 
 }
@@ -203,7 +203,7 @@ export enum WindowType {
 export interface WindowItem {
   queryParamIdKey: string;
   queryParamTypeKey: string;
-  windowID: string;
+  windowId: string;
   windowType: WindowType;
   location?: string;
   dialogRef?: MatDialogRef<any>;
