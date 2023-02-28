@@ -60,7 +60,7 @@ export class SelectorComponent {
 
   /**
    * The Selector Widget Component constructor.
-   * @param commonService The injected Common library service.
+   * @param commonService Reference to the injected Common library service.
    */
   constructor(
     private commonService: OwfCommonService,

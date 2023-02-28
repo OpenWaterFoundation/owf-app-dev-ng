@@ -45,7 +45,7 @@ export class TextComponent implements OnDestroy{
 
   /**
    * 
-   * @param commonService 
+   * @param commonService Reference to the injected Common library service.
    * @param dashboardService 
    * @param document 
    */

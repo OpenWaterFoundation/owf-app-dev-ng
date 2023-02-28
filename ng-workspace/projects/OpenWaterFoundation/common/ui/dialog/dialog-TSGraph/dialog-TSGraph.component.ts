@@ -79,7 +79,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
   /**
    * @constructor For the DialogTSGraph Component.
-   * @param commonService Reference to the top level service OwfCommonService.
+   * @param commonService Reference to the injected Common library service.
    * @param dialog Reference to the service that creates Mat dialogs.
    * @param dialogRef Reference to this DialogTSGraphComponent.
    * @param matDialogData The incoming templateGraph object containing data about

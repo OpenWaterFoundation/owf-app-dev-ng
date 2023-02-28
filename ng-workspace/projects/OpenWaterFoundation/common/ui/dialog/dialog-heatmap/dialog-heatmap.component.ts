@@ -51,7 +51,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
 
   /**
    * 
-   * @param commonService 
+   * @param commonService Reference to the injected Common library service.
    * @param dialogRef 
    * @param matDialogData 
    */

@@ -80,7 +80,7 @@ export class DialogDataTableLightComponent implements OnInit {
 
   /**
    * @constructor for the Dialog Data Table.
-   * @param commonService The reference to the OwfCommonService injected object.
+   * @param commonService Reference to the injected Common library service.
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
    * @param matDialogData The object containing data passed from the Component that created this Dialog.
    */

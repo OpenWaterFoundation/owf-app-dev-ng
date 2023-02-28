@@ -95,7 +95,7 @@ export class ColoradoHydroBaseRestDatastore {
 
   /**
    * 
-   * @param commonService 
+   * @param commonService Reference to the injected Common library service.
    * @param datastore 
    */
   constructor(private commonService: OwfCommonService, datastore: Datastore) {

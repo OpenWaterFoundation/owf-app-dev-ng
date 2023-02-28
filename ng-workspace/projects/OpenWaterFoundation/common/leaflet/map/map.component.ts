@@ -180,7 +180,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * the router.
   * @param breakpointObserver Angular provided utility for checking the matching
   * state of @media queries.
-  * @param commonService A reference to the common library service.
+  * @param commonService Reference to the injected Common library service.
   * @param dialog A reference to the MatDialog for creating and displaying a popup
   * dialog with a chart.
   * @param document Any web page loaded in the browser and serves as an entry point

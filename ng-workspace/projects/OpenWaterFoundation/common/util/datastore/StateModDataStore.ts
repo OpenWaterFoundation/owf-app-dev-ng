@@ -34,7 +34,7 @@ export class StateModDatastore {
   /**
    * Sets up and calls the DateValueTS class's readTimeSeries() method to read in
    * and create a TS object.
-   * @param commonService The top level Common library service for utility methods.
+   * @param commonService Reference to the injected Common library service.
    * @param datastore The Datastore object from the Datastore manager.
    * @param fullTSID TSID object that has been parsed from a full TSID string.
    * @returns The StateMod data as an observable of type TS.

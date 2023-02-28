@@ -192,6 +192,7 @@ export enum WindowType {
   GAL = 'Gallery',
   GAP = 'Gapminder',
   PROJ = 'Project',
+  SEARCH = 'Search',
   TABLE = 'Table',
   TEXT = 'Text',
   TSGRAPH = 'TSGraph'

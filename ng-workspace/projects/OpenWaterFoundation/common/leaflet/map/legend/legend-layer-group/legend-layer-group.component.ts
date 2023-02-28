@@ -98,7 +98,7 @@ export class LegendLayerGroupComponent {
 
   /**
    * The LegendLayerGroup constructor.
-   * @param commonService The reference to the injected Common library.
+   * @param commonService Reference to the injected Common library service.
    * @param dialog The reference to the MatDialog service.
    */
   constructor(

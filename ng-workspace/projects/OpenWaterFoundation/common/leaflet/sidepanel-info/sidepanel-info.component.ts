@@ -4,12 +4,18 @@ import { Component,
 
 import { OwfCommonService,
           Path }             from '@OpenWaterFoundation/common/services';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'lib-sidepanel-info',
   templateUrl: './sidepanel-info.component.html',
   styleUrls: ['./sidepanel-info.component.css']
 })
+/**
+ * NOTE: This component is not currently being used, because the sidebar package
+ * might need the HTML to be a certain way in the Map component to work. As of now,
+ * the code for this component resides in the Map component.
+ */
 export class SidepanelInfoComponent implements OnInit {
 
   /**
@@ -20,15 +26,14 @@ export class SidepanelInfoComponent implements OnInit {
    * 
    */
   @Input('appVersion') appVersion: any;
-  /**
-   * 
-   */
-  @Input('projectVersion') projectVersion: any;
+  /** String to be asynchronously retrieved from the `assets/version.json` file and
+   * shown as the version of the InfoMapper. */
+  @Input('projectVersion') projectVersion: Observable<string>;
 
 
   /**
    * 
-   * @param commonService 
+   * @param commonService Reference to the injected Common library service.
    */
   constructor(private commonService: OwfCommonService) { }
 

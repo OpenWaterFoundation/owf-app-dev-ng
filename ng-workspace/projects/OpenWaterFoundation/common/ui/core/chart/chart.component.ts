@@ -111,7 +111,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 
   /**
   * @constructor for the DialogTSGraph Component.
-  * @param commonService A reference to the top level service OwfCommonService.
+  * @param commonService Reference to the injected Common library service.
   */
   constructor(
     private commonService: OwfCommonService,

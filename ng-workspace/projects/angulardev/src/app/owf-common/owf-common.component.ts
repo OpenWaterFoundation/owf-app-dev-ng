@@ -43,7 +43,7 @@ export class OwfCommonComponent implements OnInit {
   /**
    * 
    * @param dialog 
-   * @param commonService 
+   * @param commonService Reference to the injected Common library service.
    */
   constructor(private commonService: OwfCommonService, private dialog: MatDialog) {
     

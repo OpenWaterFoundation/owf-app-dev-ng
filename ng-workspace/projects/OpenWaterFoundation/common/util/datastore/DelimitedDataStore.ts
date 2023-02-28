@@ -34,7 +34,7 @@ export class DelimitedDatastore {
 
   /**
    * Uses Papaparse to read in delimited data into an object.
-   * @param commonService The top level Common library service for utility methods. 
+   * @param commonService Reference to the injected Common library service.
    * @param datastore The Datastore object from the Datastore manager.
    * @param fullTSID TSID object that has been parsed from a full TSID string.
    * @returns The delimited data from the datastore as an observable.

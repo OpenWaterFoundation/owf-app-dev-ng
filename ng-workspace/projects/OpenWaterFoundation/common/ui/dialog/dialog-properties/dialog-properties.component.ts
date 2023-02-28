@@ -42,7 +42,8 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
   mapLayerManager: MapLayerManager = MapLayerManager.getInstance();
   /** The formatted string to be converted to HTML by Showdown. */
   showdownHTML: string;
-  /** The Showdown config option object. Overrides the `app.module.ts` config option object. */
+  /** The Showdown config option object. Overrides the `app.module.ts` config option
+   * object. */
   showdownOptions = {
     emoji: true,
     flavor: 'github',
@@ -56,7 +57,8 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
   }
   /** A unique string representing the windowId of this Dialog Component in the WindowManager. */
   windowId: string;
-  /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
+  /** The windowManager instance, which creates, maintains, and removes multiple
+   * open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogPropertiesComponent. */
   faXmark = faXmark;
@@ -64,9 +66,11 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
 
   /**
    * 
-   * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation and sending of data.
-   * @param commonService The reference to the app service, for sending data between components and higher scoped map variables.
-   * @param matDialogData The object containing data passed from the Component that created this Dialog.
+   * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation
+   * and sending of data.
+   * @param commonService Reference to the injected Common library service.
+   * @param matDialogData The object containing data passed from the Component that
+   * created this Dialog.
    */
   constructor(
     private commonService: OwfCommonService,
@@ -85,8 +89,9 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Iterate over the geoLayer object and assigns each key and value to a table and gives other useful information to users in a
-   * markdown string so it can be displayed in the dialog. Formats some of the attributes as well for lengthy URL's. 
+   * Iterate over the geoLayer object and assigns each key and value to a table and
+   * gives other useful information to users in a markdown string so it can be displayed
+   * in the dialog. Formats some of the attributes as well for lengthy URL's. 
    */
   private buildMarkdownString(): string {
 
@@ -99,15 +104,16 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
     '2. Layer metadata, which is information about the layer (see the ***Layer Metadata*** and ***Layer ' +
     'Configuration Properties*** sections below).\n\n';
     
-    // Create the Layer Properties table by iterating over all properties in a feature in the layer, if the layer is a Vector.
+    // Create the Layer Properties table by iterating over all properties in a feature
+    // in the layer, if the layer is a Vector.
     if (this.layerItem.isVectorLayer() === true) {
       markdownString += '| Property - (Attribute)|\n| ------- |\n';
       for (let property of this.layerProperties) {
         markdownString += '| ' + property + ' |\n';
       }
     }
-    // If the layer is a Raster layer, add the main properties for the layer, then iterate through each band and list information
-    // for each one.
+    // If the layer is a Raster layer, add the main properties for the layer, then
+    // iterate through each band and list information for each one.
     else if (this.layerItem.isRasterLayer() === true) {
       markdownString += '## Raster Properties ##\n\n' +
       '<pre class="raster-properties">';
@@ -161,15 +167,17 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
     'clicking on link will show the file in a new tab, which can be saved using the browser\'s save feature. Additionally, right-click ' +
     'on the link and save the associated file using ***Save link as…***\n\n';
 
-    // Create the Layer Configuration Properties table by iterating over all properties in the geoLayer object
+    // Create the Layer Configuration Properties table by iterating over all properties
+    // in the geoLayer object.
     markdownString += '| Property | Value |\n| ------ | ------ |\n';
     for (let property in this.geoLayer) {
       // Skip the history property, as it is not relevant to all users, per Steve
       if (property.toUpperCase().includes('HISTORY')) {
         continue;
       }
-      // The value from the geoLayer object is an array. Iterate over it and use the same property name, with the each value
-      // either printed normally if a number or string, or as a link
+      // The value from the geoLayer object is an array. Iterate over it and use
+      // the same property name, with the each value either printed normally if a
+      // number or string, or as a link.
       if (Array.isArray(this.geoLayer[property])) {
         for (let prop of this.geoLayer[property]) {
           markdownString += '| ' + property + ' | ' +
@@ -178,18 +186,20 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
                             ' |\n';
         }
       } else if (typeof this.geoLayer[property] === 'object') {
-        // When handling a nested object in the geoLayer object, this only handles ONE. Any more nested objects will not be printed.
+        // When handling a nested object in the geoLayer object, this only handles
+        // ONE. Any more nested objects will not be printed.
         for (let prop in this.geoLayer[property]) {
           markdownString += '| ' + prop + ' | ' +
 
-          (this.commonService.isURL(this.geoLayer[property][prop]) ? '[Link] (' + this.geoLayer[property][prop] + ')' : this.geoLayer[property][prop]) +
-                            ' |\n';
+          (this.commonService.isURL(this.geoLayer[property][prop]) ? '[Link] (' +
+          this.geoLayer[property][prop] + ')' : this.geoLayer[property][prop]) +
+          ' |\n';
         }
       } else if (typeof this.geoLayer[property] === 'string') {
         markdownString += '| ' + property + ' | ' +
         
-        (this.commonService.isURL(this.geoLayer[property]) ? '[Link] (' + this.geoLayer[property] + ')' : this.geoLayer[property]) +
-                          ' |\n';
+        (this.commonService.isURL(this.geoLayer[property]) ? '[Link] (' + this.geoLayer[property] +
+        ')' : this.geoLayer[property]) + ' |\n';
       }
     }
     

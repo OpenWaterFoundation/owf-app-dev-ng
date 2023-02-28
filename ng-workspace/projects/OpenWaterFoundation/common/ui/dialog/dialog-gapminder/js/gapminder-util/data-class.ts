@@ -23,7 +23,7 @@ export class Data {
 	/**
 	 * 
 	 * @param configProps 
-	 * @param commonService 
+	 * @param commonService Reference to the injected Common library service.
 	 */
 	constructor(configProps: any, private commonService: OwfCommonService) {
 

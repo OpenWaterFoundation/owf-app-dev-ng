@@ -65,7 +65,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor for the DialogDocComponent.
-   * @param commonService 
+   * @param commonService Reference to the injected Common library service.
    * @param dialogRef 
    * @param matDialogData 
    */

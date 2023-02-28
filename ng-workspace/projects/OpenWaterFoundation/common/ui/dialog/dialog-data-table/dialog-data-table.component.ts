@@ -23,7 +23,7 @@ import { faXmark,
 
 import { Bounds, CommonLoggerService,
           OwfCommonService, 
-          SaveFileType}            from '@OpenWaterFoundation/common/services';
+          SaveFileType }                from '@OpenWaterFoundation/common/services';
 import { DialogService }                from '../dialog.service';
 import { WindowManager }                from '@OpenWaterFoundation/common/ui/window-manager';
 import { MapLayerManager,
@@ -148,7 +148,7 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   /**
    * Constructor for the DialogDataTableComponent.
    * @param actRoute 
-   * @param commonService Reference to the OwfCommonService injected service.
+   * @param commonService Reference to the injected Common library service.
    * @param dialogRef Reference to the DialogTSGraphComponent. Used for creation
    * and sending of data.
    * @param dialogService 

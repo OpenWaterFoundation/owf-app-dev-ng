@@ -42,7 +42,7 @@ export class DashboardComponent implements OnDestroy {
 
   /**
    * 
-   * @param commonService The injected Common library service.
+   * @param commonService Reference to the injected Common library service.
    * @param route The injected ActivatedRoute for determining the correct URL and
    * Dashboard to be displayed.
    */

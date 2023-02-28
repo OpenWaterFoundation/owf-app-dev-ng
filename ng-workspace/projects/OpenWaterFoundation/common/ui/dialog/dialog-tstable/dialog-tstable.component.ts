@@ -60,8 +60,7 @@ export class DialogTSTableComponent implements OnDestroy {
    * 
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation
    * and sending of data.
-   * @param commonService The reference to the app service, for sending data between
-   * components and higher scoped map variables.
+   * @param commonService Reference to the injected Common library service.
    * @param matDialogData The object containing data passed from the Component that
    * created this Dialog.
    */

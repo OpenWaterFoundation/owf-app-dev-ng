@@ -876,6 +876,7 @@ export interface SearchItemsMetadata {
 
 /** Optional choices to enhance a global application search. */
 export interface SearchOptions {
+  contentPageSearch: boolean;
   keywordSearch: boolean;
   fuzzySearch: boolean;
 }
@@ -903,6 +904,11 @@ export interface AttributeTableParams {
 /** Chart Dialog properties. */
 export interface ChartDialog {
   graphTemplate: GraphTemplate;
+}
+
+/** All data that can be given to a dialog. */
+export interface DialogData {
+  windowId: string;
 }
 
 /** Currently unused. Object holding all possible parameters that can be given to
