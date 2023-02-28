@@ -1,9 +1,9 @@
 import { Injectable }  from '@angular/core';
+import { DashboardWidget, Operator, SelectorWidget, StatusIndicatorWidget } from '@OpenWaterFoundation/common/services';
 
 import { BehaviorSubject,
           Observable } from 'rxjs';
 
-import * as IM         from '@OpenWaterFoundation/common/services';
 
 
 @Injectable({
@@ -113,74 +113,74 @@ export class DashboardService {
 
     var valueMin: any = null;
     var valueMax: any = null;
-    var minOp: IM.Operator = null;
-    var maxOp: IM.Operator = null;
+    var minOp: Operator = null;
+    var maxOp: Operator = null;
     var minOpPresent = false;
     var maxOpPresent = false;
 
     // Check to see if either of them are actually positive or negative infinity.
     if (line.valueMin.toUpperCase().includes('-INFINITY')) {
       valueMin = Number.MIN_SAFE_INTEGER;
-      minOp = IM.Operator.gt;
+      minOp = Operator.gt;
     }
     if (line.valueMax.toUpperCase().includes('INFINITY')) {
       valueMax = Number.MAX_SAFE_INTEGER;
-      maxOp = IM.Operator.lt;
+      maxOp = Operator.lt;
     }
 
     // Contains operator
-    if (line.valueMin.includes(IM.Operator.gt)) {
-      valueMin = parseFloat(line.valueMin.replace(IM.Operator.gt, ''));
-      minOp = IM.Operator.gt;
+    if (line.valueMin.includes(Operator.gt)) {
+      valueMin = parseFloat(line.valueMin.replace(Operator.gt, ''));
+      minOp = Operator.gt;
       minOpPresent = true;
     }
-    if (line.valueMin.includes(IM.Operator.gtet)) {
-      valueMin = parseFloat(line.valueMin.replace(IM.Operator.gtet, ''));
-      minOp = IM.Operator.gtet;
+    if (line.valueMin.includes(Operator.gtet)) {
+      valueMin = parseFloat(line.valueMin.replace(Operator.gtet, ''));
+      minOp = Operator.gtet;
       minOpPresent = true;
     }
-    if (line.valueMin.includes(IM.Operator.lt)) {
-      valueMin = parseFloat(line.valueMin.replace(IM.Operator.lt, ''));
-      minOp = IM.Operator.lt;
+    if (line.valueMin.includes(Operator.lt)) {
+      valueMin = parseFloat(line.valueMin.replace(Operator.lt, ''));
+      minOp = Operator.lt;
       minOpPresent = true;
     }
-    if (line.valueMin.includes(IM.Operator.ltet)) {
-      valueMin = parseFloat(line.valueMin.replace(IM.Operator.ltet, ''));
-      minOp = IM.Operator.ltet;
+    if (line.valueMin.includes(Operator.ltet)) {
+      valueMin = parseFloat(line.valueMin.replace(Operator.ltet, ''));
+      minOp = Operator.ltet;
       minOpPresent = true;
     }
 
     // Contains operator
-    if (line.valueMax.includes(IM.Operator.gt)) {
-      valueMax = parseFloat(line.valueMax.replace(IM.Operator.gt, ''));
-      maxOp = IM.Operator.gt;
+    if (line.valueMax.includes(Operator.gt)) {
+      valueMax = parseFloat(line.valueMax.replace(Operator.gt, ''));
+      maxOp = Operator.gt;
       maxOpPresent = true;
     }
-    if (line.valueMax.includes(IM.Operator.gtet)) {
-      valueMax = parseFloat(line.valueMax.replace(IM.Operator.gtet, ''));
-      maxOp = IM.Operator.gtet;
+    if (line.valueMax.includes(Operator.gtet)) {
+      valueMax = parseFloat(line.valueMax.replace(Operator.gtet, ''));
+      maxOp = Operator.gtet;
       maxOpPresent = true;
     }
-    if (line.valueMax.includes(IM.Operator.lt)) {
-      valueMax = parseFloat(line.valueMax.replace(IM.Operator.lt, ''));
-      maxOp = IM.Operator.lt;
+    if (line.valueMax.includes(Operator.lt)) {
+      valueMax = parseFloat(line.valueMax.replace(Operator.lt, ''));
+      maxOp = Operator.lt;
       maxOpPresent = true;
     }
-    if (line.valueMax.includes(IM.Operator.ltet)) {
-      valueMax = parseFloat(line.valueMax.replace(IM.Operator.ltet, ''));
-      maxOp = IM.Operator.ltet;
+    if (line.valueMax.includes(Operator.ltet)) {
+      valueMax = parseFloat(line.valueMax.replace(Operator.ltet, ''));
+      maxOp = Operator.ltet;
       maxOpPresent = true;
     }
 
     // If no operator is detected in the valueMin property.
     if (minOpPresent === false) {
       valueMin = parseFloat(line.valueMin);
-      minOp = IM.Operator.gt;
+      minOp = Operator.gt;
     }
     // If no operator is detected in the valueMax property.
     if (maxOpPresent === false) {
       valueMax = parseFloat(line.valueMax);
-      maxOp = IM.Operator.ltet;
+      maxOp = Operator.ltet;
     }
 
     // The following two if, else if statements are done if only a number is given
@@ -188,19 +188,19 @@ export class DashboardService {
     // If the line.valueMin is an integer or float.
     // if (MapUtil.isInt(line.valueMin)) {
     //   valueMin = parseInt(line.valueMin);
-    //   minOp = IM.Operator.gtet;
+    //   minOp = Operator.gtet;
     // } else if (MapUtil.isFloat(line.valueMin)) {
     //   valueMin = parseFloat(line.valueMin);
-    //   minOp = IM.Operator.gt;
+    //   minOp = Operator.gt;
     // }
 
     // If the line.valueMax is an integer or float.
     // if (MapUtil.isInt(line.valueMax)) {
     //   valueMax = parseInt(line.valueMax);
-    //   maxOp = IM.Operator.ltet;
+    //   maxOp = Operator.ltet;
     // } else if (MapUtil.isFloat(line.valueMax)) {
     //   valueMax = parseFloat(line.valueMax);
-    //   maxOp = IM.Operator.ltet;
+    //   maxOp = Operator.ltet;
     // }
 
     // Each of the attributes below have been assigned; return as an object.
@@ -233,7 +233,7 @@ export class DashboardService {
    * @param widget 
    * @returns 
    */
-  getProvidedValue(widget: IM.StatusIndicatorWidget): string {
+  getProvidedValue(widget: StatusIndicatorWidget): string {
 
     if (widget.attributeName) {
       return widget.attributeName;
@@ -251,7 +251,7 @@ export class DashboardService {
    * @returns True if the widget eventHandler object's eventType is SelectEvent,
    * and false otherwise.
    */
-  hasSelectEvent(widget: IM.DashboardWidget): boolean {
+  hasSelectEvent(widget: DashboardWidget): boolean {
 
     if (!widget.eventHandlers) {
       return false;
@@ -270,7 +270,7 @@ export class DashboardService {
    * @param widget 
    * @returns 
    */
-  isSupportedWidgetType(widget: IM.DashboardWidget): boolean {
+  isSupportedWidgetType(widget: DashboardWidget): boolean {
 
     for (let supportedWidgetType of this.SUPPORTEDWIDGETTYPES) {
       if (widget.type.toLowerCase() === supportedWidgetType.toLowerCase()) {
@@ -287,7 +287,7 @@ export class DashboardService {
    * @param widget The widget to use the CSV data.
    * @returns The processed/filtered CSV data that the widget can use.
    */
-  processWidgetCSVData(csvData: any, widget: IM.SelectorWidget | IM.StatusIndicatorWidget): any[] {
+  processWidgetCSVData(csvData: any, widget: SelectorWidget | StatusIndicatorWidget): any[] {
 
     var headers: string[] = csvData[
       widget.skipDataLines ? widget.skipDataLines : 0
@@ -317,7 +317,7 @@ export class DashboardService {
    * @param JSONData The JSON object read in from a widget's `dataPath` property.
    * @returns The processed/filtered JSON data that the widget can use.
    */
-  processWidgetJSONData(JSONData: any, widget: IM.StatusIndicatorWidget): any[] {
+  processWidgetJSONData(JSONData: any, widget: StatusIndicatorWidget): any[] {
 
     // geoJson.
     if (JSONData.features) {

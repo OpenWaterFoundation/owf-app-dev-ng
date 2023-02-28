@@ -33,7 +33,7 @@ export class MapLayerManager {
    * Only one instance of this MapLayerManager can be used at one time, making it
    * a singleton class.
    */
-  public static getInstance(): MapLayerManager {
+  static getInstance(): MapLayerManager {
     if (!MapLayerManager.instance) { MapLayerManager.instance = new MapLayerManager(); }
     return MapLayerManager.instance;
   }
@@ -45,7 +45,7 @@ export class MapLayerManager {
    * @param geoLayer The geoMap geoLayer representing the layer added.
    * @param geoLayerView The geoMap geoLayerView representing the layer added.
    */
-  public addLayerItem(leafletLayer: any, geoLayer: any, geoLayerView: any, geoLayerViewGroup: any, isRaster?: boolean): void {
+  addLayerItem(leafletLayer: any, geoLayer: any, geoLayerView: any, geoLayerViewGroup: any, isRaster?: boolean): void {
     this.mapLayers[geoLayer.geoLayerId] = new MapLayerItem(leafletLayer, geoLayer, geoLayerView, geoLayerViewGroup, isRaster);
     // Add to the layerViewGroup object, with the geoLayerViewGroupId as the key, and push/create to the array
     // with the geoLayerId as the value
@@ -61,7 +61,7 @@ export class MapLayerManager {
   /**
    * @returns The number of raster layers currently being shown on the Leaflet map.
    */
-  public displayedRasterLayers(): number {
+  displayedRasterLayers(): number {
     // A counter that increments for every layer currently displayed on the map.
     var count = 0
     for (let id in this.mapLayers) {
@@ -77,7 +77,7 @@ export class MapLayerManager {
    * geoLayerId, or null if not found.
    * @param geoLayerId The desired MapLayerItem geoLayerId.
    */
-  public getMapLayerItem(geoLayerId: string): MapLayerItem {
+  getMapLayerItem(geoLayerId: string): MapLayerItem {
     return this.mapLayers[geoLayerId] ? this.mapLayers[geoLayerId] : null;
   }
 
@@ -85,14 +85,14 @@ export class MapLayerManager {
    * @returns The object holding all MapLayerItems as values, and each MayLayerItem's
    * geoLayerId as the key.
    */
-  public getMapLayers(): any {
+  getMapLayers(): any {
     return this.mapLayers;
   }
 
   /**
    * @returns A boolean whether a vector layer is currently displayed on the Leaflet @var mainMap.
    */
-  public isVectorDisplayed(): boolean {
+  isVectorDisplayed(): boolean {
 
     for (let key of Object.keys(this.mapLayers)) {
       if (this.mapLayers[key].isVectorLayer() === true && this.mapLayers[key].isDisplayedOnMainMap() === true) {
@@ -107,7 +107,7 @@ export class MapLayerManager {
    * created, they are using fresh new variables without having to worry about them
    * containing previous map information.
    */
-  public resetMapLayerManagerVariables(): void {
+  resetMapLayerManagerVariables(): void {
     this.layerViewGroups = {};
     this.mapConfigLayerOrder = [];
     this.mapLayers = {};
@@ -120,7 +120,7 @@ export class MapLayerManager {
    * @param mapLayers An object with the geoLayerId as the key, and the layer added
    * to the leaflet map as the value
    */
-  public setLayerOrder() {
+  setLayerOrder() {
     // Iterate through the MapManager's mapConfigLayerOrder, and check to see if
     // the geoLayerId is a key in the mapLayers object. If it is, then bring that
     // layer to the front of the map. Since we're going through backwards, the last
@@ -144,7 +144,7 @@ export class MapLayerManager {
    * @param mapConfigLayerOrder The string array of the order of layer geoLayerId's
    * in reverse order.
    */
-  public setMapConfigLayerOrder(mapConfigLayerOrder: string[]): void {
+  setMapConfigLayerOrder(mapConfigLayerOrder: string[]): void {
     this.mapConfigLayerOrder = mapConfigLayerOrder;
   }
 
@@ -173,8 +173,12 @@ export class MapLayerManager {
    * @param geoLayerViewGroupId The ID for the layer geoLayerViewGroup.
    * @param first 
    */
-  public toggleOffOtherLayersOnMainMap(geoLayerId: string, mainMap: any,
-                                        geoLayerViewGroupId: string, first?: string): void {
+  toggleOffOtherLayersOnMainMap(
+    geoLayerId: string,
+    mainMap: any,
+    geoLayerViewGroupId: string,
+    first?: string
+  ): void {
     // Iterate over each geoLayerView in the geoLayerViewGroup, and if the supplied
     // geoLayerId equals the geoLayerId, skip it. Otherwise, retrieve the MapLayerItem
     // object using the geoLayerId (ID), check if it's currently being show on the map,

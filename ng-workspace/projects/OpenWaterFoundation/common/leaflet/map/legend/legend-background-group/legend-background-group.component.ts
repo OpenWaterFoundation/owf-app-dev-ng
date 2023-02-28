@@ -1,17 +1,15 @@
-import { AfterViewInit,
-          Component,
+import { Component,
           EventEmitter,
           Input, 
-          Output }          from '@angular/core';
+          Output } from '@angular/core';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 
 @Component({
   selector: 'legend-background-group',
   templateUrl: './legend-background-group.component.html',
   styleUrls: ['./legend-background-group.component.css']
 })
-export class LegendBackgroundGroupComponent implements AfterViewInit {
+export class LegendBackgroundGroupComponent {
 
   /** The background geoLayerViewGroup passed as input from the Map Component when
    * this component is created. */
@@ -22,10 +20,9 @@ export class LegendBackgroundGroupComponent implements AfterViewInit {
 
 
   /**
-   * 
-   * @param commonService The reference to the injected Common library.
+   * Constructor for the LegendBackgroundGroupComponent.
    */
-  constructor(public commonService: OwfCommonService) {}
+  constructor() {}
 
 
   /**
@@ -45,12 +42,6 @@ export class LegendBackgroundGroupComponent implements AfterViewInit {
     } else {
       return false;
     }
-  }
-
-  /**
-   * Called right after the constructor.
-   */
-  ngAfterViewInit(): void {
   }
 
   /**

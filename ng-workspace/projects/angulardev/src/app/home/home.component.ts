@@ -18,13 +18,13 @@ export class HomeComponent implements OnInit {
    * The ElementCache Instance, that caches network retrieved elements so that a network request is unneeded if a user clicks
    * between multiple pages repeatedly.
    */
-   public cache: ElementCache = ElementCache.getInstance();
+  cache: ElementCache = ElementCache.getInstance();
   /**
    * The string to be converted into HTML and shown as markdown using Showdown in this component's template.
    */
-  public showdownHTML: string;
+  showdownHTML: string;
   /** The Showdown config option object. Overrides the `app.module.ts` config option object. */
-  public showdownOptions = {
+  showdownOptions = {
     emoji: true,
     flavor: 'github',
     noHeaderId: true,
@@ -57,7 +57,8 @@ export class HomeComponent implements OnInit {
   }
 
   /**
-   * Called once after the constructor.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     if (this.cache.elementExists('home-element') === true) {

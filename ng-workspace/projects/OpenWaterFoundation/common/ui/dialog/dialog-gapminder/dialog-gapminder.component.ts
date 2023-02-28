@@ -10,8 +10,7 @@ import { WindowManager,
 
 import { take }                          from 'rxjs/operators';
 
-import { OwfCommonService }              from '@OpenWaterFoundation/common/services';
-import * as IM                           from '@OpenWaterFoundation/common/services';
+import { GeoLayer, OwfCommonService, Path }              from '@OpenWaterFoundation/common/services';
 
 import { faBackwardStep,
           faForwardStep,
@@ -39,57 +38,57 @@ import 'select2';
 })
 export class DialogGapminderComponent implements OnInit {
 
-  public annotations: any;
-  public annotationText: any;
-  public annotationsData: any;
+  annotations: any;
+  annotationText: any;
+  annotationsData: any;
   /** The path to this Gapminder visualization's configuration file. */
-  public configPath: string;
-  public currYear: any;
-  public data: any;
-  public dateArray: any;
-  public dimensions: any;
-  public displayAll: any;
-  public dot: any;
-  public firstClick: boolean;
-  public formatDate: any;
+  configPath: string;
+  currYear: any;
+  data: any;
+  dateArray: any;
+  dimensions: any;
+  displayAll: any;
+  dot: any;
+  firstClick: boolean;
+  formatDate: any;
   /** The geoLayer from the current layer. */
-  public geoLayer: IM.GeoLayer;
-  public handle: any;
-  public handleText: any;
-  public inputFileFormat: any;
-  public json: any;
-  public line: any;
-  public mainSVG: any;
-  public nameOptions: any[];
+  geoLayer: GeoLayer;
+  handle: any;
+  handleText: any;
+  inputFileFormat: any;
+  json: any;
+  line: any;
+  mainSVG: any;
+  nameOptions: any[];
   /** Options used for the ng-select2 creation.
    * https://www.npmjs.com/package/ng-select2 */
-  public options = {
+  options = {
     multiple: true,
     closeOnSelect: false,
     width: '100%'
   }
-  public pathData: any;
-  public pathJSON: any;
-  public precisionInt: any;
-  public precisionUnit: any;
-  public properties: any;
-  public radiusScale: any;
-  public selectedGroup: any;
-  public timeScale: any;
-  public tip: any;
-  public topYear: any;
-  public tracer: any;
-  public transition: any;
+  pathData: any;
+  pathJSON: any;
+  precisionInt: any;
+  precisionUnit: any;
+  properties: any;
+  radiusScale: any;
+  selectedGroup: any;
+  timeScale: any;
+  tip: any;
+  topYear: any;
+  tracer: any;
+  transition: any;
   /** Array containing the currently selected values in the select2 dropdown. */
-  public selectValue: string[];
-  public variables: any;
-  public visSpeed: any;
-  public xScale: any;
-  public yScale: any;
-  /** A unique string representing the windowID of this Dialog Component in the WindowManager. */
-  public windowID: string;
+  selectValue: string[];
+  variables: any;
+  visSpeed: any;
+  xScale: any;
+  yScale: any;
+  /** A unique string representing the windowId of this Dialog Component in the WindowManager. */
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple open dialogs in an application. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogGapminderComponent. */
   faBackwardStep = faBackwardStep;
   faForwardStep = faForwardStep;
@@ -100,23 +99,26 @@ export class DialogGapminderComponent implements OnInit {
 
 
   /**
-   * Component constructor.
+   * Constructor for the DialogGapminderComponent.
    * @param dialogRef 
-   * @param dataObject 
+   * @param matDialogData 
    */
-  constructor(public commonService: OwfCommonService,
-              public dialog: MatDialog,
-              public dialogRef: MatDialogRef<DialogGapminderComponent>,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any) {
+  constructor(
+    private commonService: OwfCommonService,
+    private dialog: MatDialog,
+    private dialogRef: MatDialogRef<DialogGapminderComponent>,
+    @Inject(MAT_DIALOG_DATA) private matDialogData: any
+  ) {
 
-    this.configPath = dataObject.data.configPath;
-    this.geoLayer = dataObject.data.geoLayer;
-    this.windowID = dataObject.data.windowID;
+    this.configPath = this.matDialogData.data.configPath;
+    this.geoLayer = this.matDialogData.data.geoLayer;
+    this.windowId = this.matDialogData.data.windowId;
   }
 
   
   /**
-   * Component entry point after the constructor.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     this.gapminder();
@@ -126,16 +128,16 @@ export class DialogGapminderComponent implements OnInit {
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-  public onClose(): void {
+  onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
    * Gapminder visualization set up and creation of the svg on the DOM, along with
    * event handling functions.
    */
-  public gapminder() {
+  gapminder() {
     // The smaller scoped component reference to be used in any anonymous functions
     // throughout this function.
     var _this = this;
@@ -1661,7 +1663,7 @@ export class DialogGapminderComponent implements OnInit {
    * Called when clicking Turn Annotations On/ Turn Annotations Off.
    * Either displays the annotation shapes on the canvas or hides them.
    */
-  public annotationsButton() {
+  annotationsButton() {
     var elem = document.getElementById("annotationsButton");
     if (elem.innerHTML === "Turn Annotations On") {
       this.properties.AnnotationShapes.toUpperCase() === "ON";
@@ -1686,7 +1688,7 @@ export class DialogGapminderComponent implements OnInit {
    * Disables pause button.
    * Enables play button.
    */
-  public backButton() {
+  backButton() {
     var _this = this;
     this.currYear = this.roundDate(this.currYear);
     this.decrementDate(this.currYear);
@@ -1709,7 +1711,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param string The string to remove symbols from.
    * @returns A string with no symbols.
    */
-  public checkForSymbol(string: any) {
+  checkForSymbol(string: any) {
     return string.replace(/[^A-Za-z0-9]/g, '');
   }
 
@@ -1718,7 +1720,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param number 
    * @returns 
    */
-  public checkMin(number: any) {
+  checkMin(number: any) {
     if (number < 0) {
       d3.select(".title")
         .append("text")
@@ -1738,7 +1740,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param val 
    * @returns 
    */
-  public checkXValue(val: any) {
+  checkXValue(val: any) {
     if (this.properties.XMax) {
       if (val > this.properties.XMax) {
         val = this.properties.XMax;
@@ -1757,7 +1759,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param val 
    * @returns 
    */
-  public checkYValue(val: any) {
+  checkYValue(val: any) {
     if (this.properties.YMax) {
       if (val > this.properties.YMax) {
         val = this.properties.YMax;
@@ -1775,7 +1777,7 @@ export class DialogGapminderComponent implements OnInit {
    * Depending on precision units from configuration file, decrements the date.
    * @param date 
    */
-  public decrementDate(date: any) {
+  decrementDate(date: any) {
 
     switch (this.precisionUnit) {
       case "Year":
@@ -1805,7 +1807,7 @@ export class DialogGapminderComponent implements OnInit {
    * Displays animation for data of specified year.
    * @param date The year to display data for.
    */
-  public displayYear(date: any) {
+  displayYear(date: any) {
 
     date.setHours(0, 0, 0); // This WILL prove to be an issue if dealing with hourly time.
     if (date <= this.dimensions.maxPopulatedDate) {
@@ -1847,7 +1849,7 @@ export class DialogGapminderComponent implements OnInit {
    * Converts the string into a selector name.
    * ex: 'Denver Water' -> '.Denver.Water'
    */
-  public dotClassSelector(inputString: any) {
+  dotClassSelector(inputString: any) {
     var string = inputString.split(" ");
     var returnThis = ".D";
     for (var i = 0; i < string.length - 1; i++) {
@@ -1863,7 +1865,7 @@ export class DialogGapminderComponent implements OnInit {
    *Converts the string into an id selector name
     *ex: 'Denver Water' -> '.Denver.Water'
     */
-  public dotIDSelector(inputString: any) {
+  dotIDSelector(inputString: any) {
     var string = inputString.split(" ");
     var returnThis = "#D";
     for (var i = 0; i < string.length - 1; i++) {
@@ -1880,7 +1882,7 @@ export class DialogGapminderComponent implements OnInit {
    * in the configuration file.
    * @returns 
    */
-  public formatHandleText() {
+  formatHandleText() {
     var format: any;
     switch (this.precisionUnit) {
       case "Year":
@@ -1912,7 +1914,7 @@ export class DialogGapminderComponent implements OnInit {
    * Disables pause button.
    * Enables play button.
    */
-  public forwardButton() {
+  forwardButton() {
     var _this = this;
     (<HTMLInputElement>document.getElementById("back")).disabled = false;
     if (this.currYear <= this.dimensions.maxPopulatedDate) {
@@ -1937,7 +1939,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param year 
    * @returns The annotations for the supplied year, if found.
    */
-  public getAnnotations(year: any) {
+  getAnnotations(year: any) {
     if (this.annotationsData.GeneralAnnotations[year] !== "undefined") {
       return this.annotationsData.GeneralAnnotations[year];
     } else {
@@ -1950,7 +1952,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param date Date object which we want the closest date to.
    * @returns The closest date to the supplied date object.
    */
-  public getClosest(date: any) {
+  getClosest(date: any) {
     var close: any;
     var distance: any;
     for (var i = 0; i < this.dateArray.length; i++) {
@@ -1968,7 +1970,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param endDate The ending year.
    * @returns 
    */
-  public getTimeInterpolate(startDate: any, endDate: any) {
+  getTimeInterpolate(startDate: any, endDate: any) {
     var distance = this.timeScale(endDate) - this.timeScale(startDate);
     return distance * this.visSpeed;
   }
@@ -1977,7 +1979,7 @@ export class DialogGapminderComponent implements OnInit {
    * Depending on precision units from the Config file, increments the date.
    * @param date The current date.
    */
-  public incrementDate(date: any) {
+  incrementDate(date: any) {
     switch (this.precisionUnit) {
       case "Year":
         date.setFullYear(date.getFullYear() + this.precisionInt);
@@ -2007,7 +2009,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param date Current year to get data for.
    * @returns An object with interpolated data point properties.
    */
-  public interpolateData(date: any) {
+  interpolateData(date: any) {
     var _this = this;
     return _this.json.data.map(function (d: any) {
       return {
@@ -2036,7 +2038,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param year The year to get data for.
    * @returns 
    */
-  public interpolatePath(year: any) {
+  interpolatePath(year: any) {
     var _this = this;
     return this.pathJSON.map(function (d: any) {
 
@@ -2068,7 +2070,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param year Current year for which the interpolated data point corresponds to.
    * @returns 
    */
-  public interpolateValues(values: any, year: any) {
+  interpolateValues(values: any, year: any) {
     /** A bisector for interpolating data if sparsely-defined. */
     var bisect = d3.bisector((d) => d[0]);
 
@@ -2089,7 +2091,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param d The data point object.
    * @returns The name property of the data point object.
    */
-  public key(d: any) { return d.name; }
+  key(d: any) { return d.name; }
 
   /**
    * Called when clicking on a selection on the legend.
@@ -2097,7 +2099,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param d The data point object.
    * @param selectMultiple 
    */
-  public legendClick(d: any, selectMultiple: any) {
+  legendClick(d: any, selectMultiple: any) {
     var _this = this;
     this.displayAll = false;
     this.selectedGroup = d;
@@ -2137,7 +2139,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param value Number to check.
    * @returns A radius whose value is at least 3 pixels in width.
    */
-  public minRadius(value: any) {
+  minRadius(value: any) {
     return value < 3.0 ? 3.0 : value;
   }
 
@@ -2147,7 +2149,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param event Default event object.
    * @param d The data point object.
    */
-  public mouseoverAnnotation(event: any, d: any) {
+  mouseoverAnnotation(event: any, d: any) {
     // The way a popup like this is created does not take dialogs, or any kind of
     // different z-indexed element into account. Because of this, the mouseover
     // popup shows up behind the dialog.
@@ -2165,7 +2167,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param array Array containing data.
    * @returns 
    */
-  public nest(data: any, array: any) {
+  nest(data: any, array: any) {
     for (var i = 0; i < data.length; i++) {
       array.push(data[i]);
     }
@@ -2179,7 +2181,7 @@ export class DialogGapminderComponent implements OnInit {
    * the updated string array and highlight each one.
    * @param event 
    */
-  public onSelectValueChange(newSelectValue: string[]): void {
+  onSelectValueChange(newSelectValue: string[]): void {
     d3.selectAll('.dot')
     .style('stroke', 'black')
     .attr('stroke-width', 1)
@@ -2213,10 +2215,10 @@ export class DialogGapminderComponent implements OnInit {
   * @param geoLayerId The geoLayerView's geoLayerId to be matched so the correct
   * features are displayed.
   */
-  public openDataTableLightDialog(): void {
+  openDataTableLightDialog(): void {
 
-    var windowID = this.geoLayer.geoLayerId + '-gapminder-dialog-data-table-light';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = this.geoLayer.geoLayerId + '-gapminder-dialog-data-table-light';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -2233,7 +2235,7 @@ export class DialogGapminderComponent implements OnInit {
           allFeatures: result.data,
           geoLayer: this.geoLayer,
           mapConfigPath: this.commonService.getMapConfigPath(),
-          windowID: windowID
+          windowId: windowId
         }
         const dialogRef: MatDialogRef<DialogDataTableLightComponent, any> = this.dialog.open(DialogDataTableLightComponent, {
           data: dialogConfig,
@@ -2249,7 +2251,7 @@ export class DialogGapminderComponent implements OnInit {
           maxHeight: "90vh",
           maxWidth: "90vw"
         });
-        this.windowManager.addWindow(windowID, WindowType.TABLE);
+        this.windowManager.addWindow(windowId, WindowType.TABLE);
       }
     });
 
@@ -2260,11 +2262,11 @@ export class DialogGapminderComponent implements OnInit {
   * When the info button by the side bar slider is clicked, it will either open
   * a documentation Dialog for the selected geoLayerViewGroup or geoLayerView.
   */
-  public openDocDialog(): void {
+  openDocDialog(): void {
     var docPath = this.properties.DocFilePath;
 
-    var windowID = this.geoLayer.geoLayerId + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = this.geoLayer.geoLayerId + '-dialog-doc';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -2274,7 +2276,7 @@ export class DialogGapminderComponent implements OnInit {
     else if (docPath.includes('.md')) markdown = true;
     else if (docPath.includes('.html')) html = true;
 
-    this.commonService.getPlainText(this.commonService.buildPath(IM.Path.gP, [docPath]), IM.Path.dP)
+    this.commonService.getPlainText(this.commonService.buildPath(Path.gP, [docPath]), Path.dP)
     .pipe(take(1))
     .subscribe((doc: any) => {
 
@@ -2289,7 +2291,7 @@ export class DialogGapminderComponent implements OnInit {
         geoId: this.geoLayer.geoLayerId,
         geoName: this.geoLayer.name,
         mapConfigPath: this.commonService.getMapConfigPath(),
-        windowID: windowID
+        windowId: windowId
       }
 
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
@@ -2303,7 +2305,7 @@ export class DialogGapminderComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
     });
   }
 
@@ -2313,7 +2315,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param b Second svg dot.
    * @returns The dots in order of their radius size, with larger on bottom.
    */
-  public order(a: any, b: any) {
+  order(a: any, b: any) {
     return this.radius(b) - this.radius(a);
   }
 
@@ -2322,7 +2324,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param inputString String to be converted.
    * @returns ID selector name.
    */
-  public pathIDSelector(inputString: any) {
+  pathIDSelector(inputString: any) {
     var string = inputString.split(" ");
     var returnThis = "#T";
     for (var i = 0; i < string.length - 1; i++) {
@@ -2340,7 +2342,7 @@ export class DialogGapminderComponent implements OnInit {
    * Disables pause button.
    * Enables play button.
    */
-  public pauseButton() {
+  pauseButton() {
     this.stopAnimation();
     (<HTMLInputElement>document.getElementById("pause")).disabled = true;
     (<HTMLInputElement>document.getElementById("play")).disabled = false;
@@ -2349,7 +2351,7 @@ export class DialogGapminderComponent implements OnInit {
    /**
     * Function which plays the animation starting from Config.currYear to Config.yearMax.
     */
-  public playAnimation() {
+  playAnimation() {
     // Start transition.
     var transitionFunction = this.mainSVG.transition()
     // Call getTimeInterpolate to calculate amount of time between years transition.
@@ -2369,7 +2371,7 @@ export class DialogGapminderComponent implements OnInit {
    * Disables play button.
    * Enables pause button.
    */
-  public playButton() {
+  playButton() {
     this.playAnimation();
     (<HTMLInputElement>document.getElementById("play")).disabled = true;
     (<HTMLInputElement>document.getElementById("pause")).disabled = false;
@@ -2381,7 +2383,7 @@ export class DialogGapminderComponent implements OnInit {
    *
    *@param dot - the svg element 'dot' that gets positioned
     */
-  public position(dot: any) {
+  position(dot: any) {
     var _this = this;
     dot.attr("cx", function (d: any) {
       if (_this.properties.XAxisScale.toUpperCase() === "LOG") {
@@ -2405,7 +2407,7 @@ export class DialogGapminderComponent implements OnInit {
   * @param d The data point object.
   * @returns The dot size of the data point.
   */
-  public radius(d: any) { return d.size; }
+  radius(d: any) { return d.size; }
 
   /**
    * Callback Function: Called when clicking on replay button.
@@ -2413,7 +2415,7 @@ export class DialogGapminderComponent implements OnInit {
    * Disables play button.
    * Enables pause button.
    */
-  public replayButton() {
+  replayButton() {
     var _this = this;
     this.stopAnimation();
     (<HTMLInputElement>document.getElementById("play")).disabled = true;
@@ -2431,7 +2433,7 @@ export class DialogGapminderComponent implements OnInit {
    * Called separately to create a synchronous ordering of things, this way the
    * variables are properly configured before starting the animation again.
    */
-  public replay() {
+  replay() {
     this.pathData = [];
     this.updatePath(this.nest(this.interpolatePath(this.dimensions.dateMin), this.pathData));
     this.topYear = this.dimensions.dateMin;
@@ -2444,7 +2446,7 @@ export class DialogGapminderComponent implements OnInit {
    * @param date 
    * @returns 
    */
-  public roundDate(date: any) {
+  roundDate(date: any) {
 
     switch (this.precisionUnit) {
       case "Year":
@@ -2502,7 +2504,7 @@ export class DialogGapminderComponent implements OnInit {
   /**
    * Callback Function: Called when clicking on Select All button. Displays all dots.
    */
-  public selectAllButton() {
+  selectAllButton() {
 
     this.displayAll = true;
 
@@ -2523,7 +2525,7 @@ export class DialogGapminderComponent implements OnInit {
   /**
    * 
    */
-  public setGapminderDetails(): void {
+  setGapminderDetails(): void {
     if (this.commonService.getGapminderConfigPath() === '') {
       
     }
@@ -2533,7 +2535,7 @@ export class DialogGapminderComponent implements OnInit {
    * Resets the speed of the visualization when moving the speed slider.
    * @param value The value from the speed slider, ranging from 0 - 100.
    */
-  public setSpeed(value: any) {
+  setSpeed(value: any) {
 
     var speedScale = d3.scaleLinear()
     .domain([100, 0])
@@ -2552,7 +2554,7 @@ export class DialogGapminderComponent implements OnInit {
   /**
    * Pauses animation.
    */
-  public stopAnimation() {
+  stopAnimation() {
     this.transition = true;
     // Pause transition.
     this.mainSVG.transition()
@@ -2565,7 +2567,7 @@ export class DialogGapminderComponent implements OnInit {
     * @param date2 - End date object.
     * @returns 
     */
-  public timeDiff(date1: any, date2: any) {
+  timeDiff(date1: any, date2: any) {
     return Math.abs(date2.getTime() - date1.getTime());
   }
 
@@ -2573,7 +2575,7 @@ export class DialogGapminderComponent implements OnInit {
     * Callback Function: Called when clicking Turn Tracer On/ Turn Tracer Off.
     * Either displays all tracers or turns them all off.
     */
-  public tracerButton() {
+  tracerButton() {
      var elem = document.getElementById("tracerButton");
      if (elem.innerHTML === "Turn Tracer On") {
        // Turn on display for all tracers
@@ -2596,7 +2598,7 @@ export class DialogGapminderComponent implements OnInit {
     * Interpolates through years currYear - yearMax and calls display year on each year value.
     * @returns 
     */
-  public tweenYear() {
+  tweenYear() {
     var _this = this;
     var interpolateDate = d3.interpolateDate(this.currYear, this.dimensions.maxPopulatedDate);
     return function (t: any) {
@@ -2611,7 +2613,7 @@ export class DialogGapminderComponent implements OnInit {
     * Update all path data with new information.
     * @param newData Array of updated data.
     */
-  public updatePath(newData: any) {
+  updatePath(newData: any) {
 
     d3.select("#dataline").selectAll("path")
     // Update path with newData.
@@ -2624,13 +2626,13 @@ export class DialogGapminderComponent implements OnInit {
    * @param d The data point object.
    * @returns The x-variable property from the data point object.
    */
-  public getXVar(d: any) { return d.xVar; }
+  getXVar(d: any) { return d.xVar; }
 
   /**
    * Getter for y-variable in a data point object.
    * @param d The data point object.
    * @returns The y-variable property from the data point object.
    */
-  public getYVar(d: any) { return d.yVar; }
+  getYVar(d: any) { return d.yVar; }
 
 }

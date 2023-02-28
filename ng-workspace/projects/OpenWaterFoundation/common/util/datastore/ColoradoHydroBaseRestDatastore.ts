@@ -1,20 +1,21 @@
-import { Observable }                from 'rxjs/internal/Observable';
+import { Observable }           from 'rxjs/internal/Observable';
 import { BehaviorSubject,
           forkJoin,
-          map }                      from 'rxjs';
+          map }                 from 'rxjs';
 
 import { TS,
           TSIdent, 
-          TSUtil}                    from '@OpenWaterFoundation/common/ts';
+          TSUtil}               from '@OpenWaterFoundation/common/ts';
 
-import { OwfCommonService }          from '@OpenWaterFoundation/common/services';
-import * as IM                       from '@OpenWaterFoundation/common/services';
+import { Datastore,
+          OwfCommonService,
+          TSID }                from '@OpenWaterFoundation/common/services';
 import { DateTime,
-          TimeInterval }             from '@OpenWaterFoundation/common/util/time';
-import { PropList }                  from '@OpenWaterFoundation/common/util/io';
+          TimeInterval }        from '@OpenWaterFoundation/common/util/time';
+import { PropList }             from '@OpenWaterFoundation/common/util/io';
 import { TelemetryStation,
           TelemetryStationDataType,
-          TelemetryTimeSeries }      from '@OpenWaterFoundation/common/dmi';
+          TelemetryTimeSeries } from '@OpenWaterFoundation/common/dmi';
 
 
 // @dynamic
@@ -94,10 +95,10 @@ export class ColoradoHydroBaseRestDatastore {
 
   /**
    * 
-   * @param commonService 
+   * @param commonService Reference to the injected Common library service.
    * @param datastore 
    */
-  constructor(private commonService: OwfCommonService, datastore: IM.Datastore) {
+  constructor(private commonService: OwfCommonService, datastore: Datastore) {
 
     // this.setName (name);
     // this.setDescription (description);
@@ -199,7 +200,7 @@ export class ColoradoHydroBaseRestDatastore {
    * @param fullTSID The parsed TSID string as an object.
    * @returns A string that will be ignored by consuming components.
    */
-  public getAsyncData(fullTSID: IM.TSID): string {
+  getAsyncData(fullTSID: TSID): string {
 
     // Wait until initialized.
     this.paramsInitialized$.subscribe((initialized: boolean) => {
@@ -215,7 +216,7 @@ export class ColoradoHydroBaseRestDatastore {
    * For example 'Surface Water Station - Streamflow-Avg' would return 'Streamflow-Avg'.
    * @return data type without group
    */
-  public getDataTypeWithoutGroup ( dataType: string ): string {
+  getDataTypeWithoutGroup ( dataType: string ): string {
     // Parse the group.
     var pos = dataType.indexOf(" -");
     var group = "";
@@ -235,7 +236,7 @@ export class ColoradoHydroBaseRestDatastore {
   Return the service root URI for the data store.
   @return the service root URI for the data store.
   */
-  public getServiceRootURI(): string {
+  getServiceRootURI(): string {
     return this.__serviceRootURI;
   }
 
@@ -258,7 +259,7 @@ export class ColoradoHydroBaseRestDatastore {
    * @param dataType - the datatype portion of the TSID ex. 'DISCHRG'
    * @return true if data type is for a telemetry station, false otherwise
    */
-  public isTelemetryStationTimeSeriesDataType ( dataType: string ): boolean {
+  isTelemetryStationTimeSeriesDataType ( dataType: string ): boolean {
 
     //String routine = getClass().getSimpleName() + ".isTelemetryStationTimeSeriesData";
     //Message.printStatus(2, routine, "Checking whether \"" + dataType + "\" is telemetry station." );
@@ -2396,7 +2397,7 @@ export class ColoradoHydroBaseRestDatastore {
    * Set the apiKey 
    * @param apiKey String that is the api key.
    */
-  public setApiKey(apiKey: string): void {
+  setApiKey(apiKey: string): void {
     this.apiKey = apiKey ? apiKey : '';
   }
 
@@ -2426,7 +2427,7 @@ export class ColoradoHydroBaseRestDatastore {
    * Set the service root URI for the data store.
    * @param serviceRootURI the service root URI for the data store.
    */
-  public setServiceRootURI ( serviceRootURI: string ): void {
+  setServiceRootURI ( serviceRootURI: string ): void {
     this.__serviceRootURI = serviceRootURI;
   }
 

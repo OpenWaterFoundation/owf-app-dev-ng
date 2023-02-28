@@ -40,7 +40,7 @@ export class TimeInterval {
   if 0 return mixed/camel case (e.g., "Day", which will be useful if additional irregular data interval strings are supported),
   if 1 return uppercase (e.g., "DAY").
   */
-  public static getName ( interval: number, format: number ): string {
+  static getName ( interval: number, format: number ): string {
     var name = "";
     if ( interval == TimeInterval.YEAR ) {
       name = "Year";
@@ -87,7 +87,7 @@ export class TimeInterval {
   @param intervalBase the time interval base to check
   @return true if the interval is regular, false if not (unknown or irregular).
   */
-  public static isRegularInterval ( intervalBase: number ): boolean {
+  static isRegularInterval ( intervalBase: number ): boolean {
     if ( (intervalBase >= TimeInterval.HSECOND) && (intervalBase <= TimeInterval.YEAR) ) {
       return true;
     }
@@ -220,7 +220,7 @@ export class TimeInterval {
   Return the interval base as a string.
   @return The interval base as a string.
   */
-  public getBaseString (): string {
+  getBaseString (): string {
     return this.intervalBaseString;
   }
 

@@ -3,8 +3,7 @@
 // for running Gapminder visualization. It also parses through the 
 // csv data read in and converts it to JSON for Gapminder.
 // ----------------------------------------------------------------
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { OwfCommonService, Path } from '@OpenWaterFoundation/common/services';
 import * as $               from "jquery";
 import * as d3              from 'd3';
 import * as Papa            from 'papaparse';
@@ -12,15 +11,22 @@ import * as Papa            from 'papaparse';
 
 export class Data {
 
-	public configProps: any;
-	public variables: any;
-	public csv: any;
-	public json: any;
-	public annotations: any;
-	public dimensions: any;
-	public parseDate: any;
+	configProps: any;
+	variables: any;
+	csv: any;
+	json: any;
+	annotations: any;
+	dimensions: any;
+	parseDate: any;
 
-	constructor(configProps: any, public commonService: OwfCommonService) {
+
+	/**
+	 * 
+	 * @param configProps 
+	 * @param commonService Reference to the injected Common library service.
+	 */
+	constructor(configProps: any, private commonService: OwfCommonService) {
+
 		this.configProps = configProps;
 		this.variables = configProps.VariableNames;
 		this.csv;
@@ -45,7 +51,7 @@ export class Data {
 		var _this = this;
 		//ajax call to get annotation data from annotationsURL specified in Config file
 		$.ajax({
-			url: _this.commonService.buildPath(IM.Path.gP, [_this.configProps.AnnotationsFileName]),
+			url: _this.commonService.buildPath(Path.gP, [_this.configProps.AnnotationsFileName]),
 			async: false,
 			dataType: 'json',
 			error: function(error) {

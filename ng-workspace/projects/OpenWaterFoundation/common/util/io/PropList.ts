@@ -6,28 +6,28 @@ export class PropList {
   /**
   Indicates that the configuration file format is unknown.
   */
-  public static	FORMAT_UNKNOWN = 0;
+  static	FORMAT_UNKNOWN = 0;
 
   /**
   Indicates that the configuration file format is that used by Makefiles.
   */
-  public static	FORMAT_MAKEFILE	= 1;
+  static	FORMAT_MAKEFILE	= 1;
 
   /**
   Indicates that the configuration file format is that used by NWSRFS
   configuration files (apps_defaults).  A : is used instead of the = for assignment.
   */
-  public static	FORMAT_NWSRFS = 2;
+  static	FORMAT_NWSRFS = 2;
 
   /**
   Indicates that configuration information is being stored in a custom database.
   */
-  public static	FORMAT_CUSTOM_DB = 3;
+  static	FORMAT_CUSTOM_DB = 3;
 
   /**
   Indicates that configuration information is being stored in standard RTi properties file.
   */
-  public static	FORMAT_PROPERTIES = 4;
+  static	FORMAT_PROPERTIES = 4;
 
   /**
   Name of this PropList.
@@ -85,7 +85,7 @@ export class PropList {
   Returns the list of Props.
   @return the list of Props.
   */
-  public getList(): Prop[] {
+  getList(): Prop[] {
     return this.__list;
   }
 
@@ -94,7 +94,7 @@ export class PropList {
   @return true if quotes are handled literally, false if they should be discarded
   when contents are converted to the string value.
   */
-  public getLiteralQuotes (): boolean {
+  getLiteralQuotes (): boolean {
     return this.__literalQuotes;
   }
 
@@ -102,7 +102,7 @@ export class PropList {
   Return the format of the property list file.
   @return The format of the property list file.
   */
-  public getPersistentFormat ( ): number {
+  getPersistentFormat ( ): number {
     return this.__persistentFormat;
   }
 
@@ -111,7 +111,7 @@ export class PropList {
   // @return The property corresponding to the string key, or null if not found.
   // @param key The string key used to look up the property.
   // */
-  // public getProp ( key: string ): Prop {
+  // getProp ( key: string ): Prop {
   //   var	pos = this.findProp ( key );
   //   if ( pos >= 0 ) {
   //     var prop: Prop = this.__list[pos];
@@ -126,7 +126,7 @@ export class PropList {
   // @return The string value of the property corresponding to the string key.
   // @param key The string key used to look up the property.
   // */
-  // public getValue ( key: string ): string {
+  // getValue ( key: string ): string {
   //   var pos = this.findProp ( key );
   //   if ( pos >= 0 ) {
   //     // We have a match.  Get the value...
@@ -148,7 +148,7 @@ export class PropList {
   @return The index position of the property corresponding to the string key, or -1 if not found.
   @param key The string key used to look up the property.
   */
-  public findProp ( key: string ): number {
+  findProp ( key: string ): number {
     var	size: number = this.__list.length;
     var prop_i: Prop;
     var propKey: string;
@@ -196,7 +196,7 @@ export class PropList {
   Return null if the index is invalid.
   @param i The index position used to look up the property.
   */
-  public propAt ( i: number ): Prop {
+  propAt ( i: number ): Prop {
     if ( (i < 0) || (i > (this.__list.length - 1)) ) {
       return null;
     }
@@ -209,7 +209,7 @@ export class PropList {
   @param key The property string key.
   @param value The string value of the property (will also be used for the contents).
   */
-  public set ( key: string, value: string ): void {
+  set ( key: string, value: string ): void {
     this.setFull(key, value, true);
   }
 
@@ -221,7 +221,7 @@ export class PropList {
   @param replace if true, if the key already exists in the PropList, its value
   will be replaced.  If false, a duplicate key will be added.
   */
-  public setFull ( key: string, value: string, replace: boolean ): void {
+  setFull ( key: string, value: string, replace: boolean ): void {
     var index: number = this.findProp ( key );
     
     if ( index < 0 || !replace) {
@@ -247,7 +247,7 @@ export class PropList {
   determined by calling the object's toString() method.  If contents are null, then
   the String value is also set to null.
   */
-  public setUsingObject ( key: string, contents: any ): void
+  setUsingObject ( key: string, contents: any ): void
   {	// Ignore null keys...
 
     if ( key == null ) {
@@ -280,7 +280,7 @@ export class PropList {
   Return the size of the property list.
   @return The size of the property list.
   */
-  public size (): number {
+  size (): number {
     if ( this.__list === null ) {
       return 0;
     }

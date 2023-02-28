@@ -38,7 +38,7 @@ export class TSLimits {
   private __ts: TS = null;	// Time series being studied.
   private __date1: DateTime;
   private __date2: DateTime;
-  public _flags: number;		// Flags to control behavior.
+  _flags: number;		// Flags to control behavior.
   private __max_value: number;
   private  __max_value_date: DateTime;
   private __mean: number;
@@ -83,7 +83,7 @@ export class TSLimits {
   @return The first date for the time series according to the memory allocation.
   A copy of the date is returned.
   */
-  public getDate1 (): DateTime {
+  getDate1 (): DateTime {
     if ( this.__date1 === null ) {
       return this.__date1;
     }
@@ -95,7 +95,7 @@ export class TSLimits {
   @return The last date for the time series according to the memory allocation.
   A copy of the date is returned.
   */
-  public getDate2 (): DateTime
+  getDate2 (): DateTime
   {	if ( this.__date2 === null ) {
       return this.__date2;
     }
@@ -135,7 +135,7 @@ export class TSLimits {
   @param date1 The first date for the time series.
   @see TS#allocateDataSpace
   */
-  public setDate1 ( date1: DateTime ): void {
+  setDate1 ( date1: DateTime ): void {
     if ( date1 !== null ) {
       this.__date1 = DateTime.copyConstructor(date1) ;
     }
@@ -147,7 +147,7 @@ export class TSLimits {
   @param date2 The last date for the time series.
   @see TS#allocateDataSpace
   */
-  public setDate2 ( date2: DateTime ): void {
+  setDate2 ( date2: DateTime ): void {
     if ( date2 !== null ) {
       this.__date2 = DateTime.copyConstructor(date2) ;
     }
@@ -161,7 +161,7 @@ export class TSLimits {
   that set the date to offset the check done by checkDates().
   @param flag Indicates whether the limits have been found (true or false).
   */
-  public setLimitsFound ( flag: boolean ): void {
+  setLimitsFound ( flag: boolean ): void {
     this.__found = flag;
   }
 

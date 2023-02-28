@@ -1,19 +1,16 @@
 import { Component,
           OnDestroy,
-          OnInit }             from '@angular/core';
+          OnInit }    from '@angular/core';
 import { ActivatedRoute,
           ParamMap, 
-          Router}              from '@angular/router';
+          Router}     from '@angular/router';
 import { first,
           Subject,
-          takeUntil }          from 'rxjs';
-
-// import { options,
-//           fullpage_api }       from 'fullpage.js/dist/fullpage.extensions.min';
+          takeUntil } from 'rxjs';
 
 import { CommonLoggerService,
-          OwfCommonService }   from '@OpenWaterFoundation/common/services';
-import * as IM                 from '@OpenWaterFoundation/common/services';
+          OwfCommonService, 
+          StoryConf } from '@OpenWaterFoundation/common/services';
 
 @Component({
   selector: 'common-lib-story',
@@ -24,9 +21,7 @@ export class StoryComponent implements OnInit, OnDestroy {
 
   /** Options for fullpage creation. */
   config: any;
-  /**
-   * 
-   */
+  /** The current URL of this component. Used for displaying each stories URL fragment. */
   currentURL: string;
   /** Reference for the main fullpage object. */
   fullpageAPI: any;
@@ -45,7 +40,7 @@ export class StoryComponent implements OnInit, OnDestroy {
   /**
    * 
    */
-  storyConf: IM.StoryConf;
+  storyConf: StoryConf;
   /**
    * 
    */
@@ -58,8 +53,14 @@ export class StoryComponent implements OnInit, OnDestroy {
    * a component that is loaded in an outlet.
    * @param logger Reference to the Common library logger service.
    */
-  constructor(private actRoute: ActivatedRoute, private commonService: OwfCommonService,
-  private logger: CommonLoggerService, private router: Router) { }
+  constructor(
+    private actRoute: ActivatedRoute,
+    private commonService: OwfCommonService,
+    private logger: CommonLoggerService,
+    private router: Router
+  ) {
+    
+  }
 
 
   /**
@@ -107,11 +108,18 @@ export class StoryComponent implements OnInit, OnDestroy {
     };
   }
 
+  /**
+   * 
+   * @param fullPageRef 
+   */
   getRef(fullPageRef: any) {
     this.fullpageAPI = fullPageRef;
   }
 
-
+  /**
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
+   */
   ngOnInit(): void {
 
     this.actRoute.paramMap.pipe(takeUntil(this.destroyed)).subscribe((paramMap: ParamMap) => {
@@ -145,7 +153,7 @@ export class StoryComponent implements OnInit, OnDestroy {
     var storyConfigPath = this.commonService.getStoryConfigPathFromId(storyId);
 
     this.commonService.getJSONData(this.commonService.getAppPath() + storyConfigPath)
-    .pipe(first()).subscribe((storyConfig: IM.StoryConf) => {
+    .pipe(first()).subscribe((storyConfig: StoryConf) => {
 
       this.storyInit(storyConfig);
     });
@@ -155,7 +163,7 @@ export class StoryComponent implements OnInit, OnDestroy {
    * 
    * @param storyConfig 
    */
-  private storyInit(storyConfig: IM.StoryConf): void {
+  private storyInit(storyConfig: StoryConf): void {
     this.storyConf = storyConfig;
     this.createFullpageOptions();
   }

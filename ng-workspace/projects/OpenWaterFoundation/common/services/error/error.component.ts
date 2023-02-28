@@ -4,8 +4,8 @@ import { Component,
 
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 
-import * as IM                   from '../types';
 import { StaticStructures }      from '../static-structures';
+import { DashboardWidget, Widget } from '../types';
 
 
 @Component({
@@ -21,7 +21,7 @@ export class ErrorComponent implements OnInit {
    * describe what errors occurred. */
   @Input('errorTypes') errorTypes: string[];
   /** The offending widget object. */
-  @Input('widget') widget: IM.DashboardWidget;
+  @Input('widget') widget: DashboardWidget;
   /** All used icons in the ErrorComponent. */
   faTriangleExclamation = faTriangleExclamation;
 
@@ -72,12 +72,12 @@ export class ErrorComponent implements OnInit {
 
     // Determine which widget is erroring.
     switch (this.widget.type) {
-      case IM.Widget.cht: this.chartError(); break;
-      case IM.Widget.img: this.imageError(); break;
-      case IM.Widget.ind: this.indicatorError(); break;
-      case IM.Widget.sel: this.selectorError(); break;
-      case IM.Widget.txt: this.textError(); break;
-      case IM.Widget.ttl: this.titleError(); break;
+      case Widget.cht: this.chartError(); break;
+      case Widget.img: this.imageError(); break;
+      case Widget.ind: this.indicatorError(); break;
+      case Widget.sel: this.selectorError(); break;
+      case Widget.txt: this.textError(); break;
+      case Widget.ttl: this.titleError(); break;
       case undefined: this.noRequiredProperty('type'); break;
       default: this.unsupportedTypes(); break;
     }
@@ -117,8 +117,9 @@ export class ErrorComponent implements OnInit {
   }
 
   /**
-  * Called right after the constructor.
-  */
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
+   */
   ngOnInit(): void {
 
     if (this.errorLocation.includes('dashboard') || this.errorLocation.includes('widget')) {
@@ -257,9 +258,9 @@ export class ErrorComponent implements OnInit {
     var fileType: string;
 
     switch (this.widget.type) {
-      case IM.Widget.img:
+      case Widget.img:
         fileType = 'imageFiles';
-      case IM.Widget.txt:
+      case Widget.txt:
         fileType = 'textFiles';
     }
 

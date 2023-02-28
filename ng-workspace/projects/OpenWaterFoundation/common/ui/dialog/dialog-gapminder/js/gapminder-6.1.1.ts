@@ -10,7 +10,7 @@ var dot: any;
 
 export class GapminderViz {
 
-  public configPath: string;
+  configPath: string;
 
   /**
    * 
@@ -19,7 +19,7 @@ export class GapminderViz {
     this.configPath = configPath;
   }
 
-  public gapminder() {
+  gapminder() {
     /**
      * Assigning object's properties to the local 'properties' variable
      */

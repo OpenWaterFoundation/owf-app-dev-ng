@@ -16,21 +16,22 @@ import { WindowManager }     from '@OpenWaterFoundation/common/ui/window-manager
   styleUrls: ['./dialog-image.component.css', '../main-dialog-style.css']
 })
 export class DialogImageComponent implements OnInit {
+
   /** Unique ID for this dialog to be used by the Window Manager. */
-  public dialogID: string;
+  dialogID: string;
   /** The optional description to be shown underneath the image. */
-  public imageDescription: string;
+  imageDescription: string;
   /** The name of the image being displayed in the dialog. */
-  public imageName: string;
+  imageName: string;
   /** The absolute path to the image file. */
-  public imagePath: string;
+  imagePath: string;
   /**
    * Used as a path resolver and contains the path to the map configuration that is using this TSGraphComponent.
    * To be set in the app service for relative paths.
    */
-   public mapConfigPath: string;
+  mapConfigPath: string;
   /** The windowManager instance for managing the opening and closing of windows throughout the InfoMapper. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogImageComponent. */
   faXmark = faXmark;
 
@@ -38,20 +39,23 @@ export class DialogImageComponent implements OnInit {
   /**
    * 
    * @param dialogRef 
-   * @param dataObject
+   * @param matDialogData
    */
-  constructor(public dialogRef: MatDialogRef<DialogImageComponent>,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any) {
+  constructor(
+    private dialogRef: MatDialogRef<DialogImageComponent>,
+    @Inject(MAT_DIALOG_DATA) private matDialogData: any
+  ) {
 
-    this.dialogID = dataObject.data.dialogID;
-    this.imagePath = dataObject.data.imagePath;
-    this.imageDescription = dataObject.data.imageDescription ? dataObject.data.imageDescription : '';
-    this.mapConfigPath = dataObject.data.mapConfigPath;
+    this.dialogID = this.matDialogData.data.dialogID;
+    this.imagePath = this.matDialogData.data.imagePath;
+    this.imageDescription = this.matDialogData.data.imageDescription ? this.matDialogData.data.imageDescription : '';
+    this.mapConfigPath = this.matDialogData.data.mapConfigPath;
   }
 
 
   /**
-   * 
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     // this.commonService.setMapConfigPath(this.mapConfigPath);
@@ -64,7 +68,7 @@ export class DialogImageComponent implements OnInit {
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-   public onClose(): void {
+  onClose(): void {
     this.dialogRef.close();
     this.windowManager.removeWindow(this.dialogID);
   }

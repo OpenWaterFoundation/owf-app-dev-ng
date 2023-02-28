@@ -39,7 +39,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param ts Time series to append.
 //   // @param return the number of warnings generated.
 //   // */
-//   // public static int appendEnsembleToResultsEnsembleList ( CommandProcessor processor, Command command, TSEnsemble tsensemble )
+//   // static int appendEnsembleToResultsEnsembleList ( CommandProcessor processor, Command command, TSEnsemble tsensemble )
 //   // {   String routine = "TSCommandProcessorUtil.appendEnsembleToResultsEnsembleList";
 //   //     PropList request_params = new PropList ( "" );
 //   //     request_params.setUsingObject ( "TSEnsemble", tsensemble );
@@ -89,7 +89,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param maxSeverity the maximum severity from the command file that was run.
 //   // @param testCommandFile the full path to the command file that was run.
 //   // */
-//   // public static void appendToRegressionTestReport(CommandProcessor processor, boolean isEnabled, long runTimeMs,
+//   // static void appendToRegressionTestReport(CommandProcessor processor, boolean isEnabled, long runTimeMs,
 //   //     String testPassFail, String expectedStatus, CommandStatusType maxSeverity,
 //   //     String testCommandFile )
 //   // {
@@ -159,7 +159,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param tslist List of time series to append.
 //   // @param return the number of warnings generated.
 //   // */
-//   // public static int appendTimeSeriesListToResultsList ( CommandProcessor processor, Command command, List<TS> tslist )
+//   // static int appendTimeSeriesListToResultsList ( CommandProcessor processor, Command command, List<TS> tslist )
 //   // {
 //   //     int wc = 0;
 //   //     int size = 0;
@@ -179,7 +179,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param ts Time series to append.
 //   // @param return the number of warnings generated.
 //   // */
-//   // public static int appendTimeSeriesToResultsList ( CommandProcessor processor, Command command, TS ts )
+//   // static int appendTimeSeriesToResultsList ( CommandProcessor processor, Command command, TS ts )
 //   // {	String routine = "TSCommandProcessorUtil.appendTimeSeriesToResultsList";
 //   //   PropList request_params = new PropList ( "" );
 //   //   request_params.setUsingObject ( "TS", ts );
@@ -213,7 +213,7 @@ export abstract class TSCommandProcessorUtil {
 //   // /**
 //   // Close the regression test report file.
 //   // */
-//   // public static void closeRegressionTestReportFile ()
+//   // static void closeRegressionTestReportFile ()
 //   // {
 //   //     if ( __regression_test_fp == null ) {
 //   //         return;
@@ -240,7 +240,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param requireSpecific if true then a specific ReadXXX() command is required; if false then it is OK
 //   // to convert to the more general ReadTimeSeries() command.
 //   // */
-//   // public static Command convertTSIDToReadCommand ( TSCommandProcessor processor, String tsid, boolean requireSpecific )
+//   // static Command convertTSIDToReadCommand ( TSCommandProcessor processor, String tsid, boolean requireSpecific )
 //   // throws Exception
 //   // {
 //   //     // First create a TSIdent object
@@ -283,7 +283,7 @@ export abstract class TSCommandProcessorUtil {
 //   // Display the command documentation.  This will use the default web browser.
 //   // @param command command to display documentation.
 //   // */
-//   // public static void displayCommandDocumentation ( Command command ) {
+//   // static void displayCommandDocumentation ( Command command ) {
 //   //   try {
 //   //     // TODO SAM 2016-03-23 This is a prototype of how to do interactive documentation - put in utility code
 //   //     String docURL = null;
@@ -322,7 +322,7 @@ export abstract class TSCommandProcessorUtil {
 //   @param command the command that is being processed (may be used later for context sensitive values).
 //   @param parameterValue the parameter value being expanded, containing literal substrings and optionally ${Property} properties.
 //   */
-//   public static expandParameterValue( processor: CommandProcessor, command: any, parameterValue: string ): string {
+//   static expandParameterValue( processor: CommandProcessor, command: any, parameterValue: string ): string {
 //     // var routine = "TSCommandProcessorUtil.expandParameterValue";
 //     if ( (parameterValue === null) || (parameterValue.length === 0) ) {
 //         // Just return what was provided.
@@ -409,7 +409,7 @@ export abstract class TSCommandProcessorUtil {
 //   //  * @param warningCount starting warning count, will be added to and returned if any warnings
 //   //  * @return the warningCount, incremented with warnings generated in the method
 //   //  */
-//   // public static int expandTemplateFile ( CommandProcessor processor, String inputFile, String outputFile, boolean useTables,
+//   // static int expandTemplateFile ( CommandProcessor processor, String inputFile, String outputFile, boolean useTables,
 //   //   CommandStatus status, String commandTag, int warningLevel, int warningCount ) throws FileNotFoundException, IOException, Exception {
 //   //   String message, routine = "TSCommandProcessorUtil.expandTemplateFile";
 //   //   // Call the FreeMarker API...
@@ -551,7 +551,7 @@ export abstract class TSCommandProcessorUtil {
   // @param status CommandStatus to add messages to if problems occur, or null to ignore.
   // @param commandPhase command phase (for logging), can be null to ignore logging.
   // */
-  // public static expandTimeSeriesEnsembleMetadataString(processor: any, ensemble: any, s: string, status: any, commandPhase: any): string {
+  // static expandTimeSeriesEnsembleMetadataString(processor: any, ensemble: any, s: string, status: any, commandPhase: any): string {
   //   var routine = "TSCommandProcessorUtil.expandTimeSeriesEnsembleMetadataString";
   //   if ( s === null ) {
   //       return "";
@@ -703,7 +703,7 @@ export abstract class TSCommandProcessorUtil {
   @param status CommandStatus to add messages to if problems occur, or null to ignore.
   @param commandPhase command phase (for logging), can be null to ignore logging.
   */
-  public static expandTimeSeriesMetadataString (processor: any, ts: TS, s: string, status: any, commandPhase: any): string {
+  static expandTimeSeriesMetadataString (processor: any, ts: TS, s: string, status: any, commandPhase: any): string {
     var routine = "TSCommandProcessorUtil.expandTimeSeriesMetadataString";
     if ( s === null ) {
         return "";
@@ -858,7 +858,7 @@ export abstract class TSCommandProcessorUtil {
 //   // is returned.  If false, all matching commands above the point are returned in
 //   // the order from top to bottom.
 //   // */
-//   // public static List<Command> getCommandsBeforeIndex ( int index, TSCommandProcessor processor,
+//   // static List<Command> getCommandsBeforeIndex ( int index, TSCommandProcessor processor,
 //   //   List<String> neededCommandsList, boolean last_only )
 //   // {	// Now search backwards matching commands for each of the requested commands...
 //   //   int size = 0;
@@ -922,7 +922,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param processor Command processor to check status.
 //   // @return most severe command status from all commands in a processor.
 //   // */
-//   // public static CommandStatusType getCommandStatusMaxSeverity ( TSCommandProcessor processor )
+//   // static CommandStatusType getCommandStatusMaxSeverity ( TSCommandProcessor processor )
 //   // {
 //   //   int size = processor.size();
 //   //   Command command;
@@ -945,7 +945,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param processor the CommandProcessor to use to get data.
 //   // @return true if output should be created when processing commands, false if not.
 //   // */
-//   // public static boolean getCreateOutput ( CommandProcessor processor )
+//   // static boolean getCreateOutput ( CommandProcessor processor )
 //   // {	String routine = "TSCommandProcessorUtil.getCreateOutput";
 //   //   try {
 //   //     Object o = processor.getPropContents ( "CreateOutput" );
@@ -979,7 +979,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param commandTag string tag for logging.
 //   // @exception InvalidCommandParameterException if the parameter is not valid.
 //   // */
-//   // public static DateTime getDateTime ( String dtString, String parameterName, CommandProcessor processor,
+//   // static DateTime getDateTime ( String dtString, String parameterName, CommandProcessor processor,
 //   //     CommandStatus status, int warningLevel, String commandTag )
 //   // throws InvalidCommandParameterException
 //   // {   String routine = "TSCommandProcessorUtil.getDateTime", message;
@@ -1094,7 +1094,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param command the command above which time series identifiers are needed.
 //   // @return a list of time series ensemble, or an empty list.
 //   // */
-//   // public static List<TSEnsemble> getDiscoveryEnsembleFromCommandsBeforeCommand(
+//   // static List<TSEnsemble> getDiscoveryEnsembleFromCommandsBeforeCommand(
 //   //     TSCommandProcessor processor, Command command )
 //   // {   String routine = "getDiscoveryEnsembleFromCommandsBeforeCommand";
 //   //     // Get the position of the command in the list...
@@ -1161,7 +1161,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param command the command above which properties are needed.
 //   // @return a list of time series (containing only information populated during discovery), or an empty list.
 //   // */
-//   // public static List<Prop> getDiscoveryPropFromCommandsBeforeCommand( TSCommandProcessor processor, Command command )
+//   // static List<Prop> getDiscoveryPropFromCommandsBeforeCommand( TSCommandProcessor processor, Command command )
 //   // {   String routine = "getDiscoveryPropFromCommandsBeforeCommand";
 //   //     // Get the position of the command in the list...
 //   //     int pos = processor.indexOf(command);
@@ -1267,7 +1267,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param ensembleId time series ensemble identifier from which to match time series
 //   // @return a list of time series (containing only information populated during discovery), or an empty list.
 //   // */
-//   // public static List<TS> getDiscoveryTSFromCommandsBeforeCommand( TSCommandProcessor processor, Command command,
+//   // static List<TS> getDiscoveryTSFromCommandsBeforeCommand( TSCommandProcessor processor, Command command,
 //   //     String tsList, String tsid, String tsPosition, String ensembleId )
 //   // {   String routine = "getDiscoveryTSFromCommandsBeforeCommand";
 //   //     // Get the position of the command in the list...
@@ -1368,7 +1368,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param command the command above which time series identifiers are needed.
 //   // @return a list of String containing the ensemble identifiers, or an empty Vector.
 //   // */
-//   // public static List<String> getEnsembleIdentifiersFromCommandsBeforeCommand( TSCommandProcessor processor, Command command )
+//   // static List<String> getEnsembleIdentifiersFromCommandsBeforeCommand( TSCommandProcessor processor, Command command )
 //   // {   String routine = "TSCommandProcessorUtil.getEnsembleIdentifiersFromCommandsBeforeCommand";
 //   //     // Get the position of the command in the list...
 //   //     int pos = processor.indexOf(command);
@@ -1406,7 +1406,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @return the date/time range for the requested period - date/times will be null if unable to determine or the
 //   // global output period is not set and is used as a default
 //   // */
-//   // public static DateTimeRange getOutputPeriodForCommand ( Command command, CommandPhaseType commandPhase,
+//   // static DateTimeRange getOutputPeriodForCommand ( Command command, CommandPhaseType commandPhase,
 //   //     String startParameter, String periodStart, String endParameter, String periodEnd,
 //   //     boolean defaultToGlobalOutputPeriod,
 //   //     int logLevel, String commandTag, int warningLevel, WarningCount warningCount )
@@ -1576,7 +1576,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param command the command above which time series are needed.
 //   // @return a List of pattern time series.
 //   // */
-//   // public static List<TS> getPatternTSListFromCommandsBeforeCommand( TSCommandProcessor processor, Command command )
+//   // static List<TS> getPatternTSListFromCommandsBeforeCommand( TSCommandProcessor processor, Command command )
 //   // {   //String routine = "TSCommandProcessorUtil.getPatternTSFromCommandsBeforeCommand";
 //   //     // Get the position of the command in the list...
 //   //     int pos = processor.indexOf(command);
@@ -1655,7 +1655,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @return the parameter value as a Double or null
 //   // @exception NumberFormatException if the property has a value but cannot be converted to a Double.
 //   // */
-//   // public static Double getPropertyValueAsDouble ( TSCommandProcessor processor, String propName )
+//   // static Double getPropertyValueAsDouble ( TSCommandProcessor processor, String propName )
 //   // throws NumberFormatException
 //   // {	propName = propName.replace("${", "").replace("}","");
 //   //   Object o = null;
@@ -1685,7 +1685,7 @@ export abstract class TSCommandProcessorUtil {
 //   // These properties can be requested using getPropContents().
 //   // @return the list of property names available from the processor.
 //   // */
-//   // public static Collection<String> getPropertyNameList( CommandProcessor processor )
+//   // static Collection<String> getPropertyNameList( CommandProcessor processor )
 //   // {
 //   //   // This could use reflection.
 //   //   if ( processor instanceof TSCommandProcessor ) {
@@ -1726,7 +1726,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param commands list of commands to determine total run time.
 //   // @return total run time for all commands, in milliseconds.
 //   // */
-//   // public static long getRunTimeTotal ( List<Command> commands )
+//   // static long getRunTimeTotal ( List<Command> commands )
 //   // {
 //   //     long runTimeTotal = 0;
 //   //     if ( commands == null ) {
@@ -1748,7 +1748,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param sort Indicates whether column names should be sorted (NOT YET IMPLEMENTED).
 //   // @return a list of String containing the ensemble identifiers, or an empty Vector.
 //   // */
-//   // public static List<String> getTableColumnNamesFromCommandsBeforeCommand(
+//   // static List<String> getTableColumnNamesFromCommandsBeforeCommand(
 //   //         TSCommandProcessor processor, Command command, String table_id, boolean sort )
 //   // {   String routine = "TSCommandProcessorUtil.getTableColumnNamesFromCommandsBeforeCommand";
 //   //     // Get the position of the command in the list...
@@ -1898,7 +1898,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param command the command above which time series identifiers are needed.
 //   // @return a list of String containing the table identifiers, or an empty list.
 //   // */
-//   // public static List<String> getTableIdentifiersFromCommandsBeforeCommand( TSCommandProcessor processor, Command command )
+//   // static List<String> getTableIdentifiersFromCommandsBeforeCommand( TSCommandProcessor processor, Command command )
 //   // {   String routine = "TSCommandProcessorUtil.getTableIdentifiersFromCommandsBeforeCommand";
 //   //     // Get the position of the command in the list...
 //   //     int pos = processor.indexOf(command);
@@ -1923,7 +1923,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @return a list of tag values, which are either Strings for the value or True if the tag has
 //   // no value.  Return an empty list if the tag was not found.
 //   // */
-//   // public static List<Object> getTagValues ( CommandProcessor processor, String tag )
+//   // static List<Object> getTagValues ( CommandProcessor processor, String tag )
 //   // {
 //   //     List<Object> tagValues = new ArrayList<Object>();
 //   //     // Loop through the commands and check comments for the special string
@@ -1964,7 +1964,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @return a list of tag values, which are either Strings for the value or True if the tag has
 //   // no value.  Return an empty list if the tag was not found.
 //   // */
-//   // public static List<Object> getTagValues ( String commandFile, String tag )
+//   // static List<Object> getTagValues ( String commandFile, String tag )
 //   // throws IOException, FileNotFoundException
 //   // {
 //   //     TSCommandProcessor processor = new TSCommandProcessor();
@@ -2183,7 +2183,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param command the command above which time series identifiers are needed.
 //   // @return a list of String containing the time series identifiers, or an empty list.
 //   // */
-//   // public static List<String> getTSIdentifiersNoInputFromCommandsBeforeCommand( TSCommandProcessor processor, Command command )
+//   // static List<String> getTSIdentifiersNoInputFromCommandsBeforeCommand( TSCommandProcessor processor, Command command )
 //   // {	String routine = "TSCommandProcessorUtil.getTSIdentifiersNoInputFromCommandsBeforeCommand";
 //   //   // Get the position of the command in the list...
 //   //   int pos = processor.indexOf(command);
@@ -2211,7 +2211,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param TSPosition string value of TSPosition range notation
 //   // @param EnsembleID ensemble identifier to match
 //   // */
-//   // public static TimeSeriesToProcess getTSMatchingTSListParameters ( List<TS> tsCandidateList,
+//   // static TimeSeriesToProcess getTSMatchingTSListParameters ( List<TS> tsCandidateList,
 //   //     List<TSEnsemble> ensembleCandidateList, String TSList, String TSID, String TSPosition, String EnsembleID )
 //   // {   String routine = "TSCommandProcessorUtil.getTimeSeriesToProcess";
 //   //     if ( (TSList == null) || TSList.equals("") ) {
@@ -2536,7 +2536,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param processor the CommandProcessor to use to get data.
 //   // @return The working directory in effect for a command.
 //   // */
-//   // public static String getWorkingDir ( CommandProcessor processor )
+//   // static String getWorkingDir ( CommandProcessor processor )
 //   // {	String routine = "TSCommandProcessorUtil.getWorkingDir";
 //   //   try {
 //   //       Object o = processor.getPropContents ( "WorkingDir" );
@@ -2558,7 +2558,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param command Command for which to get the working directory.
 //   // @return The working directory in effect for a command.
 //   // */
-//   // public static String getWorkingDirForCommand ( CommandProcessor processor, Command command )
+//   // static String getWorkingDirForCommand ( CommandProcessor processor, Command command )
 //   // {	String routine = "TSCommandProcessorUtil.commandProcessor_GetWorkingDirForCommand";
 //   //   PropList request_params = new PropList ( "" );
 //   //   request_params.setUsingObject ( "Command", command );
@@ -2582,7 +2582,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param startIndex the starting index for processing.
 //   // @return the index (0+) of the matching command, or -1 if not found.
 //   // */
-//   // public static int indexOf ( CommandProcessor processor, Command command, int startIndex )
+//   // static int indexOf ( CommandProcessor processor, Command command, int startIndex )
 //   // {   List<Command> commands = processor.getCommands();
 //   //     int size = commands.size();
 //   //     Command c;
@@ -2635,7 +2635,7 @@ export abstract class TSCommandProcessorUtil {
 //   // ProcessRunner interface are checked.
 //   // @param commandList the list of commands to check.
 //   // */
-//   // public static void killCommandProcesses ( List<Command>commandList )
+//   // static void killCommandProcesses ( List<Command>commandList )
 //   // {   String routine = "TSCommandProcessorUtil.killCommandProcesses";
 //   //     int size = 0;
 //   //     if ( commandList != null ) {
@@ -2664,7 +2664,7 @@ export abstract class TSCommandProcessorUtil {
 //   // @param table data table to receive report results, or null if no table will be used.
 //   // @param append indicates whether the file should be opened in append mode.
 //   // */
-//   // public static void openNewRegressionTestReportFile ( String outputFile, DataTable table, boolean append )
+//   // static void openNewRegressionTestReportFile ( String outputFile, DataTable table, boolean append )
 //   // throws FileNotFoundException
 //   // {   // Initialize the report counts.
 //   //     __regressionTestLineCount = 0;
@@ -2705,7 +2705,7 @@ export abstract class TSCommandProcessorUtil {
 //   // Process a time series after reading.  This calls the command processor readTimeSeries2() method.
 //   // Command status messages will be added if problems arise but exceptions are not thrown.
 //   // */
-//   // public static int processTimeSeriesAfterRead( CommandProcessor processor, Command command, TS ts )
+//   // static int processTimeSeriesAfterRead( CommandProcessor processor, Command command, TS ts )
 //   // {
 //   //     List<TS> tslist = new ArrayList<TS>();
 //   //     tslist.add ( ts );
@@ -2716,7 +2716,7 @@ export abstract class TSCommandProcessorUtil {
 //   // Process a list of time series after reading.  This calls the command processor readTimeSeries2() method.
 //   // Command status messages will be added if problems arise but exceptions are not thrown.
 //   // */
-//   // public static int processTimeSeriesListAfterRead( CommandProcessor processor, Command command, List<TS> tslist )
+//   // static int processTimeSeriesListAfterRead( CommandProcessor processor, Command command, List<TS> tslist )
 //   // {   int log_level = 3;
 //   //     int warning_count = 0;
 //   //     String routine = "TSCommandProcessorUtil.processTimeSeriesListAfterRead";
@@ -2749,7 +2749,7 @@ export abstract class TSCommandProcessorUtil {
 //   // will be appended to if there are more issues.
 //   // @return the warning string, longer if invalid parameters are detected.
 //   // */
-//   // public static String validateParameterNames ( List<String> valid_Vector, Command command, String warning )
+//   // static String validateParameterNames ( List<String> valid_Vector, Command command, String warning )
 //   // {	if ( command == null ) {
 //   //     return warning;
 //   //   }

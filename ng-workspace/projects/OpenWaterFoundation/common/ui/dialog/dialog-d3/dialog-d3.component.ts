@@ -8,8 +8,10 @@ import * as d3              from 'd3';
 
 import { faXmark }          from '@fortawesome/free-solid-svg-icons';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { D3Chart,
+          D3Prop,
+          OwfCommonService,
+          Path }            from '@OpenWaterFoundation/common/services';
 import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager';
 
 /**
@@ -25,34 +27,35 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
 })
 export class DialogD3Component implements OnInit {
 
-  public d3Prop: IM.D3Prop;
-  public geoLayer: any;
+  d3Prop: D3Prop;
+  geoLayer: any;
   private svg: any;
-  private windowID: string;
-  public windowManager: WindowManager = WindowManager.getInstance();
+  private windowId: string;
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogD3Component. */
   faXmark = faXmark;
 
 
-  constructor(public dialogRef: MatDialogRef<DialogD3Component>,
+  constructor(private dialogRef: MatDialogRef<DialogD3Component>,
   private commonService: OwfCommonService,
-  @Inject(MAT_DIALOG_DATA) public matDialogData: any) {
+  @Inject(MAT_DIALOG_DATA) private matDialogData: any) {
 
     this.d3Prop = matDialogData.d3Prop;
     this.geoLayer = matDialogData.geoLayer;
-    this.windowID = matDialogData.windowID;
+    this.windowId = matDialogData.windowId;
   }
 
 
   /**
-   * Determine which D3 graph type to create and display.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     switch(this.d3Prop.chartType) {
 
-      case IM.D3Chart.tree:
+      case D3Chart.tree:
         if (this.d3Prop.dataPath.toUpperCase().endsWith('.JSON')) {
-          this.commonService.getJSONData(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getJSONData(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             var data = this.renameKeys(data);
             // Create the tree and root hierarchy node given the provided
@@ -69,7 +72,7 @@ export class DialogD3Component implements OnInit {
           });
 
         } else if (this.d3Prop.dataPath.toUpperCase().endsWith('.CSV')) {
-          this.commonService.getPlainText(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getPlainText(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             // Read in CSV file.
             var table = d3.csvParse(data);
@@ -94,10 +97,10 @@ export class DialogD3Component implements OnInit {
         }
         break;
 
-      case IM.D3Chart.treemap:
+      case D3Chart.treemap:
         // Create the root hierarchy node with data from a JSON config file.
         if (this.d3Prop.dataPath.toUpperCase().endsWith('.JSON')) {
-          this.commonService.getJSONData(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getJSONData(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             var data = this.renameKeys(data);
             // Create the treemap and root hierarchy node given the provided
@@ -116,7 +119,7 @@ export class DialogD3Component implements OnInit {
         }
         // Create the root hierarchy node with data from a CSV config file.
         else if (this.d3Prop.dataPath.toUpperCase().endsWith('.CSV')) {
-          this.commonService.getPlainText(this.commonService.buildPath(IM.Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getPlainText(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
           .subscribe((data: any) => {
             var table = d3.csvParse(data);
             this.replaceWithValue(table);
@@ -332,9 +335,9 @@ export class DialogD3Component implements OnInit {
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-   public onClose(): void {
+   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**

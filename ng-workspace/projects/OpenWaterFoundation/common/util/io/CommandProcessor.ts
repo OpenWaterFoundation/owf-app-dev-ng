@@ -47,7 +47,7 @@
 // @exception CommandException If there is an error running the command.
 // */
 // // TODO SAM 2005-05-05 need to implement in a generic way
-// //public void processCommands () throws CommandException;
+// //void processCommands () throws CommandException;
 
 // // TODO SAM 2007-02-16 How to pass back useful information when an exception
 // /**

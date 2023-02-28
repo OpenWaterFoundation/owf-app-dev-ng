@@ -17,14 +17,14 @@
 // */
 // export class PropListManager {
 
-//   public _proplists: PropList[] = [];
+//   _proplists: PropList[] = [];
 
 //   // List<PropList> _proplists; // List of PropList objects
   
 //   // /**
 //   // Default constructor.
 //   // */
-//   // public PropListManager ()
+//   // PropListManager ()
 //   // {	initialize ();
 //   // }
   
@@ -34,7 +34,7 @@
 //   // @param replace_if_match If the name of the PropList matches one that is already
 //   // in the list, replace it (true), or add the new list additionally (false).
 //   // */
-//   // public void addList ( PropList proplist, boolean replace_if_match )
+//   // void addList ( PropList proplist, boolean replace_if_match )
 //   // {	if ( proplist == null ) {
 //   //     return;
 //   //   }
@@ -65,7 +65,7 @@
 //   // @param listname The name of the list to add.
 //   // @param listformat The format of the property list to add.
 //   // */
-//   // public int addList ( String listname, int listformat )
+//   // int addList ( String listname, int listformat )
 //   // {	if ( listname == null ) {
 //   //     return 1;
 //   //   }
@@ -90,7 +90,7 @@
 //   @return The property associated with the string key.
 //   @param key The string key to look up.
 //   */
-//   public getProp ( key: string ): Prop {
+//   getProp ( key: string ): Prop {
 //     // For each list, search until we find the value...
 //     var size = this._proplists.length;
 //     var proplist: PropList;
@@ -111,7 +111,7 @@
 //   // /**
 //   // Return the list of PropLists managed by this PropListManager.
 //   // */
-//   // public List<PropList> getPropLists ()
+//   // List<PropList> getPropLists ()
 //   // {	return _proplists;
 //   // }
   
@@ -121,7 +121,7 @@
 //   // value is fully-expanded.
 //   // @param key The String key to look up.
 //   // */
-//   // public String getValue ( String key )
+//   // String getValue ( String key )
 //   // {	// For each list, search until we find the value...
 //   //   int size = _proplists.size();
 //   //   PropList proplist;
@@ -236,7 +236,7 @@
 //   // @param proplist_manager The PropListManager to search for properties.
 //   // @param contents the string contents to be expanded.
 //   // */
-//   // public static String resolveContentsValue ( PropListManager proplist_manager, String contents )
+//   // static String resolveContentsValue ( PropListManager proplist_manager, String contents )
 //   // {	return resolveContentsValue ( proplist_manager.getPropLists(), contents );
 //   // }
   
@@ -247,7 +247,7 @@
 //   @param proplist The proplist to search for properties.
 //   @param contents The string contents to be expanded.
 //   */
-//   public static resolveContentsValue ( proplist: PropList, contents: string ): string {
+//   static resolveContentsValue ( proplist: PropList, contents: string ): string {
 //     // Use a vector with one item to look up the information...
   
 //     var v: PropList[] = [];
@@ -359,7 +359,7 @@
 //   @param proplists The list of property lists to search for properties.
 //   @param contents The string contents to be expanded.
 //   */
-//   public static resolveContentsValueFull ( proplists: PropList[], contents: string ): string {
+//   static resolveContentsValueFull ( proplists: PropList[], contents: string ): string {
 //     var cchar: string, hard_quote: string, soft_quote: string, syscall_quote: string;
 //     var rfr_close: string, rfr_open: string, rfr_val: string, rfr_val_nest: string, routine = "PropListManager.resolveContentsValue";
 //     var rfr_var = '', rfr_var_nest = '';
@@ -688,7 +688,7 @@
 //   @param list The single property list to check.
 //   @param key The string key to look up>
 //   */
-//   public static resolvePropValue ( list: PropList, key: string ): string
+//   static resolvePropValue ( list: PropList, key: string ): string
 //   {	// Create a vector and call the routine that accepts the vector...
   
 //     var v: PropList[] = [];
@@ -723,7 +723,7 @@
 //   @param list The list of property lists to check.
 //   @param key The string key to look up>
 //   */
-//   public static resolvePropValueFull ( list: PropList[], key: string ): string {
+//   static resolvePropValueFull ( list: PropList[], key: string ): string {
 //     var	array_index = 0, dl = 100;
   
 //     // Make sure that we have non-null data...
@@ -794,14 +794,14 @@
 //   // /**
 //   // Given a string like X=Y, resolve the value of the property.  Not implemented.
 //   // */
-//   // public static Object resolvePropString ( PropList list, String string )
+//   // static Object resolvePropString ( PropList list, String string )
 //   // {	return null;
 //   // }
   
 //   // /**
 //   // Given a string like X=Y, resolve the value of the property.  Not implemented.
 //   // */
-//   // public static Object resolvePropVariable ( PropList list, String string )
+//   // static Object resolvePropVariable ( PropList list, String string )
 //   // {	return null;
 //   // }
   
@@ -812,7 +812,7 @@
 //   // // Probably can try to reset in a list if found but still need to determine the
 //   // // list if adding.
 //   // /*
-//   // public int setValue ( String key, Object value )
+//   // int setValue ( String key, Object value )
 //   // {
 //   //   if ( value != null ) {
 //   //     _value = value;
@@ -827,7 +827,7 @@
 //   // @param key The string key of the property to set.
 //   // @param contents The string value to set for the property.
 //   // */
-//   // public int setValue ( String listname, String key, Object contents )
+//   // int setValue ( String listname, String key, Object contents )
 //   // {	if ( contents == null ) {
 //   //     return 1;
 //   //   }

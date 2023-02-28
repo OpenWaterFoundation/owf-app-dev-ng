@@ -73,7 +73,7 @@ export class DataDimension {
   dimensions can be used throughout the application.
   @param dim Instance of DataDimension to add to the list.
   */
-  public static addDimension ( dim: DataDimension ): void {
+  static addDimension ( dim: DataDimension ): void {
     // First see if the dimension is already in the list...
 
     var size: number = DataDimension.__dimensionList.length;
@@ -109,7 +109,7 @@ export class DataDimension {
   Return the dimension abbreviation.
   @return The dimension abbreviation.
   */
-  public getAbbreviation ( ): string {
+  getAbbreviation ( ): string {
     return this.__abbreviation;
   }
 
@@ -117,7 +117,7 @@ export class DataDimension {
   Return a list of DataDimension containing the static shared dimension data.
   @return a list of DataDimension containing the static shared dimension data.
   */
-  public static getDimensionData (): DataDimension[] {
+  static getDimensionData (): DataDimension[] {
     return this.__dimensionList;
   }
 
@@ -125,7 +125,7 @@ export class DataDimension {
   Return the dimension long name.
   @return The dimension long name.
   */
-  public getLongName ( ): string {
+  getLongName ( ): string {
     return this.__long_name;
   }
 
@@ -136,7 +136,7 @@ export class DataDimension {
   @exception Exception If the data dimension cannot be determined from the string.
   @deprecated Use lookupDimension
   */
-  public static lookup ( dimension_string: string ): DataDimension {
+  static lookup ( dimension_string: string ): DataDimension {
     return this.lookupDimension ( dimension_string );
   }
 
@@ -146,7 +146,7 @@ export class DataDimension {
   @param dimension_string Dimension abbreviation string.
   @exception Exception If the data dimension cannot be determined from the string.
   */
-  public static lookupDimension ( dimension_string: string ): DataDimension {
+  static lookupDimension ( dimension_string: string ): DataDimension {
     if ( dimension_string == null ) {
       throw new Error ( "Null dimension string" );
     }
@@ -173,7 +173,7 @@ export class DataDimension {
   Set the dimension abbreviation.
   @param abbreviation The dimension abbreviation.
   */
-  public setAbbreviation ( abbreviation: string ): void {
+  setAbbreviation ( abbreviation: string ): void {
     if ( abbreviation == null ) {
       return;
     }
@@ -184,7 +184,7 @@ export class DataDimension {
   Set the dimension long name.
   @param long_name The dimension long name.
   */
-  public setLongName ( long_name: string ): void {
+  setLongName ( long_name: string ): void {
     if ( long_name == null ) {
       return;
     }
@@ -195,7 +195,7 @@ export class DataDimension {
   Return a string representation of the DataDimension.
   @return A string representation of the DataDimension.
   */
-  public toString (): string
+  toString (): string
   {	return "Dimension:  \"" + this.__abbreviation + "\", \"" + this.__long_name +"\"";
   }
 

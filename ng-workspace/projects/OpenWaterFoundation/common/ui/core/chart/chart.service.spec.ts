@@ -1,14 +1,13 @@
 import { HttpClientTestingModule,
           HttpTestingController } from '@angular/common/http/testing';
 import { TestBed }                from '@angular/core/testing';
+import { GraphProp } from '@OpenWaterFoundation/common/services';
 
 import { DayTS,
           MonthTS,
-          TS,
           YearTS }                from '@OpenWaterFoundation/common/ts';
 
 import { ChartService }           from './chart.service';
-import * as IM                    from '@OpenWaterFoundation/common/services';
 
 
 describe('DialogService', () => {
@@ -144,17 +143,17 @@ describe('DialogService', () => {
 
       // verifyPlotlyProp()
       it('should verify graph properties', () => {
-        expect(chartService.verifyPlotlyProp('Line', IM.GraphProp.cm)).toBe('lines');
-        expect(chartService.verifyPlotlyProp('Point', IM.GraphProp.cm)).toBe('markers');
-        expect(chartService.verifyPlotlyProp('Sponge', IM.GraphProp.cm)).toBe('lines');
+        expect(chartService.verifyPlotlyProp('Line', GraphProp.cm)).toBe('lines');
+        expect(chartService.verifyPlotlyProp('Point', GraphProp.cm)).toBe('markers');
+        expect(chartService.verifyPlotlyProp('Sponge', GraphProp.cm)).toBe('lines');
 
-        expect(chartService.verifyPlotlyProp('Line', IM.GraphProp.ct)).toBe('scatter');
-        expect(chartService.verifyPlotlyProp('Point', IM.GraphProp.ct)).toBe('scatter');
-        expect(chartService.verifyPlotlyProp('Zamboni', IM.GraphProp.ct)).toBe('scatter');
+        expect(chartService.verifyPlotlyProp('Line', GraphProp.ct)).toBe('scatter');
+        expect(chartService.verifyPlotlyProp('Point', GraphProp.ct)).toBe('scatter');
+        expect(chartService.verifyPlotlyProp('Zamboni', GraphProp.ct)).toBe('scatter');
 
-        expect(chartService.verifyPlotlyProp('0x41528a', IM.GraphProp.bc)).toBe('#41528a');
-        expect(chartService.verifyPlotlyProp('white', IM.GraphProp.bc)).toBe('white');
-        expect(chartService.verifyPlotlyProp('', IM.GraphProp.bc)).toBe('black');
+        expect(chartService.verifyPlotlyProp('0x41528a', GraphProp.bc)).toBe('#41528a');
+        expect(chartService.verifyPlotlyProp('white', GraphProp.bc)).toBe('white');
+        expect(chartService.verifyPlotlyProp('', GraphProp.bc)).toBe('black');
       });
 
       // zeroPad()

@@ -74,7 +74,7 @@ export class AbstractCommand {
   see only the parameters in the command, so that defaults are not explicitly displayed?
   @return the parameters being used by the command.  A non-null list is guaranteed.
   */
-  public getCommandParameters (): PropList {
+  getCommandParameters (): PropList {
     return this.__parameters;
   }
 
@@ -82,7 +82,7 @@ export class AbstractCommand {
   // Return the command processor that is managing the command.
   // @return the CommandProcessor used to process the command.
   // */
-  // public getCommandProcessor (): CommandProcessor {
+  // getCommandProcessor (): CommandProcessor {
   //   return this.__processor;
   // }
 
@@ -90,7 +90,7 @@ export class AbstractCommand {
   Set the command name, as taken from the command string.
   @param command_name The command name.
   */
-  public setCommandName ( command_name: string ): void {
+  setCommandName ( command_name: string ): void {
     this.__commandName = command_name;
   }
 

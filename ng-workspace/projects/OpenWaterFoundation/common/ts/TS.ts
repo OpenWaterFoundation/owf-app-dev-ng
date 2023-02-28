@@ -12,7 +12,7 @@ export class TS {
   /**
   Data flavor for transferring this object.
   */
-  // public static DataFlavor tsFlavor = new DataFlavor(RTi.TS.TS.class,"RTi.TS.TS");
+  // static DataFlavor tsFlavor = new DataFlavor(RTi.TS.TS.class,"RTi.TS.TS");
 
   /**
   General string to use for status of the time series (use as appropriate by
@@ -263,7 +263,7 @@ export class TS {
 
   /**Add a TSDataFlagMetadata instance to the list maintained with the time series, to explain flag meanings.
   @param dataFlagMetadata instance of TSDataFlagMetadata to add to time series. */
-  public addDataFlagMetadata(dataFlagMetadata: TSDataFlagMetadata): void {
+  addDataFlagMetadata(dataFlagMetadata: TSDataFlagMetadata): void {
     this.__dataFlagMetadataList.push(dataFlagMetadata);
   }
 
@@ -275,7 +275,7 @@ export class TS {
   table that indicates what is NOT copied.  This method may need to be overloaded
   in the future to allow only a partial copy of the header.
   */
-  public copyHeader(ts: TS): void {
+  copyHeader(ts: TS): void {
     this.setVersion(ts.getVersion());
     this.setStatus(ts.getStatus());
 
@@ -366,7 +366,7 @@ export class TS {
   (e.g., MinuteTS, MonthTS) that are optimized for data storage for different intervals.
   @return 0 if successful allocating memory, non-zero if failure.
   */
-  public allocateDataSpace(): number {
+  allocateDataSpace(): number {
     console.error(1, "TS.allocateDataSpace", "TS.allocateDataSpace() is virtual, define in derived classes.");
     return 1;
   }
@@ -384,7 +384,7 @@ export class TS {
   @return true if the data value is missing, false if not.
   @param value Value to check.
   */
-  public isDataMissing(value: number): boolean {
+  isDataMissing(value: number): boolean {
     if (isNaN(value)) {
       return true;
     }
@@ -394,7 +394,7 @@ export class TS {
     return false;
   }
 
-  public formatLegendBool(format: string, update_ts: boolean): string {
+  formatLegendBool(format: string, update_ts: boolean): string {
 
     var buffer: string = '';
 
@@ -573,7 +573,7 @@ export class TS {
   time series legend data.  See the version that accepts a flag for a description of format characters.
   @param format Format string.
   */
-  public formatLegend(format: string): string {
+  formatLegend(format: string): string {
     return this.formatLegendBool(format, false);
   }
 
@@ -581,7 +581,7 @@ export class TS {
   Return the time series alias from the TSIdent.
   @return The alias part of the time series identifier.
   */
-  public getAlias(): string {
+  getAlias(): string {
     return this._id.getAlias();
   }
 
@@ -589,7 +589,7 @@ export class TS {
   Return the time series comments.
   @return The comments list.
   */
-  public getComments(): string[] {
+  getComments(): string[] {
     return this._comments;
   }
 
@@ -599,7 +599,7 @@ export class TS {
    * @return The data value associated with a date.  This should be overridden in
    * derived classes (always returns the missing data value here).
    */
-  public getDataValue(date: DateTime): number {
+  getDataValue(date: DateTime): number {
     console.warn(3, "TS.getDataValue", "TS.getDataValue is a virtual function, redefine in derived classes");
     return this._missing;
   }
@@ -608,7 +608,7 @@ export class TS {
   Return the data interval base.
   @return The data interval base (see TimeInterval.*).
   */
-  public getDataIntervalBase(): number {
+  getDataIntervalBase(): number {
     return this._data_interval_base;
   }
 
@@ -616,7 +616,7 @@ export class TS {
   Return the original data interval base.
   @return The data interval base of the original data.
   */
-  public getDataIntervalBaseOriginal(): number {
+  getDataIntervalBaseOriginal(): number {
     return this._data_interval_base_original;
   }
 
@@ -624,7 +624,7 @@ export class TS {
   Return the data interval multiplier.
   @return The data interval multiplier.
   */
-  public getDataIntervalMult(): number {
+  getDataIntervalMult(): number {
     return this._data_interval_mult;
   }
 
@@ -632,7 +632,7 @@ export class TS {
   Return the original data interval multiplier.
   @return The data interval multiplier of the original data.
   */
-  public getDataIntervalMultOriginal(): number {
+  getDataIntervalMultOriginal(): number {
     return this._data_interval_mult_original;
   }
 
@@ -645,7 +645,7 @@ export class TS {
   increase performance).
   @return a TSData for the specified date/time.
   */
-  public getDataPoint(date: DateTime, tsdata: TSData): TSData {
+  getDataPoint(date: DateTime, tsdata: TSData): TSData {
     console.warn(3, "TS.getDataPoint", "This is a virtual function, redefine in child classes");
     // Empty point...
     var data: TSData = new TSData();
@@ -657,7 +657,7 @@ export class TS {
   Zero will be returned if allocateDataSpace() has not been called.
   @return The number of data points included in the period.
   */
-  public getDataSize(): number {
+  getDataSize(): number {
     return this._data_size;
   }
 
@@ -665,7 +665,7 @@ export class TS {
   Return the data type from the TSIdent or an empty string if no TSIdent has been set.
   @return The data type abbreviation.
   */
-  public getDataType(): string {
+  getDataType(): string {
     if (this._id == null) {
       return "";
     }
@@ -679,7 +679,7 @@ export class TS {
   @return The data units.
   @see RTi.Util.IO.DataUnits
   */
-  public getDataUnits(): string {
+  getDataUnits(): string {
     return this._data_units;
   }
 
@@ -688,7 +688,7 @@ export class TS {
   @return The data units in the original data.
   @see RTi.Util.IO.DataUnits
   */
-  public getDataUnitsOriginal(): string {
+  getDataUnitsOriginal(): string {
     return this._data_units_original;
   }
 
@@ -696,7 +696,7 @@ export class TS {
   Return the first date in the period of record (returns a copy).
   @return The first date in the period of record, or null if the date is null.
   */
-  public getDate1(): DateTime {
+  getDate1(): DateTime {
     if (this._date1 === null) {
       return null;
     }
@@ -708,7 +708,7 @@ export class TS {
   @return The first date of the original data source (generally equal to or
   earlier than the time series that is actually read), or null if the date is null.
   */
-  public getDate1Original(): DateTime {
+  getDate1Original(): DateTime {
     if (this._date1_original === null) {
       return null;
     }
@@ -719,7 +719,7 @@ export class TS {
   Return the last date in the period of record (returns a copy).
   @return The last date in the period of record, or null if the date is null.
   */
-  public getDate2(): DateTime {
+  getDate2(): DateTime {
     if (this._date2 === null) {
       return null;
     }
@@ -731,7 +731,7 @@ export class TS {
   @return The last date of the original data source (generally equal to or
   later than the time series that is actually read), or null if the date is null.
   */
-  public getDate2Original(): DateTime {
+  getDate2Original(): DateTime {
     if (this._date2_original === null) {
       return null;
     }
@@ -742,7 +742,7 @@ export class TS {
   Return the time series description.
   @return The time series description.
   */
-  public getDescription(): string {
+  getDescription(): string {
     return this._description;
   }
 
@@ -750,7 +750,7 @@ export class TS {
   Return the extended time series legend.
   @return Time series extended legend.
   */
-  public getExtendedLegend(): string {
+  getExtendedLegend(): string {
     return this._extended_legend;
   }
 
@@ -758,7 +758,7 @@ export class TS {
   Return the genesis information.
   @return The genesis comments.
   */
-  public getGenesis(): string[] {
+  getGenesis(): string[] {
     return this._genesis;
   }
 
@@ -766,7 +766,7 @@ export class TS {
   Return the input name (file or database table) for the time series.
   @return the input name.
   */
-  public getInputName(): string {
+  getInputName(): string {
     return this._input_name;
   }
 
@@ -774,7 +774,7 @@ export class TS {
   Return the time series legend.
   @return Time series legend.
   */
-  public getLegend(): string {
+  getLegend(): string {
     return this._legend;
   }
 
@@ -782,14 +782,14 @@ export class TS {
   Return the location part of the time series identifier.  Does not include location type.
   @return The location part of the time series identifier (from TSIdent).
   */
-  public getLocation(): string {
+  getLocation(): string {
     return this._id.getLocation();
   }
 
   /** Return the missing data value used for the time series (single value).
   @return The value used for missing data.
   */
-  public getMissing(): number {
+  getMissing(): number {
     return this._missing;
   }
 
@@ -797,7 +797,7 @@ export class TS {
   @return The range of values for missing data.  The first value is the lowest
   value, the second the highest.  A new array instance is returned.
   */
-  public getMissingRange(): number[] {
+  getMissingRange(): number[] {
     var missing_range = [];
     missing_range[0] = this._missingl;
     missing_range[1] = this._missingu;
@@ -808,7 +808,7 @@ export class TS {
   @param propertyName name of property being retrieved.
   @return property object corresponding to the property name.
   */
-  public getProperty(propertyName: string): any {
+  getProperty(propertyName: string): any {
     if (this.__property_HashMap === null) {
       return null;
     }
@@ -821,7 +821,7 @@ export class TS {
   @return the time series identifier as a TSIdent.
   @see TSIdent
   */
-  public getIdentifier(): TSIdent {
+  getIdentifier(): TSIdent {
     return this._id;
   }
 
@@ -830,7 +830,7 @@ export class TS {
   @return The time series identifier as a string.
   @see TSIdent
   */
-  public getIdentifierString(): string {
+  getIdentifierString(): string {
     return this._id.getIdentifier();
   }
 
@@ -838,7 +838,7 @@ export class TS {
   Return whether data flag strings use String.intern().
   @return True if data flag strings use String.intern(), false otherwise.
   */
-  public getInternDataFlagStrings(): boolean {
+  getInternDataFlagStrings(): boolean {
     return this._internDataFlagStrings;
   }
 
@@ -847,7 +847,7 @@ export class TS {
   @return The status flag for the time series.  This is a general purpose flag.
   @see #setStatus
   */
-  public getStatus(): string {
+  getStatus(): string {
     return this._status;
   }
 
@@ -855,7 +855,7 @@ export class TS {
   Return the time series input format version.
   @return The time series version, to be used to indicate input file formats.
   */
-  public getVersion(): string {
+  getVersion(): string {
     return this._version;
   }
 
@@ -872,7 +872,7 @@ export class TS {
   string values are used, then false can be specified so as to not bloat the global String table.
   @return true if data flags are enabled for the time series, after the set.
   */
-  public hasDataFlags(hasDataFlags: boolean, internDataFlagStrings: boolean): boolean {
+  hasDataFlags(hasDataFlags: boolean, internDataFlagStrings: boolean): boolean {
     this._has_data_flags = hasDataFlags;
     this._internDataFlagStrings = internDataFlagStrings;
     return this._has_data_flags;
@@ -882,7 +882,7 @@ export class TS {
   Set the time series identifier alias.
   @param alias Alias of time series.
   */
-  public setAlias(alias: string): void {
+  setAlias(alias: string): void {
     if (alias != null) {
       this._id.setAlias(alias);
     }
@@ -894,7 +894,7 @@ export class TS {
   @param t First date in period.
   @see DateTime
   */
-  public setDate1(t: any): void {
+  setDate1(t: any): void {
     if (t != null) {
       this._date1 = DateTime.copyConstructor(t);
       if (this._data_interval_base != TimeInterval.IRREGULAR) {
@@ -910,7 +910,7 @@ export class TS {
   @param t First date in period in the original data.
   @see DateTime
   */
-  public setDate1Original(t: any): void {
+  setDate1Original(t: any): void {
     if (t != null) {
       this._date1_original = DateTime.copyConstructor(t);
       if (this._data_interval_base != TimeInterval.IRREGULAR) {
@@ -926,7 +926,7 @@ export class TS {
   @param t Last date in period.
   @see DateTime
   */
-  public setDate2(t: any): void {
+  setDate2(t: any): void {
     if (t != null) {
       this._date2 = DateTime.copyConstructor(t);
       if (this._data_interval_base != TimeInterval.IRREGULAR) {
@@ -942,7 +942,7 @@ export class TS {
   @param t Last date in period in the original data.
   @see DateTime
   */
-  public setDate2Original(t: any): void {
+  setDate2Original(t: any): void {
     if (t != null) {
       this._date2_original = DateTime.copyConstructor(t);
       if (this._data_interval_base != TimeInterval.IRREGULAR) {
@@ -1018,7 +1018,7 @@ export class TS {
   @param val Data value for date.
   @see RTi.Util.Time.DateTime
   */
-  public setDataValueTwo(date: DateTime, val: number): void {
+  setDataValueTwo(date: DateTime, val: number): void {
     console.error("TS.setDataValueTwo is " +
       "virtual and should be redefined in derived classes");
   }
@@ -1033,7 +1033,7 @@ export class TS {
   @param duration Duration (seconds) for the data value (specify as 0 if not relevant).
   @see DateTime
   */
-  public setDataValueFour(date: DateTime, val: number, data_flag: string, duration: number): void {
+  setDataValueFour(date: DateTime, val: number, data_flag: string, duration: number): void {
     console.warn("TS.setDataValueFour is " +
       "virtual and should be implemented in derived classes");
   }
@@ -1042,7 +1042,7 @@ export class TS {
   Set the description.
   @param description Time series description (this is not the comments).
   */
-  public setDescription(description: string) {
+  setDescription(description: string) {
     if (description != null) {
       this._description = description;
     }
@@ -1056,7 +1056,7 @@ export class TS {
   @see TSIdent
   @exception Exception If there is an error setting the identifier.
   */
-  public setIdentifierTSIdent(id: TSIdent): void {
+  setIdentifierTSIdent(id: TSIdent): void {
     if (id != null) {
       this._id = new TSIdent(id);
     }
@@ -1069,7 +1069,7 @@ export class TS {
   @param identifier Time series identifier.
   @exception Exception If there is an error setting the identifier.
   */
-  public setIdentifier(identifier: string): void {
+  setIdentifier(identifier: string): void {
     if (identifier != null) {
       this._id.setIdentifier(identifier);
     }
@@ -1096,7 +1096,7 @@ export class TS {
   @see TSIdent
   @exception Exception If there is an error setting the identifier.
   */
-  public setIdentifierObject(id: any): void {
+  setIdentifierObject(id: any): void {
     if (id != null) {
       this._id = new TSIdent(id);
     }
@@ -1105,7 +1105,7 @@ export class TS {
   /**
   Set the input name (file or database table).
   */
-  public setInputName(input_name: string): void {
+  setInputName(input_name: string): void {
     if (input_name != null) {
       this._input_name = input_name;
     }
@@ -1116,7 +1116,7 @@ export class TS {
   @param legend Time series legend (can be used for labels on graphs, etc.).
   @see #formatLegend
   */
-  public setLegend(legend: string): void {
+  setLegend(legend: string): void {
     if (legend != null) {
       this._legend = legend.trim();
     }
@@ -1155,7 +1155,7 @@ export class TS {
   specified, neither of which can be a NaN.
   @param missing Missing data range for time series.
   */
-  public setMissingRange(missing: number[]): void {
+  setMissingRange(missing: number[]): void {
     if (missing === null) {
       return;
     }
@@ -1178,7 +1178,7 @@ export class TS {
   @param propertyName name of property being set.
   @param property property object corresponding to the property name.
   */
-  public setProperty(propertyName: string, property: any): void {
+  setProperty(propertyName: string, property: any): void {
     if (this.__property_HashMap === null) {
       this.__property_HashMap = new Map<String, Object>();
     }
@@ -1189,7 +1189,7 @@ export class TS {
   Set the sequence identifier (old sequence number), used with ensembles.
   @param sequenceID sequence identifier for the time series.
   */
-  public setSequenceID(sequenceID: string): void {
+  setSequenceID(sequenceID: string): void {
     this._id.setSequenceID(sequenceID);
   }
 
@@ -1202,7 +1202,7 @@ export class TS {
   This feature may be phased out.
   @see #getStatus
   */
-  public setStatus(status: string): void {
+  setStatus(status: string): void {
     if (status != null) {
       this._status = status;
     }
@@ -1212,7 +1212,7 @@ export class TS {
   Set the time series version, to be used with input file formats.
   @param version Version number for time series file.
   */
-  public setVersion(version: string): void {
+  setVersion(version: string): void {
     if (version != null) {
       this._version = version;
     }

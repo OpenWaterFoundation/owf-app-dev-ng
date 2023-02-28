@@ -5,8 +5,7 @@ import { Component,
 import { MatDialogRef,
           MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { OwfCommonService, Path } from '@OpenWaterFoundation/common/services';
 
 import { faXmark }          from '@fortawesome/free-solid-svg-icons';
 
@@ -20,28 +19,28 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
 })
 export class DialogDocComponent implements OnInit, OnDestroy {
   /** Shows if the current documentation type is a regular text file. */
-  public docText: boolean;
+  docText: boolean;
   /** Shows if the current documentation type is a markdown file. */
-  public docMarkdown: boolean;
+  docMarkdown: boolean;
   /** Shows if the current documentation type is an HTML file. */
-  public docHTML: boolean;
+  docHTML: boolean;
   /** The string containing the documentation that needs to be displayed in this
    * DialogDocComponent. */
-  public doc: string;
+  doc: string;
   /** The string representing the path to the documentation file to be displayed. */
-  public docPath: string;
+  docPath: string;
   /** The full path to the folder containing the markdown file. */
-  public fullMarkdownPath: string;
+  fullMarkdownPath: string;
   /** The Id from the given geoMapId, geoLayerViewGroupId, or geoLayerViewId. */
-  public geoId: string;
+  geoId: string;
   /** The name property from the geoMap, geoLayerViewGroup, or geoLayerView. */
-  public geoName: string;
+  geoName: string;
   /** Used as a path resolver and contains the path to the map configuration that
    * is using this TSGraphComponent. To be set in the app service for relative paths. */
-  public mapConfigPath: string;
+  mapConfigPath: string;
   /** The Showdown config option object. Overrides an app `app.module.ts` config 
    * option object. */
-  public showdownOptions = {
+  showdownOptions = {
     emoji: true,
     flavor: 'github',
     noHeaderId: true,
@@ -53,45 +52,47 @@ export class DialogDocComponent implements OnInit, OnDestroy {
     tables: true
   }
   /** The formatted string to be converted into markdown by Showdown. */
-  public showdownHTML: string;
-  /** A unique string representing the windowID of this Dialog Component in the
+  showdownHTML: string;
+  /** A unique string representing the windowId of this Dialog Component in the
    * WindowManager. */
-  public windowID: string;
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogDocComponent. */
   faXmark = faXmark;
   
 
   /**
-   * 
-   * @param commonService 
+   * Constructor for the DialogDocComponent.
+   * @param commonService Reference to the injected Common library service.
    * @param dialogRef 
    * @param matDialogData 
    */
-  constructor(public commonService: OwfCommonService,
-              public dialogRef: MatDialogRef<DialogDocComponent>,
-              @Inject(MAT_DIALOG_DATA) public matDialogData: any) {
+  constructor(
+    private commonService: OwfCommonService,
+    private dialogRef: MatDialogRef<DialogDocComponent>,
+    @Inject(MAT_DIALOG_DATA) private matDialogData: any
+  ) {
 
-    this.doc = matDialogData.doc;
-    this.docPath = matDialogData.docPath;
-    this.fullMarkdownPath = matDialogData.fullMarkdownPath;
-    this.geoId = matDialogData.geoId;
-    this.geoName = matDialogData.geoName;
+    this.doc = this.matDialogData.doc;
+    this.docPath = this.matDialogData.docPath;
+    this.fullMarkdownPath = this.matDialogData.fullMarkdownPath;
+    this.geoId = this.matDialogData.geoId;
+    this.geoName = this.matDialogData.geoName;
 
-    if (matDialogData.docText) this.docText = true;
-    else if (matDialogData.docMarkdown) this.docMarkdown = true;
-    else if (matDialogData.docHtml) this.docHTML = true;
+    if (this.matDialogData.docText) this.docText = true;
+    else if (this.matDialogData.docMarkdown) this.docMarkdown = true;
+    else if (this.matDialogData.docHtml) this.docHTML = true;
 
-    this.mapConfigPath = matDialogData.mapConfigPath;
-    this.windowID = matDialogData.windowID;
+    this.mapConfigPath = this.matDialogData.mapConfigPath;
+    this.windowId = this.matDialogData.windowId;
   }
 
 
   /**
-   * This function is called on initialization of the map component, right after
-   * the constructor.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     if (this.mapConfigPath && this.fullMarkdownPath) {
@@ -104,7 +105,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
       // If it does, we want users to be able to set the path to the image relative
       // to the markdown folder being displayed, so they don't have to be burdened
       // with putting a possibly extra long path.
-      var sanitizedDoc = this.commonService.sanitizeDoc(this.doc, IM.Path.mP);
+      var sanitizedDoc = this.commonService.sanitizeDoc(this.doc, Path.mP);
 
       setTimeout(() => {
         this.showdownHTML = sanitizedDoc;
@@ -120,7 +121,7 @@ export class DialogDocComponent implements OnInit, OnDestroy {
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-  public onClose(): void {
+  onClose(): void {
     this.dialogRef.close();
   }
 
@@ -129,8 +130,8 @@ export class DialogDocComponent implements OnInit, OnDestroy {
    * link is clicked on in the dialog that opens a new map, make sure to close the
    * dialog and remove it from the window manager.
    */
-  public ngOnDestroy(): void {
-    this.windowManager.removeWindow(this.windowID);
+  ngOnDestroy(): void {
+    this.windowManager.removeWindow(this.windowId);
   }
 
 }

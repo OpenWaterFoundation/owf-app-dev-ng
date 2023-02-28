@@ -11,7 +11,15 @@ import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 // the app as much as before.
 export class JustificationPipe implements PipeTransform {
 
-  constructor(private commonService: OwfCommonService) { }
+
+  /**
+   * Constructor for the JustificationPipe.
+   * @param commonService Reference to the injected Common library service.
+   */
+  constructor(private commonService: OwfCommonService) {
+
+  }
+
 
   transform(value: unknown, ...args: unknown[]): unknown {
     if (args[0]) {

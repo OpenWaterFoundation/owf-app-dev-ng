@@ -14,8 +14,7 @@ import { DialogTSTableComponent } from '../dialog-tstable/dialog-tstable.compone
 import { faXmark }                from '@fortawesome/free-solid-svg-icons';
 
 import { TS }                     from '@OpenWaterFoundation/common/ts';
-import { OwfCommonService }       from '@OpenWaterFoundation/common/services';
-import * as IM                    from '@OpenWaterFoundation/common/services';
+import { AttributeTableParams, ChartDialog, OwfCommonService }       from '@OpenWaterFoundation/common/services';
 import { WindowManager,
           WindowType }            from '@OpenWaterFoundation/common/ui/window-manager';
 
@@ -31,9 +30,9 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   attributeTable: any[] = [];
   /** Object that will be assigned by data passed up from the Chart component, and
    * used to create a TSTable dialog. */
-  attributeTableParams: IM.AttributeTableParams;
+  attributeTableParams: AttributeTableParams;
   /** Object that is sent down to the Chart component for displaying. */
-  chartDialog: IM.ChartDialog;
+  chartDialog: ChartDialog;
   /** A string representing the chartPackage property given (or not) from a popup
    * configuration file. */
   chartPackage: string;
@@ -70,7 +69,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * header. To be passed to dialog-tstable for downloading files. */
   valueColumns: string[] = [];
   /** A string representing the button ID of the button clicked to open this dialog. */
-  windowID: string;
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
   windowManager: WindowManager = WindowManager.getInstance();
@@ -80,17 +79,20 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
 
   /**
    * @constructor For the DialogTSGraph Component.
-   * @param commonService Reference to the top level service OwfCommonService.
+   * @param commonService Reference to the injected Common library service.
    * @param dialog Reference to the service that creates Mat dialogs.
    * @param dialogRef Reference to this DialogTSGraphComponent.
    * @param matDialogData The incoming templateGraph object containing data about
    * from the graph template file.
    */
-  constructor(private commonService: OwfCommonService, private dialog: MatDialog,
-  private dialogRef: MatDialogRef<DialogTSGraphComponent>,
-  @Inject(MAT_DIALOG_DATA) matDialogData: any) {
+  constructor(
+    private commonService: OwfCommonService,
+    private dialog: MatDialog,
+    private dialogRef: MatDialogRef<DialogTSGraphComponent>,
+    @Inject(MAT_DIALOG_DATA) matDialogData: any
+  ) {
 
-    this.windowID = matDialogData.windowID;
+    this.windowId = matDialogData.windowId;
     this.featureProperties = matDialogData.featureProperties;
     this.chartPackage = matDialogData.chartPackage;
     this.downloadFileName = matDialogData.downloadFileName ? matDialogData.downloadFileName : undefined;
@@ -104,9 +106,9 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
   
 
   /**
-  * Initial function call when the Dialog component is created. Determines whether
-  * a CSV or StateMod file is to be read for graph creation.
-  */
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
+   */
   ngOnInit(): void {
     this.commonService.setMapConfigPath(this.mapConfigPath);
     this.commonService.setChartTemplateObject(this.graphTemplate);
@@ -123,7 +125,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    */
   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -136,7 +138,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
       this.forkJoinSub$.unsubscribe();
     }
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -149,8 +151,8 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
     //   this.attributeTable = this.attributeTable.concat(this.attributeTable);
     // }
 
-    var windowID = this.windowID + '-dialog-ts-table';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = this.windowId + '-dialog-ts-table';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
     // Create and use a MatDialogConfig object to pass to the DialogTSGraphComponent
@@ -163,7 +165,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
       featureProperties: this.featureProperties,
       isTSFile: this.attributeTableParams.isTSFile,
       TSArrayRef: this.attributeTableParams.TSArrayRef,
-      windowID: windowID,
+      windowId: windowId,
       valueColumns: this.attributeTableParams.valueColumns
     }
     const dialogRef: MatDialogRef<DialogTSTableComponent, any> = this.dialog.open(DialogTSTableComponent, {
@@ -177,7 +179,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
       maxHeight: "90vh",
       maxWidth: "90vw"
     });
-    this.windowManager.addWindow(windowID, WindowType.TABLE);
+    this.windowManager.addWindow(windowId, WindowType.TABLE);
   }
 
   /**
@@ -186,7 +188,7 @@ export class DialogTSGraphComponent implements OnInit, OnDestroy {
    * @param attributeTableParams The object that holds the data needed for creating
    * a TSTable dialog component.
    */
-  setAttributeTableParams(attributeTableParams: IM.AttributeTableParams): void {
+  setAttributeTableParams(attributeTableParams: AttributeTableParams): void {
     this.attributeTableParams = attributeTableParams;
   }
 

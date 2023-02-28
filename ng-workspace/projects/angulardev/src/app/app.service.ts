@@ -3,14 +3,15 @@ import { HttpClient }       from '@angular/common/http';
 
 import { Observable,
           firstValueFrom }  from 'rxjs';
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
+import { AppConfig,
+        OwfCommonService } from '@OpenWaterFoundation/common/services';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
 
-  constructor(private http: HttpClient, private commonService: OwfCommonService) { }
+  constructor(private commonService: OwfCommonService, private http: HttpClient) { }
 
 
   /**
@@ -18,7 +19,7 @@ export class AppService {
    * @param path The path or URL to the file needed to be read
    * @returns The JSON retrieved from the host as an Observable
    */
-  public getJSONData(path: string, type?: string, id?: string): Observable<any> {
+  getJSONData(path: string, type?: string, id?: string): Observable<any> {
     // This creates an options object with the optional headers property to add headers to the request. This could solve some
     // CORS issues, but is not completely tested yet
     // var options = {
@@ -35,7 +36,7 @@ export class AppService {
    * @param type Optional type of request sent, e.g. IM.Path.cPP. Used for error handling and messaging
    * @param id Optional app-config id to help determine where exactly an error occurred
    */
-  public getPlainText(path: string, type?: string, id?: string): Observable<any> {
+  getPlainText(path: string, type?: string, id?: string): Observable<any> {
     // This next line is important, as it tells our response that it needs to return plain text, not a default JSON object.
     const obj: Object = { responseType: 'text' as 'text' };
     return this.http.get<any>(path, obj);
@@ -44,9 +45,9 @@ export class AppService {
   /**
    * 
    */
-  public async loadConfigFiles() {
+  async loadConfigFiles() {
     // App Configuration. firstValueFrom has replaced: await (...).toPromise().
-    const appData = await firstValueFrom(this.http.get('assets/app/app-config.json'));
+    const appData = await firstValueFrom(this.http.get('assets/app/app-config.json')) as AppConfig;
     this.commonService.setAppConfig(appData);
 
     // Map Configuration
@@ -60,7 +61,7 @@ export class AppService {
    * file can be used e.g. ![Waldo](waldo.png) will be converted to ![Waldo](full/path/to/markdown/file/waldo.png)
    * @param doc The documentation string retrieved from the markdown file
    */
-  // public sanitizeDoc(doc: string, pathType: string): string {
+  // sanitizeDoc(doc: string, pathType: string): string {
   //   // Needed for a smaller scope when replacing the image links
   //   var _this = this;
   //   // If anywhere in the documentation there exists  ![any amount of text](

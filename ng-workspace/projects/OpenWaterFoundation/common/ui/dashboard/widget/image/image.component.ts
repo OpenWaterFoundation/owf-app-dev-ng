@@ -1,8 +1,9 @@
 import { Component,
-          Input }           from '@angular/core';
+          Input } from '@angular/core';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { ImageWidget,
+          OwfCommonService,
+          Path }  from '@OpenWaterFoundation/common/services';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class ImageComponent {
 
   /** The attribute provided to this component when created, e.g.
    *   <widget-image [imageWidget]="path/to/image.png"></widget-image> */
-  @Input('imageWidget') imageWidget: IM.ImageWidget;
+  @Input('imageWidget') imageWidget: ImageWidget;
   /** String array representing the type of error that occurred while building this
    * widget. Used by the error widget. */
   errorTypes: string[] = [];
@@ -28,7 +29,7 @@ export class ImageComponent {
 
   /**
    * 
-   * @param commonService The injected Common library service.
+   * @param commonService Reference to the injected Common library service.
    */
   constructor(private commonService: OwfCommonService) {}
 
@@ -50,11 +51,12 @@ export class ImageComponent {
       return;
     }
 
-    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.imageWidget.imagePath]);
+    this.fullDataPath = this.commonService.buildPath(Path.dbP, [this.imageWidget.imagePath]);
   }
 
   /**
-   * Called right after the constructor.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
 

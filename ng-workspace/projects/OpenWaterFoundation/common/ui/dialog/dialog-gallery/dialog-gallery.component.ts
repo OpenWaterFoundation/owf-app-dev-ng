@@ -22,41 +22,41 @@ import { WindowManager }       from '@OpenWaterFoundation/common/ui/window-manag
 })
 export class DialogGalleryComponent implements OnInit, OnDestroy {
   /** All features of a geoLayerView. */
-  public allFeatures: any;
+  allFeatures: any;
   /** The object containing an event action's id as the key, and the entire event
    * object from the popup template file as the value. Used for kebab menu Image 
    * Galleries. */
-  public eventActions: any;
+  eventActions: any;
   /** The object containing the type of event as the key (e.g. click-eCP) and the
    * entire event object from the popup template file. */
-  public eventObject: any;
+  eventObject: any;
   /** The initial index of the picture in the @var galleryImages array when this
    * DialogGalleryComponent was opened. */
   private featureIndex: number;
   /** Array of NgxGalleryOption objects containing optional data for creating the Gallery. */
-  public galleryOptions: NgxGalleryOptions[] = [];
+  galleryOptions: NgxGalleryOptions[] = [];
   /** Array of NgxGalleryImage objects for creating and showing images in the Gallery. */
-  public galleryImages: NgxGalleryImage[] = [];
+  galleryImages: NgxGalleryImage[] = [];
   /** The geoLayerId that the feature belongs to from the map configuration file. */
-  public geoLayerId: string;
+  geoLayerId: string;
   /** The geoLayerView that the feature belongs to from the map configuration file. */
-  public geoLayerView: any;
+  geoLayerView: any;
   /** The reference to the Leaflet map object. */
-  public mainMap: any;
+  mainMap: any;
   /** The array containing the result objects from Papaparse, with the headers of
    * the CSV file as keys, and the appropriate CSV column as the value. Each object
    * in the array counts as one line from the CSV file. */
-  public papaResult: any;
+  papaResult: any;
   /** The layer MapLayerItem. Each
    * element in the object contains the geoLayerId as the key, and the LayerGroup
    * object as the value. */
-  public mapLayerItem: any;
-  /** A unique string representing the windowID of this Dialog Component in the
+  mapLayerItem: any;
+  /** A unique string representing the windowId of this Dialog Component in the
    * WindowManager. */
-  public windowID: string;
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogGalleryComponent. */
   faXmark = faXmark;
 
@@ -64,26 +64,28 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
   /**
    * Creates and displays an Image Gallery with png, jpg, and similar files in a
    * Material Dialog.
-   * @param commonService The reference to the app service injected object.
+   * @param commonService Reference to the injected Common library service.
    * @param dialogRef The reference to the DialogTSGraphComponent. Used for creation
    * and sending of data.
-   * @param dataObject The object containing data passed from the Component that
+   * @param matDialogData The object containing data passed from the Component that
    * created this Dialog.
    */
-  constructor(public commonService: OwfCommonService,
-              public dialogRef: MatDialogRef<DialogGalleryComponent>,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any) {
+  constructor(
+    private commonService: OwfCommonService,
+    private dialogRef: MatDialogRef<DialogGalleryComponent>,
+    @Inject(MAT_DIALOG_DATA) private matDialogData: any
+  ) {
 
-    this.allFeatures = dataObject.data.allFeatures;
-    this.eventActions = dataObject.data.eventActions;
-    this.eventObject = dataObject.data.eventObject;
-    this.featureIndex = dataObject.data.featureIndex ? dataObject.data.featureIndex - 1 : 0;
-    this.geoLayerId = dataObject.data.geoLayerId;
-    this.geoLayerView = dataObject.data.geoLayerView;
-    this.papaResult = dataObject.data.papaResult;
-    this.mainMap = dataObject.data.mainMap;
-    this.mapLayerItem = dataObject.data.mapLayerItem;
-    this.windowID = this.geoLayerId + '-dialog-gallery';
+    this.allFeatures = this.matDialogData.data.allFeatures;
+    this.eventActions = this.matDialogData.data.eventActions;
+    this.eventObject = this.matDialogData.data.eventObject;
+    this.featureIndex = this.matDialogData.data.featureIndex ? this.matDialogData.data.featureIndex - 1 : 0;
+    this.geoLayerId = this.matDialogData.data.geoLayerId;
+    this.geoLayerView = this.matDialogData.data.geoLayerView;
+    this.papaResult = this.matDialogData.data.papaResult;
+    this.mainMap = this.matDialogData.data.mainMap;
+    this.mapLayerItem = this.matDialogData.data.mapLayerItem;
+    this.windowId = this.geoLayerId + '-dialog-gallery';
   }
 
 
@@ -213,7 +215,8 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Called once after the constructor.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     // this.commonService.setMapConfigPath(this.mapConfigPath);
@@ -224,9 +227,9 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    * Closes the Mat Dialog popup when the Close button is clicked, and removes this
    * dialog's window ID from the windowManager.
    */
-  public onClose(): void {
+  onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -234,9 +237,9 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    * link is clicked on in the dialog that opens a new map, make sure to close the
    * dialog and remove it from the window manager.
    */
-   public ngOnDestroy(): void {
+   ngOnDestroy(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -244,7 +247,7 @@ export class DialogGalleryComponent implements OnInit, OnDestroy {
    * and zoom the map to them.
    * @param index The index of the image clicked on in the NgxGalleryImage array.
    */
-  public zoomToFeatures(index: number): void {
+  zoomToFeatures(index: number): void {
     // Attempt to create the layers array, with each feature object as an element.
     // Use the Leaflet getLayers() LayerGroup method to obtain an array of layers.
     var layers = this.mapLayerItem.leafletLayer.getLayers();

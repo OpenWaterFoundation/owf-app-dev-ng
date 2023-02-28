@@ -13,17 +13,17 @@
       <!-- If the geoLayerView contains the separatorBefore property, insert this
         divider to separate the background map(s) above from the one(s) below -->
       <div *ngIf="backgroundGeoLayerView.properties.separatorBefore === 'true'"
-            class="background-geoLayerView-divider">
+      class="background-geoLayerView-divider">
       </div>
       
       <div class="background-layer-control-container">
           
         <div class="radio-container">
           <input type="radio"
-                  id="{{backgroundGeoLayerView.name}}-radio"
-                  name="background-layer"
-                  value="{{backgroundGeoLayerView.name}}"
-                  (click)="selectBackgroundLayer(backgroundGeoLayerView.name)"/>
+          id="{{backgroundGeoLayerView.name}}-radio"
+          name="background-layer"
+          value="{{backgroundGeoLayerView.name}}"
+          (click)="selectBackgroundLayer(backgroundGeoLayerView.name)"/>
         </div>
           
         <div class="label-container">

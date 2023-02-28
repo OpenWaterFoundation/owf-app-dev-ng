@@ -8,14 +8,18 @@ import { Component,
 import { BehaviorSubject,
           forkJoin,
           Observable,
-          Subject,
           Subscription }     from 'rxjs';
 
 import structuredClone       from '@ungap/structured-clone';
 
-import { EventService,
-          OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM               from '@OpenWaterFoundation/common/services';
+import { AttributeTableParams, ChartDialog, ChartDisplayType, ChartWidget, DatastoreType, EventService,
+          GraphData,
+          GraphProp,
+          GraphTemplate,
+          OwfCommonService, 
+          Path, 
+          PopulateGraph,
+          SelectEvent} from '@OpenWaterFoundation/common/services';
 import { DataUnits }         from '@OpenWaterFoundation/common/util/io';
 import { TS }                from '@OpenWaterFoundation/common/ts';
 import { DatastoreManager }  from '@OpenWaterFoundation/common/util/datastore';
@@ -45,14 +49,14 @@ export class ChartComponent implements OnInit, OnDestroy {
   private allResultsSub: Subscription;
   /** The attribute provided to this component when created from a dialog, e.g.
    * <core-chart [chartDialog]="widget"></core-chart> */
-  @Input('chartDialog') chartDialog: IM.ChartDialog;
+  @Input('chartDialog') chartDialog: ChartDialog;
   /** The way this Chart component is being displayed in the InfoMapper. */
-  @Input('chartDisplayType') chartDisplayType: IM.ChartDisplayType;
+  @Input('chartDisplayType') chartDisplayType: ChartDisplayType;
   /** Set to true if any errors occur in the Chart Widget. */
   private chartError: BehaviorSubject<boolean> = new BehaviorSubject(false);
   /** The attribute provided to this component when created from a widget, e.g.
   * <core-chart [chartWidget]="widget"></core-chart> */
-  @Input('chartWidget') chartWidget: IM.ChartWidget;
+  @Input('chartWidget') chartWidget: ChartWidget;
   /** The BehaviorSubject that is set to whether this widget is currently getting
   * data, or has finished and ready to display. */
   private dataLoading: BehaviorSubject<boolean> = new BehaviorSubject(true);
@@ -75,9 +79,9 @@ export class ChartComponent implements OnInit, OnDestroy {
   private dsManager: DatastoreManager = DatastoreManager.getInstance();
   /** The graph template object retrieved from the popup configuration file property
   * resourcePath. */
-  graphTemplate: IM.GraphTemplate;
+  graphTemplate: GraphTemplate;
   /** The original unparsed graph template file. */
-  graphTemplatePrime: IM.GraphTemplate;
+  graphTemplatePrime: GraphTemplate;
   /** The object containing all of the layer's feature properties. */
   featureProperties: any;
   /** Subscription for the initial files to read if provided in the Chart Widget. */
@@ -96,7 +100,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   TSIDLocation: string;
   /** EventEmitter that alerts the Map component (parent) that an update has happened,
    * and sends the basin name. */
-  @Output() updateAttributeTable = new EventEmitter<IM.AttributeTableParams>();
+  @Output() updateAttributeTable = new EventEmitter<AttributeTableParams>();
   /** Subscription for reading in a graph template file if it hasn't been retrieved yet. */
   private updateResultsSub: Subscription;
   /**
@@ -107,11 +111,15 @@ export class ChartComponent implements OnInit, OnDestroy {
 
   /**
   * @constructor for the DialogTSGraph Component.
-  * @param commonService A reference to the top level service OwfCommonService.
+  * @param commonService Reference to the injected Common library service.
   */
-  constructor(private commonService: OwfCommonService,
+  constructor(
+    private commonService: OwfCommonService,
     private chartService: ChartService,
-    private eventService: EventService) { }
+    private eventService: EventService
+  ) {
+    
+  }
 
   /**
    * Observable used in the Chart Widget that's used with an async pipe in the template
@@ -392,7 +400,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   * @param totalGraphConfig An array of PopulateGraph typed objects that contain all time
   * series data planned to be shown on the plotly graph.
   */
-  private createPlotlyGraph(totalGraphConfig: IM.PopulateGraph[]): void {
+  private createPlotlyGraph(totalGraphConfig: PopulateGraph[]): void {
 
     // The final data array of objects that is given to Plotly.react to create the graph.
     var finalData: { x: number[], y: number[], type: string }[] = [];
@@ -545,8 +553,8 @@ export class ChartComponent implements OnInit, OnDestroy {
   * Contains at least one result array with its index in the graphTemplate data
   * array.
   */
-  private makeDelimitedPlotlyObject(delimitedData: any, graphData: IM.GraphData,
-    index: number): IM.PopulateGraph {
+  private makeDelimitedPlotlyObject(delimitedData: any, graphData: GraphData,
+    index: number): PopulateGraph {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     // These two are the string representing the keys in the current result.
@@ -576,8 +584,8 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     // Return the PopulateGraph instance that will be passed to create the Plotly graph.
     return {
-      chartMode: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.cm),
-      chartType: this.chartService.verifyPlotlyProp(graphType, IM.GraphProp.ct),
+      chartMode: this.chartService.verifyPlotlyProp(graphType, GraphProp.cm),
+      chartType: this.chartService.verifyPlotlyProp(graphType, GraphProp.ct),
       dataLabels: xAxisLabels,
       datasetData: yAxisData,
       datasetBackgroundColor: backgroundColor,
@@ -596,7 +604,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     // TODO jpkeahey 2022-04-27: This might need to be in a for loop for multiple
     // Event objects in the eventHandlers.
-    this.eventService.getWidgetEvent(this.chartWidget).subscribe((selectEvent: IM.SelectEvent) => {
+    this.eventService.getWidgetEvent(this.chartWidget).subscribe((selectEvent: SelectEvent) => {
 
       // Check if the initial selectEvent was passed.
       if (selectEvent === null) {
@@ -606,9 +614,9 @@ export class ChartComponent implements OnInit, OnDestroy {
       // If graphTemplatePrime hasn't been set yet, read it in and set it here.
       if (!this.graphTemplatePrime) {
         this.updateResultsSub = this.commonService.getJSONData(
-          this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
+          this.commonService.buildPath(Path.dbP, [this.chartWidget.graphTemplatePath])
         ).subscribe({
-          next: (graphTemplate: IM.GraphTemplate) => {
+          next: (graphTemplate: GraphTemplate) => {
             this.graphTemplatePrime = graphTemplate;
             // Update the chart with the new feature object data.
             this.updateChartVariables(selectEvent);
@@ -626,7 +634,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   * @param timeSeries The array of all Time Series objects retrieved asynchronously
   * from the StateMod file.
   */
-  private makeTSPlotlyObject(timeSeries: TS, graphData: IM.GraphData, index: number): IM.PopulateGraph {
+  private makeTSPlotlyObject(timeSeries: TS, graphData: GraphData, index: number): PopulateGraph {
 
     var chartConfigProp = this.graphTemplate.product.subProducts[0].properties;
     // 
@@ -669,36 +677,36 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     // Return the PopulateGraph instance that will be passed to create the Plotly graph.
     return {
-      chartMode: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.cm),
-      chartType: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.ct),
+      chartMode: this.chartService.verifyPlotlyProp(chartType, GraphProp.cm),
+      chartType: this.chartService.verifyPlotlyProp(chartType, GraphProp.ct),
       endDate: end,
-      fillType: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.fl),
+      fillType: this.chartService.verifyPlotlyProp(chartType, GraphProp.fl),
       plotlyDatasetData: yAxisData,
       plotlyXAxisLabels: xAxisLabels,
-      datasetBackgroundColor: this.chartService.verifyPlotlyProp(backgroundColor, IM.GraphProp.bc),
+      datasetBackgroundColor: this.chartService.verifyPlotlyProp(backgroundColor, GraphProp.bc),
       graphFileType: 'TS',
       legendLabel: legendLabel.trim().length !== 0 ? legendLabel : TSAlias,
-      lineWidth: this.chartService.verifyPlotlyProp(lineWidth, IM.GraphProp.lw),
-      stackGroup: this.chartService.verifyPlotlyProp(chartType, IM.GraphProp.sk),
+      lineWidth: this.chartService.verifyPlotlyProp(lineWidth, GraphProp.lw),
+      stackGroup: this.chartService.verifyPlotlyProp(chartType, GraphProp.sk),
       startDate: start
     }
   }
 
   /**
-  * Initial function call when the Dialog component is created. Determines whether
-  * a CSV or StateMod file is to be read for graph creation.
-  */
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
+   */
   ngOnInit(): void {
     
     this.isChartError$ = this.isChartError;
 
     switch (this.chartDisplayType) {
-      case IM.ChartDisplayType.dlg:
+      case ChartDisplayType.dlg:
         this.setupForDialog();
         break;
-      case IM.ChartDisplayType.emd: break;
-      case IM.ChartDisplayType.ful: break;
-      case IM.ChartDisplayType.wid:
+      case ChartDisplayType.emd: break;
+      case ChartDisplayType.ful: break;
+      case ChartDisplayType.wid:
         this.checkWidgetObject();
         if (this.eventService.hasSelectEvent(this.chartWidget) === true) {
           this.listenForEvent();
@@ -738,7 +746,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 
     var chartError = false;
     var allDataObservables: Observable<any>[] = [];
-    var allGraphObjects: IM.PopulateGraph[] = [];
+    var allGraphObjects: PopulateGraph[] = [];
     // The array of all graphData objects in the graph template file.
     const graphData = this.graphTemplate.product.subProducts[0].data;
 
@@ -799,12 +807,12 @@ export class ChartComponent implements OnInit, OnDestroy {
             var datastore = this.dsManager.getDatastore(TSID.datastore);
 
             switch (datastore.type) {
-              case IM.DatastoreType.delimited:
+              case DatastoreType.delimited:
                 allGraphObjects.push(this.makeDelimitedPlotlyObject(result, graphData[i], i));
                 break;
-              case IM.DatastoreType.dateValue:
-              case IM.DatastoreType.stateMod:
-              case IM.DatastoreType.ColoradoHydroBaseRest:
+              case DatastoreType.dateValue:
+              case DatastoreType.stateMod:
+              case DatastoreType.ColoradoHydroBaseRest:
                 this.isTSFile = true;
                 allGraphObjects.push(this.makeTSPlotlyObject(result, graphData[i], i));
                 break;
@@ -985,10 +993,10 @@ export class ChartComponent implements OnInit, OnDestroy {
   private setupForWidget(): void {
 
     this.initialResultsSub = this.commonService.getJSONData(
-      this.commonService.buildPath(IM.Path.dbP, [this.chartWidget.graphTemplatePath])
+      this.commonService.buildPath(Path.dbP, [this.chartWidget.graphTemplatePath])
     ).subscribe({
 
-      next: (graphTemplate: IM.GraphTemplate) => {
+      next: (graphTemplate: GraphTemplate) => {
 
         this.graphTemplatePrime = graphTemplate;
         // Create a clone of the original graph template file.
@@ -1014,7 +1022,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   * @param selectEvent The ChartSelector communicator object passed by the BehaviorSubject
   * when it has been updated.
   */
-  private updateChartVariables(selectEvent: IM.SelectEvent): void {
+  private updateChartVariables(selectEvent: SelectEvent): void {
 
     this.featureProperties = selectEvent.selectedItem;
     this.graphTemplate = structuredClone(this.graphTemplatePrime);

@@ -2,8 +2,7 @@ import { Observable }       from 'rxjs/internal/Observable';
 import { TS }               from '@OpenWaterFoundation/common/ts';
 
 import { StateModTS }       from '@OpenWaterFoundation/common/dwr/statemod';
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { Datastore, OwfCommonService, Path, TSID } from '@OpenWaterFoundation/common/services';
 
 
 // @dynamic
@@ -35,12 +34,12 @@ export class StateModDatastore {
   /**
    * Sets up and calls the DateValueTS class's readTimeSeries() method to read in
    * and create a TS object.
-   * @param commonService The top level Common library service for utility methods.
+   * @param commonService Reference to the injected Common library service.
    * @param datastore The Datastore object from the Datastore manager.
    * @param fullTSID TSID object that has been parsed from a full TSID string.
    * @returns The StateMod data as an observable of type TS.
    */
-  public static readTimeSeries(commonService: OwfCommonService, datastore: IM.Datastore, fullTSID: IM.TSID): Observable<TS> {
+  static readTimeSeries(commonService: OwfCommonService, datastore: Datastore, fullTSID: TSID): Observable<TS> {
 
     var convertedPath: string;
 
@@ -52,7 +51,7 @@ export class StateModDatastore {
 
     return new StateModTS(commonService).readTimeSeries(
       fullTSID.location,
-      commonService.buildPath(IM.Path.sMP, [convertedPath]),
+      commonService.buildPath(Path.sMP, [convertedPath]),
       null,
       null,
       null,

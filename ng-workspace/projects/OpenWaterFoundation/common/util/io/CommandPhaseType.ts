@@ -12,17 +12,17 @@ export class CommandPhaseType {
 	INITIALIZATION indicates that the command is being initialized, including
 	construction and validation of parameters.
 	*/ 
-	public static INITIALIZATION = new CommandPhaseType(0, "INITIALIZATION");
+	static INITIALIZATION = new CommandPhaseType(0, "INITIALIZATION");
 	
 	/**
 	 * DISCOVERY is the phase where a command is partially run, in order to provide data to dependent commands.
 	 */
-	public static DISCOVERY = new CommandPhaseType(1, "DISCOVERY");
+	static DISCOVERY = new CommandPhaseType(1, "DISCOVERY");
 	
 	/**
 	 * RUN indicates the phase where the command is being run.
 	 */
-	public static RUN = new CommandPhaseType(2, "RUN");
+	static RUN = new CommandPhaseType(2, "RUN");
 	
 	//private int __type;
 	/**
@@ -38,7 +38,7 @@ export class CommandPhaseType {
 	/**
 	 * Return a String representation of the command processing phase.
 	 */
-	public toString (): string {
+	toString (): string {
 		return this.__typename;
 	}
 }

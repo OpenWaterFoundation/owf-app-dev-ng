@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 
-import * as IM       from '@OpenWaterFoundation/common/services';
-
 
 @Component({
   selector: 'widget-diagnostics',

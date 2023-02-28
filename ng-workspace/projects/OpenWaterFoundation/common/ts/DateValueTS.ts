@@ -97,7 +97,7 @@ export class DateValueTS {
   @param units Units to convert to.
   @param read_data Indicates whether data should be read (false=no, true=yes).
   */
-  public readTimeSeries(tsident_string: string, filename: string,
+  readTimeSeries(tsident_string: string, filename: string,
     date1: DateTime, date2: DateTime, units: string, read_data: boolean): Observable<TS> {
 
     var ts: TS = null;
@@ -639,7 +639,7 @@ All data are reset, except for the identifier, which is assumed to have been set
       // alias only, need to create a time series of the correct type using the header information...
       if (req_ts.getLocation() === "" && req_ts.getAlias() !== "") {
         // The requested time series is only identified by the alias and needs to be recreated for the full
-        // identifier.  This case is configured in the calling public readTimeSeries() method.
+        // identifier.  This case is configured in the calling readTimeSeries() method.
         identifier = identifier_v[req_ts_i].trim();
         //Message.printStatus ( 1, routine,"SAMX creating new req_ts for \"" +
         //identifier + "\" alias \"" + req_ts.getAlias() +"\"");
@@ -1061,7 +1061,7 @@ All data are reset, except for the identifier, which is assumed to have been set
           // This introduces a performance hit - maybe need to add a boolean array for each time series
           // to be able to check whether NaN is the missing - then can avoid the check.
           // For now just check the string.
-          if (Number(svalue) === NaN || (svalue == null) || (svalue.length == 0)) {
+          if (Number.isNaN(svalue) || (svalue == null) || (svalue.length == 0)) {
             // Treat the data value as missing.
             dvalue = ts_array[0].getMissing();
           }

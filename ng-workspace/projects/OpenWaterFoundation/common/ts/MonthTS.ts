@@ -23,7 +23,7 @@ export class MonthTS extends TS {
   Allocate the data space for the time series.  The start and end dates and the
   data interval multiplier must have been set.  Initialize the space with the missing data value.
   */
-  public allocateDataSpace(): number {
+  allocateDataSpace(): number {
     return this.allocateDataSpace1 ( this._missing );
   }
 
@@ -33,7 +33,7 @@ export class MonthTS extends TS {
   @param value Value to initialize data space.
   @return 1 if the allocation fails, 0 if a success.
   */
-  public allocateDataSpace1 ( value: number ): number {    
+  allocateDataSpace1 ( value: number ): number {    
     // let routine="MonthTS.allocateDataSpace";
     let	iYear: number, nyears = 0;
 
@@ -107,7 +107,7 @@ export class MonthTS extends TS {
   previous data values will be retained.  If false, the array will be reallocated and initialized to spaces.
   @exception Exception if there is an error allocating the memory.
   */
-  public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boolean ): void {
+  allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boolean ): void {
     var	routine = "MonthTS.allocateDataFlagSpace", message: string;
     var	i: number, nyears = 0;
 
@@ -185,7 +185,7 @@ export class MonthTS extends TS {
   @param end_date The last date of the period.
   @param interval_mult The time series data interval multiplier.
   */
-  public calculateDataSize ( start_date: DateTime, end_date: DateTime, interval_mult: number ): number {
+  calculateDataSize ( start_date: DateTime, end_date: DateTime, interval_mult: number ): number {
     // String routine = "MonthTS.calculateDataSize";
     let datasize = 0;
 
@@ -224,7 +224,7 @@ export class MonthTS extends TS {
   @return a TSData for the specified date/time.
   @see TSData
   */
-  public getDataPoint ( date: DateTime, tsdata: TSData ): TSData {
+  getDataPoint ( date: DateTime, tsdata: TSData ): TSData {
     if ( tsdata === null ) {
       // Allocate it (this is the only method that uses it and don't want to waste memory)...
       tsdata = new TSData();
@@ -310,7 +310,7 @@ export class MonthTS extends TS {
   @return The data value corresponding to the date, or missing if the date is not found.
   @param date Date of interest.
   */
-  public getDataValue( date: DateTime ): number {
+  getDataValue( date: DateTime ): number {
     // Do not define routine here to increase performance.
 
     if ( this._data == null ) {
@@ -364,7 +364,7 @@ export class MonthTS extends TS {
   @param date Date of interest.
   @param value Value corresponding to date.
   */
-  public setDataValueTwo( date: DateTime, value: number ): void {
+  setDataValueTwo( date: DateTime, value: number ): void {
     // Do not define routine here to increase performance.
     // Check the date coming in...
 
@@ -406,7 +406,7 @@ export class MonthTS extends TS {
   @param data_flag Data flag for value.
   @param duration Duration for value (ignored - assumed to be 1-month or instantaneous depending on data type).
   */
-  public setDataValueFour ( date: DateTime, value: number, data_flag: string, duration: number ): void {
+  setDataValueFour ( date: DateTime, value: number, data_flag: string, duration: number ): void {
     // Do not define routine here to increase performance.
 
     // Check the date coming in...

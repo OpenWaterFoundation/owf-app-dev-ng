@@ -60,7 +60,7 @@ export class DataFormat {
   (use with StringUtil.formatString()).
   @see RTi.Util.String.StringUtil#formatString
   */
-  public getFormatString ( ): string {
+  getFormatString ( ): string {
     return this._format_string;
   }
 
@@ -69,7 +69,7 @@ export class DataFormat {
   @return The precision (number of digits after the decimal point) to use for
   formatting.
   */
-  public getPrecision ( ): number {
+  getPrecision ( ): number {
     return this._precision;
   }
 
@@ -77,7 +77,7 @@ export class DataFormat {
   Return the width of the output when formatting.
   @return The width of the output when formatting.
   */
-  public getWidth ( ): number {
+  getWidth ( ): number {
     return this._width;
   }
 
@@ -111,7 +111,7 @@ export class DataFormat {
   @param format_string Format string to use for output.
   @see RTi.Util.String.StringUtil#formatString
   */
-  public setFormatString1 ( format_string: string ): void {
+  setFormatString1 ( format_string: string ): void {
     if ( format_string == null ) {
       return;
     }
@@ -159,7 +159,7 @@ export class DataFormat {
   Set the number of digits after the decimal point to use for output.
   @param precision Number of digits after the decimal point.
   */
-  public setPrecision ( precision: number ): void {
+  setPrecision ( precision: number ): void {
     this._precision = precision;
     this.setFormatString();
   }
@@ -168,7 +168,7 @@ export class DataFormat {
   Set the total number of characters to use for output.
   @param width Total number of characters for output.
   */
-  public setWidth ( width: number ): void {
+  setWidth ( width: number ): void {
     this._width = width;
     this.setFormatString();
   }
@@ -177,7 +177,7 @@ export class DataFormat {
   Return string version.
   @return A string representation of the format (e.g., "%10.2f").
   */
-  public toString ( ): string {
+  toString ( ): string {
     return this._format_string;
   }
 

@@ -12,7 +12,15 @@ These elements will only be added if they are applicable for the new version. Ne
 versions will have the date of deployment after the version number, and will contain
 X's if the version is not yet released.
 
-# 4.2.0 #
+# 4.2.1 (2023-02-27) #
+
+### Refactoring ###
+
+* Made more identical code comments consistent (e.g. made each injection of the OWF
+Common Service say the same thing everywhere).
+* Documented more code and types.
+
+# 4.2.0 (2023-02-20) #
 
 ### Bug Fixes ###
 
@@ -693,7 +701,7 @@ rely on map component code.
 
 ### Bug Fixes ###
 
-* Fixed a Window Manager windowID issue, where the variable in the InfoMapper was still called
+* Fixed a Window Manager windowId issue, where the variable in the InfoMapper was still called
 buttonID, an old leftover when the ID was only being created in a Leaflet popup button. This will
 stop a Text and Graph Dialog from opening just once.
 * Fixed a bug where a address would be added to the map regardless if it was in a feature or not.

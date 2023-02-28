@@ -27,7 +27,7 @@ appropriate.  Use this method when the data flags need to be allocated after the
 previous data values will be retained.  If false, the array will be reallocated and initialized to spaces.
 @exception Exception if there is an error allocating the memory.
 */
-public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boolean ): void {
+allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boolean ): void {
   var routine="YearTS.allocateDataFlagSpace", message: string;
 
 	if ( (this._date1 == null) || (this._date2 == null) ) {
@@ -92,7 +92,7 @@ public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boole
   Allocate the data space and initialize using the default missing data value.
   @return Zero if successful, non-zero if not.
   */
-  public allocateDataSpace(): number {
+  allocateDataSpace(): number {
     return this.allocateDataSpace1 ( this._missing );
   }
 
@@ -101,7 +101,7 @@ public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boole
   @return Zero if successful, non-zero if not.
   @param value Value used to initialize data space.
   */
-  public allocateDataSpace1( value: number ): number {
+  allocateDataSpace1( value: number ): number {
     if ( (this._date1 == null) || (this._date2 == null) ) {
       console.warn ( 2, "YearTS.allocateDataSpace",
       "Dates have not been set.  Cannot allocate data space" );
@@ -154,7 +154,7 @@ public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boole
   @param end_date The last date of the period.
   @param interval_mult The time series data interval multiplier.
   */
-  public static calculateDataSize ( start_date: DateTime, end_date: DateTime, interval_mult: number ): number {
+  static calculateDataSize ( start_date: DateTime, end_date: DateTime, interval_mult: number ): number {
     var routine = "YearTS.calculateDataSize";
 
     if ( start_date == null ) {
@@ -193,7 +193,7 @@ public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boole
   @return a TSData for the specified date/time.
   @see TSData
   */
-  public getDataPoint ( date: DateTime, tsdata: TSData ): TSData {
+  getDataPoint ( date: DateTime, tsdata: TSData ): TSData {
     // Initialize data to most of what we need...
     if ( tsdata == null ) {
       // Allocate it...
@@ -246,7 +246,7 @@ public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boole
   not found in the period, a missing data value is returned.
   @param date Date of interest.
   */
-  public getDataValue ( date: DateTime ): number
+  getDataValue ( date: DateTime ): number
   {	// Check the date coming in...
 
     if ( (this._data == null) || (date == null) ) {
@@ -281,7 +281,7 @@ public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boole
   @param date Date to set value.
   @param value Value for the date.
   */
-  public setDataValueTwo( date: DateTime, value: number ): void {
+  setDataValueTwo( date: DateTime, value: number ): void {
     if ( date === null ) {
       return;
     }
@@ -320,7 +320,7 @@ public allocateDataFlagSpace ( initialValue: string, retainPreviousValues: boole
   @param duration Duration for value (ignored - assumed to be 1-day or
   instantaneous depending on data type).
   */
-  public setDataValueFour ( date: DateTime, value: number, data_flag: string, duration: number ): void {
+  setDataValueFour ( date: DateTime, value: number, data_flag: string, duration: number ): void {
     if ( date == null ) {
       return;
     }

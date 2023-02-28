@@ -1,9 +1,9 @@
 // The interfaces and enums below are typed for use throughout the common library
-// as well as the ability to be utilized by outside consuming applications.
+// as well as the ability to be utilized by consuming applications.
 
 import { BehaviorSubject } from "rxjs";
 
-// ENUM
+/////////////////////////////////// ENUMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /** The different ways a Chart can be displayed in the InfoMapper. */
 export enum ChartDisplayType {
@@ -21,6 +21,9 @@ export enum DatastoreType {
   stateMod = 'owf.datastore.statemod'
 }
 
+/**
+ * Currently unused.
+ */
 export enum DataType {
   geoJson = 'geoJson',
   CDSSWebService = 'CDSSWebService'
@@ -139,9 +142,9 @@ export enum Widget {
 //   TSGRAPH = 'TSGraph'
 // }
 
-// INTERFACES
+///////////////////////////////// INTERFACES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/////////////////////////////// APPLICATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//////////////////////////////// APPLICATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /** The main AppConfig JSON object created by the user. */
 export interface AppConfig {
@@ -172,6 +175,7 @@ export interface GeoMapProject {
   keywords?: string[];
   geoMaps?: GeoMap[];
 }
+
 /** The GeoMap JSON object created by the GeoProcessor. */
 export interface GeoMap {
   geoMapId?: string;
@@ -186,6 +190,7 @@ export interface GeoMap {
   geoLayers?: GeoLayer[];
   geoLayerViewGroups?: GeoLayerViewGroup[];
 }
+
 /** The GeoLayer JSON object created by the GeoProcessor. */
 export interface GeoLayer {
   geoLayerId?: string;
@@ -203,6 +208,7 @@ export interface GeoLayer {
   },
   history?: string[];
 }
+
 /** The GeoLayerViewGroup JSON object created by the GeoProcessor. */
 export interface GeoLayerViewGroup {
   geoLayerViewGroupId?: string;
@@ -217,6 +223,7 @@ export interface GeoLayerViewGroup {
   },
   geoLayerViews?: GeoLayerView[];
 }
+
 /** The GeoLayerView JSON object created by the GeoProcessor. */
 export interface GeoLayerView {
   geoLayerViewId?: string;
@@ -298,7 +305,7 @@ export interface EventHandler {
   }
 }
 
-////////////////////////////////// MENUS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+/////////////////////////////////// MENUS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /** The MainMenu JSON object created by the user. */
 export interface MainMenu {
@@ -335,7 +342,7 @@ export interface SubMenu {
   visible?: any;
 }
 
-///////////////////////////////// LEAFLET \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////// LEAFLET \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   
 /** Used for creating Bounds objects that contain Latitude and Longitude
  * bounds for zooming on a Leaflet map. */
@@ -359,7 +366,7 @@ export interface LeafletEvent {
   symbol?: any;
 }
 
-///////////////////////////////// GRAPHS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////// GRAPHS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 /** Properties to be used with creating a D3 chart. */
 export interface D3Prop {
@@ -583,9 +590,9 @@ export interface WidgetTileStyle {
   textDecoration?: string;
 }
 
-//////////////////////////// DASHBOARD WIDGETS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+///////////////////////////// DASHBOARD WIDGETS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/** Dashboard widget object. */
+/** Base interface for widget objects shown in a dashboard. */
 export interface DashboardWidget {
   type: string;
   name: string;
@@ -597,19 +604,23 @@ export interface DashboardWidget {
   errorTypes?: string[];
 }
 
+/**Chart widget properties.*/
 export interface ChartWidget extends DashboardWidget {
   graphTemplatePath: string;
 }
 
+/**Image widget properties.*/
 export interface ImageWidget extends DashboardWidget {
   imagePath: string;
   title?: string;
 }
 
+/**Map widget properties.*/
 export interface MapWidget extends DashboardWidget {
   mapConfigPath: string;
 }
 
+/**Selector widget properties. */
 export interface SelectorWidget extends DashboardWidget {
   dataPath: string;
   dataFormat: string;
@@ -619,6 +630,7 @@ export interface SelectorWidget extends DashboardWidget {
   skipDataLines?: number;
 }
 
+/**Status Indicator widget properties. */
 export interface StatusIndicatorWidget extends DashboardWidget {
   title?: string;
   dataPath?: string;
@@ -638,6 +650,7 @@ export interface StatusIndicatorWidget extends DashboardWidget {
   referenceValueTooltip?: string;
 }
 
+/** Title widget properties. */
 export interface TextWidget extends DashboardWidget {
   contentType: string;
   graphTemplatePath: string;
@@ -645,27 +658,31 @@ export interface TextWidget extends DashboardWidget {
   text?: string;
 }
 
+/** Title widget properties. */
 export interface TitleWidget extends DashboardWidget {
   title: string;
 }
 
+/** Used when an event occurs in a dashboard widget that will effect another widget. */
 export interface WidgetEvent {
   widgetName?: string;
 }
 
-/**
- * Communicator object for passing necessary data from the Selector Widget to
- * the Chart Widget.
- */
- export interface SelectEvent extends WidgetEvent {
+/** Communicator object for passing necessary data from the Selector Widget to
+ * the Chart Widget. */
+export interface SelectEvent extends WidgetEvent {
   selectedItem?: any;
 }
 
+/** Handler for dealing with multiple widgets on one dasboard that can interact with
+ * each other. */
 export interface WidgetEventHandler {
   widgetName: string;
   eventType: string;
 }
 
+/** Each widget that is currently listening for events. BehaviorSubject will be subscribed
+ * to by the listening widget. */
 export interface ListenedToWidget {
   name: string;
   behaviorSubject: BehaviorSubject<WidgetEvent>
@@ -673,15 +690,18 @@ export interface ListenedToWidget {
 
 /////////////////////////////// STORY CONFIG \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+/** Top level Story config object. */
 export interface StoryConf {
   story: StoryMain;
 }
 
+/** Main Story object. Holds all story chapters. */
 export interface StoryMain {
   name: string;
   chapters: StoryChapters[];
 }
 
+/** Each chapter in a story. */
 export interface StoryChapters {
   name: string;
   tooltip?: string;
@@ -690,9 +710,7 @@ export interface StoryChapters {
 
 //////////////////////////////// TIME SERIES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/**
- * 
- */
+/** Datastore to be used by an InfoMapper's app config object. */
 export interface Datastore {
   name?: string,
   type?: string,
@@ -708,8 +726,9 @@ export interface TSID {
   path?: string;
 }
 
-///////////////////////////// TELEMETRY STATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+///////////////////////////// TELEMETRY STATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+/** Telemetry Station imported from TSTool. */
 export interface TelStation {
   abbrev: string;
   contrArea: number;
@@ -748,6 +767,7 @@ export interface TelStation {
   wdid: string;
 }
 
+/** Telemetry Station Data Type imported from TSTool. */
 export interface TelStationDataType {
   abbrev: string;
   contrArea: number;
@@ -781,6 +801,7 @@ export interface TelStationDataType {
   wdid: string;
 }
 
+/** Telemetry Time Series imported from TSTool. */
 export interface TelTimeSeries {
   abbrev: string;
   flagA: string;
@@ -796,9 +817,7 @@ export interface TelTimeSeries {
 
 /////////////////////////////////// TREE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/**
- * Sent from each IM Builder node-menu component to the main Build component.
- */
+/** Sent from each IM Builder node-menu component to the main Build component. */
 export interface MenuChoice {
   choiceType: string;
   node: TreeFlatNode;
@@ -815,9 +834,7 @@ export interface TreeFlatNode {
   flatLevel?: number;
 }
 
-/**
- * Used by the Angular Material Tree Control and Data Source in the IM Builder.
- */
+/** Used by the Angular Material Tree Control and Data Source in the IM Builder. */
 export interface TreeNodeData extends TreeNode<TreeNodeData> {
   level: string;
   name: string;
@@ -828,9 +845,7 @@ export interface TreeNodeData extends TreeNode<TreeNodeData> {
 
 /////////////////////////////////// FILE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/**
- * Used by application file explorer components.
- */
+/** Used by application file explorer components. */
 export interface FileNode {
   id?: string;
   isFolder: boolean;
@@ -840,56 +855,33 @@ export interface FileNode {
 
 ////////////////////////////////// SEARCH \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/**
- * 
- */
-export interface Keyword {
-  word: string;
-  score: number;
-}
-
-/**
- * Used for ranking global searches in applications.
- */
-export interface KeywordPage {
-  [key: string]: Keyword[];
-}
-
-/**
- * 
- */
+/** Item that can be added to the Lunr search index. */
 export interface SearchItem {
   title: string;
   text?: string;
   keywords?: string;
 }
 
-/**
- * 
- */
+/** Contains metadata for a SearchItem that shouldn't be searchable in the index,
+ * but is needed for displaying the property's results in the search table. */
 export interface SearchItemMetadata {
   routerPath: string;
   type: string;
 }
 
-/**
- * 
- */
+/** Contains all search result metadata items with a unique string used as the key. */
 export interface SearchItemsMetadata {
   [key: string]: SearchItemMetadata;
 }
 
-/**
- * Optional choices to enhance a global application search.
- */
+/** Optional choices to enhance a global application search. */
 export interface SearchOptions {
+  contentPageSearch: boolean;
   keywordSearch: boolean;
   fuzzySearch: boolean;
 }
 
-/**
- * 
- */
+/** Used by the Angular Material table to display the results of a search. */
 export interface SearchResultsDisplay {
   page: string;
   totalScore: number;
@@ -897,12 +889,10 @@ export interface SearchResultsDisplay {
   type: string;
 }
 
-/////////////////////////////////// Misc \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+/////////////////////////////// MISCELLANEOUS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-/**
- * Passed from the Chart component with the necessary data for creating and displaying
- * an attribute table.
- */
+/** Passed from the Chart component with the necessary data for creating and displaying
+ * an attribute table. */
 export interface AttributeTableParams {
   attributeTable: any[];
   dateTimeColumnName: string;
@@ -911,25 +901,26 @@ export interface AttributeTableParams {
   valueColumns: string[];
 }
 
-/**
- * 
- */
+/** Chart Dialog properties. */
 export interface ChartDialog {
   graphTemplate: GraphTemplate;
 }
 
-/**
- * 
- */
+/** All data that can be given to a dialog. */
+export interface DialogData {
+  windowId: string;
+}
+
+/** Currently unused. Object holding all possible parameters that can be given to
+ * a dialog. */
 export interface DialogParams {
   fullResourcePath?: string;
   text?: string;
-  windowID?: string;
+  windowId?: string;
 }
 
-/**
- * 
- */
+/** Currently unused. Might be used with the IM Builder, which is currently using
+ * this same type in the application. */
 export interface ParamAccountValues {
   accountPath?: string;
   accountType?: string;
@@ -939,9 +930,8 @@ export interface ParamAccountValues {
   userPoolClientId?: string;
 }
 
-/**
- * 
- */
+/** Currently unused. Might be used with the IM Builder, which is currently using
+ * this same type in the application. */
 export interface ParamAccount {
   slug?: string;
   values?: ParamAccountValues;
@@ -955,17 +945,14 @@ export interface ParsedProp {
   line: string;
 }
 
-/**
- * 
- */
+/** Can be used to tell an AppConfig object that a map is to be used by itself, instead
+ * of the entire InfoMapper application. */
 export interface StandaloneMap {
   mapProject: string;
 }
 
-/**
- * Type to be used recursively by the TreeNodeData interface. Code found at:
- * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript
- */
+/** Type to be used recursively by the TreeNodeData interface. Code found at:
+ * https://stackoverflow.com/questions/47842266/recursive-types-in-typescript. */
 export type TreeNode<T> = {
   [key: string]: boolean | number | string | T[];
 }

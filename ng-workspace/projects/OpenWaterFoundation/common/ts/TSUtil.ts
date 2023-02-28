@@ -13,11 +13,11 @@ export class TSUtil {
   /**
   Used with getPeriodFromTS, and getPeriodFromLimits and others.  Find the maximum period.
   */
-  public static MAX_POR = 0;
+  static MAX_POR = 0;
   /**
   Used with getPeriodFromTS and others.  Find the minimum (overlapping) period.
   */
-  public static MIN_POR = 1;
+  static MIN_POR = 1;
 
 
   // FIXME SAM 2009-10-05 Evaluate whether to keep this or intervalsMatch()
@@ -27,7 +27,7 @@ export class TSUtil {
   @return true if the intervals are the same.
   @param tslist list of time series.
   */
-  public static areIntervalsSame ( tslist: TS[] ): boolean
+  static areIntervalsSame ( tslist: TS[] ): boolean
   {
     if ( tslist === null ) {
       // No units.  Decide later whether to throw an exception.
@@ -81,7 +81,7 @@ export class TSUtil {
   @param por_flag Use a *_POR flag.
   @exception RTi.TS.TSException If the period cannot be determined from the time series.
   */
-  public static getPeriodFromTS ( ts: TS[], por_flag: number ): TSLimits {
+  static getPeriodFromTS ( ts: TS[], por_flag: number ): TSLimits {
     var	message: string, routine="TSUtil.getPeriodFromTS";
     var tsPtr: TS = null;
     var	dl = 10, i = 0;

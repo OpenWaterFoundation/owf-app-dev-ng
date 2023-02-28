@@ -7,8 +7,7 @@ import { DOCUMENT }         from '@angular/common';
 import { Observable,
           Subscription }    from 'rxjs';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { OwfCommonService, Path, TextWidget } from '@OpenWaterFoundation/common/services';
 import { DashboardService } from '../../dashboard.service';
 
 
@@ -41,16 +40,22 @@ export class TextComponent implements OnDestroy{
   textSub: Subscription;
   /** The attribute provided to this component when created, e.g.
    *   <widget-text [textWidget]="widget"></widget-text> */
-  @Input('textWidget') textWidget: IM.TextWidget;
+  @Input('textWidget') textWidget: TextWidget;
   
 
   /**
    * 
-   * @param commonService The injected Common library service.
+   * @param commonService Reference to the injected Common library service.
+   * @param dashboardService 
+   * @param document 
    */
-  constructor(private commonService: OwfCommonService,
+  constructor(
+    private commonService: OwfCommonService,
     private dashboardService: DashboardService,
-    @Inject(DOCUMENT) private document: Document) {}
+    @Inject(DOCUMENT) private document: Document
+  ) {
+    
+  }
 
 
   /**
@@ -80,7 +85,7 @@ export class TextComponent implements OnDestroy{
     }
 
     // The widget object has passed its inspection and can be created.
-    this.fullDataPath = this.commonService.buildPath(IM.Path.dbP, [this.textWidget.textPath]);
+    this.fullDataPath = this.commonService.buildPath(Path.dbP, [this.textWidget.textPath]);
     this.getTextData();
   }
 
@@ -96,7 +101,7 @@ export class TextComponent implements OnDestroy{
 
       this.textSub = this.commonService.getPlainText(this.fullDataPath)
       .subscribe((text: string) => {
-        this.text = this.commonService.sanitizeDoc(text, IM.Path.dbP);
+        this.text = this.commonService.sanitizeDoc(text, Path.dbP);
       });
     }
     // HTML file.
@@ -117,7 +122,8 @@ export class TextComponent implements OnDestroy{
   }
 
   /**
-   * Called right after the constructor.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     this.isTextError$ = this.dashboardService.isTextError;

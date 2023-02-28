@@ -36,8 +36,19 @@ import { faCaretLeft,
           faLayerGroup }           from '@fortawesome/free-solid-svg-icons';
 
 import { CommonLoggerService,
+          D3Prop,
           DialogParams,
-          OwfCommonService }       from '@OpenWaterFoundation/common/services';
+          EventHandler,
+          GeoLayer,
+          GeoLayerSymbol,
+          GeoLayerView,
+          GeoLayerViewGroup,
+          GeoMapProject,
+          GraphTemplate,
+          OwfCommonService, 
+          Path,
+          RefreshType,
+          Style }                  from '@OpenWaterFoundation/common/services';
 import { MapLayerManager,
           MapLayerItem }           from '@OpenWaterFoundation/common/ui/layer-manager';
 import { WindowManager,
@@ -45,7 +56,6 @@ import { WindowManager,
 import { MapUtil }                 from './map.util';
 import { MapManager }              from './map-manager';
 
-import * as IM                     from '@OpenWaterFoundation/common/services';
 import * as Papa                   from 'papaparse';
 import * as GeoRasterLayer         from 'georaster-layer-for-leaflet';
 import geoblaze                    from 'geoblaze';
@@ -124,7 +134,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /** The reference for the Leaflet map. */
   mainMap: any;
   /** The map configuration object read in as this component's map configuration file. */
-  mapConfig: IM.GeoMapProject;
+  mapConfig: GeoMapProject;
   /** Template input property used by consuming applications,websites, or other Angular
    * modules for passing the path to the map configuration file. */
   @Input('map-config') mapConfigStandalonePath: string;
@@ -170,7 +180,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * the router.
   * @param breakpointObserver Angular provided utility for checking the matching
   * state of @media queries.
-  * @param commonService A reference to the common library service.
+  * @param commonService Reference to the injected Common library service.
   * @param dialog A reference to the MatDialog for creating and displaying a popup
   * dialog with a chart.
   * @param document Any web page loaded in the browser and serves as an entry point
@@ -213,7 +223,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   /**
    * @returns All geoLayerViewGroups from the FIRST geoMap.
    */
-  get allGeoLayerViewGroups(): IM.GeoLayerViewGroup[] {
+  get allGeoLayerViewGroups(): GeoLayerViewGroup[] {
     return this.mapConfig.geoMaps[0].geoLayerViewGroups;
   }
 
@@ -283,7 +293,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   private addInfoToSidebar(): void {
     this.appVersion = this.commonService.appConfig.version;
-    this.projectVersion = this.commonService.getJSONData('assets/version.json', IM.Path.vP);
+    this.projectVersion = this.commonService.getJSONData('assets/version.json', Path.vP);
   }
 
   /**
@@ -576,20 +586,20 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.createMapTitleInitial();
     this.addAllMapControls();
 
-    var geoLayerViewGroups: IM.GeoLayerViewGroup[] = this.allGeoLayerViewGroups;
+    var geoLayerViewGroups: GeoLayerViewGroup[] = this.allGeoLayerViewGroups;
 
     // Iterate through each geoLayerView in every geoLayerViewGroup, and create
     // & add a Leaflet map layer for them.
-    geoLayerViewGroups.forEach((geoLayerViewGroup: IM.GeoLayerViewGroup) => {
+    geoLayerViewGroups.forEach((geoLayerViewGroup: GeoLayerViewGroup) => {
       if (geoLayerViewGroup.properties.isBackground === undefined ||
       geoLayerViewGroup.properties.isBackground === 'false') {
 
         for (let geoLayerView of geoLayerViewGroup.geoLayerViews) {
 
           // Obtain the geoLayer for use in creating this Leaflet layer.
-          let geoLayer: IM.GeoLayer = this.getGeoLayerFromId(geoLayerView.geoLayerId);
+          let geoLayer: GeoLayer = this.getGeoLayerFromId(geoLayerView.geoLayerId);
           // Obtain the symbol data for use in creating this Leaflet layer.
-          let symbol: IM.GeoLayerSymbol = this.getSymbolDataFromID(geoLayer.geoLayerId);
+          let symbol: GeoLayerSymbol = this.getSymbolDataFromID(geoLayer.geoLayerId);
           // A geoLayerSymbol object was not provided in the geoLayerView, so leave
           // the user an error message and log an error message that one needs to
           // be added to show something other than default styling.
@@ -601,7 +611,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           }
           // Obtain the event handler information from the geoLayerView for use
           // in creating this Leaflet layer.
-          let eventHandlers: IM.EventHandler[] = this.getGeoLayerViewEventHandler(geoLayer.geoLayerId);
+          let eventHandlers: EventHandler[] = this.getGeoLayerViewEventHandler(geoLayer.geoLayerId);
           var asyncData: Observable<any>[] = [];
 
           // // Displays a web feature service from Esri. 
@@ -613,12 +623,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           // it and won't log any errors.
           asyncData.push(
             this.commonService.getJSONData(
-              this.commonService.buildPath(IM.Path.gLGJP, [geoLayer.sourcePath]), IM.Path.gLGJP, geoLayer.geoLayerId
+              this.commonService.buildPath(Path.gLGJP, [geoLayer.sourcePath]), Path.gLGJP, geoLayer.geoLayerId
             )
           );
           // Push each event handler onto the async array if there are any.
           if (eventHandlers.length > 0) {
-            eventHandlers.forEach((event: IM.EventHandler) => {
+            eventHandlers.forEach((event: EventHandler) => {
               // TODO: jpkeahey 2020.10.22 - popupConfigPath will be deprecated,
               // but will still work for now, just with a warning message displayed
               // to the user.
@@ -628,8 +638,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // Use the http GET request function and pass it the returned formatted path.
                 asyncData.push(
                   this.commonService.getJSONData(
-                    this.commonService.buildPath(IM.Path.eCP, [event.properties.popupConfigPath]),
-                    IM.Path.eCP, this.mapID
+                    this.commonService.buildPath(Path.eCP, [event.properties.popupConfigPath]),
+                    Path.eCP, this.mapID
                   )
                 );
               }
@@ -637,8 +647,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // Use the http GET request function and pass it the returned formatted path.
                 asyncData.push(
                   this.commonService.getJSONData(
-                    this.commonService.buildPath(IM.Path.eCP, [event.properties.eventConfigPath]),
-                    IM.Path.eCP, this.mapID
+                    this.commonService.buildPath(Path.eCP, [event.properties.eventConfigPath]),
+                    Path.eCP, this.mapID
                   )
                 );
               }
@@ -695,7 +705,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               symbol.classificationType.toUpperCase().includes('SINGLESYMBOL')) {
               // TODO: jkeahey 2021.5.11 - Is anything in this conditional necessary?
               if (symbol.properties.classificationFile) {
-                Papa.parse(this.commonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+                Papa.parse(this.commonService.buildPath(Path.cP, [symbol.properties.classificationFile]), {
                   delimiter: ",",
                   download: true,
                   comments: "#",
@@ -777,7 +787,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
               if (symbol.properties.classificationFile) {
 
-                Papa.parse(this.commonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+                Papa.parse(this.commonService.buildPath(Path.cP, [symbol.properties.classificationFile]), {
                   delimiter: ",",
                   download: true,
                   comments: "#",
@@ -845,11 +855,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                   style: (feature: any, layerData: any) => {
                     let classificationAttribute: any = feature['properties'][symbol.classificationAttribute];
                     return {
-                      color: MapUtil.verify(MapUtil.getColor(symbol, classificationAttribute, colorTable), IM.Style.color),
-                      fillOpacity: MapUtil.verify(symbol.properties.fillOpacity, IM.Style.fillOpacity),
-                      opacity: MapUtil.verify(symbol.properties.opacity, IM.Style.opacity),
+                      color: MapUtil.verify(MapUtil.getColor(symbol, classificationAttribute, colorTable), Style.color),
+                      fillOpacity: MapUtil.verify(symbol.properties.fillOpacity, Style.fillOpacity),
+                      opacity: MapUtil.verify(symbol.properties.opacity, Style.opacity),
                       stroke: symbol.properties.outlineColor === "" ? false : true,
-                      weight: MapUtil.verify(parseInt(symbol.properties.weight), IM.Style.weight)
+                      weight: MapUtil.verify(parseInt(symbol.properties.weight), Style.weight)
                     }
                   }
                 });
@@ -873,10 +883,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             // Display an image on the map.
             else if (geoLayer.layerType.toUpperCase().includes('IMAGE')) {
               var imageLayer = L.imageOverlay(
-                this.commonService.buildPath(IM.Path.iP, [geoLayer.sourcePath]),
+                this.commonService.buildPath(Path.iP, [geoLayer.sourcePath]),
                 MapUtil.parseImageBounds(geoLayerView.properties.imageBounds),
                 {
-                  opacity: MapUtil.verify(symbol.properties.opacity, IM.Style.opacity)
+                  opacity: MapUtil.verify(symbol.properties.opacity, Style.opacity)
                 }
               );
 
@@ -902,7 +912,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // Confirm the parsing was successful by checking if getRefreshInterval
                 // returned a number.
                 if (!isNaN(refreshInterval)) {
-                  this.refreshLayer(refreshOffset, refreshInterval, geoLayer, IM.RefreshType.image,
+                  this.refreshLayer(refreshOffset, refreshInterval, geoLayer, RefreshType.image,
                                       geoLayerView);
                 }
               }
@@ -911,7 +921,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             else {
               // If the point layer contains a classification file for styling.
               if (symbol.properties.classificationFile) {
-                Papa.parse(this.commonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+                Papa.parse(this.commonService.buildPath(Path.cP, [symbol.properties.classificationFile]), {
                   delimiter: ",",
                   download: true,
                   comments: "#",
@@ -957,7 +967,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
                           let markerIcon = new L.icon({
                             iconUrl: this.commonService.getAppPath() +
-                            this.commonService.formatPath(symbol.properties.symbolImage, IM.Path.sIP),
+                            this.commonService.formatPath(symbol.properties.symbolImage, Path.sIP),
                             iconAnchor: MapUtil.createAnchorArray(symbol.properties.symbolImage, symbol.properties.imageAnchorPoint)
                           });
 
@@ -975,7 +985,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                         // Create a built-in (default) marker image layer
                         else if (symbol.properties.builtinSymbolImage) {
                           let markerIcon = new L.icon({
-                            iconUrl: this.commonService.formatPath(symbol.properties.builtinSymbolImage, IM.Path.bSIP),
+                            iconUrl: this.commonService.formatPath(symbol.properties.builtinSymbolImage, Path.bSIP),
                             iconAnchor: MapUtil.createAnchorArray(symbol.properties.builtinSymbolImage, symbol.properties.imageAnchorPoint)
                           });
                           return L.marker(latlng, { icon: markerIcon })
@@ -1015,7 +1025,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
                       let markerIcon = new L.icon({
                         iconUrl: this.commonService.getAppPath() +
-                        this.commonService.formatPath(symbol.properties.symbolImage, IM.Path.sIP),
+                        this.commonService.formatPath(symbol.properties.symbolImage, Path.sIP),
                         iconAnchor: MapUtil.createAnchorArray(symbol.properties.symbolImage, symbol.properties.imageAnchorPoint)
                       });
 
@@ -1033,7 +1043,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                     // Create a built-in (default) marker image layer.
                     else if (symbol.properties.builtinSymbolImage) {
                       let markerIcon = new L.icon({
-                        iconUrl: this.commonService.formatPath(symbol.properties.builtinSymbolImage, IM.Path.bSIP),
+                        iconUrl: this.commonService.formatPath(symbol.properties.builtinSymbolImage, Path.bSIP),
                         iconAnchor: MapUtil.createAnchorArray(symbol.properties.builtinSymbolImage, symbol.properties.imageAnchorPoint)
                       });
                       return L.marker(latlng, { icon: markerIcon })
@@ -1065,7 +1075,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               // Confirm the parsing was successful by checking if getRefreshInterval
               // returned a number.
               if (!isNaN(refreshInterval)) {
-                this.refreshLayer(refreshOffset, refreshInterval, geoLayer, IM.RefreshType.vector);
+                this.refreshLayer(refreshOffset, refreshInterval, geoLayer, RefreshType.vector);
               }
             }
 
@@ -1125,7 +1135,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                           var TSIDLocation: string;
                           var resourcePathArray: string[] = [];
                           var downloadFileNameArray: any[] = [];
-                          var windowID: string;
+                          var windowId: string;
 
                           if (e.target.getTooltip()) {
                             featureIndex = parseInt(e.target.getTooltip()._content);
@@ -1174,12 +1184,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                           popup.setLatLng(e.latlng).openOn(_this.mainMap);
 
                           for (let i = 0; i < numberOfActions; i++) {
-                            windowID = popupTemplateId + '-' + actionLabelArray[i];
-                            L.DomEvent.addListener(L.DomUtil.get(windowID), 'click', function (e: any) {
-                              windowID = popupTemplateId + '-' + actionLabelArray[i];
+                            windowId = popupTemplateId + '-' + actionLabelArray[i];
+                            L.DomEvent.addListener(L.DomUtil.get(windowId), 'click', function (e: any) {
+                              windowId = popupTemplateId + '-' + actionLabelArray[i];
                               // If this button has already been clicked and resides
                               // in the windowManager, don't do anything.
-                              if (_this.windowManager.windowExists(windowID)) {
+                              if (_this.windowManager.windowExists(windowId)) {
                                 return;
                               }
 
@@ -1189,23 +1199,23 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 // any ${properties}, replace the ${property} for
                                 // the resourcePath only.
                                 var resourcePath = _this.commonService.obtainPropertiesFromLine(resourcePathArray[i], featureProperties);
-                                let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePath]);
+                                let fullResourcePath = _this.commonService.buildPath(Path.rP, [resourcePath]);
 
-                                _this.commonService.getPlainText(fullResourcePath, IM.Path.rP).subscribe((text: string) => {
+                                _this.commonService.getPlainText(fullResourcePath, Path.rP).subscribe((text: string) => {
                                   _this.openTextDialog({
                                     fullResourcePath: fullResourcePath,
                                     text: text,
-                                    windowID: windowID
+                                    windowId: windowId
                                   });
                                 });
                               }
                               // Display a Time Series graph in a Dialog popup.
                               else if (actionArray[i].toUpperCase() === 'DISPLAYTIMESERIES') {
 
-                                let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
+                                let fullResourcePath = _this.commonService.buildPath(Path.rP, [resourcePathArray[i]]);
 
-                                _this.commonService.getJSONData(fullResourcePath, IM.Path.rP, _this.mapID)
-                                  .subscribe((graphTemplate: IM.GraphTemplate) => {
+                                _this.commonService.getJSONData(fullResourcePath, Path.rP, _this.mapID)
+                                  .subscribe((graphTemplate: GraphTemplate) => {
                                     // Replaces all ${} property notations with
                                     // the correct feature in the TSTool graph
                                     // template object
@@ -1229,14 +1239,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                     } else console.error('The TSID has not been set in the graph template file');
 
                                     _this.openTSGraphDialog(graphTemplate, graphFilePath, TSIDLocation, chartPackageArray[i],
-                                      featureProperties, downloadFileNameArray[i] ? downloadFileNameArray[i] : null, windowID);
+                                      featureProperties, downloadFileNameArray[i] ? downloadFileNameArray[i] : null, windowId);
                                   });
                               }
                               // Display a Heatmap Dialog.
                               else if (actionArray[i].toUpperCase() === 'DISPLAYHEATMAP') {
-                                let fullResourcePath = _this.commonService.buildPath(IM.Path.rP, [resourcePathArray[i]]);
+                                let fullResourcePath = _this.commonService.buildPath(Path.rP, [resourcePathArray[i]]);
 
-                                _this.commonService.getJSONData(fullResourcePath).subscribe((graphTemplate: IM.GraphTemplate) => {
+                                _this.commonService.getJSONData(fullResourcePath).subscribe((graphTemplate: GraphTemplate) => {
                                   // Replaces all ${} property notations with the
                                   // correct feature in the TSTool graph template object.
                                   _this.commonService.replaceProperties(graphTemplate, featureProperties);
@@ -1260,8 +1270,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 });
                                 
                               } else if (actionArray[i].toUpperCase() === 'DISPLAYD3VIZ') {
-                                var fullVizPath = _this.commonService.buildPath(IM.Path.d3P, [resourcePathArray[i]])
-                                _this.commonService.getJSONData(fullVizPath).subscribe((d3Prop: IM.D3Prop) => {
+                                var fullVizPath = _this.commonService.buildPath(Path.d3P, [resourcePathArray[i]])
+                                _this.commonService.getJSONData(fullVizPath).subscribe((d3Prop: D3Prop) => {
                                   _this.openD3VizDialog(geoLayer, d3Prop);
                                 });
                               }
@@ -1544,8 +1554,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param geoLayer The geoLayer object from the map configuration file
   * @param symbol The Symbol data object from the geoLayerView
   */
-  private createRasterLayer(geoLayer: IM.GeoLayer, symbol: IM.GeoLayerSymbol, geoLayerView: IM.GeoLayerView,
-                            geoLayerViewGroup: IM.GeoLayerViewGroup, eventObject?: any): void {
+  private createRasterLayer(
+    geoLayer: GeoLayer,
+    symbol: GeoLayerSymbol,
+    geoLayerView: GeoLayerView,
+    geoLayerViewGroup: GeoLayerViewGroup,
+    eventObject?: any
+  ): void {
+
     if (!symbol) {
       console.warn('The geoLayerSymbol for geoLayerId: "' + geoLayerView.geoLayerId +
       '" and name: "' + geoLayerView.name +
@@ -1555,7 +1571,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     // Uses the fetch API with the given path to get the tiff file in assets to
     // create the raster layer.
-    fetch(this.commonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
+    fetch(this.commonService.buildPath(Path.raP, [geoLayer.sourcePath]))
     .then((response: any) => response.arrayBuffer())
     .then((arrayBuffer: any) => {
       parseGeoRaster(arrayBuffer).then((georaster: any) => {
@@ -1564,7 +1580,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         if (symbol && symbol.properties.classificationFile) {
           this.categorizedLayerColors[geoLayer.geoLayerId] = [];
 
-          Papa.parse(this.commonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+          Papa.parse(this.commonService.buildPath(Path.cP, [symbol.properties.classificationFile]), {
             delimiter: ",",
             download: true,
             comments: "#",
@@ -1607,7 +1623,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               }
               // With the help of GeoBlaze, use Leaflet Map Events for clicking
               // and/or hovering over a raster layer.
-              const blaze = geoblaze.load(this.commonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
+              const blaze = geoblaze.load(this.commonService.buildPath(Path.raP, [geoLayer.sourcePath]))
               .then((georaster: any) => {
                 let layerItem = _this.mapLayerManager.getMapLayerItem(geoLayerView.geoLayerId);
 
@@ -1686,8 +1702,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // Check if the parsing was successful. 
       if (isNaN(refreshInterval)) {
       } else {
-        this.refreshLayer(refreshOffset, refreshInterval, geoLayer,
-                          IM.RefreshType.raster, geoLayerView);
+        this.refreshLayer(refreshOffset, refreshInterval, geoLayer, RefreshType.raster,
+        geoLayerView);
       }
 
     }
@@ -1749,7 +1765,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     let backgroundLayers: any[] = this.getBackgroundLayers();
     // Iterate over each background layer, create them using tileLayer, and add
     // them to the mapBackgroundLayers class object.
-    backgroundLayers.forEach((geoLayer: IM.GeoLayer) => {
+    backgroundLayers.forEach((geoLayer: GeoLayer) => {
       let leafletBackgroundLayer = L.tileLayer(geoLayer.sourcePath, {
         attribution: geoLayer.properties.attribution,
         maxZoom: geoLayer.properties.zoomLevelMax ? parseInt(geoLayer.properties.zoomLevelMax) : 18
@@ -1764,7 +1780,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         // Check if the parsing was successful. 
         if (isNaN(refreshInterval)) {
         } else {
-          this.refreshLayer(refreshOffset, refreshInterval, geoLayer, IM.RefreshType.tile,
+          this.refreshLayer(refreshOffset, refreshInterval, geoLayer, RefreshType.tile,
             null, leafletBackgroundLayer);
         }
   
@@ -1996,7 +2012,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * matches the given @param geoLayerId.
    * @param geoLayerId The geoLayerId to match with.
    */
-  private getGeoLayerViewEventHandler(geoLayerId: string): IM.EventHandler[] {
+  private getGeoLayerViewEventHandler(geoLayerId: string): EventHandler[] {
 
     var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
 
@@ -2131,7 +2147,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * with @param id.
    * @param id The geoLayerId to match with.
    */
-  private getSymbolDataFromID(id: string): IM.GeoLayerSymbol {
+  private getSymbolDataFromID(id: string): GeoLayerSymbol {
     var geoLayerViewGroups: any = this.mapConfig.geoMaps[0].geoLayerViewGroups;
 
     for (let geoLayerViewGroup of geoLayerViewGroups) {
@@ -2160,8 +2176,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Get AND sets the map config path and geoJson path for relative path use.
     this.commonService.getFullMapConfigPath(this.mapID, standalone, configPath);
 
-    this.commonService.getJSONData(fullMapConfigPath, IM.Path.fMCP, this.mapID)
-    .pipe(first()).subscribe((mapConfig: IM.GeoMapProject) => {
+    this.commonService.getJSONData(fullMapConfigPath, Path.fMCP, this.mapID)
+    .pipe(first()).subscribe((mapConfig: GeoMapProject) => {
 
       this.logger.print('info', 'MapComponent.ngAfterViewInit - Map initialization for geoMapId "' + 
       mapConfig.geoMaps[0].geoMapId + '".');
@@ -2318,10 +2334,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   //       case WindowType.TEXT: {
 
-  //         if (this.windowManager.windowExists(dialogParams.windowID)) { return false; }
+  //         if (this.windowManager.windowExists(dialogParams.windowId)) { return false; }
 
   //         extras.queryParams[this.windowManager.setQueryParamTypeKey()] = dialogParams.location;
-  //         extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogParams.windowID;
+  //         extras.queryParams[this.windowManager.setQueryParamIdKey()] = dialogParams.windowId;
   //         this.router.navigate([], extras);
       
   //         this.openTextDialog(dialogParams);
@@ -2352,17 +2368,17 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * @param geoLayer The layer geoLayer object.
    * @param d3Prop The D3 visualization's property object from the config file.
    */
-  openD3VizDialog(geoLayer: IM.GeoLayer, d3Prop: IM.D3Prop): void {
+  openD3VizDialog(geoLayer: GeoLayer, d3Prop: D3Prop): void {
 
-    var windowID = geoLayer.geoLayerId + '-dialog-d3-viz';
-    if (!this.windowManager.addWindow(windowID, WindowType.D3)) {
+    var windowId = geoLayer.geoLayerId + '-dialog-d3-viz';
+    if (!this.windowManager.addWindow(windowId, WindowType.D3)) {
       return;
     }
 
     var dialogConfigData = {
       d3Prop: d3Prop,
       geoLayer: geoLayer,
-      windowID: windowID
+      windowId: windowId
     }
       
     var dialogRef: MatDialogRef<DialogD3Component, any> = this.dialog.open(
@@ -2379,8 +2395,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   */
   openDocDialog(): void {
 
-    const windowID = this.geoMapId;
-    if (!this.windowManager.addWindow(windowID, WindowType.DOC)) {
+    const windowId = this.geoMapId;
+    if (!this.windowManager.addWindow(windowId, WindowType.DOC)) {
       return;
     }
 
@@ -2391,7 +2407,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     else if (this.geoMapDocPath.includes('.html')) html = true;
 
     this.commonService.getPlainText(
-      this.commonService.buildPath(IM.Path.dP, [this.geoMapDocPath]), IM.Path.dP
+      this.commonService.buildPath(Path.dP, [this.geoMapDocPath]), Path.dP
     )
     .pipe(take(1)).subscribe((doc: any) => {
 
@@ -2405,7 +2421,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         geoId: this.geoMapId,
         geoName: this.geoMapName,
         mapConfigPath: this.commonService.getMapConfigPath(),
-        windowID: windowID
+        windowId: windowId
       }
 
       const docDialog: MatDialogRef<DialogDocComponent, any> = this.dialog.open(
@@ -2429,21 +2445,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param resourcePath The resourcePath string representing the absolute or relative
   * path to the resourcePath property.
   */
-  private openGapminderDialog(geoLayer: IM.GeoLayer, resourcePath: string): any {
+  private openGapminderDialog(geoLayer: GeoLayer, resourcePath: string): any {
 
-    var windowID = geoLayer.geoLayerId + '-dialog-gapminder';
-    if (!this.windowManager.addWindow(windowID, WindowType.GAP)) {
+    var windowId = geoLayer.geoLayerId + '-dialog-gapminder';
+    if (!this.windowManager.addWindow(windowId, WindowType.GAP)) {
       return;
     }
 
-    let fullGapminderPath = this.commonService.buildPath(IM.Path.rP, [resourcePath]);
+    let fullGapminderPath = this.commonService.buildPath(Path.rP, [resourcePath]);
     this.commonService.setGapminderConfigPath(fullGapminderPath);
     
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       configPath: fullGapminderPath,
       geoLayer: geoLayer,
-      windowID: windowID
+      windowId: windowId
     }
 
     const dialogRef: MatDialogRef<DialogGapminderComponent, any> = this.dialog.open(DialogGapminderComponent, {
@@ -2463,10 +2479,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * 
    * @param geoLayer The geoLayer object from the map configuration file.
    */
-  private openHeatmapDialog(geoLayer: any, graphTemplate: IM.GraphTemplate, graphFilePath: string): void {
+  private openHeatmapDialog(geoLayer: any, graphTemplate: GraphTemplate, graphFilePath: string): void {
 
-    var windowID = geoLayer.geoLayerId + '-dialog-heatmap';
-    if (!this.windowManager.addWindow(windowID, WindowType.HEAT)) {
+    var windowId = geoLayer.geoLayerId + '-dialog-heatmap';
+    if (!this.windowManager.addWindow(windowId, WindowType.HEAT)) {
       return;
     }
 
@@ -2475,7 +2491,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       geoLayer: geoLayer,
       graphFilePath: graphFilePath,
       graphTemplate: graphTemplate,
-      windowID: windowID
+      windowId: windowId
     }
     const dialogRef: MatDialogRef<DialogHeatmapComponent, any> = this.dialog.open(DialogHeatmapComponent, {
       data: dialogConfig,
@@ -2503,12 +2519,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private openImageGalleryDialog(geoLayer: any, feature: any, featureIndex: number, resourcePath: string,
     geoLayerView: any, eventObject: any): void {
 
-    var windowID = geoLayer.geoLayerId + '-dialog-gallery';
-    if (!this.windowManager.addWindow(windowID, WindowType.GAL)) {
+    var windowId = geoLayer.geoLayerId + '-dialog-gallery';
+    if (!this.windowManager.addWindow(windowId, WindowType.GAL)) {
       return;
     }
 
-    let fullResourcePath = this.commonService.buildPath(IM.Path.rP, [resourcePath]);
+    let fullResourcePath = this.commonService.buildPath(Path.rP, [resourcePath]);
 
     Papa.parse(fullResourcePath, {
       delimiter: ",",
@@ -2552,15 +2568,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * @param graphTemplate The template config object of the current graph being shown
   * @param graphFilePath The file path to the current graph that needs to be read
   */
-  private openTSGraphDialog(graphTemplate: IM.GraphTemplate, graphFilePath: string, TSIDLocation: string,
-  chartPackage: string, featureProperties: any, downloadFileName?: string, windowID?: string): void {
+  private openTSGraphDialog(graphTemplate: GraphTemplate, graphFilePath: string, TSIDLocation: string,
+  chartPackage: string, featureProperties: any, downloadFileName?: string, windowId?: string): void {
 
-    if (!this.windowManager.addWindow(windowID, WindowType.TSGRAPH)) {
+    if (!this.windowManager.addWindow(windowId, WindowType.TSGRAPH)) {
       return;
     }
 
     var dialogConfigData = {
-      windowID: windowID,
+      windowId: windowId,
       chartPackage: chartPackage,
       featureProperties: featureProperties,
       graphTemplate: graphTemplate,
@@ -2586,18 +2602,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   * .popup
   * @param resourcePath The path to the text file so the file name can be extracted
   * in the dialog-text component.
-  * @param windowID A string representing the button ID of the button clicked to
+  * @param windowId A string representing the button ID of the button clicked to
   * open this dialog.
   */
   private openTextDialog(params: DialogParams): void {
 
-    if (!this.windowManager.addWindow(params.windowID, WindowType.TEXT)) {
+    if (!this.windowManager.addWindow(params.windowId, WindowType.TEXT)) {
       return;
     }
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      windowID: params.windowID,
+      windowId: params.windowId,
       mapConfigPath: this.commonService.getMapConfigPath(),
       resourcePath: params.fullResourcePath,
       text: params.text
@@ -2634,8 +2650,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * @param refreshInterval The number in seconds to wait for each layer refresh.
    * @param geoLayer The geoLayer object from the map configuration file.
    */
-  private refreshLayer(refreshOffset: number, refreshInterval: number, geoLayer: IM.GeoLayer,
-  refreshType: IM.RefreshType, geoLayerView?: IM.GeoLayerView, bgLayer?: any): void {
+  private refreshLayer(
+    refreshOffset: number,
+    refreshInterval: number,
+    geoLayer: GeoLayer,
+    refreshType: RefreshType,
+    geoLayerView?: GeoLayerView,
+    bgLayer?: any
+  ): void {
 
     // The initial time the layer was created. To be shown so users know this layer
     // will be refreshed.
@@ -2652,9 +2674,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.setRefreshDateTime(geoLayer, refreshInterval);
 
       // Refresh a vector layer.
-      if (refreshType === IM.RefreshType.vector) {
+      if (refreshType === RefreshType.vector) {
         this.commonService.getJSONData(
-          this.commonService.buildPath(IM.Path.gLGJP, [geoLayer.sourcePath])
+          this.commonService.buildPath(Path.gLGJP, [geoLayer.sourcePath])
         ).pipe(first()).subscribe((geoJsonData: any) => {
 
           // Use the Map Layer Manager to remove all layers from the Leaflet layer,
@@ -2668,13 +2690,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }
 
       // Refresh a raster layer.
-      else if (refreshType === IM.RefreshType.raster) {
+      else if (refreshType === RefreshType.raster) {
         // First remove the raster layer.
         this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
         
         // Uses the fetch API with the given path to get the tiff file in assets
         // to create the raster layer.
-        fetch(this.commonService.buildPath(IM.Path.raP, [geoLayer.sourcePath]))
+        fetch(this.commonService.buildPath(Path.raP, [geoLayer.sourcePath]))
         .then((response: any) => response.arrayBuffer())
         .then((arrayBuffer: any) => {
           parseGeoRaster(arrayBuffer).then((georaster: any) => {
@@ -2686,7 +2708,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             if (symbol && symbol.properties.classificationFile) {
               this.categorizedLayerColors[geoLayer.geoLayerId] = [];
 
-              Papa.parse(this.commonService.buildPath(IM.Path.cP, [symbol.properties.classificationFile]), {
+              Papa.parse(this.commonService.buildPath(Path.cP, [symbol.properties.classificationFile]), {
                 delimiter: ",",
                 download: true,
                 comments: "#",
@@ -2752,21 +2774,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }
 
       // Refresh a tile (background) layer.
-      else if (refreshType === IM.RefreshType.tile) {
+      else if (refreshType === RefreshType.tile) {
         bgLayer.redraw();
       }
 
       // Refresh an image layer.
-      else if (refreshType === IM.RefreshType.image) {
+      else if (refreshType === RefreshType.image) {
 
         const symbol = geoLayerView.geoLayerSymbol;
         this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
 
         var imageLayer = L.imageOverlay(
-          this.commonService.buildPath(IM.Path.iP, [geoLayer.sourcePath]),
+          this.commonService.buildPath(Path.iP, [geoLayer.sourcePath]),
           MapUtil.parseImageBounds(geoLayerView.properties.imageBounds),
           {
-            opacity: MapUtil.verify(symbol.properties.opacity, IM.Style.opacity)
+            opacity: MapUtil.verify(symbol.properties.opacity, Style.opacity)
           }
         );
 
@@ -2949,7 +2971,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * @param geoLayer The geoLayer from the map configuration file.
    * @param refreshInterval The refreshInterval from the map configuration file.
    */
-  private setRefreshDateTime(geoLayer: IM.GeoLayer, refreshInterval: any): void {
+  private setRefreshDateTime(geoLayer: GeoLayer, refreshInterval: any): void {
 
     var refreshDateTime: string;
 

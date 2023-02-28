@@ -15,8 +15,11 @@ import { DialogD3Component,
 
 import { WindowManager,
           WindowType }             from '@OpenWaterFoundation/common/ui/window-manager';
-import { OwfCommonService }        from '@OpenWaterFoundation/common/services';
-import * as IM                     from '@OpenWaterFoundation/common/services'
+import { D3Chart,
+          D3Prop,
+          GeoLayerView,
+          OwfCommonService,
+          Path }                   from '@OpenWaterFoundation/common/services';
 
 import { take }                    from 'rxjs/operators';
 
@@ -30,22 +33,26 @@ export class OwfCommonComponent implements OnInit {
 
   /** The windowManager instance, whose job it will be to create, maintain, and remove
    * multiple open dialogs in an application. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** Whether the application is currently showing the map component. */
-  public mapDisplay: boolean;
+  mapDisplay: boolean;
   /** Whether the application is currently showing the dialog menus. */
-  public menuDisplay: boolean;
+  menuDisplay: boolean;
 
 
   /**
    * 
    * @param dialog 
-   * @param commonService 
+   * @param commonService Reference to the injected Common library service.
    */
-  constructor(public dialog: MatDialog,
-              private commonService: OwfCommonService) { }
+  constructor(private commonService: OwfCommonService, private dialog: MatDialog) {
+    
+  }
 
-
+  /**
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
+   */
   ngOnInit(): void {
     this.menuDisplay = true;
   }
@@ -54,16 +61,16 @@ export class OwfCommonComponent implements OnInit {
   /**
    * Opens the D3 Dialog example.
    */
-  public openD3ExampleDialog(): void {
-    var windowID = 'geoLayerId-dialog-d3';
-    if (this.windowManager.windowExists(windowID)) {
+  openD3ExampleDialog(): void {
+    var windowId = 'geoLayerId-dialog-d3';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
     this.commonService.getJSONData(this.commonService.buildPath(
-    IM.Path.d3P, ['/data-maps/data-ts/d3-treemap-config.json']))
-    .subscribe((d3Config: IM.D3Prop) => {
-      d3Config.chartType = IM.D3Chart.treemap;
+    Path.d3P, ['/data-maps/data-ts/d3-treemap-config.json']))
+    .subscribe((d3Config: D3Prop) => {
+      d3Config.chartType = D3Chart.treemap;
     });
 
     var geoLayer = {
@@ -73,8 +80,8 @@ export class OwfCommonComponent implements OnInit {
     var colorScheme = ['#b30000', '#ff6600', '#ffb366', '#ffff00', '#59b300', '#33cc33',
       '#b3ff66', '#00ffff', '#66a3ff', '#003cb3'];
 
-    var treeMapConfig: IM.D3Prop = {
-      chartType: IM.D3Chart.treemap,
+    var treeMapConfig: D3Prop = {
+      chartType: D3Chart.treemap,
       dataPath: '/data-maps/data-ts/data.json',
       name: 'The name',
       parent: 'Parent Basin',
@@ -86,8 +93,8 @@ export class OwfCommonComponent implements OnInit {
       width: 500
     };
 
-    var treeConfig: IM.D3Prop = {
-      chartType: IM.D3Chart.tree,
+    var treeConfig: D3Prop = {
+      chartType: D3Chart.tree,
       dataPath: '/data-maps/data-ts/data.json',
       name: 'Basin River Name',
       parent: 'Parent Basin',
@@ -101,7 +108,7 @@ export class OwfCommonComponent implements OnInit {
       dialogConfig.data = {
         d3Prop: treeMapConfig,
         geoLayer: geoLayer,
-        windowID: windowID
+        windowId: windowId
       }
         
       var dialogRef: MatDialogRef<DialogD3Component, any> = this.dialog.open(DialogD3Component, {
@@ -116,15 +123,15 @@ export class OwfCommonComponent implements OnInit {
         maxWidth: "100vw"
       });
 
-    this.windowManager.addWindow(windowID, WindowType.D3);
+    this.windowManager.addWindow(windowId, WindowType.D3);
   }
 
   /**
    * 
    */
-  public openDataTableExampleDialog(): void {
-    var windowID = 'geoLayerId-dialog-data-table';
-    if (this.windowManager.windowExists(windowID)) {
+  openDataTableExampleDialog(): void {
+    var windowId = 'geoLayerId-dialog-data-table';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -154,16 +161,16 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.TABLE);
+      this.windowManager.addWindow(windowId, WindowType.TABLE);
     });
   }
 
   /**
    * 
    */
-  public openDocMarkdownExampleDialog(): void {
-    var windowID = 'uniqueDocMarkdownID' + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+  openDocMarkdownExampleDialog(): void {
+    var windowId = 'uniqueDocMarkdownID' + '-dialog-doc';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -184,7 +191,7 @@ export class OwfCommonComponent implements OnInit {
         docMarkdown: markdown,
         docHtml: html,
         geoLayerView: 'Doc Markdown Example',
-        windowID: windowID
+        windowId: windowId
       }
         
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
@@ -198,16 +205,16 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
     });
   }
 
   /**
    * 
    */
-  public openDocTextExampleDialog(): void {
-    var windowID = 'uniqueDocTextID' + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+  openDocTextExampleDialog(): void {
+    var windowId = 'uniqueDocTextID' + '-dialog-doc';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -228,7 +235,7 @@ export class OwfCommonComponent implements OnInit {
         docMarkdown: markdown,
         docHtml: html,
         geoLayerView: 'Doc Text Example',
-        windowID: windowID
+        windowId: windowId
       }
         
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
@@ -242,16 +249,16 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
     });
   }
 
   /**
    * 
    */
-  public openDocHTMLExampleDialog(): void {
-    var windowID = 'uniqueDocHtmlID' + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+  openDocHTMLExampleDialog(): void {
+    var windowId = 'uniqueDocHtmlID' + '-dialog-doc';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -272,7 +279,7 @@ export class OwfCommonComponent implements OnInit {
         docMarkdown: markdown,
         docHtml: html,
         geoLayerView: 'Doc HTML Example',
-        windowID: windowID
+        windowId: windowId
       }
         
       var dialogRef: MatDialogRef<DialogDocComponent, any> = this.dialog.open(DialogDocComponent, {
@@ -286,20 +293,20 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
     });
   }
 
   /**
    * 
    */
-  public openGapminderExampleDialog(): void {
-    var windowID = 'uniqueGapminderExampleID' + '-dialog-doc';
-    if (this.windowManager.windowExists(windowID)) {
+  openGapminderExampleDialog(): void {
+    var windowId = 'uniqueGapminderExampleID' + '-dialog-doc';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
-    var geoLayer: IM.GeoLayerView = {
+    var geoLayer: GeoLayerView = {
       geoLayerId: 'geoLayerId',
       name: 'Gapminder Test'
     }
@@ -309,7 +316,7 @@ export class OwfCommonComponent implements OnInit {
     dialogConfig.data = {
       configPath: 'assets/app/data-maps/data-viz/viz-config/viz-config.json',
       geoLayer: geoLayer,
-      windowID: windowID
+      windowId: windowId
     }
     const dialogRef: MatDialogRef<DialogGapminderComponent, any> = this.dialog.open(DialogGapminderComponent, {
       data: dialogConfig,
@@ -322,13 +329,13 @@ export class OwfCommonComponent implements OnInit {
       maxHeight: "100vh",
       maxWidth: "100vw"
     });
-    this.windowManager.addWindow(windowID, WindowType.GAP);
+    this.windowManager.addWindow(windowId, WindowType.GAP);
   }
 
   /**
    * Opens up a very basic plotly heatmap graph example dialog.
    */
-  public openHeatmapExampleDialog(): void {
+  openHeatmapExampleDialog(): void {
     // streamflow-graph-template.json
     this.commonService.getJSONData('assets/app/data-maps/data-ts/streamflow-graph-template.json')
     .subscribe((graphTemplateObject: any) => {
@@ -363,10 +370,10 @@ export class OwfCommonComponent implements OnInit {
   /**
    * 
    */
-  public openImageExampleDialog(): void {
+  openImageExampleDialog(): void {
 
-    var windowID = 'uniqueImageID' + '-dialog-image';
-    if (this.windowManager.windowExists(windowID)) {
+    var windowId = 'uniqueImageID' + '-dialog-image';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -377,7 +384,7 @@ export class OwfCommonComponent implements OnInit {
 
       const dialogConfig = new MatDialogConfig();
       dialogConfig.data = {
-        dialogID: windowID,
+        dialogID: windowId,
         imagePath: pathObj.absolutePath + pathObj.relativePath + '402-SNODAS-SnowCover.png',
         imageDescription: ''
       }
@@ -392,15 +399,15 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "65vh",
         maxWidth: "80vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
   }
 
   /**
    * 
    */
-  public openTextExampleDialog(): void {
-    var windowID = 'uniqueTextID' + '-dialog-text';
-    if (this.windowManager.windowExists(windowID)) {
+  openTextExampleDialog(): void {
+    var windowId = 'uniqueTextID' + '-dialog-text';
+    if (this.windowManager.windowExists(windowId)) {
       return;
     }
 
@@ -412,7 +419,7 @@ export class OwfCommonComponent implements OnInit {
     this.commonService.getPlainText("assets/app/Text/text-files/0300911.H2.xdd").subscribe((text: any) => {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.data = {
-        windowID: windowID,
+        windowId: windowId,
         text: text,
         resourcePath: pathObj.absolutePath + pathObj.relativePath + 'text-files/0300911.H2.xdd'
       }
@@ -430,7 +437,7 @@ export class OwfCommonComponent implements OnInit {
         maxHeight: "90vh",
         maxWidth: "90vw"
       });
-      this.windowManager.addWindow(windowID, WindowType.DOC);
+      this.windowManager.addWindow(windowId, WindowType.DOC);
     });
 
   }
@@ -438,7 +445,7 @@ export class OwfCommonComponent implements OnInit {
   /**
    * 
    */
-  public openTSGraphExampleDialog(): void {
+  openTSGraphExampleDialog(): void {
 
     var pathResolverObj = {
       absolutePath: "assets/app/",
@@ -447,7 +454,7 @@ export class OwfCommonComponent implements OnInit {
     // Create a MatDialogConfig object to pass to the DialogTSGraphComponent for the graph that will be shown
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      windowID: 'uniqueTSGraphWindowId',
+      windowId: 'uniqueTSGraphWindowId',
       // featureProperties: featureProperties,
       chartPackage: 'plotly',
       // graphTemplate: graphTemplateObject,

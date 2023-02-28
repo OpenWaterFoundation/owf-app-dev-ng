@@ -33,7 +33,7 @@ constructor ( dataFlag: string, description: string )
 Return the data flag.
 @return the data flag
 */
-public getDataFlag (): string
+getDataFlag (): string
 {
     return this.__dataFlag;
 }
@@ -42,7 +42,7 @@ public getDataFlag (): string
 Return the data flag description.
 @return the data flag description
 */
-public getDescription (): string
+getDescription (): string
 {
     return this.__description;
 }

@@ -13,8 +13,7 @@ import { WindowManager }    from '@OpenWaterFoundation/common/ui/window-manager'
 
 import { faXmark }          from '@fortawesome/free-solid-svg-icons';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
-import * as IM              from '@OpenWaterFoundation/common/services';
+import { GraphTemplate, OwfCommonService, Path } from '@OpenWaterFoundation/common/services';
 import { StateModTS }       from '@OpenWaterFoundation/common/dwr/statemod';
 import { DateValueTS,
           DayTS,
@@ -36,28 +35,36 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    * leaks.*/
   private forkJoinSub: Subscription;
   /** Path to the data being displayed in the heatmap. */
-  public graphFilePath: string;
+  graphFilePath: string;
   /** The geoLayer object from the map configuration file. */
-  public geoLayer: any;
+  geoLayer: any;
   /** The object read from the JSON file from TSTool. Gives properties and metadata
    * for the graph. */
-  public graphTemplate: IM.GraphTemplate;
+  graphTemplate: GraphTemplate;
   /** A string representing the button ID of the button clicked to open this dialog. */
-  public windowID: string;
+  windowId: string;
   /** The windowManager instance, which creates, maintains, and removes multiple
    * open dialogs in an application. */
-  public windowManager: WindowManager = WindowManager.getInstance();
+  windowManager: WindowManager = WindowManager.getInstance();
   /** All used icons in the DialogHeatmapComponent. */
   faXmark = faXmark;
 
-  constructor(public dialogRef: MatDialogRef<DialogHeatmapComponent>,
-              @Inject(MAT_DIALOG_DATA) public dataObject: any,
-              private commonService: OwfCommonService) {
+  /**
+   * 
+   * @param commonService Reference to the injected Common library service.
+   * @param dialogRef 
+   * @param matDialogData 
+   */
+  constructor(
+    private commonService: OwfCommonService,
+    private dialogRef: MatDialogRef<DialogHeatmapComponent>,
+    @Inject(MAT_DIALOG_DATA) private matDialogData: any
+  ) {
 
-    this.geoLayer = dataObject.data.geoLayer;
-    this.graphTemplate = dataObject.data.graphTemplate;
-    this.graphFilePath = dataObject.data.graphFilePath;
-    this.windowID = dataObject.data.windowID;
+    this.geoLayer = this.matDialogData.data.geoLayer;
+    this.graphTemplate = this.matDialogData.data.graphTemplate;
+    this.graphFilePath = this.matDialogData.data.graphFilePath;
+    this.windowId = this.matDialogData.data.windowId;
   }
 
   /**
@@ -65,7 +72,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    */
   // TODO: jpkeahey 2021-08-02 - Ths is dealing with only one TS-based class in
   // the TS array. 
-  public createHeatmap(resultsArray: TS[]): void {
+  createHeatmap(resultsArray: TS[]): void {
 
     var dataPoints: any[] = [];
     var heatmapDataObj = {};
@@ -102,7 +109,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
         }
         ++monthIndex;
   
-        // Update the interval and labelIndex now that the dataObject has been pushed onto the chartJS_yAxisData array.
+        // Update the interval and labelIndex now that the this.matDialogData has been pushed onto the chartJS_yAxisData array.
         currentDateIter.addInterval(resultsArray[0].getDataIntervalBase(), resultsArray[0].getDataIntervalMult());
   
         // Check if the very last data value in the last year has been reached, add
@@ -158,13 +165,14 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Entry point of the component.
+   * Lifecycle hook that is called after Angular has initialized all data-bound
+   * properties of a directive. Called after the constructor.
    */
   ngOnInit(): void {
     if (this.graphFilePath.toUpperCase().includes('.STM')) {
-      this.parseTSFile(IM.Path.sMP);
+      this.parseTSFile(Path.sMP);
     } else if (this.graphFilePath.toUpperCase().includes('.DV')) {
-      this.parseTSFile(IM.Path.dVP);
+      this.parseTSFile(Path.dVP);
     }
   }
 
@@ -183,7 +191,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    */
   onClose(): void {
     this.dialogRef.close();
-    this.windowManager.removeWindow(this.windowID);
+    this.windowManager.removeWindow(this.windowId);
   }
 
   /**
@@ -191,7 +199,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
    * files, create a TS object, and add it to an array.
    * @param dataPath The path type describing what kind of file is being processed.
    */
-  parseTSFile(dataPath: IM.Path): void {
+  parseTSFile(dataPath: Path): void {
     // Defines a TSObject so it can be instantiated as the desired object later.
     var TSObject: any;
     // Create an array to hold the Observables of each file read.
@@ -202,8 +210,8 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
     var TSIDLocation: string;
 
     switch (dataPath) {
-      case IM.Path.sMP: TSObject = new StateModTS(this.commonService); break;
-      case IM.Path.dVP: TSObject = new DateValueTS(this.commonService); break;
+      case Path.sMP: TSObject = new StateModTS(this.commonService); break;
+      case Path.dVP: TSObject = new DateValueTS(this.commonService); break;
     }
 
     for (let data of this.graphTemplate.product.subProducts[0].data) {
