@@ -78,11 +78,10 @@ by using the command (this step can usually be skipped unless a 401 Unauthorized
 error occurs when publishing):
 
     ```bash
-    npm login --registry=https://npm.pkg.github.com --scope=<OWNER>
+    npm login --registry=https://npm.pkg.github.com --scope=OpenWaterFoundation --auth-type=legacy
     ```
 
-    replacing `<OWNER>` with the owner of the repository: `OpenWaterFoundation` in this
-    case. Three prompts will display:
+    Three prompts will display:
 
       * **Username** - GitHub username. This must be all lower case or it will ask
       again.
