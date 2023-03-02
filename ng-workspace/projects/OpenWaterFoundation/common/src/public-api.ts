@@ -1,4 +1,9 @@
-/* Public API Surface of the Common library. */
+/**
+ * Public API Surface of the Common library. This is what's exposed to consuming
+ * applications as imports, such as:
+ * 
+ *   import { SomeThing } from '@OpenWaterFoundation/common/services';
+ */
 
 export * from '@OpenWaterFoundation/common/dmi';
 

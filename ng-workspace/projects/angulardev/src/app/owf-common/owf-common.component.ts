@@ -41,9 +41,9 @@ export class OwfCommonComponent implements OnInit {
 
 
   /**
-   * 
-   * @param dialog 
+   * Constructor for the OwfCommonComponent.
    * @param commonService Reference to the injected Common library service.
+   * @param dialog 
    */
   constructor(private commonService: OwfCommonService, private dialog: MatDialog) {
     
@@ -68,7 +68,7 @@ export class OwfCommonComponent implements OnInit {
     }
 
     this.commonService.getJSONData(this.commonService.buildPath(
-    Path.d3P, ['/data-maps/data-ts/d3-treemap-config.json']))
+    Path.d3P, '/data-maps/data-ts/d3-treemap-config.json'))
     .subscribe((d3Config: D3Prop) => {
       d3Config.chartType = D3Chart.treemap;
     });

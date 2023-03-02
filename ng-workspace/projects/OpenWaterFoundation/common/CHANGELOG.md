@@ -12,6 +12,13 @@ These elements will only be added if they are applicable for the new version. Ne
 versions will have the date of deployment after the version number, and will contain
 X's if the version is not yet released.
 
+# 4.2.2 (2023-xx-xx) #
+
+### Refactoring ###
+
+* Renamed the `ZoomDisablePipe` to `CheckDataTableElementPipe` since it was doing
+more than just determining whether a zoom button should be disabled.
+
 # 4.2.1 (2023-02-27) #
 
 ### Refactoring ###

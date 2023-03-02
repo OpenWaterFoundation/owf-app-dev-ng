@@ -56,12 +56,6 @@ on by the user. */
   padding: 0px 8px 0px 8px;
 }
 
-/* When a mat-raised-button is clicked, there is a focus on it that slightly deepens
-the color of the button. This overrides that so that it always stays the same color. */
-.mat-raised-button ::ng-deep .mat-button-focus-overlay {
-  display: none;
-}
-
 /* The class for the upper-right close button in a dialog. The inline-block display
 makes it so that it will share with the title header div, rendering them side-by-side. */
 .upper-dialog-close-button {
@@ -70,4 +64,12 @@ makes it so that it will share with the title header div, rendering them side-by
   width: 80px;
   float: right;
   outline: none;
+}
+
+/* ANGULAR STYLING WORKAROUNDS */
+
+/* When a mat-raised-button is clicked, there is a focus on it that slightly deepens
+the color of the button. This overrides that so that it always stays the same color. */
+.mat-raised-button ::ng-deep .mat-button-focus-overlay {
+  display: none;
 }

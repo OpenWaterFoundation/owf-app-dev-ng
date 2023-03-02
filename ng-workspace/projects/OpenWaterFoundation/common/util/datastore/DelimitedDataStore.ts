@@ -50,7 +50,7 @@ export class DelimitedDatastore {
     }
 
     return new Observable((subscriber: Subscriber<any>) => {
-      Papa.parse(commonService.buildPath(Path.csvPath, [convertedPath]), {
+      Papa.parse(commonService.buildPath(Path.csvPath, convertedPath), {
         delimiter: ",",
         download: true,
         comments: "#",

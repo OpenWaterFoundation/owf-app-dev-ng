@@ -1,40 +1,46 @@
-<div *ngIf="storyConf">
+<div *ngIf="validStoryId === true">
+  <div *ngIf="storyConf">
 
-  <!-- Fullpage main nav menu. -->
-  <nav id="story-nav">
-    <div class="story-nav-container">
-
-      <div class="story-nav-home-container">
-        <a mat-button class="story-nav-home js-scroll-trigger"
-        [attr.href]="currentURL + '#' + storyConf.story.chapters[0].pages[0].metadata.id">
-          {{storyConf.story.name}}
-        </a>
+    <!-- Fullpage main nav menu. -->
+    <nav id="story-nav">
+      <div class="story-nav-container">
+  
+        <div class="story-nav-home-container">
+          <a mat-button class="story-nav-home js-scroll-trigger"
+          [attr.href]="currentURL + '#' + storyConf.story.chapters[0].pages[0].metadata.id">
+            {{storyConf.story.name}}
+          </a>
+        </div>
+  
+        <div class="story-nav-all-menus-container" id="story-menu">
+          <ul class="story-nav-ul">
+            <div *ngFor="let chapter of storyConf.story.chapters" class="story-nav-menu-container">
+              <li class="nav-item">
+                <a mat-button class="nav-link" [attr.href]="currentURL + '#' + chapter.pages[0].metadata.id"
+                [matTooltip]="chapter.tooltip" [matTooltipShowDelay]="500" matTooltipPosition="below">
+                  {{chapter.name}}
+                </a>
+              </li>		  
+            </div>
+          </ul>
+        </div>
       </div>
-
-      <div class="story-nav-all-menus-container" id="story-menu">
-        <ul class="story-nav-ul">
-          <div *ngFor="let chapter of storyConf.story.chapters" class="story-nav-menu-container">
-            <li class="nav-item">
-              <a mat-button class="nav-link" [attr.href]="currentURL + '#' + chapter.pages[0].metadata.id"
-              [matTooltip]="chapter.tooltip" [matTooltipShowDelay]="500" matTooltipPosition="below">
-                {{chapter.name}}
-              </a>
-            </li>		  
-          </div>
-        </ul>
-      </div>
+    </nav>
+  
+    <!-- Fullpage main content. -->
+    <div fullpage id="fullpage" [options]="config" (ref)="getRef($event)">
+      <!-- Ensures no element is actually put into the DOM. Doing so messes with the
+      story creation and functionality. -->
+      <ng-container *ngFor="let chapter of storyConf.story.chapters">
+        <div *ngFor="let page of chapter.pages" class="section">
+          <dashboard [dashboardConfig]="page"></dashboard>
+        </div>
+      </ng-container>
     </div>
-  </nav>
-
-  <!-- Fullpage main content. -->
-  <div fullpage id="fullpage" [options]="config" (ref)="getRef($event)">
-    <!-- Ensures no element is actually put into the DOM. Doing so messes with the
-    story creation and functionality. -->
-    <ng-container *ngFor="let chapter of storyConf.story.chapters">
-      <div *ngFor="let page of chapter.pages" class="section">
-        <dashboard [dashboardConfig]="page"></dashboard>
-      </div>
-    </ng-container>
+  
   </div>
+</div>
 
+<div *ngIf="validStoryId === false">
+  <common-not-found pageType="Story"></common-not-found>
 </div>

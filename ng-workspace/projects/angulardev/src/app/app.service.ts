@@ -80,7 +80,7 @@ export class AppService {
   //           // Take off the pre pending ]( and ending )
   //           var innerParensContent = word.substring(2, word.length - 1);
   //           // Return the formatted full markdown path with the corresponding bracket and parentheses
-  //           return '](' + _this.buildPath(pathType, [innerParensContent]) + ')';
+  //           return '](' + _this.buildPath(pathType, innerParensContent) + ')';
   //         });
 
   //       }

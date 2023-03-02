@@ -52,7 +52,7 @@ export class AppComponent {
    * @param dataUnitsPath The path to the dataUnits file.
    */
   private setDataUnits(dataUnitsPath: string): void {
-    this.owfService.getPlainText(this.owfService.buildPath(Path.dUP, [dataUnitsPath]), Path.dUP).pipe(map((dfile: any) => {
+    this.owfService.getPlainText(this.owfService.buildPath(Path.dUP, dataUnitsPath), Path.dUP).pipe(map((dfile: any) => {
       let dfileArray = dfile.split('\n');
       // Convert the returned string above into an array of strings as an argument
       DataUnits.readUnitsFileBool ( dfileArray, true );

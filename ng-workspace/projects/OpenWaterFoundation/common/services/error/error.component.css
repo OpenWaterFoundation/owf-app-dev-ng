@@ -1,6 +1,6 @@
 /* CLASSES */
 
-/*  */
+/* The main container for this component. */
 .error-widget-container {
   background: rgba(0,0,0,0);
 
@@ -12,7 +12,7 @@
   width: 100%;
 }
 
-/*  */
+/* The FA triangle icon. */
 .fa-exclamation-triangle {
   color: darkred;
 }

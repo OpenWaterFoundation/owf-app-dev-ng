@@ -37,35 +37,6 @@ th.mat-header-cell {
 
 /* CLASSES */
 
-/* Material input CSS overriding. This is deprecated! */
-::ng-deep .mat-focused .mat-form-field-label {
-  /*change color of label*/
-  color: #9DB66B !important;
- }
-
-::ng-deep.mat-form-field-underline {
-  /*change color of underline*/
-  background-color: #9DB66B !important;
-} 
-
-::ng-deep.mat-form-field-ripple {
- /*change color of underline when focused*/
- background-color: #9DB66B !important;;
-}
-
-/* Material Radio Button CSS overriding. This is deprecated! */
-::ng-deep .mat-radio-button.mat-primary .mat-radio-ripple .mat-ripple-element {
-  background-color:#9DB66B;
-}
-
-::ng-deep .mat-radio-button.mat-primary .mat-radio-inner-circle {
-  background-color: #9DB66B;
-}
-
-::ng-deep .mat-radio-button.mat-primary.mat-radio-checked .mat-radio-outer-circle {
-  border-color: rgb(155, 155, 155);
-}
-
 /* The div surrounding the Mat Table so scrolling will occur if the table is large
 enough, and it doesn't take up too much space vertically in the Dialog. The draggable
 <h1> is 5% of the Dialog height, so this <div> can be technically 95%. Making it
@@ -245,4 +216,36 @@ fixed-layout table, and won't wrap, creating the desired cell style */
 
 .zoom-to-selected {
   font-size: 12px;
+}
+
+/* ANGULAR STYLING WORKAROUNDS */
+
+/* Change color of form label. */
+::ng-deep .mat-focused .mat-form-field-label {
+  color: #9DB66B !important;
+}
+
+/* Change color of form underline. */
+::ng-deep.mat-form-field-underline {
+  background-color: #9DB66B !important;
+} 
+
+/* Change color of underline when focused. */
+::ng-deep.mat-form-field-ripple {
+  background-color: #9DB66B !important;
+}
+
+/* Material Radio Button CSS overriding. */
+::ng-deep .mat-radio-button.mat-primary .mat-radio-ripple .mat-ripple-element {
+  background-color:#9DB66B;
+}
+
+/*  */
+::ng-deep .mat-radio-button.mat-primary .mat-radio-inner-circle {
+  background-color: #9DB66B;
+}
+
+/*  */
+::ng-deep .mat-radio-button.mat-primary.mat-radio-checked .mat-radio-outer-circle {
+  border-color: rgb(155, 155, 155);
 }

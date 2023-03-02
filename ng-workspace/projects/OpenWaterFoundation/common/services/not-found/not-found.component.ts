@@ -9,14 +9,12 @@ import { Component,
 })
 export class NotFoundComponent implements OnInit {
 
-  /**
-   * 
-   */
+  /** InfoMapper page type, shown on the error page. */
   @Input('pageType') pageType = 'InfoMapper';
 
 
   /**
-   * 
+   * Constructor for the NotFoundComponent.
    */
   constructor() { }
 

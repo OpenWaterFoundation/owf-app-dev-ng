@@ -26,6 +26,9 @@ export class EventService {
   private listenedToWidgets: ListenedToWidget[] = [];
 
 
+  /**
+   * Constructor for the EventService.
+   */
   constructor() { }
 
 

@@ -1,14 +1,19 @@
-import { Injectable }      from '@angular/core';
-import { HttpClient }      from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-import { catchError }      from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { BehaviorSubject,
           Observable, 
           of, 
-          Subscriber}      from 'rxjs';
+          Subscriber} from 'rxjs';
 
-import * as Papa           from 'papaparse';
-import { AppConfig, GeoMapProject, Path, PropFunction, SaveFileType, TSID } from './types';
+import * as Papa      from 'papaparse';
+import { AppConfig,
+          GeoMapProject,
+          Path,
+          PropFunction,
+          SaveFileType,
+          TSID }      from './types';
 
 
 @Injectable({
@@ -121,10 +126,12 @@ export class OwfCommonService {
 
   
   /**
-   * @constructor OWFCommonService.
+   * Constructor for the OWFCommonService.
    * @param http The reference to the HttpClient class for HTTP requests.
    */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+
+  }
 
 
   /**
@@ -169,29 +176,30 @@ export class OwfCommonService {
    * Builds the correct path needed for an HTTP GET request for either a local file
    * or URL, and does so whether given an absolute or relative path in a configuration
    * or template file.
-   * @param pathType A Path enum representing what kind of path that needs to be built.
-   * @param arg An optional array for arguments needed to build the path, e.g. a
-   * filename or geoLayerId.
+   * @param pathType A Path enum that differentiates the kind of path that needs
+   * to be built.
+   * @param path An optional string used to build the path.
    */
-  buildPath(pathType: string, arg?: any[]): string {
+  buildPath(pathType: Path, path?: string): string {
 
-    // If a URL is given as the path that needs to be built, just return it so the
-    // http GET request can be performed.
-    if (arg) {
-      if (arg[0].startsWith('https') || arg[0].startsWith('http') || arg[0].startsWith('www')) {
-        return arg[0];
+    // If a URL is given as the path that needs to be built, just return it so a
+    // HTTP GET request can be performed.
+    if (path) {
+      if (path.startsWith('https') || path.startsWith('http') || path.startsWith('www')) {
+        return path;
       }
     }
+
     // Depending on the pathType, build the correct path.
     switch(pathType) {
       case Path.cPP:
-        return this.getAppPath() + this.getContentPathFromId(arg[0]);
+        return this.getAppPath() + this.getContentPathFromId(path);
       case Path.gLGJP:
-        return this.getAppPath() + this.getGeoJSONBasePath() + arg[0];
+        return this.getAppPath() + this.getGeoJSONBasePath() + path;
       case Path.hPP:
         return this.getAppPath() + this.getHomePage();
       case Path.eCP:
-        return this.getAppPath() + this.getMapConfigPath() + arg[0];
+        return this.getAppPath() + this.getMapConfigPath() + path;
       case Path.cP:
       case Path.csvPath:
       case Path.d3P:
@@ -206,22 +214,22 @@ export class OwfCommonService {
       case Path.raP:
       case Path.rP:
         if (pathType === Path.dP) {
-          this.setMarkdownPath(this.getAppPath() + this.formatPath(arg[0], pathType));
+          this.setMarkdownPath(this.getAppPath() + this.formatPath(pathType, path));
         }
-        return this.getAppPath() + this.formatPath(arg[0], pathType);
+        return this.getAppPath() + this.formatPath(pathType, path);
       case Path.bSIP:
-        return this.formatPath(arg[0], pathType);
+        return this.formatPath(pathType, path);
       case Path.mP:
-        if (arg[0].startsWith('/')) {
-          return this.getAppPath() + this.formatPath(arg[0], pathType);
+        if (path.startsWith('/')) {
+          return this.getAppPath() + this.formatPath(pathType, path);
         } else {
-          return this.getFullMarkdownPath() + this.formatPath(arg[0], pathType);
+          return this.getFullMarkdownPath() + this.formatPath(pathType, path);
         }
       case Path.gP:
-        if (arg[0].startsWith('/')) {
-          return this.getAppPath() + arg[0].substring(1);
+        if (path.startsWith('/')) {
+          return this.getAppPath() + path.substring(1);
         } else {
-          return this.formatPath(arg[0], pathType);
+          return this.formatPath(pathType, path);
         }
       default:
         return '';
@@ -270,10 +278,10 @@ export class OwfCommonService {
    * Formats the path with either the correct relative path prepended to the destination
    * file, or the removal of the beginning '/' forward slash or an absolute path.
    * @param path The path to format.
-   * @param pathType A string representing the type of path being formatted, so
+   * @param pathType The IM enum representing the type of path being formatted, so
    * the correct handling can be used.
    */
-  formatPath(path: string, pathType: string): string {
+  formatPath(pathType: Path, path: string): string {
 
     switch (pathType) {
       case Path.cP:
@@ -508,7 +516,7 @@ export class OwfCommonService {
         if (mainMenu.id === id) storyPathExt = mainMenu.storyFile;
       }
     }
-
+    // Create the 
     splitStoryPath = storyPathExt.split('/');
 
     for (let i = 0; i < splitStoryPath.length - 1; i++) {
@@ -519,9 +527,7 @@ export class OwfCommonService {
     this.dashboardConfigPath = storyPath.substring(1) :
     this.dashboardConfigPath = storyPath;
 
-    return storyPathExt.startsWith('/') ?
-    storyPathExt.substring(1) :
-    storyPathExt;
+    return storyPathExt.startsWith('/') ? storyPathExt.substring(1) : storyPathExt;
   }
 
   /**
@@ -671,8 +677,6 @@ export class OwfCommonService {
       catchError(this.handleError<any>(path, type, id))
     );
   }
-
-  
 
   /**
    * @returns The layerError object, which contains any layer geoLayerId's of a
@@ -1125,7 +1129,7 @@ export class OwfCommonService {
             if (innerParensContent.startsWith('assets/img/')) {
               return '](' + innerParensContent + ')';
             }
-            return '](' + _this.buildPath(pathType, [innerParensContent]) + ')';
+            return '](' + _this.buildPath(pathType, innerParensContent) + ')';
           });
 
         }

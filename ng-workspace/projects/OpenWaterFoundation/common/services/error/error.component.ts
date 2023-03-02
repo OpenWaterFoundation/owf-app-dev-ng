@@ -5,7 +5,8 @@ import { Component,
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 import { StaticStructures }      from '../static-structures';
-import { DashboardWidget, Widget } from '../types';
+import { DashboardWidget,
+          Widget }               from '../types';
 
 
 @Component({
@@ -25,10 +26,13 @@ export class ErrorComponent implements OnInit {
   /** All used icons in the ErrorComponent. */
   faTriangleExclamation = faTriangleExclamation;
 
+
   /**
-  * @constructor The Error widget component constructor.
+  * Constructor for the ErrorComponent.
   */
-  constructor() { }
+  constructor() {
+
+  }
 
 
   /**
@@ -125,7 +129,6 @@ export class ErrorComponent implements OnInit {
     if (this.errorLocation.includes('dashboard') || this.errorLocation.includes('widget')) {
       this.dashboardError();
     }
-
     
   }
 

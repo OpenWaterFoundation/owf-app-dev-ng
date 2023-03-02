@@ -55,7 +55,7 @@ export class DialogD3Component implements OnInit {
 
       case D3Chart.tree:
         if (this.d3Prop.dataPath.toUpperCase().endsWith('.JSON')) {
-          this.commonService.getJSONData(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getJSONData(this.commonService.buildPath(Path.d3P, this.d3Prop.dataPath))
           .subscribe((data: any) => {
             var data = this.renameKeys(data);
             // Create the tree and root hierarchy node given the provided
@@ -72,7 +72,7 @@ export class DialogD3Component implements OnInit {
           });
 
         } else if (this.d3Prop.dataPath.toUpperCase().endsWith('.CSV')) {
-          this.commonService.getPlainText(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getPlainText(this.commonService.buildPath(Path.d3P, this.d3Prop.dataPath))
           .subscribe((data: any) => {
             // Read in CSV file.
             var table = d3.csvParse(data);
@@ -100,7 +100,7 @@ export class DialogD3Component implements OnInit {
       case D3Chart.treemap:
         // Create the root hierarchy node with data from a JSON config file.
         if (this.d3Prop.dataPath.toUpperCase().endsWith('.JSON')) {
-          this.commonService.getJSONData(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getJSONData(this.commonService.buildPath(Path.d3P, this.d3Prop.dataPath))
           .subscribe((data: any) => {
             var data = this.renameKeys(data);
             // Create the treemap and root hierarchy node given the provided
@@ -119,7 +119,7 @@ export class DialogD3Component implements OnInit {
         }
         // Create the root hierarchy node with data from a CSV config file.
         else if (this.d3Prop.dataPath.toUpperCase().endsWith('.CSV')) {
-          this.commonService.getPlainText(this.commonService.buildPath(Path.d3P, [this.d3Prop.dataPath]))
+          this.commonService.getPlainText(this.commonService.buildPath(Path.d3P, this.d3Prop.dataPath))
           .subscribe((data: any) => {
             var table = d3.csvParse(data);
             this.replaceWithValue(table);

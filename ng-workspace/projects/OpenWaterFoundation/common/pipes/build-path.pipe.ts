@@ -3,7 +3,10 @@ import {
   PipeTransform
 } from '@angular/core';
 
-import { OwfCommonService } from '@OpenWaterFoundation/common/services';
+import {
+  OwfCommonService,
+  Path
+} from '@OpenWaterFoundation/common/services';
 
 @Pipe({ name: 'buildPath' })
 export class BuildPathPipe implements PipeTransform {
@@ -24,8 +27,8 @@ export class BuildPathPipe implements PipeTransform {
    * @param path The path to use for building.
    * @returns The full built path to the InfoMapper file.
    */
-  transform(pathType: string, path: string): string {
-    return this.commonService.buildPath(pathType, [path]);
+  transform(pathType: Path, path: string): string {
+    return this.commonService.buildPath(pathType, path);
   }
 
 }

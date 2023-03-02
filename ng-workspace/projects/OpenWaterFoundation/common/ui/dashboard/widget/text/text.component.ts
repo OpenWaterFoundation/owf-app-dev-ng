@@ -46,7 +46,7 @@ export class TextComponent implements OnDestroy{
   /**
    * 
    * @param commonService Reference to the injected Common library service.
-   * @param dashboardService 
+   * @param dashboardService The injected dashboard service.
    * @param document 
    */
   constructor(
@@ -85,7 +85,7 @@ export class TextComponent implements OnDestroy{
     }
 
     // The widget object has passed its inspection and can be created.
-    this.fullDataPath = this.commonService.buildPath(Path.dbP, [this.textWidget.textPath]);
+    this.fullDataPath = this.commonService.buildPath(Path.dbP, this.textWidget.textPath);
     this.getTextData();
   }
 

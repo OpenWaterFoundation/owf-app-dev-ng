@@ -1,31 +1,3 @@
-/* TAGS */
-
-ngx-gallery ::ng-deep .fa-arrow-circle-o-left {
-  background: radial-gradient(black 60%, rgba(255, 255, 255, 0) 40%);
-  border-radius: 100%;
-  color: white;
-}
-
-ngx-gallery ::ng-deep .fa-arrow-circle-o-right {
-  background: radial-gradient(black 60%, rgba(255, 255, 255, 0) 40%);
-  border-radius: 100%;
-  color: white;
-}
-
-ngx-gallery ::ng-deep .fa-search-plus {
-  background: radial-gradient(black 20%, rgba(255, 255, 255, 0) 80%);
-  /* border-radius: 100%; */
-  color: white;
-  margin-left: 10px;
-}
-
-ngx-gallery ::ng-deep .fa-dot-circle-o {
-  background: radial-gradient(black 20%, rgba(255, 255, 255, 0) 80%);
-  /* border-radius: 100%; */
-  color: white;
-  margin-left: 10px;
-}
-
 /* CLASSES */
 
 /* .dialog-background {
@@ -73,4 +45,36 @@ case) and have it subtracted from the size of the dialog. */
 .gallery-components-group button {
   margin: 0px 20px 0px 0px;
   background-color: #c2c1c1;
+}
+
+/* ANGULAR STYLING WORKAROUNDS */
+
+/*  */
+ngx-gallery ::ng-deep .fa-arrow-circle-o-left {
+  background: radial-gradient(black 60%, rgba(255, 255, 255, 0) 40%);
+  border-radius: 100%;
+  color: white;
+}
+
+/*  */
+ngx-gallery ::ng-deep .fa-arrow-circle-o-right {
+  background: radial-gradient(black 60%, rgba(255, 255, 255, 0) 40%);
+  border-radius: 100%;
+  color: white;
+}
+
+/*  */
+ngx-gallery ::ng-deep .fa-search-plus {
+  background: radial-gradient(black 20%, rgba(255, 255, 255, 0) 80%);
+  /* border-radius: 100%; */
+  color: white;
+  margin-left: 10px;
+}
+
+/*  */
+ngx-gallery ::ng-deep .fa-dot-circle-o {
+  background: radial-gradient(black 20%, rgba(255, 255, 255, 0) 80%);
+  /* border-radius: 100%; */
+  color: white;
+  margin-left: 10px;
 }

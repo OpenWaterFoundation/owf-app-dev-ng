@@ -8,7 +8,14 @@ import { GeoLayerSymbol } from '@OpenWaterFoundation/common/services';
 })
 export class SymbolCheckPipe implements PipeTransform {
 
-  transform(checkType: string, geoLayerSymbol?: GeoLayerSymbol, classificationInfo?: any): any {
+  /**
+   * @param checkType The type of symbol to check.
+   * @param geoLayerSymbol The GeoLayerSymbol object from a GeoLayerView.
+   * @param classificationInfo The object with data from a classification file.
+   * @returns A boolean of whether the provided symbol `checkType` will be rendered
+   * on screen.
+   */
+  transform(checkType: string, geoLayerSymbol?: GeoLayerSymbol, classificationInfo?: any): boolean {
 
     switch(checkType) {
       case 'noSymbol':

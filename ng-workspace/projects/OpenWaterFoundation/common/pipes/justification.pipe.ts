@@ -3,12 +3,13 @@ import { Pipe,
 
 import { OwfCommonService } from '@OpenWaterFoundation/common/services';
 
+
 @Pipe({ name: 'justification' })
-// A pipe that makes sure to only update and be called when something changes on the page. Otherwise, these functions will be
-// called whenever a change is detected, e.g. mouse movement. This ends up calling the functions thousands and thousands of
-// times. Utilizing this pipe, it is only called - to determine a table cell justification or whether the table's cell is a
-// URL - when the user actually scrolls through the table. This is when the computations need to be done, and won't slow down
-// the app as much as before.
+
+/**
+ * This pure pipe will be called  This pipe determines a table's content justification in a cell,
+ * or whether the table's cell is a URL.
+ */
 export class JustificationPipe implements PipeTransform {
 
 
@@ -21,13 +22,19 @@ export class JustificationPipe implements PipeTransform {
   }
 
 
-  transform(value: unknown, ...args: unknown[]): unknown {
-    if (args[0]) {
-       return this.commonService.isURL(value);
-    } else {
-      if (this.commonService.isURL(value)) {
+  /**
+   * Determines the justification of a table cell's content, or whether the content
+   * is a URL based on if the @param checkUrl is provided.
+   */
+  transform(cellContent: string, checkUrl?: boolean): any {
+
+    if (checkUrl) {
+       return this.commonService.isURL(cellContent);
+    }
+    else {
+      if (this.commonService.isURL(cellContent)) {
         return 'url';
-      } else if (isNaN(Number(value))) {
+      } else if (isNaN(Number(cellContent))) {
         return 'left';
       } else {
         return 'right';

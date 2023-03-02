@@ -8,7 +8,13 @@ import { NGXLogger }  from 'ngx-logger';
 export class CommonLoggerService {
 
 
-  constructor(private logger: NGXLogger) { }
+  /**
+   * Constuctor for the CommonLoggerService.
+   * @param logger Reference to the NGXLogger package.
+   */
+  constructor(private logger: NGXLogger) {
+    
+  }
 
   
   /**

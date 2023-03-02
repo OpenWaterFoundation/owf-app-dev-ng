@@ -37,7 +37,7 @@ export class SelectorComponent {
    * is updated. */
   @ViewChild(CdkVirtualScrollViewport, { static: false }) cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
   /**
-   * 
+   * Set to true when data in the component
    */
   private dataLoading: BehaviorSubject<boolean> = new BehaviorSubject(true);
   /**
@@ -175,7 +175,7 @@ export class SelectorComponent {
    */
   retrieveCSVData(): void {
 
-    var fullDataPath = this.commonService.buildPath(Path.dbP, [this.selectorWidget.dataPath]);
+    var fullDataPath = this.commonService.buildPath(Path.dbP, this.selectorWidget.dataPath);
 
     Papa.parse(fullDataPath, {
       delimiter: ",",
@@ -211,7 +211,7 @@ export class SelectorComponent {
    * so this Selector Widget correctly shows them in its dropdown.
    */
   retrieveJSONData(): void {
-    this.commonService.getJSONData(this.commonService.buildPath(Path.dbP, [this.selectorWidget.dataPath]))
+    this.commonService.getJSONData(this.commonService.buildPath(Path.dbP, this.selectorWidget.dataPath))
     .subscribe((JSONData: any) => {
 
       this.allFeatures = this.dashboardService.processWidgetJSONData(JSONData, this.selectorWidget);

@@ -1,19 +1,18 @@
 import { Component,
-          Input,
-          OnDestroy }        from '@angular/core';
-import { ActivatedRoute }    from '@angular/router';
+          Input }           from '@angular/core';
+import { ActivatedRoute }   from '@angular/router';
 
-import { Subscription }      from 'rxjs';
-import { first }             from 'rxjs/operators';
+import { Subscription }     from 'rxjs';
+import { first }            from 'rxjs/operators';
 
 import { DashboardConf,
           DashboardWidget,
           EventService,
           OwfCommonService, 
           Style,
-          WidgetTileStyle} from '@OpenWaterFoundation/common/services';
+          WidgetTileStyle } from '@OpenWaterFoundation/common/services';
 
-import { DashboardService }  from './dashboard.service';
+import { DashboardService } from './dashboard.service';
 
 
 @Component({
@@ -21,7 +20,7 @@ import { DashboardService }  from './dashboard.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnDestroy {
+export class DashboardComponent {
 
   /** The dashboard configuration object read in from the JSON file. */
   dashboardConf: DashboardConf;
@@ -33,18 +32,24 @@ export class DashboardComponent implements OnDestroy {
    * ngDestroy. */
   routeSub: Subscription;
   /**
-   * A dashboard config object passed in from a 
+   * A dashboard config object passed in from a parent component
    */
-  @Input('dashboardConfig') standaloneDashboardConf: DashboardConf;
+  @Input('dashboardConfig') embeddedDashboardConf: DashboardConf;
   /** `true` if the id in the URL matches an id from the `app-config.json` file.
    * `false` if not, and the 404 page will show. */
   validDashboardId: boolean;
 
   /**
    * 
-   * @param commonService Reference to the injected Common library service.
    * @param route The injected ActivatedRoute for determining the correct URL and
    * Dashboard to be displayed.
+   */
+  /**
+   * 
+   * @param commonService Reference to the injected Common library service.
+   * @param dashboardService The injected dashboard service.
+   * @param eventService 
+   * @param route 
    */
   constructor(
     private commonService: OwfCommonService,
@@ -113,28 +118,22 @@ export class DashboardComponent implements OnDestroy {
       if (this.validDashboardId === false) {
         return;
       }
-      
-      // The dashboard component is being created and used in another component's
-      // template and has provided the dashboardConfig property.
-      if (!this.standaloneDashboardConf) {
-        this.readDashboardConfig(dashboardId);
-      } else {
+
+      // The dashboard config object has been provided in the another config file
+      // and has already been read in by that component.
+      if (this.embeddedDashboardConf) {
         this.displayedInStory = true;
-        this.dashboardInit(this.standaloneDashboardConf);
+        this.dashboardInit(this.embeddedDashboardConf);
       }
-      
-  
-      
+      // The dashboard is being created as a 'standalone' component.
+      if (!this.embeddedDashboardConf) {
+        this.readDashboardConfig(dashboardId);
+      }
     });
   }
 
   /**
-   * Called once, before the instance is destroyed.
-   */
-  ngOnDestroy(): void { }
-
-  /**
-   * 
+   * Asynchronously reads in the dashboard configuration file
    * @param dashboardId 
    */
   private readDashboardConfig(dashboardId: string): void {

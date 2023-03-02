@@ -205,16 +205,6 @@ the map configuration JSON file. Transitions from 'black' to whitesmoke.   */
   width: 100%;
 }
 
-/* TESTING with the Angular Material Mat Slide Toggle. */
-::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
-  background-color: #64b2f1;
-}
-
-/* TESTING with the Angular Material Mat Slide Toggle. */
-::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
-  background-color: #016dc5;
-}
-
 /* Styles both the default and user-provided single symbol containers. */
 .no-symbol-container,
 .single-symbol-container {
@@ -273,4 +263,16 @@ the map configuration JSON file. Transitions from 'black' to whitesmoke.   */
 /* Rounded slider when toggled off. */
 .slider.round:before {
   border-radius: 50%;
+}
+
+/* ANGULAR STYLING WORKAROUNDS */
+
+/* TESTING with the Angular Material Mat Slide Toggle. */
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+  background-color: #64b2f1;
+}
+
+/* TESTING with the Angular Material Mat Slide Toggle. */
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+  background-color: #016dc5;
 }

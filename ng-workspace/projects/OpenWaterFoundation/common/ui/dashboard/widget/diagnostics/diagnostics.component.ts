@@ -7,11 +7,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./diagnostics.component.css']
 })
 export class DiagnosticsComponent {
-
   
 
   /**
-   * @constructor The Error widget component constructor.
+   * @constructor The Error widget component constructor. NOTE: Not currently used.
    */
   constructor() {}
 
@@ -22,8 +21,6 @@ export class DiagnosticsComponent {
   ngOnInit(): void {
     
   }
-
-  
 
 }
 

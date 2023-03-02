@@ -170,10 +170,10 @@
               </div>
               <!-- USER-PROVIDED DEFAULT MARKER -->
               <img *ngIf="geoLayerView.geoLayerSymbol.properties.symbolImage" class="layer-icon"
-              [attr.src]="'symbolImagePath' | buildPath : geoLayerView.geoLayerSymbol.properties.symbolImage">
+              [attr.src]="IMPath.sIP | buildPath : geoLayerView.geoLayerSymbol.properties.symbolImage">
               <!-- BUILT-IN DEFAULT MARKER -->
               <img *ngIf="geoLayerView.geoLayerSymbol.properties.builtinSymbolImage" class="layer-icon"
-              [attr.src]="'builtinSymbolImagePath' | buildPath : geoLayerView.geoLayerSymbol.properties.builtinSymbolImage">
+              [attr.src]="IMPath.bSIP | buildPath : geoLayerView.geoLayerSymbol.properties.builtinSymbolImage">
               <!-- SYMBOL SHAPE -->
               <div *ngIf="geoLayerView.geoLayerSymbol.properties.symbolShape; else defaultLegend">
                 <!-- SQUARE -->

@@ -27,7 +27,7 @@ screen. -->
         Search layer data
       </mat-radio-button>
       <mat-radio-button value="address" (click)="toggleSearchInfo()"
-      [hidden]="geoLayer.geometryType | zoomDisable : 'null' : 'address-radio'"
+      [hidden]="'address-radio' | checkDataTableElement : geoLayer.geometryType"
       class="option" attr.data-cy="{{geoLayer.geoLayerId}}-radio-address">
         Search using address
       </mat-radio-button>
@@ -79,7 +79,7 @@ screen. -->
             <!-- If the property value is a URL, it has already been truncated
             (as attributeTable is a copy), so below the truncated version of the
             link above, use a pipe to display Link to open up in a new tab.-->
-            <div *ngIf="element.properties[property.key] | justification: 'true'">
+            <div *ngIf="element.properties[property.key] | justification: true">
               <a [attr.href]="links[element.properties[property.key]]"
               target="_blank">Link</a>
             </div>
@@ -138,15 +138,15 @@ screen. -->
       </button>
       <mat-menu #menuFriend="matMenu">
         <button mat-menu-item class="zoom-to-address" (click)="zoomToAddress()"
-        [disabled]="searchType | zoomDisable : addressMarkerDisplayed : 'address-zoom'"
-        [hidden]="geoLayer.geometryType | zoomDisable : 'null' : 'address-radio'"
+        [disabled]="'address-zoom' | checkDataTableElement : searchType : addressMarkerDisplayed"
+        [hidden]="'address-radio' | checkDataTableElement : geoLayer.geometryType"
         attr.data-cy="{{geoLayer.geoLayerId}}-zoom-to-address">
           <fa-icon class="fa-mag-glass-plus" [icon]="faMagnifyingGlassPlus" size="2xl">
           </fa-icon>
           Zoom to address
         </button>
         <button mat-menu-item class="zoom-to-selected" (click)="zoomToFeatures()"
-        [disabled]="selectedLayer | zoomDisable : geoLayer.geoLayerId : 'selected-layers'"
+        [disabled]="'selected-layers' | checkDataTableElement : selectedLayer"
         attr.data-cy="{{geoLayer.geoLayerId}}-zoom-to-feature">
           <fa-icon class="fa-mag-glass-plus" [icon]="faMagnifyingGlassPlus" size="2xl">
           </fa-icon>

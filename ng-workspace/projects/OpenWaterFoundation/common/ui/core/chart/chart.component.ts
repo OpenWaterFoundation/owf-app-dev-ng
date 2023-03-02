@@ -614,7 +614,7 @@ export class ChartComponent implements OnInit, OnDestroy {
       // If graphTemplatePrime hasn't been set yet, read it in and set it here.
       if (!this.graphTemplatePrime) {
         this.updateResultsSub = this.commonService.getJSONData(
-          this.commonService.buildPath(Path.dbP, [this.chartWidget.graphTemplatePath])
+          this.commonService.buildPath(Path.dbP, this.chartWidget.graphTemplatePath)
         ).subscribe({
           next: (graphTemplate: GraphTemplate) => {
             this.graphTemplatePrime = graphTemplate;
@@ -993,7 +993,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   private setupForWidget(): void {
 
     this.initialResultsSub = this.commonService.getJSONData(
-      this.commonService.buildPath(Path.dbP, [this.chartWidget.graphTemplatePath])
+      this.commonService.buildPath(Path.dbP, this.chartWidget.graphTemplatePath)
     ).subscribe({
 
       next: (graphTemplate: GraphTemplate) => {

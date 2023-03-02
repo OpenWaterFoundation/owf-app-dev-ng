@@ -51,7 +51,7 @@ export class StateModDatastore {
 
     return new StateModTS(commonService).readTimeSeries(
       fullTSID.location,
-      commonService.buildPath(Path.sMP, [convertedPath]),
+      commonService.buildPath(Path.sMP, convertedPath),
       null,
       null,
       null,

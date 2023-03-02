@@ -5,6 +5,8 @@ import { MatButtonModule }       from '@angular/material/button';
 import { MatTooltipModule }      from '@angular/material/tooltip';
 import { AngularFullpageModule } from '@fullpage/angular-fullpage';
 
+import { NotFoundModule }        from '@OpenWaterFoundation/common/services';
+
 import { MapModule }             from '@OpenWaterFoundation/common/leaflet';
 import { DashboardModule }       from '@OpenWaterFoundation/common/ui/dashboard';
 import { StoryComponent }        from './story.component';
@@ -16,6 +18,8 @@ import { StoryComponent }        from './story.component';
   ],
   imports: [
     CommonModule,
+
+    NotFoundModule,
 
     AngularFullpageModule,
     DashboardModule,

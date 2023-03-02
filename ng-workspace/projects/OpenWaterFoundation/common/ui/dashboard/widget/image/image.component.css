@@ -1,9 +1,11 @@
 /* CLASSES */
 
+/* Image tag with no title. */
 .image-with-title {
   height: 80%;
 }
 
+/* Image tag with title. */
 .image-no-title {
   height: 100%;
 }
@@ -26,13 +28,14 @@ the dashboard. */
   justify-content: center;
 }
 
+/* Container around the image title. */
 .title-container {
   height: 20%;
   display: flex;
   justify-content: center;
 }
 
-/*  */
+/* Either or will be shown. Container around the image tag. */
 .title-given-container, .title-not-given-container {
   height: 100%;
   display: flex;

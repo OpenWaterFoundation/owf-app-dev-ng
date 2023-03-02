@@ -2276,7 +2276,7 @@ export class DialogGapminderComponent implements OnInit {
     else if (docPath.includes('.md')) markdown = true;
     else if (docPath.includes('.html')) html = true;
 
-    this.commonService.getPlainText(this.commonService.buildPath(Path.gP, [docPath]), Path.dP)
+    this.commonService.getPlainText(this.commonService.buildPath(Path.gP, docPath), Path.dP)
     .pipe(take(1))
     .subscribe((doc: any) => {
 

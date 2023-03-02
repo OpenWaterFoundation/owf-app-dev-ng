@@ -623,7 +623,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           // it and won't log any errors.
           asyncData.push(
             this.commonService.getJSONData(
-              this.commonService.buildPath(Path.gLGJP, [geoLayer.sourcePath]), Path.gLGJP, geoLayer.geoLayerId
+              this.commonService.buildPath(Path.gLGJP, geoLayer.sourcePath), Path.gLGJP, geoLayer.geoLayerId
             )
           );
           // Push each event handler onto the async array if there are any.
@@ -638,7 +638,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // Use the http GET request function and pass it the returned formatted path.
                 asyncData.push(
                   this.commonService.getJSONData(
-                    this.commonService.buildPath(Path.eCP, [event.properties.popupConfigPath]),
+                    this.commonService.buildPath(Path.eCP, event.properties.popupConfigPath),
                     Path.eCP, this.mapID
                   )
                 );
@@ -647,7 +647,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                 // Use the http GET request function and pass it the returned formatted path.
                 asyncData.push(
                   this.commonService.getJSONData(
-                    this.commonService.buildPath(Path.eCP, [event.properties.eventConfigPath]),
+                    this.commonService.buildPath(Path.eCP, event.properties.eventConfigPath),
                     Path.eCP, this.mapID
                   )
                 );
@@ -705,7 +705,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               symbol.classificationType.toUpperCase().includes('SINGLESYMBOL')) {
               // TODO: jkeahey 2021.5.11 - Is anything in this conditional necessary?
               if (symbol.properties.classificationFile) {
-                Papa.parse(this.commonService.buildPath(Path.cP, [symbol.properties.classificationFile]), {
+                Papa.parse(this.commonService.buildPath(Path.cP, symbol.properties.classificationFile), {
                   delimiter: ",",
                   download: true,
                   comments: "#",
@@ -787,7 +787,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
               if (symbol.properties.classificationFile) {
 
-                Papa.parse(this.commonService.buildPath(Path.cP, [symbol.properties.classificationFile]), {
+                Papa.parse(this.commonService.buildPath(Path.cP, symbol.properties.classificationFile), {
                   delimiter: ",",
                   download: true,
                   comments: "#",
@@ -883,7 +883,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             // Display an image on the map.
             else if (geoLayer.layerType.toUpperCase().includes('IMAGE')) {
               var imageLayer = L.imageOverlay(
-                this.commonService.buildPath(Path.iP, [geoLayer.sourcePath]),
+                this.commonService.buildPath(Path.iP, geoLayer.sourcePath),
                 MapUtil.parseImageBounds(geoLayerView.properties.imageBounds),
                 {
                   opacity: MapUtil.verify(symbol.properties.opacity, Style.opacity)
@@ -921,7 +921,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             else {
               // If the point layer contains a classification file for styling.
               if (symbol.properties.classificationFile) {
-                Papa.parse(this.commonService.buildPath(Path.cP, [symbol.properties.classificationFile]), {
+                Papa.parse(this.commonService.buildPath(Path.cP, symbol.properties.classificationFile), {
                   delimiter: ",",
                   download: true,
                   comments: "#",
@@ -967,7 +967,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
                           let markerIcon = new L.icon({
                             iconUrl: this.commonService.getAppPath() +
-                            this.commonService.formatPath(symbol.properties.symbolImage, Path.sIP),
+                            this.commonService.formatPath(Path.sIP, symbol.properties.symbolImage),
                             iconAnchor: MapUtil.createAnchorArray(symbol.properties.symbolImage, symbol.properties.imageAnchorPoint)
                           });
 
@@ -985,7 +985,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                         // Create a built-in (default) marker image layer
                         else if (symbol.properties.builtinSymbolImage) {
                           let markerIcon = new L.icon({
-                            iconUrl: this.commonService.formatPath(symbol.properties.builtinSymbolImage, Path.bSIP),
+                            iconUrl: this.commonService.formatPath(Path.bSIP, symbol.properties.builtinSymbolImage),
                             iconAnchor: MapUtil.createAnchorArray(symbol.properties.builtinSymbolImage, symbol.properties.imageAnchorPoint)
                           });
                           return L.marker(latlng, { icon: markerIcon })
@@ -1025,7 +1025,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
                       let markerIcon = new L.icon({
                         iconUrl: this.commonService.getAppPath() +
-                        this.commonService.formatPath(symbol.properties.symbolImage, Path.sIP),
+                        this.commonService.formatPath(Path.sIP, symbol.properties.symbolImage),
                         iconAnchor: MapUtil.createAnchorArray(symbol.properties.symbolImage, symbol.properties.imageAnchorPoint)
                       });
 
@@ -1043,7 +1043,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                     // Create a built-in (default) marker image layer.
                     else if (symbol.properties.builtinSymbolImage) {
                       let markerIcon = new L.icon({
-                        iconUrl: this.commonService.formatPath(symbol.properties.builtinSymbolImage, Path.bSIP),
+                        iconUrl: this.commonService.formatPath(Path.bSIP, symbol.properties.builtinSymbolImage),
                         iconAnchor: MapUtil.createAnchorArray(symbol.properties.builtinSymbolImage, symbol.properties.imageAnchorPoint)
                       });
                       return L.marker(latlng, { icon: markerIcon })
@@ -1199,7 +1199,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 // any ${properties}, replace the ${property} for
                                 // the resourcePath only.
                                 var resourcePath = _this.commonService.obtainPropertiesFromLine(resourcePathArray[i], featureProperties);
-                                let fullResourcePath = _this.commonService.buildPath(Path.rP, [resourcePath]);
+                                let fullResourcePath = _this.commonService.buildPath(Path.rP, resourcePath);
 
                                 _this.commonService.getPlainText(fullResourcePath, Path.rP).subscribe((text: string) => {
                                   _this.openTextDialog({
@@ -1212,7 +1212,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                               // Display a Time Series graph in a Dialog popup.
                               else if (actionArray[i].toUpperCase() === 'DISPLAYTIMESERIES') {
 
-                                let fullResourcePath = _this.commonService.buildPath(Path.rP, [resourcePathArray[i]]);
+                                let fullResourcePath = _this.commonService.buildPath(Path.rP, resourcePathArray[i]);
 
                                 _this.commonService.getJSONData(fullResourcePath, Path.rP, _this.mapID)
                                   .subscribe((graphTemplate: GraphTemplate) => {
@@ -1244,7 +1244,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                               }
                               // Display a Heatmap Dialog.
                               else if (actionArray[i].toUpperCase() === 'DISPLAYHEATMAP') {
-                                let fullResourcePath = _this.commonService.buildPath(Path.rP, [resourcePathArray[i]]);
+                                let fullResourcePath = _this.commonService.buildPath(Path.rP, resourcePathArray[i]);
 
                                 _this.commonService.getJSONData(fullResourcePath).subscribe((graphTemplate: GraphTemplate) => {
                                   // Replaces all ${} property notations with the
@@ -1270,7 +1270,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                                 });
                                 
                               } else if (actionArray[i].toUpperCase() === 'DISPLAYD3VIZ') {
-                                var fullVizPath = _this.commonService.buildPath(Path.d3P, [resourcePathArray[i]])
+                                var fullVizPath = _this.commonService.buildPath(Path.d3P, resourcePathArray[i])
                                 _this.commonService.getJSONData(fullVizPath).subscribe((d3Prop: D3Prop) => {
                                   _this.openD3VizDialog(geoLayer, d3Prop);
                                 });
@@ -1571,7 +1571,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     // Uses the fetch API with the given path to get the tiff file in assets to
     // create the raster layer.
-    fetch(this.commonService.buildPath(Path.raP, [geoLayer.sourcePath]))
+    fetch(this.commonService.buildPath(Path.raP, geoLayer.sourcePath))
     .then((response: any) => response.arrayBuffer())
     .then((arrayBuffer: any) => {
       parseGeoRaster(arrayBuffer).then((georaster: any) => {
@@ -1580,7 +1580,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         if (symbol && symbol.properties.classificationFile) {
           this.categorizedLayerColors[geoLayer.geoLayerId] = [];
 
-          Papa.parse(this.commonService.buildPath(Path.cP, [symbol.properties.classificationFile]), {
+          Papa.parse(this.commonService.buildPath(Path.cP, symbol.properties.classificationFile), {
             delimiter: ",",
             download: true,
             comments: "#",
@@ -1623,7 +1623,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               }
               // With the help of GeoBlaze, use Leaflet Map Events for clicking
               // and/or hovering over a raster layer.
-              const blaze = geoblaze.load(this.commonService.buildPath(Path.raP, [geoLayer.sourcePath]))
+              const blaze = geoblaze.load(this.commonService.buildPath(Path.raP, geoLayer.sourcePath))
               .then((georaster: any) => {
                 let layerItem = _this.mapLayerManager.getMapLayerItem(geoLayerView.geoLayerId);
 
@@ -2407,7 +2407,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     else if (this.geoMapDocPath.includes('.html')) html = true;
 
     this.commonService.getPlainText(
-      this.commonService.buildPath(Path.dP, [this.geoMapDocPath]), Path.dP
+      this.commonService.buildPath(Path.dP, this.geoMapDocPath), Path.dP
     )
     .pipe(take(1)).subscribe((doc: any) => {
 
@@ -2452,7 +2452,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    let fullGapminderPath = this.commonService.buildPath(Path.rP, [resourcePath]);
+    let fullGapminderPath = this.commonService.buildPath(Path.rP, resourcePath);
     this.commonService.setGapminderConfigPath(fullGapminderPath);
     
     const dialogConfig = new MatDialogConfig();
@@ -2524,7 +2524,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    let fullResourcePath = this.commonService.buildPath(Path.rP, [resourcePath]);
+    let fullResourcePath = this.commonService.buildPath(Path.rP, resourcePath);
 
     Papa.parse(fullResourcePath, {
       delimiter: ",",
@@ -2676,7 +2676,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // Refresh a vector layer.
       if (refreshType === RefreshType.vector) {
         this.commonService.getJSONData(
-          this.commonService.buildPath(Path.gLGJP, [geoLayer.sourcePath])
+          this.commonService.buildPath(Path.gLGJP, geoLayer.sourcePath)
         ).pipe(first()).subscribe((geoJsonData: any) => {
 
           // Use the Map Layer Manager to remove all layers from the Leaflet layer,
@@ -2696,7 +2696,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         
         // Uses the fetch API with the given path to get the tiff file in assets
         // to create the raster layer.
-        fetch(this.commonService.buildPath(Path.raP, [geoLayer.sourcePath]))
+        fetch(this.commonService.buildPath(Path.raP, geoLayer.sourcePath))
         .then((response: any) => response.arrayBuffer())
         .then((arrayBuffer: any) => {
           parseGeoRaster(arrayBuffer).then((georaster: any) => {
@@ -2708,7 +2708,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             if (symbol && symbol.properties.classificationFile) {
               this.categorizedLayerColors[geoLayer.geoLayerId] = [];
 
-              Papa.parse(this.commonService.buildPath(Path.cP, [symbol.properties.classificationFile]), {
+              Papa.parse(this.commonService.buildPath(Path.cP, symbol.properties.classificationFile), {
                 delimiter: ",",
                 download: true,
                 comments: "#",
@@ -2785,7 +2785,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this.mapLayerManager.getMapLayerItem(geoLayer.geoLayerId).getItemLeafletLayer().remove();
 
         var imageLayer = L.imageOverlay(
-          this.commonService.buildPath(Path.iP, [geoLayer.sourcePath]),
+          this.commonService.buildPath(Path.iP, geoLayer.sourcePath),
           MapUtil.parseImageBounds(geoLayerView.properties.imageBounds),
           {
             opacity: MapUtil.verify(symbol.properties.opacity, Style.opacity)

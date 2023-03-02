@@ -204,7 +204,7 @@ export class DialogPropertiesComponent implements OnInit, OnDestroy {
     }
     
 
-    var fullPath: string = this.commonService.buildPath(Path.gLGJP, [this.geoLayer.sourcePath]);
+    var fullPath: string = this.commonService.buildPath(Path.gLGJP, this.geoLayer.sourcePath);
     var formattedPath = this.commonService.condensePath(fullPath, 'link');
 
     markdownString += '\n## Download Layer ##\n\n' +

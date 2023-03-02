@@ -28,10 +28,12 @@ export class ImageComponent {
 
 
   /**
-   * 
+   * Constructor for the ImageComponent.
    * @param commonService Reference to the injected Common library service.
    */
-  constructor(private commonService: OwfCommonService) {}
+  constructor(private commonService: OwfCommonService) {
+    
+  }
 
 
   /**
@@ -51,7 +53,7 @@ export class ImageComponent {
       return;
     }
 
-    this.fullDataPath = this.commonService.buildPath(Path.dbP, [this.imageWidget.imagePath]);
+    this.fullDataPath = this.commonService.buildPath(Path.dbP, this.imageWidget.imagePath);
   }
 
   /**

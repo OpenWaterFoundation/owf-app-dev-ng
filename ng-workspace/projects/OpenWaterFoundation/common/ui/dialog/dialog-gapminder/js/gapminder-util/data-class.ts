@@ -51,7 +51,7 @@ export class Data {
 		var _this = this;
 		//ajax call to get annotation data from annotationsURL specified in Config file
 		$.ajax({
-			url: _this.commonService.buildPath(Path.gP, [_this.configProps.AnnotationsFileName]),
+			url: _this.commonService.buildPath(Path.gP, _this.configProps.AnnotationsFileName),
 			async: false,
 			dataType: 'json',
 			error: function(error) {

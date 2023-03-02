@@ -119,7 +119,7 @@ export class StatusIndicatorComponent {
       // Found a classification file.
       if (this.statusIndicatorWidget.classificationFile) {
 
-        var fullClassificationPath = this.commonService.buildPath(Path.dbP, [this.statusIndicatorWidget.classificationFile]);
+        var fullClassificationPath = this.commonService.buildPath(Path.dbP, this.statusIndicatorWidget.classificationFile);
         this.classifyFile$ = this.commonService.papaParse(fullClassificationPath);
         this.initStatusIndicator();
       }
@@ -302,7 +302,7 @@ export class StatusIndicatorComponent {
       delimitedData$.push(this.classifyFile$);
     }
 
-    var fullCSVDataPath = this.commonService.buildPath(Path.dbP, [this.statusIndicatorWidget.dataPath]);
+    var fullCSVDataPath = this.commonService.buildPath(Path.dbP, this.statusIndicatorWidget.dataPath);
     delimitedData$.push(this.commonService.papaParse(fullCSVDataPath, true));
 
     this.CSVSub = forkJoin(delimitedData$).subscribe((delimitedData: any[]) => {
@@ -334,7 +334,7 @@ export class StatusIndicatorComponent {
       allData$.push(this.classifyFile$);
     }
 
-    var fullJSONDataPath = this.commonService.buildPath(Path.dbP, [this.statusIndicatorWidget.dataPath]);
+    var fullJSONDataPath = this.commonService.buildPath(Path.dbP, this.statusIndicatorWidget.dataPath);
     allData$.push(this.commonService.getJSONData(fullJSONDataPath));
 
     this.JSONSub = forkJoin(allData$).subscribe((allData: any) => {

@@ -197,9 +197,10 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
   /**
    * Use the cdss-lib-common-java converted code to read through StateMod and DateValue
    * files, create a TS object, and add it to an array.
-   * @param dataPath The path type describing what kind of file is being processed.
+   * @param pathType The path type describing what kind of file is being processed.
    */
-  parseTSFile(dataPath: Path): void {
+  parseTSFile(pathType: Path): void {
+
     // Defines a TSObject so it can be instantiated as the desired object later.
     var TSObject: any;
     // Create an array to hold the Observables of each file read.
@@ -209,7 +210,7 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
     // The TSID used by the readTimeSeries function in the converted Java code that utilizes it as a TS identifier.
     var TSIDLocation: string;
 
-    switch (dataPath) {
+    switch (pathType) {
       case Path.sMP: TSObject = new StateModTS(this.commonService); break;
       case Path.dVP: TSObject = new DateValueTS(this.commonService); break;
     }
@@ -226,8 +227,8 @@ export class DialogHeatmapComponent implements OnInit, OnDestroy {
       } else if (fullTSID.split('~').length === 3) {
         filePath = fullTSID.split('~')[2];
       }
-      // Don't subscribe yet!  
-      dataArray.push(TSObject.readTimeSeries(TSIDLocation, this.commonService.buildPath(dataPath, [filePath]),
+      // Don't subscribe yet! Just push the observable into the array.
+      dataArray.push(TSObject.readTimeSeries(TSIDLocation, this.commonService.buildPath(pathType, filePath),
       null,
       null,
       null,

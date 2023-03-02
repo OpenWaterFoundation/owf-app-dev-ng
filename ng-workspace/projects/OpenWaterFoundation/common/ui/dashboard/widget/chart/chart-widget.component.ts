@@ -1,7 +1,5 @@
 import { Component,
-          Input,
-          OnDestroy, 
-          OnInit}      from '@angular/core';
+          Input }      from '@angular/core';
 import { ChartWidget } from '@OpenWaterFoundation/common/services';
 
 
@@ -11,7 +9,7 @@ import { ChartWidget } from '@OpenWaterFoundation/common/services';
   templateUrl: './chart-widget.component.html',
   styleUrls: ['./chart-widget.component.css']
 })
-export class ChartWidgetComponent implements OnDestroy {
+export class ChartWidgetComponent {
 
   /** The attribute provided to this component when created, e.g.
    *   <chart-widget [chartWidget]="widget"></chart-widget> */
@@ -24,12 +22,5 @@ export class ChartWidgetComponent implements OnDestroy {
   constructor() { }
 
 
-  /**
-  * Called once, before the instance is destroyed. Unsubscribes from all defined
-  * subscriptions to prevent memory leaks.
-  */
-  ngOnDestroy(): void {
-    
-  }
 
 }

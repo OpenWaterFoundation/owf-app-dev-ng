@@ -140,6 +140,9 @@ export class StoryComponent implements OnInit, OnDestroy {
     });
   }
   
+  /**
+   * 
+   */
   ngOnDestroy(): void {
     this.destroyed.next();
     this.destroyed.complete();

@@ -1,30 +1,5 @@
 /* CLASSES */
 
-/*  */
-::ng-deep .mat-focused .mat-form-field-label {
-  /*change color of label*/
-  color: #9DB66B !important;
- }
-
- /* Change color of the form's underline. */
-::ng-deep.mat-form-field-underline {
-  background-color: #9DB66B !important;
-} 
-
-/* Change color of underline when focused. */
-::ng-deep.mat-form-field-ripple {
- background-color: #9DB66B !important;;
-}
-
-/* Change color of the mat-select arrow. */
-::ng-deep .mat-select-arrow {
-  color: #9DB66B !important;
-}
-
-.progress-bar {
-  align-self: flex-end;
-}
-
 /* The main mat-form-field to be shown in the widget. */
 .select-form {
   padding: 0px;
@@ -45,4 +20,27 @@
   height: 48px;
   width: 242px;
   padding: 0px 10px 0px 10px;
+}
+
+/* ANGULAR STYLING WORKAROUNDS */
+
+/* Change color of underline when focused. */
+::ng-deep .mat-focused .mat-form-field-label {
+  /*change color of label*/
+  color: #9DB66B !important;
+}
+
+/* Change color of the form's underline. */
+::ng-deep.mat-form-field-underline {
+  background-color: #9DB66B !important;
+} 
+
+/* Change color of ripple. */
+::ng-deep.mat-form-field-ripple {
+ background-color: #9DB66B !important;;
+}
+
+/* Change color of the mat-select arrow. */
+::ng-deep .mat-select-arrow {
+  color: #9DB66B !important;
 }

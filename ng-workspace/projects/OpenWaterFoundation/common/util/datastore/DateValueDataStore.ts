@@ -51,7 +51,7 @@ export class DateValueDatastore {
 
     return new DateValueTS(commonService).readTimeSeries(
       fullTSID.location,
-      commonService.buildPath(Path.sMP, [convertedPath]),
+      commonService.buildPath(Path.sMP, convertedPath),
       null,
       null,
       null,

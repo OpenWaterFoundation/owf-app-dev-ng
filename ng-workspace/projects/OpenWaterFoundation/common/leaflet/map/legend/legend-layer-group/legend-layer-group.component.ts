@@ -71,6 +71,8 @@ export class LegendLayerGroupComponent {
    * value: object with style properties
    * For displaying a graduated symbol in the Leaflet legend. */
   @Input('graduatedLayerColors') graduatedLayerColors: any;
+  /** Set to the InfoMapper Path type, to be used in the component template. */
+  IMPath = Path;
   /** Boolean test variable for use with Angular Material slide toggle. */
   isChecked = true;
   /** Represents the Date string since the last time a layer was updated. */
@@ -249,7 +251,7 @@ export class LegendLayerGroupComponent {
     else if (docPath.includes('.md')) { markdown = true; }
     else if (docPath.includes('.html')) { html = true; }
 
-    this.commonService.getPlainText(this.commonService.buildPath(Path.dP, [docPath]), Path.dP)
+    this.commonService.getPlainText(this.commonService.buildPath(Path.dP, docPath), Path.dP)
     .pipe(take(1))
     .subscribe((doc: any) => {
 
@@ -318,7 +320,7 @@ export class LegendLayerGroupComponent {
     }
 
     var resourcePath = this.eventActions[geoLayerView.properties.imageGalleryEventActionId].resourcePath;
-    let fullResourcePath = this.commonService.buildPath(Path.rP, [resourcePath]);
+    let fullResourcePath = this.commonService.buildPath(Path.rP, resourcePath);
 
     Papa.parse(fullResourcePath, {
       delimiter: ",",
