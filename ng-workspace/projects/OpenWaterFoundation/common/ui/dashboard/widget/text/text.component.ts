@@ -44,10 +44,10 @@ export class TextComponent implements OnDestroy{
   
 
   /**
-   * 
+   * Constructor for the TextComponent.
    * @param commonService Reference to the injected Common library service.
    * @param dashboardService The injected dashboard service.
-   * @param document 
+   * @param document Reference to the web page's content, which is the DOM tree.
    */
   constructor(
     private commonService: OwfCommonService,
@@ -148,9 +148,8 @@ export class TextComponent implements OnDestroy{
   }
 
   /**
-   * 
-   * @param $event 
-   * @returns 
+   * Stops event propagation.
+   * @param $event The 'wheel' event.
    */
   private preventScroll($event: Event): boolean {
     $event.stopPropagation();
@@ -158,7 +157,9 @@ export class TextComponent implements OnDestroy{
   }
 
   /**
-   * 
+   * Prevents the scroll event propagation when the mouse is over this component.
+   * This way if this component is in a Story for example, scrolling with the mouse
+   * wheel will not change the story page, just the Text component.
    */
   private preventScrollPropagation(): void {
     var docMarkdownDiv = this.document.querySelector('#docMarkdownDiv');

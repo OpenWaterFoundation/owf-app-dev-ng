@@ -11,27 +11,21 @@
   justify-content: center;
 }
 
-/*  */
+/* The container around the indicator change icon. */
 .change-icon {
   margin-right: 10px;
   margin-top: 4px;
 }
 
-/*  */
+/* Container around both the indicator change icon and main data number. */
 .change-icon-and-info-container {
   display: flex;
   justify-content: center;
 }
 
-/*  */
+/* Unknown indicator icon. */
 .change-icon-neutral {
   color: black;
-}
-
-/*  */
-.change-info-container {
-  display: flex;
-  width: 50%;
 }
 
 /* The element used to show what the change was from the previous time period. */
@@ -51,7 +45,7 @@
   padding-top: 8px;
 }
 
-/*  */
+/* Unknown font awesome icon. */
 .fa-question {
   color: black;
 }

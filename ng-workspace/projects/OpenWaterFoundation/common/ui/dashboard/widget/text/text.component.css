@@ -1,13 +1,14 @@
 /* CLASSES */
 
-/* This can be 100% of the height, since it's a child of .doc-box above, and so will be 100% relative to it */
+/* This can be 100% of the height, since it's a child of .doc-box above, and so will
+be 100% relative to it */
 .doc-contents-text {
   height: 100%;
   margin-bottom: 0px;
 }
 
-/*  */
-.error-widget-comp-container {
+/* Container around the Widget Error component. */
+.error-widget-container {
   height: 100%;
   width: 100%;
 }

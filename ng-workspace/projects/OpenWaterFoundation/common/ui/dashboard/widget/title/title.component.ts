@@ -1,6 +1,5 @@
 import { Component,
-          Input, 
-          OnDestroy}        from '@angular/core';
+          Input}            from '@angular/core';
 import { TitleWidget }      from '@OpenWaterFoundation/common/services';
 
 import { Observable }       from 'rxjs';
@@ -13,7 +12,7 @@ import { DashboardService } from '../../dashboard.service';
   templateUrl: './title.component.html',
   styleUrls: ['./title.component.css']
 })
-export class TitleComponent implements OnDestroy{
+export class TitleComponent {
 
   /** String array representing the type of error that occurred while building this
    * widget. Used by the error widget. */
@@ -25,11 +24,14 @@ export class TitleComponent implements OnDestroy{
    *   <widget-title [titleWidget]="widget"></widget-title> */
   @Input('titleWidget') titleWidget: TitleWidget;
 
+
   /**
-   * 
+   * Constructor for the TitleComponent.
    * @param dashboardService The injected dashboard service.
    */
-  constructor(private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService) {
+    
+  }
 
 
   /**
@@ -54,14 +56,6 @@ export class TitleComponent implements OnDestroy{
       return;
     }
 
-    this.createTitle();
-  }
-
-  /**
-   * 
-   */
-  private createTitle(): void {
-    // Do I even need to do anything?
   }
 
   /**
@@ -72,13 +66,6 @@ export class TitleComponent implements OnDestroy{
     this.isTitleError$ = this.dashboardService.isTitleError;
 
     this.checkWidgetObject();
-  }
-
-  /**
-   * Called once, before the instance is destroyed.
-   */
-  ngOnDestroy(): void {
-    
   }
 
 }

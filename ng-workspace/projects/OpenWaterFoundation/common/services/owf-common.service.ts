@@ -121,6 +121,10 @@ export class OwfCommonService {
   /** Object containing a layer's geoLayerId as the key, and a boolean showing whether
    * the URL for the layer is not currently working or does not exist. */
   serverUnavailable: {} = {};
+  /**
+   * 
+   */
+  storyConfigPath: string;
   /** Determines whether query parameters should be used when dialogs are opened. */
   private _useQueryParams = false;
 
@@ -266,15 +270,6 @@ export class OwfCommonService {
   }
 
   /**
-   * 
-   * @param highlighted 
-   * @returns 
-   */
-  featureHighlighted(highlighted: boolean): any {
-    return this.highlighted.next(highlighted);
-  }
-
-  /**
    * Formats the path with either the correct relative path prepended to the destination
    * file, or the removal of the beginning '/' forward slash or an absolute path.
    * @param path The path to format.
@@ -308,7 +303,7 @@ export class OwfCommonService {
         if (path.startsWith('/')) {
           return path.substring(1);
         } else {
-          return this.getDashboardConfigPath() + path;
+          return this.getDashboardConfigBasePath() + path;
         }
       case Path.bSIP:
         if (path.startsWith('/')) {
@@ -418,7 +413,7 @@ export class OwfCommonService {
   }
 
   /**
-   * @returns the chart template JSON file read earlier as an object
+   * @returns the chart template JSON file read earlier as an object.
    */
   getChartTemplateObject(): Object {
     return this.chartTemplateObject;
@@ -457,15 +452,17 @@ export class OwfCommonService {
   }
 
   /**
-   * 
-   * @returns 
+   * @returns The path to the folder where dashboard configuration files reside.
    */
-  getDashboardConfigPath(): string { return this.dashboardConfigPath; }
+  getDashboardConfigBasePath(): string { return this.dashboardConfigPath; }
 
   /**
-   * 
-   * @param id 
-   * @returns 
+   * Checks if the provided id matches an id from any subMenu or mainMenu in the
+   * `app-config.json` file. If it does, sets the path to the dashboard configuration
+   * file (just the path only) and returns the path with the config file.
+   * @param id The id to check against.
+   * @returns The path relative to the AppPath where the dashboard configuration
+   * file resides with the matching id.
    */
    getDashboardConfigPathFromId(id: string): string {
     var dashboardPathExt: string;
@@ -498,9 +495,12 @@ export class OwfCommonService {
   }
 
   /**
-   * 
-   * @param id 
-   * @returns 
+   * Checks if the provided id matches an id from any subMenu or mainMenu in the
+   * `app-config.json` file. If it does, sets the path to the story configuration
+   * file (just the path only) and returns the path with the config file.
+   * @param id The id to check against.
+   * @returns The path relative to the AppPath where the dashboard configuration
+   * file resides with the matching id.
    */
    getStoryConfigPathFromId(id: string): string {
     var storyPathExt: string;
@@ -516,7 +516,7 @@ export class OwfCommonService {
         if (mainMenu.id === id) storyPathExt = mainMenu.storyFile;
       }
     }
-    // Create the 
+
     splitStoryPath = storyPathExt.split('/');
 
     for (let i = 0; i < splitStoryPath.length - 1; i++) {
@@ -524,8 +524,8 @@ export class OwfCommonService {
     }
 
     storyPath.startsWith('/') ?
-    this.dashboardConfigPath = storyPath.substring(1) :
-    this.dashboardConfigPath = storyPath;
+    this.storyConfigPath = storyPath.substring(1) :
+    this.storyConfigPath = storyPath;
 
     return storyPathExt.startsWith('/') ? storyPathExt.substring(1) : storyPathExt;
   }
@@ -664,14 +664,7 @@ export class OwfCommonService {
    * @returns The JSON retrieved from the host as an Observable.
    */
   getJSONData(path: string, type?: string, id?: string): Observable<any> {
-    // This creates an options object with the optional headers property to add
-    // headers to the request. This could solve some CORS issues, but is not completely
-    // tested yet.
-    // var options = {
-    //   headers: new HttpHeaders({
-    //     'Access-Control-Request-Method': 'GET'
-    //   })
-    // }
+
     return this.http.get<any>(path)
     .pipe(
       catchError(this.handleError<any>(path, type, id))
@@ -839,17 +832,28 @@ export class OwfCommonService {
    * to the propertyArray when we've detected the end of the property. Find each
    * one in the value until the value line is done.
    * @param line The string to search through.
-   * @param featureProperties The object containing the feature's key and value
-   * pair properties.
+   * @param featureProperties The object containing the feature's key and value pair
+   * properties.
    * @param key Optional parameter to provide a better console warning by logging
    * the key.
-   * @param labelProp Optional parameter
-   * @returns A parsedProp object that contains:
-   * (foundProps): An array of all found properties in the line in the order they were found,
-   * and (line): The line with all ${property} notation properly converted.
+   * @param labelProp Optional boolean that will have the method check if any operators
+   * need to be removed from the property.
+   * @param countFoundProps Optional boolean that tells the method to count and save
+   * the found props in this line so it can be returned with the formatted line.
+   * @returns Either a parsedProp object that contains:
+   * * `foundProps` - Array of all found properties in the line in order.
+   * * `line` - The formatted line with all `${property}` notation properly converted.
+   * 
+   * **only** if the `countFoundProps` parameter is true. If not, will return:
+   * * The formatted line with all `${property}` notation properly converted.
    */
-  obtainPropertiesFromLine(line: string, featureProperties: Object, key?: any,
-  labelProp?: boolean, countFoundProps?: boolean): any {
+  obtainPropertiesFromLine(
+    line: string,
+    featureProperties: Object,
+    key?: any,
+    labelProp?: boolean,
+    countFoundProps?: boolean
+  ): any {
 
     var allFoundProps: string[] = [];
     var propertyString = '';
@@ -1116,11 +1120,12 @@ export class OwfCommonService {
       // Go through each one of these strings and replace each one that does not
       // specify itself as an in-page link, or external link.
       for (let image of allImages) {
+
         if (image.startsWith('](#') || image.startsWith('](https') ||
         image.startsWith('](http') || image.startsWith('](www')) {
           continue;
-        } else {
-
+        }
+        else {
           doc = doc.replace(image, function(word) {
             // Take off the pre pending ]( and ending )
             var innerParensContent = word.substring(2, word.length - 1);
@@ -1131,11 +1136,9 @@ export class OwfCommonService {
             }
             return '](' + _this.buildPath(pathType, innerParensContent) + ')';
           });
-
         }
       }
     }
-
     return doc;
   }
 
@@ -1179,8 +1182,8 @@ export class OwfCommonService {
   setDataUnitsArr(dataUnits: any[]): void { this.dataUnits = dataUnits; }
 
   /**
-   * 
-   * @param path 
+   * Sets the fullMarkdownPath to the provided path.
+   * @param path The path to set as the full path to markdown files.
    */
   setFullMarkdownPath(path: string) { this.fullMarkdownPath = path; }
 
@@ -1194,8 +1197,8 @@ export class OwfCommonService {
   }
 
   /**
-   * Sets the @var graphFilePath to the given path
-   * @param path The path given in the graph template file TSID
+   * Sets the @var graphFilePath to the given path.
+   * @param path The path given in the graph template file TSID.
    */
   setGraphFilePath(path: string): void {
     this.graphFilePath = path;
@@ -1238,8 +1241,8 @@ export class OwfCommonService {
   setMapConfigPath(path: string): void { this.mapConfigPath = path; }
 
   /**
-   * 
-   * @param path 
+   * Sets the fullMarkdownPath to the provided path.
+   * @param path The path to markdown files.
    */
   private setMarkdownPath(path: string): void {
     
@@ -1252,14 +1255,15 @@ export class OwfCommonService {
   }
 
   /**
-   * Sets the @var originalFeatureStyle to the style object from the feature passed in.
-   * @param style The style object of the feature to be saved
+   * Sets the @var originalFeatureStyle to the style object from the feature passed
+   * in.
+   * @param style The style object of the feature to be saved.
    */
   setOriginalFeatureStyle(style: any): void { this.originalFeatureStyle = style; }
 
   /**
    * Sets the @var serverUnavailable with a key of @var geoLayerId to true.
-   * @param geoLayerId The geoLayerId to compare to while creating the side bar
+   * @param geoLayerId The geoLayerId to compare to while creating the side bar.
    */
   setServerUnavailable(geoLayerId: string): void {
     this.serverUnavailable[geoLayerId] = true;
@@ -1267,7 +1271,7 @@ export class OwfCommonService {
 
   /**
    * Sets the @var graphTSID to the given tsid.
-   * @param tsid The tsid to set to
+   * @param tsid The TSID used to set the `graphTSID`.
    */
   setTSIDLocation(tsid: string): void { this.graphTSID = tsid; }
 

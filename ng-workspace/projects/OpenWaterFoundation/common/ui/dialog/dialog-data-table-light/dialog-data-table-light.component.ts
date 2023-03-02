@@ -24,6 +24,7 @@ import { MapLayerManager,
   styleUrls: ['./dialog-data-table-light.component.css', '../main-dialog-style.css']
 })
 export class DialogDataTableLightComponent implements OnInit {
+
   /** The original object containing all features in the layer. */
   attributeTableOriginal: any;
   /** The copied object for displaying data a Material Table's cells. Is an instance
@@ -34,9 +35,6 @@ export class DialogDataTableLightComponent implements OnInit {
   defaultRadioDisabled = true;
   /** Array containing the names of all header columns in the Material Table. */
   displayedColumns: string[];
-  /** EventEmitter that alerts the Map component (parent) that an update has happened,
-   * and sends the basin name. */
-  @Output() featureHighlighted = new EventEmitter<boolean>();
   /** The layer's geoLayer. */
   geoLayer: any;
   /** Object containing the layer geoLayerId as the ID, and an object of properties

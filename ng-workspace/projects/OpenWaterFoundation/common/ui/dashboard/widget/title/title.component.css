@@ -1,7 +1,7 @@
 /* CLASSES */
 
-/*  */
-.error-widget-comp-container {
+/* Container around the Widget Error component. */
+.error-widget-container {
   height: 100%;
   width: 100%;
 }
@@ -12,7 +12,7 @@
   user-select: none;
 }
 
-/*  */
+/* Container around the Title <p> tag. */
 .title-container {
   height: 100%;
   width: 100%;

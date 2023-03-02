@@ -906,6 +906,29 @@ export interface ChartDialog {
   graphTemplate: GraphTemplate;
 }
 
+/**
+ * 
+ */
+export interface ClassifyData {
+  color?: string;
+  fillColor?: string;
+  fillOpacity?: string;
+  label?: string;
+  level?: string;
+  opacity?: string;
+  valueMax?: string;
+  valueMin?: string;
+  weight?: string;
+}
+
+export interface ClassifyLevel {
+  valueMin: string;
+  valueMax: string;
+  minOp: Operator;
+  maxOp: Operator;
+  level: string;
+}
+
 /** All data that can be given to a dialog. */
 export interface DialogData {
   windowId: string;

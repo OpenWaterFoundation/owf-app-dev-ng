@@ -1,8 +1,13 @@
-import { Injectable }  from '@angular/core';
-import { DashboardWidget, Operator, SelectorWidget, StatusIndicatorWidget } from '@OpenWaterFoundation/common/services';
+import { Injectable }             from '@angular/core';
+import { ClassifyData,
+          ClassifyLevel,
+          DashboardWidget,
+          Operator,
+          SelectorWidget,
+          StatusIndicatorWidget } from '@OpenWaterFoundation/common/services';
 
 import { BehaviorSubject,
-          Observable } from 'rxjs';
+          Observable }            from 'rxjs';
 
 
 
@@ -20,10 +25,10 @@ export class DashboardService {
   private titleError: BehaviorSubject<boolean> = new BehaviorSubject(false);
   /** A read only object for dynamically using operators between two integers. */
   readonly operators = {
-    '>': function (a: any, b: any) { return a > b; },
-    '>=': function (a: any, b: any) { return a >= b; },
     '<': function (a: any, b: any) { return a < b; },
-    '<=': function (a: any, b: any) { return a <= b; }
+    '<=': function (a: any, b: any) { return a <= b; },
+    '>': function (a: any, b: any) { return a > b; },
+    '>=': function (a: any, b: any) { return a >= b; }
   }
   /** Set to true if any error occurs in the Selector Widget. */
   private selectorError: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -106,10 +111,10 @@ export class DashboardService {
    * @returns An object representing what the current cell's valueMin, valueMax,
    * and valueMin & valueMax operators are. Used for deciding what operators to
    * look between the values.
-   * @param line The valueMax property of one line from the CSV classification
+   * @param line The object that makes up a line (or row) from the CSV classification
    * file for Graduated layers.
    */
-  determineValueOperator(line: any): any {
+  determineValueOperator(line: ClassifyData): ClassifyLevel {
 
     var valueMin: any = null;
     var valueMax: any = null;
@@ -203,7 +208,7 @@ export class DashboardService {
     //   maxOp = Operator.ltet;
     // }
 
-    // Each of the attributes below have been assigned; return as an object.
+    // Each of the attributes below have been assigned. Return as an object.
     return {
       valueMin: valueMin,
       valueMax: valueMax,

@@ -1,23 +1,24 @@
 import { Component,
-          Input }            from '@angular/core';
+          Input }                 from '@angular/core';
 
 import { forkJoin,
           Observable,
-          Subscription }     from 'rxjs';
+          Subscription }          from 'rxjs';
 
 import { faCaretDown,
           faCaretUp,
           faCheck,
           faExclamation,
           faQuestion,
-          faXmark }          from '@fortawesome/free-solid-svg-icons';
+          faXmark }               from '@fortawesome/free-solid-svg-icons';
 
-import { EventService,
+import { ClassifyLevel,
+          EventService,
           OwfCommonService, 
           Path,
           SelectEvent,
-          StatusIndicatorWidget} from '@OpenWaterFoundation/common/services';
-import { DashboardService }  from '../../dashboard.service';
+          StatusIndicatorWidget } from '@OpenWaterFoundation/common/services';
+import { DashboardService }       from '../../dashboard.service';
 
 
 
@@ -27,64 +28,26 @@ import { DashboardService }  from '../../dashboard.service';
   styleUrls: ['./status-indicator.component.css']
 })
 export class StatusIndicatorComponent {
-  
-  /**
-   * 
-   */
-  allFeatures: any[] = [];
-  /**
-   * 
-   */
-  changeDec: boolean;
-  /**
-   * 
-   */
-  changeInc: boolean;
-  /**
-   * 
-   */
-  classificationLevels: any[] = [];
-  /**
-   * 
-   */
+
+  /** The indicator used for displaying the change in the main data value for this
+   * status indicator widget. */
+  change = {
+    increase: false,
+    decrease: false
+  };
+  /** Array of each level (or line) in the classification file that will be used
+   * to determine how a data point is classified. */
+  classifyLevels: ClassifyLevel[] = [];
+  /** An observable that is only set if a classification file is supplied. */
   classifyFile$: Observable<any>;
-  /**
-   * 
-   */
+  /** Subscription used when reading in a CSV file for this component's data. */
   CSVSub: Subscription;
-  /**
-   * 
-   */
+  /** Represents the change in the main data value, to be shown at the bottom of
+   * this component. */
   dataChange: string;
   /** String array representing the type of error that occurred while building this
    * widget. Used by the error widget. */
   errorTypes: string[] = [];
-  /** Displays a red X icon in the widget if set to true. */
-  failureIndicator: boolean;
-  /** Observable that's updated as a BehaviorSubject when a critical error creating
-   * this component occurs. */
-  isIndicatorError$: Observable<boolean>;
-  /**
-   * 
-   */
-  JSONSub: Subscription;
-  /** The main data to be displayed on this Status Indicator widget. */
-  mainData: string;
-  /**
-   * 
-   */
-  mainDataSub$: Subscription;
-  /** Displays a green check icon in the widget if set to true. */
-  passingIndicator: boolean;
-  /** The attribute provided to this component when created, e.g.
-   *   <widget-status-indicator [statusIndicatorWidget]="widget"></widget-status-indicator> */
-  @Input('statusIndicatorWidget') statusIndicatorWidget: StatusIndicatorWidget;
-  /**
-   * 
-   */
-  unknownIndicator: boolean;
-  /** Displays a yellow exclamation icon in the widget if set to true. */
-  warningIndicator: boolean;
   /** All used icons in the StatusIndicatorComponent. */
   faCaretDown = faCaretDown;
   faCaretUp = faCaretUp;
@@ -92,11 +55,36 @@ export class StatusIndicatorComponent {
   faExclamation = faExclamation;
   faQuestion = faQuestion;
   faXmark = faXmark;
-
+  /**
+   * Displays an icon in this component that represents the state of the data:
+   * * `failure` - A red X.
+   * * `passing` - A green check mark.
+   * * `unknown` - A black question mark.
+   * * `warning` - A yellow exclamation.
+   */
+  indicatorIcon = {
+    failure: false,
+    passing: false,
+    unknown: false,
+    warning: false
+  };
+  /** Observable that's updated as a BehaviorSubject when a critical error creating
+   * this component occurs. */
+  isIndicatorError$: Observable<boolean>;
+  /** Subscription used when reading in a JSON file for this component's data. */
+  JSONSub: Subscription;
+  /** The main data to be displayed on this Status Indicator widget. */
+  mainData: string;
+  /** The attribute provided to this component when created, e.g.
+   *   <widget-status-indicator [statusIndicatorWidget]="widget"></widget-status-indicator> */
+  @Input('statusIndicatorWidget') statusIndicatorWidget: StatusIndicatorWidget;
+  
 
   /**
-   * 
+   * Constructor for the StatusIndicatorComponent.
    * @param commonService Reference to the injected Common library service.
+   * @param dashboardService The injected dashboard service.
+   * @param eventService The injected event service for dashboard widgets.
    */
   constructor(
     private commonService: OwfCommonService,
@@ -132,8 +120,8 @@ export class StatusIndicatorComponent {
   }
 
   /**
-   * Checks the properties of the given chart object and determines what action
-   * to take.
+   * Checks the properties of the given chart object and determines what action to
+   * take.
    */
   private checkWidgetObject(): void {
 
@@ -233,8 +221,8 @@ export class StatusIndicatorComponent {
    * Checks if an error occurred from Papaparse, then iterates over each line from
    * the classification file and creates the necessary array of objects used for
    * classification.
-   * @param classifyData The object returned from Papaparsing the classification
-   * CSV file.
+   * @param classifyData The object returned from parsing the classification CSV
+   * file with Papaparse.
    * @returns An array of each line read in with its min and max Values,
    * operators, and the level the line is classified as.
    */
@@ -246,10 +234,9 @@ export class StatusIndicatorComponent {
       this.dashboardService.setIndicatorError = true;
       return;
     }
-      
+
     for (let line of classifyData) {
-      var valueObj = this.dashboardService.determineValueOperator(line);
-      this.classificationLevels.push(valueObj);
+      this.classifyLevels.push(this.dashboardService.determineValueOperator(line));
     }
   }
 
@@ -277,9 +264,9 @@ export class StatusIndicatorComponent {
     this.dataChange = (Number(this.mainData) - Number(previousValue)).toFixed(2);
 
     if (Number(this.mainData) >= Number(previousValue)) {
-      this.changeInc = true;
+      this.change.increase = true;
     } else {
-      this.changeDec = true;
+      this.change.decrease = true;
     }
 
     if (this.statusIndicatorWidget.classificationFile) {
@@ -292,7 +279,8 @@ export class StatusIndicatorComponent {
   }
 
   /**
-   * Gets CSV data from a data source and processes it so this widget can utilize it.
+   * Gets CSV data from a data source and processes it so this widget can utilize
+   * it.
    */
   private retrieveCSVData(): void {
 
@@ -307,15 +295,13 @@ export class StatusIndicatorComponent {
 
     this.CSVSub = forkJoin(delimitedData$).subscribe((delimitedData: any[]) => {
 
-      var classifyData: any;
       var mainData: any;
 
       if (delimitedData.length === 1) {
         mainData = delimitedData[0].data;
         this.processCSVData(mainData);
       } else if (delimitedData.length === 2) {
-        classifyData = delimitedData[0].data;
-        this.processClassifyData(classifyData);
+        this.processClassifyData(delimitedData[0].data);
         mainData = delimitedData[1].data;
         this.processCSVData(mainData);
       }
@@ -324,7 +310,8 @@ export class StatusIndicatorComponent {
   }
 
   /**
-   * Gets JSON data from a data source and processes it so this widget can utilize it.
+   * Gets JSON data from a data source and processes it so this widget can utilize
+   * it.
    */
   private retrieveJSONData(): void {
 
@@ -339,14 +326,13 @@ export class StatusIndicatorComponent {
 
     this.JSONSub = forkJoin(allData$).subscribe((allData: any) => {
 
-      var classifyData: any;
       var mainData: any;
 
       if (allData.length === 1) {
         mainData = allData[0];
-      } else if (allData.length === 2) {
-        classifyData = allData[0].data;
-        this.processClassifyData(classifyData);
+      }
+      else if (allData.length === 2) {
+        this.processClassifyData(allData[0].data);
         mainData = allData[1];
       }
 
@@ -362,9 +348,9 @@ export class StatusIndicatorComponent {
         this.dataChange = (Number(this.mainData) - Number(previousValue)).toFixed(2);
 
         if (Number(this.mainData) >= Number(previousValue)) {
-          this.changeInc = true;
+          this.change.increase = true;
         } else {
-          this.changeDec = true;
+          this.change.decrease = true;
         }
 
       } else {
@@ -382,17 +368,17 @@ export class StatusIndicatorComponent {
    */
   private setIconFromClassification(): void {
 
-    for (let classifyLevel of this.classificationLevels) {
+    for (let classifyLevel of this.classifyLevels) {
       if (this.dashboardService.operators[classifyLevel.minOp](Number(this.mainData), classifyLevel.valueMin) &&
           //                             |------operator-----||---------a----------|  |----------b----------|
           this.dashboardService.operators[classifyLevel.maxOp](Number(this.mainData), classifyLevel.valueMax)) {
 
         switch(classifyLevel.level.toLowerCase()) {
-          case 'black': this.unknownIndicator = true; break;
-          case 'red': this.failureIndicator = true; break;
-          case 'yellow': this.warningIndicator = true; break;
-          case 'green': this.passingIndicator = true; break;
-          default: this.unknownIndicator = true;
+          case 'black': this.indicatorIcon.unknown = true; break;
+          case 'red': this.indicatorIcon.failure = true; break;
+          case 'yellow': this.indicatorIcon.warning = true; break;
+          case 'green': this.indicatorIcon.passing = true; break;
+          default: this.indicatorIcon.unknown = true;
         }
       }
     }

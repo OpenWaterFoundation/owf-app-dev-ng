@@ -24,38 +24,32 @@ export class DashboardComponent {
 
   /** The dashboard configuration object read in from the JSON file. */
   dashboardConf: DashboardConf;
-  /**
-   * 
-   */
+  /** Boolean that determines whether this dashboard is being displayed inside a
+   * Story component. */
   displayedInStory = false;
   /** Subscription for updating the route for this component. Unsubscribed to in
    * ngDestroy. */
-  routeSub: Subscription;
-  /**
-   * A dashboard config object passed in from a parent component
-   */
+  actRouteSub: Subscription;
+  /** A dashboard config object passed in from a parent component. */
   @Input('dashboardConfig') embeddedDashboardConf: DashboardConf;
   /** `true` if the id in the URL matches an id from the `app-config.json` file.
    * `false` if not, and the 404 page will show. */
   validDashboardId: boolean;
 
+
   /**
-   * 
-   * @param route The injected ActivatedRoute for determining the correct URL and
+   * Constructor for the DashboardComponent.
+   * @param actRoute The injected ActivatedRoute for determining the correct URL and
    * Dashboard to be displayed.
-   */
-  /**
-   * 
    * @param commonService Reference to the injected Common library service.
    * @param dashboardService The injected dashboard service.
-   * @param eventService 
-   * @param route 
+   * @param eventService The injected event service for dashboard widgets.
    */
   constructor(
+    private actRoute: ActivatedRoute,
     private commonService: OwfCommonService,
     private dashboardService: DashboardService,
-    private eventService: EventService,
-    private route: ActivatedRoute
+    private eventService: EventService
   ) {
     
   }
@@ -93,7 +87,7 @@ export class DashboardComponent {
   }
 
   /**
-   * 
+   * Performs Dashboard initialization tasks.
    */
   private dashboardInit(dashboardConfig: DashboardConf): void {
     this.checkDashboardConfig(dashboardConfig);
@@ -111,7 +105,7 @@ export class DashboardComponent {
    */
   ngOnInit(): void {
 
-    this.routeSub = this.route.paramMap.subscribe((paramMap) => {
+    this.actRouteSub = this.actRoute.paramMap.subscribe((paramMap) => {
 
       var dashboardId = paramMap.get('id');
       this.validDashboardId = this.commonService.validID(dashboardId);
@@ -133,8 +127,9 @@ export class DashboardComponent {
   }
 
   /**
-   * Asynchronously reads in the dashboard configuration file
-   * @param dashboardId 
+   * Asynchronously reads in the dashboard configuration file and initializes the
+   * component creation tasks.
+   * @param dashboardId The dashboard URL id.
    */
   private readDashboardConfig(dashboardId: string): void {
     var dashboardConfigPath = this.commonService.getDashboardConfigPathFromId(dashboardId);

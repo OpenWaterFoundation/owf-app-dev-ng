@@ -79,9 +79,6 @@ export class DialogDataTableComponent implements OnInit, OnDestroy {
   destroyed = new Subject<void>();
   /** Array containing the names of all header columns in the Material Table. */
   displayedColumns: string[];
-  /** EventEmitter that alerts the Map component (parent) that an update has happened,
-   * and sends the basin name. */
-  @Output() featureHighlighted = new EventEmitter<boolean>();
   /** The layer's geoLayer. */
   geoLayer: any;
   /** The layer's geoLayerView. */

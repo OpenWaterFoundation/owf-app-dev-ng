@@ -4,32 +4,30 @@
   <div class="center-all-info">
     <div class="status-indicator-container">
   
-      <h4 class="status-title"
-      [matTooltip]="statusIndicatorWidget.titleTooltip"
+      <h4 class="status-title" [matTooltip]="statusIndicatorWidget.titleTooltip"
       matTooltipPosition="above">
         {{statusIndicatorWidget.title}}
       </h4>
     
       <div class="icon-and-data-container">
   
-        <div *ngIf="passingIndicator" class="indicator-icon">
+        <div *ngIf="indicatorIcon.passing" class="indicator-icon">
           <fa-icon class="fa-check" [icon]="faCheck" size="5x"></fa-icon>
         </div>
   
-        <div *ngIf="warningIndicator" class="indicator-icon">
+        <div *ngIf="indicatorIcon.warning" class="indicator-icon">
           <fa-icon class="fa-exclamation" [icon]="faExclamation" size="5x"></fa-icon>
         </div>
   
-        <div *ngIf="failureIndicator" class="indicator-icon">
+        <div *ngIf="indicatorIcon.failure" class="indicator-icon">
           <fa-icon class="fa-x-mark" [icon]="faXmark" size="5x"></fa-icon>
         </div>
 
-        <div *ngIf="unknownIndicator" class="indicator-icon">
+        <div *ngIf="indicatorIcon.unknown" class="indicator-icon">
           <fa-icon class="fa-question" [icon]="faQuestion" size="5x"></fa-icon>
         </div>
     
-        <p class="indicator-data"
-        [matTooltip]="statusIndicatorWidget.indicatorValueTooltip"
+        <p class="indicator-data" [matTooltip]="statusIndicatorWidget.indicatorValueTooltip"
         matTooltipPosition="above">
           {{mainData}}
         </p>
@@ -38,23 +36,21 @@
       
       <div class="change-icon-and-info-container">
 
-        <div *ngIf="changeDec" class="change-icon">
+        <div *ngIf="change.decrease" class="change-icon">
           <fa-icon class="change-icon-neutral" [icon]="faCaretDown" size="xl"></fa-icon>
         </div>
   
-        <div *ngIf="changeInc" class="change-icon">
+        <div *ngIf="change.increase" class="change-icon">
           <fa-icon class="change-icon-neutral" [icon]="faCaretUp" size="xl"></fa-icon>
         </div>
   
-        <p class="change-info"
-        [matTooltip]="statusIndicatorWidget.referenceValueTooltip"
+        <p class="change-info" [matTooltip]="statusIndicatorWidget.referenceValueTooltip"
         matTooltipPosition="above">
           {{dataChange}}
         </p>
-  
+
       </div>
-      
-    
+
     </div>
   </div>
   
@@ -62,6 +58,7 @@
 
 <ng-template #error>
   <div class="no-indicator-container">
-    <common-error errorLocation="widget" [errorTypes]="errorTypes" [widget]="statusIndicatorWidget"></common-error>
+    <common-error errorLocation="widget" [errorTypes]="errorTypes" [widget]="statusIndicatorWidget">
+    </common-error>
   </div>
 </ng-template>
