@@ -33,7 +33,8 @@ export class StatusIndicatorComponent {
    * status indicator widget. */
   change = {
     increase: false,
-    decrease: false
+    decrease: false,
+    equal: false
   };
   /** Array of each level (or line) in the classification file that will be used
    * to determine how a data point is classified. */
@@ -261,12 +262,27 @@ export class StatusIndicatorComponent {
 
     var previousValue = dataArray[dataArray.length - 2][givenProperty];
 
-    this.dataChange = (Number(this.mainData) - Number(previousValue)).toFixed(2);
-
-    if (Number(this.mainData) >= Number(previousValue)) {
-      this.change.increase = true;
+    if (this.mainData && previousValue) {
+      this.dataChange = (Number(this.mainData) - Number(previousValue)).toFixed(2);
     } else {
+      this.dataChange = 'No current data';
+    }
+
+    console.log('Main data:', this.mainData);
+    console.log('Previous data:', previousValue);
+
+    if (!this.mainData) {
+      this.mainData = '-';
+      this.change.equal = true;
+    }
+    else if (Number(this.mainData) > Number(previousValue)) {
+      this.change.increase = true;
+    }
+    else if (Number(this.mainData) < Number(previousValue)) {
       this.change.decrease = true;
+    }
+    else if (Number(this.mainData) === Number(previousValue)) {
+      this.change.equal = true;
     }
 
     if (this.statusIndicatorWidget.classificationFile) {
@@ -345,12 +361,24 @@ export class StatusIndicatorComponent {
 
         var previousValue = dataArray[dataArray.length - 2][givenProperty];
 
-        this.dataChange = (Number(this.mainData) - Number(previousValue)).toFixed(2);
-
-        if (Number(this.mainData) >= Number(previousValue)) {
-          this.change.increase = true;
+        if (this.mainData && previousValue) {
+          this.dataChange = (Number(this.mainData) - Number(previousValue)).toFixed(2);
         } else {
+          this.dataChange = 'No current data';
+        }
+
+        if (!this.mainData) {
+          this.mainData = '-';
+          this.change.equal = true;
+        }
+        else if (Number(this.mainData) > Number(previousValue)) {
+          this.change.increase = true;
+        }
+        else if (Number(this.mainData) < Number(previousValue)) {
           this.change.decrease = true;
+        }
+        else if (Number(this.mainData) === Number(previousValue)) {
+          this.change.equal = true;
         }
 
       } else {
@@ -369,6 +397,12 @@ export class StatusIndicatorComponent {
   private setIconFromClassification(): void {
 
     for (let classifyLevel of this.classifyLevels) {
+
+      if (this.mainData === '-') {
+        this.indicatorIcon.unknown = true;
+        return;
+      }
+
       if (this.dashboardService.operators[classifyLevel.minOp](Number(this.mainData), classifyLevel.valueMin) &&
           //                             |------operator-----||---------a----------|  |----------b----------|
           this.dashboardService.operators[classifyLevel.maxOp](Number(this.mainData), classifyLevel.valueMax)) {
